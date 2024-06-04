@@ -1,0 +1,98 @@
+{
+  "name": "essor-router",
+  "version": "0.0.6-beta.1",
+  "packageManager": "pnpm@9.1.4",
+  "description": "",
+  "type": "module",
+  "keywords": [],
+  "license": "MIT",
+  "homepage": "https://github.com/estjs/essor-router#readme",
+  "bugs": "https://github.com/estjs/essor-router/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/estjs/essor-router.git"
+  },
+  "author": "jiangxd <jiangxd2016@gmail.com>",
+  "funding": "https://github.com/sponsors/estjs",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/essor-router.mjs",
+  "module": "./dist/essor-router.mjs",
+  "types": "./dist/essor-router.d.ts",
+  "exports": {
+    ".": {
+      "browser": {
+        "development": {
+          "types": "./dist/essor-router.d.ts",
+          "require": "./dist/essor-router.dev.cjs",
+          "import": "./dist/essor-router.dev.mjs"
+        },
+        "types": "./dist/essor-router.d.ts",
+        "require": "./dist/essor-router.cjs",
+        "import": "./dist/essor-router.mjs"
+      },
+      "development": {
+        "types": "./dist/essor-router.d.ts",
+        "require": "./dist/essor-router.dev.cjs",
+        "import": "./dist/essor-router.dev.mjs"
+      },
+      "types": "./dist/essor-router.d.ts",
+      "require": "./dist/essor-router.cjs",
+      "import": "./dist/essor-router.mjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/essor-router.d.ts"
+      ]
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup && cross-env NODE_ENV=production tsup --clean=false --treeshake --sourcemap=false",
+    "dev": "tsup --watch",
+    "lint": "eslint ./ --fix",
+    "typecheck": "tsc --noEmit -p ./tsconfig.build.json",
+    "test:unit": "vitest",
+    "test:e2e": "playwright test",
+    "test": "pnpm run test:unit && pnpm run test:e2e",
+    "test:watch": "vitest --watch",
+    "coverage": "vitest run --coverage",
+    "changelog": "tsx scripts/changelog.ts",
+    "prerelease": "pnpm run lint && pnpm run build && pnpm run typecheck && pnpm run test",
+    "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag && pnpm -r publish --access public"
+  },
+  "dependencies": {
+    "essor": "^0.0.6-beta.7"
+  },
+  "devDependencies": {
+    "@estjs/eslint-config": "^1.1.2",
+    "@playwright/test": "^1.44.1",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^20.13.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "bumpp": "^9.4.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.4.0",
+    "faked-promise": "^2.2.2",
+    "jsdom": "^24.1.0",
+    "lint-staged": "^15.2.5",
+    "picocolors": "^1.0.1",
+    "pnpm": "^9.1.4",
+    "prettier": "^3.2.5",
+    "simple-git-hooks": "^2.11.1",
+    "standard-changelog": "^6.0.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec lint-staged --concurrent false",
+    "commit-msg": "pnpm exec tsx ./scripts/verify-commit.ts $1"
+  },
+  "lint-staged": {
+    "src/*.{ts,tsx,js}": "eslint --cache --fix"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["esnext", "DOM"],
+    "baseUrl": ".",
+    "rootDir": ".",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/tests/*": ["tests/*"]
+    },
+    "resolveJsonModule": true,
+    "types": ["vitest/globals"],
+    "strict": true,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules", "dist", "./dist/**/*"]
+}

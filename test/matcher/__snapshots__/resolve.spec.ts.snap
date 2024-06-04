@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RouterMatcher.resolve LocationAsName throws if the named route does not exists 1`] = `
+[Error: No match for
+ {"name":"Home"}]
+`;
+
+exports[`RouterMatcher.resolve LocationAsRelative throws if the current named route does not exists 1`] = `
+[Error: No match for
+ {"params":{"a":"foo"}}
+while being at
+{"name":"home","params":{},"path":"/","meta":{}}]
+`;
+
+exports[`routerMatcher.resolve > locationAsName > throws if the named route does not exists 1`] = `
+[Error: No match for
+ {"name":"Home"}]
+`;
+
+exports[`routerMatcher.resolve > locationAsRelative > throws if the current named route does not exists 1`] = `
+[Error: No match for
+ {"params":{"a":"foo"}}
+while being at
+{"name":"home","params":{},"path":"/","meta":{}}]
+`;
