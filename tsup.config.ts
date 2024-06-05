@@ -20,6 +20,7 @@ export default defineConfig({
   tsconfig: './tsconfig.build.json',
   define: {
     __DEV__: env !== 'production' ? 'true' : 'false',
+    __TEST__: 'false',
   },
 
   outExtension({ format }) {
