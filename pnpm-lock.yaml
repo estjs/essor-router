@@ -96,7 +96,7 @@ importers:
         version: 5.4.5
       unplugin-essor:
         specifier: ^v0.0.6-beta.7
-        version: 0.0.6-beta.7(esbuild@0.20.2)(rollup@4.14.3)(vite@5.2.12(@types/node@20.14.0))
+        version: 0.0.6-beta.8(esbuild@0.20.2)(rollup@4.14.3)(vite@5.2.12(@types/node@20.14.0))
       vite:
         specifier: ^5.2.12
         version: 5.2.12(@types/node@20.14.0)
@@ -133,7 +133,7 @@ importers:
         version: 5.4.5
       unplugin-essor:
         specifier: ^v0.0.6-beta.7
-        version: 0.0.6-beta.7(esbuild@0.20.2)(rollup@4.14.3)(vite@5.2.12(@types/node@20.14.0))
+        version: 0.0.6-beta.8(esbuild@0.20.2)(rollup@4.14.3)(vite@5.2.12(@types/node@20.14.0))
       vite:
         specifier: ^5.2.12
         version: 5.2.12(@types/node@20.14.0)
@@ -993,8 +993,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  babel-plugin-essor@0.0.6-beta.7:
-    resolution: {integrity: sha512-yPp+8fnLGyiz9SRE+4sP3ageKr3xJtWj2jqS6gtFQ0VHliLkGw2A4Wrqh8L5QIMYFrmaVgx1CcrDraZ01qcVgg==}
+  babel-plugin-essor@0.0.6-beta.8:
+    resolution: {integrity: sha512-DovP0oXxJkFkBMuhe11pcwsQnhJYIXiTD/eukscUu5sqR0rzYgXdXkOADkpYxUq0g8dr43RCNO1uSAZpXZjQ1g==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1243,6 +1243,15 @@ packages:
 
   debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
+  debug@4.3.5:
+    resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -1604,6 +1613,9 @@ packages:
 
   essor-shared@0.0.6-beta.7:
     resolution: {integrity: sha512-E9lJ+c5eCR8EugSmnLBtZJ/fy5ArHforMWjLkInJk0hV3MeR5eL6CWZVxInm1A8LFdYGnfC1/6Q/7uned6dPgA==}
+
+  essor-shared@0.0.6-beta.8:
+    resolution: {integrity: sha512-kL2Q9Fjxh/gzk3fykLojJlvSpi87IzXvWc3Jcvb0I45B1Jo39/iPF2H7815gpgR3UrS0yd/AnUzlRs/e6oS86A==}
 
   essor@0.0.6-beta.7:
     resolution: {integrity: sha512-QID7bDUEU89b7Soyqz4pMmdSn/+nod706XAbVFjluAa276ZM5l/q/4x7OkK8YmzUbdYBUJNOGELhGhh0eUcQ4A==}
@@ -2803,6 +2815,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.6.2:
+    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
     engines: {node: '>= 0.4'}
@@ -3165,8 +3182,8 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unplugin-essor@0.0.6-beta.7:
-    resolution: {integrity: sha512-PKcFI5LGLx2XZ9E0CFI4VIwzyiolyHYb7muieKS/p6BDLybh2CsNi40G8iNGu5tdRBs/HP5qdaPdSwtcFvz0AQ==}
+  unplugin-essor@0.0.6-beta.8:
+    resolution: {integrity: sha512-TWlS7y1m1W79gRYPNz2W/PakPsN6ecl9yH+3Y9DyDejoUvHDT/I2ZLtw7W2v7uhwC7WyFqsBLsR7VqBmrkaA5Q==}
     peerDependencies:
       esbuild: '*'
       rollup: ^4
@@ -3321,8 +3338,8 @@ packages:
     resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}
     engines: {node: '>=10.13.0'}
 
-  webpack-virtual-modules@0.6.1:
-    resolution: {integrity: sha512-poXpCylU7ExuvZK8z+On3kX+S8o/2dQ/SVYueKA0D4WEMXROXgY8Ez50/bQEUmvoSMMrWcrJqCHuhAbsiwg7Dg==}
+  webpack-virtual-modules@0.6.2:
+    resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
 
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
@@ -3472,7 +3489,7 @@ snapshots:
       '@babel/traverse': 7.24.6
       '@babel/types': 7.24.6
       convert-source-map: 2.0.0
-      debug: 4.3.4
+      debug: 4.3.5
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -3572,7 +3589,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.24.6
       '@babel/parser': 7.24.6
       '@babel/types': 7.24.6
-      debug: 4.3.4
+      debug: 4.3.5
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -3594,7 +3611,7 @@ snapshots:
   '@conventional-changelog/git-client@1.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.0.0)':
     dependencies:
       '@types/semver': 7.5.8
-      semver: 7.6.0
+      semver: 7.6.2
     optionalDependencies:
       conventional-commits-filter: 5.0.0
       conventional-commits-parser: 6.0.0
@@ -4271,11 +4288,11 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  babel-plugin-essor@0.0.6-beta.7:
+  babel-plugin-essor@0.0.6-beta.8:
     dependencies:
       '@babel/core': 7.24.6
       '@babel/types': 7.24.6
-      essor-shared: 0.0.6-beta.7
+      essor-shared: 0.0.6-beta.8
     transitivePeerDependencies:
       - supports-color
 
@@ -4552,6 +4569,10 @@ snapshots:
       ms: 2.1.3
 
   debug@4.3.4:
+    dependencies:
+      ms: 2.1.2
+
+  debug@4.3.5:
     dependencies:
       ms: 2.1.2
 
@@ -5096,6 +5117,8 @@ snapshots:
       estraverse: 5.3.0
 
   essor-shared@0.0.6-beta.7: {}
+
+  essor-shared@0.0.6-beta.8: {}
 
   essor@0.0.6-beta.7:
     dependencies:
@@ -6330,6 +6353,8 @@ snapshots:
     dependencies:
       lru-cache: 6.0.0
 
+  semver@7.6.2: {}
+
   set-function-length@1.2.2:
     dependencies:
       define-data-property: 1.1.4
@@ -6718,10 +6743,10 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-essor@0.0.6-beta.7(esbuild@0.20.2)(rollup@4.14.3)(vite@5.2.12(@types/node@20.14.0)):
+  unplugin-essor@0.0.6-beta.8(esbuild@0.20.2)(rollup@4.14.3)(vite@5.2.12(@types/node@20.14.0)):
     dependencies:
       '@babel/core': 7.24.6
-      babel-plugin-essor: 0.0.6-beta.7
+      babel-plugin-essor: 0.0.6-beta.8
       unplugin: 1.10.1
     optionalDependencies:
       esbuild: 0.20.2
@@ -6735,7 +6760,7 @@ snapshots:
       acorn: 8.11.3
       chokidar: 3.6.0
       webpack-sources: 3.2.3
-      webpack-virtual-modules: 0.6.1
+      webpack-virtual-modules: 0.6.2
 
   update-browserslist-db@1.0.13(browserslist@4.23.0):
     dependencies:
@@ -6868,7 +6893,7 @@ snapshots:
 
   webpack-sources@3.2.3: {}
 
-  webpack-virtual-modules@0.6.1: {}
+  webpack-virtual-modules@0.6.2: {}
 
   whatwg-encoding@3.1.1:
     dependencies:
