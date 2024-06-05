@@ -65,26 +65,26 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag && pnpm -r publish --access public"
   },
   "dependencies": {
-    "essor": "^0.0.6-beta.7"
+    "essor": "^0.0.6-beta.9"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^1.1.2",
     "@playwright/test": "^1.44.1",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^20.13.0",
+    "@types/node": "^20.14.2",
     "@vitest/coverage-v8": "^1.6.0",
     "bumpp": "^9.4.1",
     "cross-env": "^7.0.3",
-    "eslint": "^9.4.0",
+    "eslint": "^8.56.0",
     "faked-promise": "^2.2.2",
     "jsdom": "^24.1.0",
     "lint-staged": "^15.2.5",
     "picocolors": "^1.0.1",
     "pnpm": "^9.1.4",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.1",
     "simple-git-hooks": "^2.11.1",
     "standard-changelog": "^6.0.0",
-    "tsup": "^8.0.2",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   },

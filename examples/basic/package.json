@@ -10,16 +10,16 @@
     "test": "vitest -r test"
   },
   "dependencies": {
-    "essor": "^0.0.6-beta.7",
+    "essor": "^0.0.6-beta.9",
     "essor-router": "workspace:*"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^1.1.2",
-    "@types/node": "^20.13.0",
-    "eslint": "^9.4.0",
+    "@types/node": "^20.14.2",
+    "eslint": "^8.56.0",
     "happy-dom": "^14.12.0",
     "typescript": "^5.4.5",
-    "unplugin-essor": "^v0.0.6-beta.7",
+    "unplugin-essor": "^0.0.6-beta.9",
     "vite": "^5.2.12",
     "vite-plugin-inspect": "^0.8.4",
     "vitest": "^1.6.0"
