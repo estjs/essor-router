@@ -10,7 +10,7 @@ importers:
     dependencies:
       essor:
         specifier: ^0.0.6-beta.7
-        version: 0.0.6-beta.7
+        version: 0.0.6-beta.8
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.1.2
@@ -74,7 +74,7 @@ importers:
     dependencies:
       essor:
         specifier: ^0.0.6-beta.7
-        version: 0.0.6-beta.7
+        version: 0.0.6-beta.8
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -111,7 +111,7 @@ importers:
     dependencies:
       essor:
         specifier: ^0.0.6-beta.7
-        version: 0.0.6-beta.7
+        version: 0.0.6-beta.8
       essor-router:
         specifier: workspace:*
         version: link:..
@@ -1611,14 +1611,11 @@ packages:
     resolution: {integrity: sha512-KmfKL3b6G+RXvP8N1vr3Tq1kL/oCFgn2NYXEtqP8/L3pKapUA4G8cFVaoF3SU323CD4XypR/ffioHmkti6/Tag==}
     engines: {node: '>=4.0'}
 
-  essor-shared@0.0.6-beta.7:
-    resolution: {integrity: sha512-E9lJ+c5eCR8EugSmnLBtZJ/fy5ArHforMWjLkInJk0hV3MeR5eL6CWZVxInm1A8LFdYGnfC1/6Q/7uned6dPgA==}
-
   essor-shared@0.0.6-beta.8:
     resolution: {integrity: sha512-kL2Q9Fjxh/gzk3fykLojJlvSpi87IzXvWc3Jcvb0I45B1Jo39/iPF2H7815gpgR3UrS0yd/AnUzlRs/e6oS86A==}
 
-  essor@0.0.6-beta.7:
-    resolution: {integrity: sha512-QID7bDUEU89b7Soyqz4pMmdSn/+nod706XAbVFjluAa276ZM5l/q/4x7OkK8YmzUbdYBUJNOGELhGhh0eUcQ4A==}
+  essor@0.0.6-beta.8:
+    resolution: {integrity: sha512-EP6lscQxjy57Etn7DDBVi1evxA5AQL44UXanxvLF50Ij8qhI4AFVk80m8R0+ozjnt8B4XIOYu8Os5pMHYpMihg==}
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -5116,14 +5113,12 @@ snapshots:
     dependencies:
       estraverse: 5.3.0
 
-  essor-shared@0.0.6-beta.7: {}
-
   essor-shared@0.0.6-beta.8: {}
 
-  essor@0.0.6-beta.7:
+  essor@0.0.6-beta.8:
     dependencies:
       csstype: 3.1.3
-      essor-shared: 0.0.6-beta.7
+      essor-shared: 0.0.6-beta.8
 
   estraverse@5.3.0: {}
 
