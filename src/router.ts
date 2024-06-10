@@ -1,4 +1,4 @@
-import { type Signal, useSignal } from 'essor';
+import { EssorComponent, type Signal, useSignal } from 'essor';
 import { applyToParams, assign, isArray, isBrowser, isObject, isString, noop } from './utils';
 import {
   type Lazy,
@@ -1083,6 +1083,8 @@ export function createRouter(options: RouterOptions): Router {
     started = false;
     ready = false;
   };
+
+  installRouter();
   return router;
 }
 

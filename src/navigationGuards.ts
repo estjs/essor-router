@@ -213,32 +213,18 @@ export function extractComponentsGuards(
       );
     }
     for (const name in record.components) {
-      let rawComponent = record.components[name];
-      if (__DEV__) {
-        if (
-          !rawComponent ||
-          (typeof rawComponent !== 'object' && typeof rawComponent !== 'function')
-        ) {
-          warn(
-            `Component "${name}" in record with path "${record.path}" is not` +
-              ` a valid component. Received "${String(rawComponent)}".`,
-          );
-          // throw to ensure we stop here but warn to ensure the message isn't
-          // missed by the user
-          throw new Error('Invalid route component');
-        } else if ('then' in rawComponent) {
-          // warn if user wrote import('/component.jsx') instead of () =>
-          // import('./component.jsx')
-          warn(
-            `Component "${name}" in record with path "${record.path}" is a ` +
-              `Promise instead of a function that returns a Promise. Did you ` +
-              `write "import('./MyPage.jsx')" instead of ` +
-              `"() => import('./MyPage.jsx')" ? This will break in ` +
-              `production if not fixed.`,
-          );
-          const promise = rawComponent;
-          rawComponent = () => promise;
-        }
+      const rawComponent = record.components[name];
+      if (
+        __DEV__ &&
+        (!rawComponent || (typeof rawComponent !== 'object' && typeof rawComponent !== 'function'))
+      ) {
+        warn(
+          `Component "${name}" in record with path "${record.path}" is not` +
+            ` a valid component. Received "${String(rawComponent)}".`,
+        );
+        // throw to ensure we stop here but warn to ensure the message isn't
+        // missed by the user
+        throw new Error('Invalid route component');
       }
 
       // skip update and leave guards if the route component is not mounted
@@ -249,10 +235,7 @@ export function extractComponentsGuards(
         guard && guards.push(guardToPromiseFn(guard, to, from, record, name));
       } else {
         // start requesting the chunk already
-        let componentPromise: Promise<RouteComponent | null | undefined | void> = (
-          rawComponent as Lazy<RouteComponent>
-        )();
-
+        let componentPromise: Promise<RouteComponent | null | undefined | void> = rawComponent;
         if (__DEV__ && !('catch' in componentPromise)) {
           warn(
             `Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`,
@@ -314,9 +297,9 @@ export function loadRouteLocation(
               Object.keys(record.components).reduce(
                 (promises, name) => {
                   const rawComponent = record.components![name];
-                  if (typeof rawComponent === 'function' && !('displayName' in rawComponent)) {
+                  if ('then' in rawComponent && !('displayName' in rawComponent)) {
                     promises.push(
-                      (rawComponent as Lazy<RouteComponent>)().then(resolved => {
+                      (rawComponent as RouteComponent).then(resolved => {
                         if (!resolved)
                           return Promise.reject(
                             new Error(
