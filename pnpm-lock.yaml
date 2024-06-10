@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: ^0.0.6-beta.9
-        version: 0.0.6-beta.9
+        specifier: ^0.0.6-beta.10
+        version: 0.0.6-beta.10
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.1.2
@@ -49,8 +49,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       pnpm:
-        specifier: ^9.1.4
-        version: 9.1.4
+        specifier: ^9.2.0
+        version: 9.2.0
       prettier:
         specifier: ^3.3.1
         version: 3.3.1
@@ -73,8 +73,8 @@ importers:
   examples/basic:
     dependencies:
       essor:
-        specifier: ^0.0.6-beta.9
-        version: 0.0.6-beta.9
+        specifier: ^0.0.6-beta.10
+        version: 0.0.6-beta.10
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -95,14 +95,14 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       unplugin-essor:
-        specifier: ^0.0.6-beta.9
-        version: 0.0.6-beta.9(esbuild@0.21.4)(vite@5.2.12)
+        specifier: ^0.0.6-beta.10
+        version: 0.0.6-beta.10(esbuild@0.21.4)(vite@5.2.13)
       vite:
-        specifier: ^5.2.12
-        version: 5.2.12(@types/node@20.14.2)
+        specifier: ^5.2.13
+        version: 5.2.13(@types/node@20.14.2)
       vite-plugin-inspect:
         specifier: ^0.8.4
-        version: 0.8.4(vite@5.2.12)
+        version: 0.8.4(vite@5.2.13)
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.14.2)(happy-dom@14.12.0)(jsdom@24.1.0)
@@ -110,8 +110,8 @@ importers:
   playground:
     dependencies:
       essor:
-        specifier: ^0.0.6-beta.9
-        version: 0.0.6-beta.9
+        specifier: ^0.0.6-beta.10
+        version: 0.0.6-beta.10
       essor-router:
         specifier: workspace:*
         version: link:..
@@ -132,14 +132,14 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       unplugin-essor:
-        specifier: ^0.0.6-beta.9
-        version: 0.0.6-beta.9(esbuild@0.21.4)(vite@5.2.12)
+        specifier: ^0.0.6-beta.10
+        version: 0.0.6-beta.10(esbuild@0.21.4)(vite@5.2.13)
       vite:
-        specifier: ^5.2.12
-        version: 5.2.12(@types/node@20.14.2)
+        specifier: ^5.2.13
+        version: 5.2.13(@types/node@20.14.2)
       vite-plugin-inspect:
         specifier: ^0.8.4
-        version: 0.8.4(vite@5.2.12)
+        version: 0.8.4(vite@5.2.13)
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.14.2)(happy-dom@14.12.0)(jsdom@24.1.0)
@@ -1684,12 +1684,12 @@ packages:
       possible-typed-array-names: 1.0.0
     dev: true
 
-  /babel-plugin-essor@0.0.6-beta.9:
-    resolution: {integrity: sha512-vFdy0xq8Yh+8bnpNNB6Lpzt199cQrL5CU9OCBXfWdd4dOuzTJBKnEb2mIy4ME2iqRh3WwLBhb5RbmSx7jsXkHg==}
+  /babel-plugin-essor@0.0.6-beta.10:
+    resolution: {integrity: sha512-KMtti17WRFLobUYjxQHOxhFM4aWTkqnwd8bButzkm5kWThZijbc/SQU1ytB0NCf9TG8IGZ2lGkvmwHFoXOKj6Q==}
     dependencies:
       '@babel/core': 7.24.6
       '@babel/types': 7.24.6
-      essor-shared: 0.0.6-beta.9
+      essor-shared: 0.0.6-beta.10
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2960,14 +2960,14 @@ packages:
       estraverse: 5.3.0
     dev: true
 
-  /essor-shared@0.0.6-beta.9:
-    resolution: {integrity: sha512-zexfinTuuzw0FRPnsmgGE61haOS9fPtHPGyfT0PwxPef7nA3BeIeTmufcv2bHXvpdbBHreHo5xhE7YWNTZ+omQ==}
+  /essor-shared@0.0.6-beta.10:
+    resolution: {integrity: sha512-UjcpdIANMMMhXy3ha06P+igcGcloow9I5mmLO6leqtWSBW7DAclGCNYpDHilK27cWChNbGGUJSzh3q+6Zy1UOw==}
 
-  /essor@0.0.6-beta.9:
-    resolution: {integrity: sha512-+AjX/nJQpN7//7ri82nS5hY4GlzvYi8k0FQgtvA32xiaDly/gsrVMuZET6VoUzSo89Hlons6+q/GkmLaTpfqPw==}
+  /essor@0.0.6-beta.10:
+    resolution: {integrity: sha512-WJxzpJS3YDnqZK6KAv/G5EgKhXjP6Ua57+dK6vPjRFhpR6bnpynfLGZnFRri7n21AavXqLTbpugXzEC/PWTVrg==}
     dependencies:
       csstype: 3.1.3
-      essor-shared: 0.0.6-beta.9
+      essor-shared: 0.0.6-beta.10
     dev: false
 
   /estraverse@5.3.0:
@@ -4694,8 +4694,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /pnpm@9.1.4:
-    resolution: {integrity: sha512-nfnPJ8kXFWRsfWddHJyOQfb86IJG8TGMGqah7RrrPE8DL830umPMacT+bWNCeRdrU1hyfY8sweZbZfQ84vi/sA==}
+  /pnpm@9.2.0:
+    resolution: {integrity: sha512-mKgP0RwucJZ0d2IwQQZDKz3cZ9z1S1qMAck/aKLNXgXmghhJUioG+3YoTUGiZg1eM08u47vykYO/LnObHa+ncQ==}
     engines: {node: '>=18.12'}
     hasBin: true
     dev: true
@@ -5744,8 +5744,8 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unplugin-essor@0.0.6-beta.9(esbuild@0.21.4)(vite@5.2.12):
-    resolution: {integrity: sha512-ka5pllvcBzOX+NYGgpf+E6xnA6toWMk2dGmRJnfjwM8Bwkz8EblAV7LA9CTyrgNk5P45AMkOlbSvXyqO6BcvVw==}
+  /unplugin-essor@0.0.6-beta.10(esbuild@0.21.4)(vite@5.2.13):
+    resolution: {integrity: sha512-FhpaN+/RL93YJeOr4i/Spttg4Jw99jfnwtF1g2sWo18HTEMHWJeZLxhKiHhDaXw0W69YB5aStw8aWskgUvu4uw==}
     peerDependencies:
       esbuild: '*'
       rollup: ^4
@@ -5762,10 +5762,10 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.24.6
-      babel-plugin-essor: 0.0.6-beta.9
+      babel-plugin-essor: 0.0.6-beta.10
       esbuild: 0.21.4
       unplugin: 1.10.1
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5824,7 +5824,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.1
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -5836,7 +5836,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-inspect@0.8.4(vite@5.2.12):
+  /vite-plugin-inspect@0.8.4(vite@5.2.13):
     resolution: {integrity: sha512-G0N3rjfw+AiiwnGw50KlObIHYWfulVwaCBUBLh2xTW9G1eM9ocE5olXkEYUbwyTmX+azM8duubi+9w5awdCz+g==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -5855,7 +5855,7 @@ packages:
       perfect-debounce: 1.0.0
       picocolors: 1.0.1
       sirv: 2.0.4
-      vite: 5.2.12(@types/node@20.14.2)
+      vite: 5.2.13(@types/node@20.14.2)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -5897,8 +5897,8 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vite@5.2.12(@types/node@20.14.2):
-    resolution: {integrity: sha512-/gC8GxzxMK5ntBwb48pR32GGhENnjtY30G4A0jemunsBkiEZFw60s8InGpN8gkhHEkjnRK1aSAxeQgwvFhUHAA==}
+  /vite@5.2.13(@types/node@20.14.2):
+    resolution: {integrity: sha512-SSq1noJfY9pR3I1TUENL3rQYDQCFqgD+lM6fTRAM8Nv6Lsg5hDLaXkjETVeBt+7vZBCMoibD+6IWnT2mJ+Zb/A==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:

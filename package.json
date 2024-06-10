@@ -1,7 +1,7 @@
 {
   "name": "essor-router",
   "version": "0.0.6-beta.2",
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.2.0",
   "description": "",
   "type": "module",
   "keywords": [],
@@ -64,8 +64,8 @@
     "prerelease": "pnpm run lint && pnpm run build && pnpm run typecheck && pnpm run test",
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag && pnpm -r publish --access public"
   },
-  "dependencies": {
-    "essor": "^0.0.6-beta.9"
+  "peerDependencies": {
+    "essor": "^0.0.6-beta.10"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^1.1.2",
@@ -80,7 +80,7 @@
     "jsdom": "^24.1.0",
     "lint-staged": "^15.2.5",
     "picocolors": "^1.0.1",
-    "pnpm": "^9.1.4",
+    "pnpm": "^9.2.0",
     "prettier": "^3.3.1",
     "simple-git-hooks": "^2.11.1",
     "standard-changelog": "^6.0.0",
