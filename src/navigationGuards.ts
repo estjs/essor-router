@@ -51,7 +51,7 @@ export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
   if (!activeRecord.value) {
     __DEV__ &&
       warn(
-        'No active route record was found when calling `onBeforeRouteLeave()`. Make sure you call this function inside a component child of <router-view>. Maybe you called it inside of App.essor?',
+        'No active route record was found when calling `onBeforeRouteLeave()`. Make sure you call this function inside a component child of <router-view>. Maybe you called it inside of App.jsx?',
       );
     return;
   }
@@ -72,7 +72,7 @@ export function onBeforeRouteUpdate(updateGuard: NavigationGuard) {
   if (!activeRecord.value) {
     __DEV__ &&
       warn(
-        'No active route record was found when calling `onBeforeRouteUpdate()`. Make sure you call this function inside a component child of <router-view>. Maybe you called it inside of App.essor?',
+        'No active route record was found when calling `onBeforeRouteUpdate()`. Make sure you call this function inside a component child of <router-view>. Maybe you called it inside of App.jsx?',
       );
     return;
   }
@@ -227,13 +227,13 @@ export function extractComponentsGuards(
           // missed by the user
           throw new Error('Invalid route component');
         } else if ('then' in rawComponent) {
-          // warn if user wrote import('/component.essor') instead of () =>
-          // import('./component.essor')
+          // warn if user wrote import('/component.jsx') instead of () =>
+          // import('./component.jsx')
           warn(
             `Component "${name}" in record with path "${record.path}" is a ` +
               `Promise instead of a function that returns a Promise. Did you ` +
-              `write "import('./MyPage.essor')" instead of ` +
-              `"() => import('./MyPage.essor')" ? This will break in ` +
+              `write "import('./MyPage.jsx')" instead of ` +
+              `"() => import('./MyPage.jsx')" ? This will break in ` +
               `production if not fixed.`,
           );
           const promise = rawComponent;
