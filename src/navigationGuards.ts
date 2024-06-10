@@ -298,8 +298,17 @@ export function loadRouteLocation(
                 (promises, name) => {
                   const rawComponent = record.components![name];
                   if ('then' in rawComponent && !('displayName' in rawComponent)) {
+                    let componentPromise: Promise<RouteComponent | null | undefined | void> =
+                      rawComponent;
+                    if (__DEV__ && !('catch' in componentPromise)) {
+                      warn(
+                        `Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`,
+                      );
+                      componentPromise = Promise.resolve(componentPromise as RouteComponent);
+                    }
+
                     promises.push(
-                      (rawComponent as RouteComponent).then(resolved => {
+                      (componentPromise as RouteComponent).then(resolved => {
                         if (!resolved)
                           return Promise.reject(
                             new Error(
@@ -309,6 +318,7 @@ export function loadRouteLocation(
                         const resolvedComponent = isESModule(resolved)
                           ? resolved.default
                           : resolved;
+
                         // replace the function with the resolved component
                         // cannot be null or undefined because we went into the for loop
                         record.components![name] = resolvedComponent;
