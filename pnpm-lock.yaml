@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: ^0.0.6-beta.10
-        version: 0.0.6-beta.10
+        specifier: ^0.0.6-beta.11
+        version: 0.0.6-beta.11
       essor-shared:
-        specifier: ^0.0.6-beta.10
-        version: 0.0.6-beta.10
+        specifier: ^0.0.6-beta.11
+        version: 0.0.6-beta.11
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.1.2
@@ -2966,11 +2966,22 @@ packages:
   /essor-shared@0.0.6-beta.10:
     resolution: {integrity: sha512-UjcpdIANMMMhXy3ha06P+igcGcloow9I5mmLO6leqtWSBW7DAclGCNYpDHilK27cWChNbGGUJSzh3q+6Zy1UOw==}
 
+  /essor-shared@0.0.6-beta.11:
+    resolution: {integrity: sha512-CTAAjX74OAEW7h1+rNi2iwj0DFiOZWrrNEWgPwf/ijyRxKry9xJ2ZX6Hhgqk+XlbOPBmLorQ56PxeQRZkcBBqA==}
+    dev: false
+
   /essor@0.0.6-beta.10:
     resolution: {integrity: sha512-WJxzpJS3YDnqZK6KAv/G5EgKhXjP6Ua57+dK6vPjRFhpR6bnpynfLGZnFRri7n21AavXqLTbpugXzEC/PWTVrg==}
     dependencies:
       csstype: 3.1.3
       essor-shared: 0.0.6-beta.10
+    dev: false
+
+  /essor@0.0.6-beta.11:
+    resolution: {integrity: sha512-hi2EAEBA+UZ2vjdOg0oV8iKBBNCoBgdfPh6SemfBIiJd0jxheXI73Sja3Y44bKu8KGHTn1f/H35EfwdWKXOo+g==}
+    dependencies:
+      csstype: 3.1.3
+      essor-shared: 0.0.6-beta.11
     dev: false
 
   /estraverse@5.3.0:
