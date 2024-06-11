@@ -1,9 +1,8 @@
 import { routerStore } from './store';
 
 export function useRouter() {
-  return routerStore.getRouter.value;
+  return routerStore.getRouter;
 }
-
 export function useRoute() {
-  return routerStore.getCurrentRouter.value;
+  return routerStore.getCurrentRouter;
 }

@@ -316,7 +316,7 @@ export function createHistory(mode: History | RouterHistory, base?: string): Rou
   }
 }
 
-export let installRouter;
+export let initRouter;
 export let unMountRouter;
 /**
  * Creates a Router instance that can be used by a essor app.
@@ -1044,7 +1044,7 @@ export function createRouter(options: RouterOptions): Router {
     return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
   }
 
-  installRouter = () => {
+  initRouter = () => {
     // this initial navigation is only necessary on client, on server it doesn't
     // make sense because it will create an extra unnecessary navigation and could
     // lead to problems
@@ -1084,7 +1084,6 @@ export function createRouter(options: RouterOptions): Router {
     ready = false;
   };
 
-  installRouter();
   return router;
 }
 

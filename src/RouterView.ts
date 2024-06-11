@@ -11,7 +11,7 @@ import {
 } from 'essor';
 import { routerStore } from './store';
 import { viewDepthKey } from './injectionSymbols';
-import { installRouter, unMountRouter } from './router';
+import { initRouter, unMountRouter } from './router';
 import type { RouteLocationNormalized } from './types';
 export interface RouterViewProps {
   name?: string;
@@ -20,6 +20,8 @@ export interface RouterViewProps {
 }
 
 export const RouterView = (props: RouterViewProps) => {
+  initRouter && initRouter();
+
   const injectedDepth = useInject(viewDepthKey, 0) as Signal<number>;
   const routeToDisplay = useComputed<RouteLocationNormalized>(
     () => props.route || routerStore.state.currentRouter,
