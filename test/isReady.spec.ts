@@ -99,7 +99,7 @@ describe('isReady', () => {
     expect(errorSpy).toHaveBeenCalledTimes(0);
   });
 
-  it('rejects failed lazy loading', async () => {
+  it('rejects failed lazy loading', () => {
     const router = newRouter();
     const errorSpy = vitest.fn();
     router.onError(errorSpy);
