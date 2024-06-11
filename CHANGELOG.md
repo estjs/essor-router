@@ -10,6 +10,16 @@ docClass: timeline
 
 ### Bug Fixes
 
+* fix testcase async ([6a70a1e](https://github.com/estjs/essor-router/commit/6a70a1e9ad144d34b30566e9925548494f4efbe1))
+
+
+
+
+## 0.0.6-beta.2 `2024-06-11`
+
+
+### Bug Fixes
+
 * fix async component in load router ([3157ace](https://github.com/estjs/essor-router/commit/3157ace4de25ac96d9710945a93a65ef9bb252ea))
 * fix essor deps & update deps ([e7851d4](https://github.com/estjs/essor-router/commit/e7851d471693e973e46e66a969b6beb600cb6df7))
 * fix import async component reader ([90d6abe](https://github.com/estjs/essor-router/commit/90d6abe69bff4261affaa4348f29d3789f74deb9))
