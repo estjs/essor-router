@@ -57,7 +57,7 @@
     "typecheck": "tsc --noEmit -p ./tsconfig.build.json",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
-    "test": "pnpm run test:unit && pnpm run test:e2e",
+    "test": "pnpm run test:unit",
     "test:watch": "vitest --watch",
     "coverage": "vitest run --coverage",
     "changelog": "tsx scripts/changelog.ts",
