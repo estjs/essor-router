@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2
+        specifier: link:../essor-core/packages/core
+        version: link:../essor-core/packages/core
       essor-shared:
         specifier: ^0.0.7-beta.2
         version: 0.0.7-beta.2
