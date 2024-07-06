@@ -65,8 +65,8 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag && pnpm -r publish --access public"
   },
   "peerDependencies": {
-    "essor": "link:../essor-core/packages/core",
-    "essor-shared": "^0.0.7-beta.2"
+    "essor": "^0.0.7-beta.4",
+    "essor-shared": "^0.0.7-beta.4"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^1.1.2",

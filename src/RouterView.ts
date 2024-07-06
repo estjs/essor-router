@@ -20,6 +20,8 @@ export interface RouterViewProps {
 }
 
 export const RouterView = (props: RouterViewProps) => {
+  initRouter && initRouter();
+
   const injectedDepth = useInject(viewDepthKey, 0) as Signal<number>;
   const routeToDisplay = useComputed<RouteLocationNormalized>(
     () => props.route || routerStore.getCurrentRouter.value,

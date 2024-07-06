@@ -10,7 +10,7 @@
     "test": "vitest -r test"
   },
   "dependencies": {
-    "essor": "^0.0.7-beta.2",
+    "essor": "link:../../../essor-core/packages/core",
     "essor-router": "workspace:*"
   },
   "devDependencies": {
@@ -19,7 +19,7 @@
     "eslint": "^8.56.0",
     "happy-dom": "^14.12.0",
     "typescript": "^5.4.5",
-    "unplugin-essor": "^0.0.7-beta.2",
+    "unplugin-essor": "^0.0.7-beta.4",
     "vite": "^5.2.13",
     "vite-plugin-inspect": "^0.8.4",
     "vitest": "^1.6.0"

@@ -9,11 +9,11 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: link:../essor-core/packages/core
-        version: link:../essor-core/packages/core
+        specifier: ^0.0.7-beta.4
+        version: 0.0.7-beta.4
       essor-shared:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2
+        specifier: ^0.0.7-beta.4
+        version: 0.0.7-beta.4
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.1.2
@@ -79,8 +79,8 @@ importers:
   examples/async-router:
     dependencies:
       essor:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2
+        specifier: ^0.0.7-beta.4
+        version: 0.0.7-beta.4
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -101,8 +101,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       unplugin-essor:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2(esbuild@0.21.4)(vite@5.2.13)
+        specifier: ^0.0.7-beta.4
+        version: 0.0.7-beta.4(esbuild@0.21.4)(vite@5.2.13)
       vite:
         specifier: ^5.2.13
         version: 5.2.13(@types/node@20.14.2)
@@ -116,8 +116,8 @@ importers:
   examples/basic:
     dependencies:
       essor:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2
+        specifier: link:../../../essor-core/packages/core
+        version: link:../../../essor-core/packages/core
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -138,8 +138,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       unplugin-essor:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2(esbuild@0.21.4)(vite@5.2.13)
+        specifier: ^0.0.7-beta.4
+        version: 0.0.7-beta.4(esbuild@0.21.4)(vite@5.2.13)
       vite:
         specifier: ^5.2.13
         version: 5.2.13(@types/node@20.14.2)
@@ -153,8 +153,8 @@ importers:
   playground:
     dependencies:
       essor:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2
+        specifier: ^0.0.7-beta.4
+        version: 0.0.7-beta.4
       essor-router:
         specifier: workspace:*
         version: link:..
@@ -175,8 +175,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       unplugin-essor:
-        specifier: ^0.0.7-beta.2
-        version: 0.0.7-beta.2(esbuild@0.21.4)(vite@5.2.13)
+        specifier: ^0.0.7-beta.4
+        version: 0.0.7-beta.4(esbuild@0.21.4)(vite@5.2.13)
       vite:
         specifier: ^5.2.13
         version: 5.2.13(@types/node@20.14.2)
@@ -1981,12 +1981,12 @@ packages:
       possible-typed-array-names: 1.0.0
     dev: true
 
-  /babel-plugin-essor@0.0.7-beta.2:
-    resolution: {integrity: sha512-/R5lM3vvhNZJdMduWcd37uNO9F/HkN+Ajtytu8o7/hMYANfEJwlF5jANbPmBLAy/EAfl4d1MGRukOCPVGYapqw==}
+  /babel-plugin-essor@0.0.7-beta.4:
+    resolution: {integrity: sha512-FASdfkt2gFPWOcXaGKLnUODeNliguh5T2+5e0zK+1KGXi/J+MX4DTEr1jutSRAPP3PqtmnCMMbDwUsYTFxJ6iQ==}
     dependencies:
       '@babel/core': 7.24.7
       '@babel/types': 7.24.7
-      essor-shared: 0.0.7-beta.2
+      essor-shared: 0.0.7-beta.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -3288,14 +3288,14 @@ packages:
       estraverse: 5.3.0
     dev: true
 
-  /essor-shared@0.0.7-beta.2:
-    resolution: {integrity: sha512-cDnDdBDa9/fi8wDSBuY+Z7omx70ktVQsYTuu1A7eY6+5LB/17AebvYkSQ2iDC1NiZgyVMGPDMnc6rDhTjx60wQ==}
+  /essor-shared@0.0.7-beta.4:
+    resolution: {integrity: sha512-W+9naWSimfOE8sxM6qKVSNpWdFyj+dcRbNSG1kFkMyzAZcerEQbw77TKUQSmw3JOMM/QapE1OwqdvvrbZYf/jA==}
 
-  /essor@0.0.7-beta.2:
-    resolution: {integrity: sha512-T8HLEGkMrAKK9yBuSMSEfRjK7YZ5Y0+Gw8A/N7xmyAjIvRExcnzY6lH32AN2rWdrKgko5Lf1q9rDLzaTOV7HKQ==}
+  /essor@0.0.7-beta.4:
+    resolution: {integrity: sha512-3JUGMxjuB1y0TS9LUR34Bn9EHt5Wje3KGbGTGTRKNjxAZEXVJttBUg1bLVFAT7Ipa66YTY3LJjXT0DYU2sTfyg==}
     dependencies:
       csstype: 3.1.3
-      essor-shared: 0.0.7-beta.2
+      essor-shared: 0.0.7-beta.4
     dev: false
 
   /estraverse@5.3.0:
@@ -6089,8 +6089,8 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unplugin-essor@0.0.7-beta.2(esbuild@0.21.4)(vite@5.2.13):
-    resolution: {integrity: sha512-FpOd1eq7YnuMKySd2lA6EqdRNY3rrTvg9qRAJnZLYSEE/g4ygvz3OgUa758ALsvaNaBK9OOcogikLGcVSHAlKA==}
+  /unplugin-essor@0.0.7-beta.4(esbuild@0.21.4)(vite@5.2.13):
+    resolution: {integrity: sha512-quiG8gtPjrsFI6l4NrSdmWJSoGO4yKDCXpwvTK9AjRCzEC+ZnAinZ1b5T/zWtvf/F1bu3IheKFfEDLL8Oewb4Q==}
     peerDependencies:
       esbuild: '*'
       rollup: ^4
@@ -6107,7 +6107,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.24.7
-      babel-plugin-essor: 0.0.7-beta.2
+      babel-plugin-essor: 0.0.7-beta.4
       esbuild: 0.21.4
       unplugin: 1.10.1
       vite: 5.2.13(@types/node@20.14.2)

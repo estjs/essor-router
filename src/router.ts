@@ -1083,8 +1083,6 @@ export function createRouter(options: RouterOptions): Router {
     started = false;
     ready = false;
   };
-  initRouter();
-
   return router;
 }
 
