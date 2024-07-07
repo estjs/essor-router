@@ -46,14 +46,7 @@ export const RouterView = (props: RouterViewProps) => {
       matchedRouteRef.value && matchedRouteRef.value.components[props.name || 'default'];
     return ViewComponent ? h(ViewComponent, {}) : props.children;
   });
-
-  onDestroy(() => {
-    unMountRouter && unMountRouter();
-  });
-
-  return h(template(''), {
-    '0': {
-      children: [[() => renderView.value, null]],
-    },
+  return h('', {
+    children: [[() => renderView.value, null]],
   });
 };
