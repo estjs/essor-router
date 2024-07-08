@@ -1043,7 +1043,8 @@ export function createRouter(options: RouterOptions): Router {
   function runGuardQueue(guards: Lazy<any>[]): Promise<void> {
     return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
   }
-
+  routerStore.setRouter(router);
+  routerStore.setCurrent(currentRoute.value);
   initRouter = () => {
     // this initial navigation is only necessary on client, on server it doesn't
     // make sense because it will create an extra unnecessary navigation and could
@@ -1061,17 +1062,6 @@ export function createRouter(options: RouterOptions): Router {
         if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
-
-    const reactiveRoute = {} as RouteLocationNormalizedLoaded;
-    for (const key in START_LOCATION_NORMALIZED) {
-      Object.defineProperty(reactiveRoute, key, {
-        get: () => currentRoute.value[key as keyof RouteLocationNormalized],
-        enumerable: true,
-      });
-    }
-
-    routerStore.setRouter(router);
-    routerStore.setCurrent(currentRoute.value);
   };
 
   unMountRouter = () => {
@@ -1083,6 +1073,7 @@ export function createRouter(options: RouterOptions): Router {
     started = false;
     ready = false;
   };
+
   return router;
 }
 
