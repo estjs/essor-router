@@ -80,7 +80,7 @@ importers:
     dependencies:
       essor:
         specifier: ^0.0.7-beta.5
-        version: 0.0.7-beta.5
+        version: 0.0.7-beta.6
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -117,7 +117,7 @@ importers:
     dependencies:
       essor:
         specifier: link:../../../essor-core/packages/core
-        version: link:../../../essor-core/packages/core
+        version: 0.0.7-beta.6
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -154,7 +154,7 @@ importers:
     dependencies:
       essor:
         specifier: ^0.0.7-beta.5
-        version: 0.0.7-beta.5
+        version: 0.0.7-beta.6
       essor-router:
         specifier: workspace:*
         version: link:..
@@ -1703,8 +1703,14 @@ packages:
   essor-shared@0.0.7-beta.5:
     resolution: {integrity: sha512-LCKxMO9+y/XhcqD43mjGFnEDkwPfnyDflh3r6MR6N7HRjHo4C8fMCT9zNoUUATBVcIJZZTv5hCPgkgBCW8ri3A==}
 
+  essor-shared@0.0.7-beta.6:
+    resolution: {integrity: sha512-C1N9mweNPlkXqeN1x48BZGatHG5u0ZATqHGymSAhS+IWAiUUwoejXlkpikY9UwjmX8wozvRQJqxm+dupbgTUGg==}
+
   essor@0.0.7-beta.5:
     resolution: {integrity: sha512-fAs5ho7IEXjK4WbbgWy9ftcBnGeLp3GL0kwVnCYXVMrPEhTdXqJEML2+WRoB7huecypcmeuuhzrqqKpIzrDWmw==}
+
+  essor@0.0.7-beta.6:
+    resolution: {integrity: sha512-6ZH9RpSgeSPvolr1IYCWKrvnJWxl2zpJm3H0Hm2nRlfQDfXrjbyM6Nz8PRIKIMDRPOnXlquWNdWoK2t0SAPPIg==}
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -5252,10 +5258,17 @@ snapshots:
 
   essor-shared@0.0.7-beta.5: {}
 
+  essor-shared@0.0.7-beta.6: {}
+
   essor@0.0.7-beta.5:
     dependencies:
       csstype: 3.1.3
       essor-shared: 0.0.7-beta.5
+
+  essor@0.0.7-beta.6:
+    dependencies:
+      csstype: 3.1.3
+      essor-shared: 0.0.7-beta.6
 
   estraverse@5.3.0: {}
 
