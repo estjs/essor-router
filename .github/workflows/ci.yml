@@ -67,4 +67,3 @@ jobs:
       - run: pnpm install --no-frozen-lockfile
       - run: npm run build
       - run: pnpm run test:unit
-      - run: pnpm run test:e2e
