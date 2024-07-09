@@ -73,7 +73,7 @@
     "@playwright/test": "^1.45.1",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^20.14.10",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/coverage-v8": "^2.0.0",
     "bumpp": "^9.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^9.6.0",
