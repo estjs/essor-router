@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: ^v0.0.7-beta.5
-        version: 0.0.7-beta.5
+        specifier: ^v0.0.7-beta.5 || ^0.0.8
+        version: 0.0.8
       essor-shared:
         specifier: ^v0.0.7-beta.5
         version: 0.0.7-beta.5
@@ -79,8 +79,8 @@ importers:
   examples/async-router:
     dependencies:
       essor:
-        specifier: ^0.0.7-beta.5
-        version: 0.0.7-beta.5
+        specifier: ^0.0.8
+        version: 0.0.8
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -153,8 +153,8 @@ importers:
   playground:
     dependencies:
       essor:
-        specifier: ^0.0.7-beta.5
-        version: 0.0.7-beta.5
+        specifier: ^0.0.8
+        version: 0.0.8
       essor-router:
         specifier: workspace:*
         version: link:..
@@ -1703,8 +1703,11 @@ packages:
   essor-shared@0.0.7-beta.5:
     resolution: {integrity: sha512-LCKxMO9+y/XhcqD43mjGFnEDkwPfnyDflh3r6MR6N7HRjHo4C8fMCT9zNoUUATBVcIJZZTv5hCPgkgBCW8ri3A==}
 
-  essor@0.0.7-beta.5:
-    resolution: {integrity: sha512-fAs5ho7IEXjK4WbbgWy9ftcBnGeLp3GL0kwVnCYXVMrPEhTdXqJEML2+WRoB7huecypcmeuuhzrqqKpIzrDWmw==}
+  essor-shared@0.0.8:
+    resolution: {integrity: sha512-1G5+j1V+Mp8HdPjcvs2AJek+YxVdECDTmP8Nv9QPhNLkHQiuGp6j+MouNeBufSphcfq+ZkloqJyGnp9dENf6kA==}
+
+  essor@0.0.8:
+    resolution: {integrity: sha512-x+iRRAgiWsG2+TaM3znA+r+xxKoOmX1D7bhG+dqFZmypTEP033o+5WxIA5ONZWlY6QUYTFxXPaUj+2IRHNULHQ==}
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -5252,10 +5255,12 @@ snapshots:
 
   essor-shared@0.0.7-beta.5: {}
 
-  essor@0.0.7-beta.5:
+  essor-shared@0.0.8: {}
+
+  essor@0.0.8:
     dependencies:
       csstype: 3.1.3
-      essor-shared: 0.0.7-beta.5
+      essor-shared: 0.0.8
 
   estraverse@5.3.0: {}
 

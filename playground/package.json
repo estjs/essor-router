@@ -10,7 +10,7 @@
     "test": "vitest -r test"
   },
   "dependencies": {
-    "essor": "^0.0.7-beta.5",
+    "essor": "^0.0.8",
     "essor-router": "workspace:*"
   },
   "devDependencies": {

@@ -65,7 +65,7 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag && pnpm -r publish --access public"
   },
   "peerDependencies": {
-    "essor": "^v0.0.7-beta.5",
+    "essor": "^v0.0.7-beta.5 || ^0.0.8",
     "essor-shared": "^v0.0.7-beta.5"
   },
   "devDependencies": {
