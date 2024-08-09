@@ -10,18 +10,18 @@
     "test": "vitest -r test"
   },
   "dependencies": {
-    "essor": "^0.0.7-beta.5",
+    "essor": "^0.0.8",
     "essor-router": "workspace:*"
   },
   "devDependencies": {
-    "@estjs/eslint-config": "^1.2.0",
-    "@types/node": "^20.14.10",
-    "eslint": "^9.6.0",
+    "@estjs/eslint-config": "^1.2.4",
+    "@types/node": "^22.1.0",
+    "eslint": "^9.8.0",
     "happy-dom": "^14.12.3",
-    "typescript": "^5.5.3",
-    "unplugin-essor": "^0.0.7-beta.5",
-    "vite": "^5.3.3",
-    "vite-plugin-inspect": "^0.8.4",
-    "vitest": "^2.0.0"
+    "typescript": "^5.5.4",
+    "unplugin-essor": "^0.0.8",
+    "vite": "^5.4.0",
+    "vite-plugin-inspect": "^0.8.5",
+    "vitest": "^2.0.5"
   }
 }

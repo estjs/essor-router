@@ -1,7 +1,7 @@
 {
   "name": "essor-router",
   "version": "0.0.7-beta.3",
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.7.0",
   "description": "",
   "type": "module",
   "keywords": [],
@@ -65,30 +65,30 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag && pnpm -r publish --access public"
   },
   "peerDependencies": {
-    "essor": "^v0.0.7-beta.5",
-    "essor-shared": "^v0.0.7-beta.5"
+    "essor": "^0.0.8",
+    "essor-shared": "^0.0.8"
   },
   "devDependencies": {
-    "@estjs/eslint-config": "^1.2.1",
-    "@playwright/test": "^1.45.1",
+    "@estjs/eslint-config": "^1.2.4",
+    "@playwright/test": "^1.46.0",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^20.14.10",
-    "@vitest/coverage-v8": "^2.0.0",
-    "bumpp": "^9.4.1",
+    "@types/node": "^22.1.0",
+    "@vitest/coverage-v8": "^2.0.5",
+    "bumpp": "^9.4.2",
     "cross-env": "^7.0.3",
-    "eslint": "^9.6.0",
+    "eslint": "^9.8.0",
     "faked-promise": "^2.2.2",
-    "jsdom": "^24.1.0",
-    "lint-staged": "^15.2.7",
+    "jsdom": "^24.1.1",
+    "lint-staged": "^15.2.8",
     "picocolors": "^1.0.1",
-    "pnpm": "^9.5.0",
-    "prettier": "^3.3.2",
+    "pnpm": "^9.7.0",
+    "prettier": "^3.3.3",
     "simple-git-hooks": "^2.11.1",
     "standard-changelog": "^6.0.0",
-    "tsup": "^8.1.0",
-    "tsx": "^4.16.2",
-    "typescript": "^5.5.3",
-    "vitest": "^2.0.0"
+    "tsup": "^8.2.4",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged --concurrent false",
