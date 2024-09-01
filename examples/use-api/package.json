@@ -17,7 +17,7 @@
     "@estjs/eslint-config": "^1.2.4",
     "@types/node": "^22.1.0",
     "eslint": "^9.8.0",
-    "happy-dom": "^14.12.3",
+    "happy-dom": "^15.0.0",
     "typescript": "^5.5.4",
     "unplugin-essor": "^0.0.8",
     "vite": "^5.4.0",
