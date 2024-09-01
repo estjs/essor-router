@@ -6,12 +6,12 @@ export default estjs({
     'unicorn/error-message': 'off',
     'unicorn/no-array-push-push': 'off',
   },
-  javascript: {
-    'unused-imports/no-unused-imports': 'off',
-  },
+
   typescript: {
     '@typescript-eslint/no-invalid-void-type': 'off',
     '@typescript-eslint/unified-signatures': 'off',
     '@typescript-eslint/prefer-literal-enum-member': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
+    '@typescript-eslint/no-unsafe-function-type': 'off',
   },
 });

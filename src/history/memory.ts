@@ -1,6 +1,5 @@
 import {
   type HistoryLocation,
-  type HistoryState,
   type NavigationCallback,
   NavigationDirection,
   type NavigationInformation,

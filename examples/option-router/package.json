@@ -10,7 +10,7 @@
     "test": "vitest -r test"
   },
   "dependencies": {
-    "essor": "link:../../../essor-core/packages/core",
+    "essor": "latest",
     "essor-router": "workspace:*"
   },
   "devDependencies": {

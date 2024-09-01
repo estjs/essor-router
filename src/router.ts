@@ -1,4 +1,4 @@
-import { EssorComponent, type Signal, useSignal } from 'essor';
+import { type Signal, useComputed, useProvide, useReactive, useSignal } from 'essor';
 import { applyToParams, assign, isArray, isBrowser, isObject, isString, noop } from './utils';
 import {
   type Lazy,
@@ -33,10 +33,10 @@ import { type LocationQuery, normalizeQuery, parseQuery, stringifyQuery } from '
 import { isSameRouteLocation, isSameRouteRecord, parseURL, stringifyURL } from './location';
 import { extractComponentsGuards, guardToPromiseFn } from './navigationGuards';
 import { warn } from './warning';
-import { routerStore } from './store';
 import { createWebHistory } from './history/html5';
 import { createWebHashHistory } from './history/hash';
 import { createMemoryHistory } from './history/memory';
+import { routeLocationKey, routerKey, routerViewLocationKey } from './injectionSymbols';
 import type { PathParserOptions } from './matcher/pathParserRanker';
 import type { RouteRecord, RouteRecordNormalized } from './matcher/types';
 
@@ -841,7 +841,6 @@ export function createRouter(options: RouterOptions): Router {
       else routerHistory.push(toLocation.fullPath, data);
     }
 
-    routerStore.setCurrent(toLocation);
     currentRoute.value = toLocation;
     markAsReady();
   }
@@ -1043,8 +1042,7 @@ export function createRouter(options: RouterOptions): Router {
   function runGuardQueue(guards: Lazy<any>[]): Promise<void> {
     return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
   }
-  routerStore.setRouter(router);
-  routerStore.setCurrent(currentRoute.value);
+
   initRouter = () => {
     // this initial navigation is only necessary on client, on server it doesn't
     // make sense because it will create an extra unnecessary navigation and could
@@ -1062,6 +1060,21 @@ export function createRouter(options: RouterOptions): Router {
         if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
+
+    const reactiveRoute = {} as RouteLocationNormalizedLoaded;
+    for (const key in START_LOCATION_NORMALIZED) {
+      Object.defineProperty(reactiveRoute, key, {
+        get: () => currentRoute.value[key as keyof RouteLocationNormalized],
+        enumerable: true,
+      });
+    }
+
+    useProvide(routerKey, router);
+    useProvide(routeLocationKey, useReactive(reactiveRoute));
+    useProvide(
+      routerViewLocationKey,
+      useComputed(() => currentRoute.value!),
+    );
   };
 
   unMountRouter = () => {
@@ -1069,7 +1082,6 @@ export function createRouter(options: RouterOptions): Router {
     removeHistoryListener && removeHistoryListener();
     removeHistoryListener = null;
     currentRoute.value = START_LOCATION_NORMALIZED;
-    routerStore.setCurrent(START_LOCATION_NORMALIZED);
     started = false;
     ready = false;
   };

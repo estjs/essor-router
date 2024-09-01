@@ -1,17 +1,6 @@
-import {
-  type Signal,
-  h,
-  onDestroy,
-  template,
-  useComputed,
-  useEffect,
-  useInject,
-  useProvide,
-  useSignal,
-} from 'essor';
-import { routerStore } from './store';
-import { viewDepthKey } from './injectionSymbols';
-import { initRouter, unMountRouter } from './router';
+import { type Signal, h, useComputed, useInject, useProvide } from 'essor';
+import { matchedRouteKey, routerViewLocationKey, viewDepthKey } from './injectionSymbols';
+import { initRouter } from './router';
 import type { RouteLocationNormalized } from './types';
 export interface RouterViewProps {
   name?: string;
@@ -21,10 +10,10 @@ export interface RouterViewProps {
 
 export const RouterView = (props: RouterViewProps) => {
   initRouter && initRouter();
-
+  const injectedRoute = useInject(routerViewLocationKey)!;
   const injectedDepth = useInject(viewDepthKey, 0) as Signal<number>;
   const routeToDisplay = useComputed<RouteLocationNormalized>(
-    () => props.route || routerStore.getCurrentRouter.value,
+    () => props.route || injectedRoute.value,
   );
   const depth = useComputed<number>(() => {
     let initialDepth = injectedDepth.value || 0;
@@ -39,7 +28,8 @@ export const RouterView = (props: RouterViewProps) => {
   const matchedRouteRef = useComputed<any>(() => routeToDisplay.value!.matched[depth.value]);
   useProvide(viewDepthKey, useComputed(() => depth.value + 1) as any);
 
-  routerStore.setCurrent(routeToDisplay.value as any);
+  useProvide(matchedRouteKey, matchedRouteRef);
+  useProvide(routerViewLocationKey, routeToDisplay);
 
   const renderView = useComputed(() => {
     const ViewComponent =

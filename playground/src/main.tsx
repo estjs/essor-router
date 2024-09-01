@@ -1,5 +1,4 @@
 import { RouterLink, RouterView, createRouter } from 'essor-router';
-import { onMount } from 'essor';
 
 function T1() {
   return <div>t1</div>;

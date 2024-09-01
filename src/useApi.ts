@@ -1,8 +1,20 @@
-import { routerStore } from './store';
+import { useInject } from 'essor';
+import { routeLocationKey, routerKey } from './injectionSymbols';
+import type { Router } from './router';
+import type { RouteLocationNormalizedLoaded } from './types';
 
-export function useRouter() {
-  return routerStore.getRouter;
+/**
+ * Returns the router instance. Equivalent to using `$router` inside
+ * templates.
+ */
+export function useRouter(): Router {
+  return useInject(routerKey)!;
 }
-export function useRoute() {
-  return routerStore.getCurrentRouter;
+
+/**
+ * Returns the current route location. Equivalent to using `$route` inside
+ * templates.
+ */
+export function useRoute(): RouteLocationNormalizedLoaded {
+  return useInject(routeLocationKey)!;
 }

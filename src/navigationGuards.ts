@@ -1,6 +1,5 @@
-import { onDestroy } from 'essor';
+import { onDestroy, useInject } from 'essor';
 import {
-  type Lazy,
   type NavigationGuard,
   type NavigationGuardNext,
   type NavigationGuardNextCallback,
@@ -21,7 +20,7 @@ import {
 
 import { isESModule } from './utils';
 import { warn } from './warning';
-import { routerStore } from './store';
+import { matchedRouteKey } from './injectionSymbols';
 import type { RouteRecordNormalized } from './matcher/types';
 
 function registerGuard(
@@ -46,9 +45,13 @@ function registerGuard(
  * @param leaveGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
-  const activeRecord: any = routerStore.getCurrentRouter;
+  const activeRecord: RouteRecordNormalized | undefined = useInject(
+    matchedRouteKey,
+    // to avoid warning
+    {} as any,
+  )!.value;
 
-  if (!activeRecord.value) {
+  if (!activeRecord) {
     __DEV__ &&
       warn(
         'No active route record was found when calling `onBeforeRouteLeave()`. Make sure you call this function inside a component child of <router-view>. Maybe you called it inside of App.jsx?',
@@ -56,7 +59,7 @@ export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
     return;
   }
 
-  registerGuard(activeRecord.value, 'leaveGuards', leaveGuard);
+  registerGuard(activeRecord, 'leaveGuards', leaveGuard);
 }
 
 /**
@@ -67,9 +70,12 @@ export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
  * @param updateGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteUpdate(updateGuard: NavigationGuard) {
-  const activeRecord: any = routerStore.getCurrentRouter;
-
-  if (!activeRecord.value) {
+  const activeRecord: RouteRecordNormalized | undefined = useInject(
+    matchedRouteKey,
+    // to avoid warning
+    {} as any,
+  )!.value;
+  if (!activeRecord) {
     __DEV__ &&
       warn(
         'No active route record was found when calling `onBeforeRouteUpdate()`. Make sure you call this function inside a component child of <router-view>. Maybe you called it inside of App.jsx?',
@@ -77,7 +83,7 @@ export function onBeforeRouteUpdate(updateGuard: NavigationGuard) {
     return;
   }
 
-  registerGuard(activeRecord.value, 'updateGuards', updateGuard);
+  registerGuard(activeRecord, 'updateGuards', updateGuard);
 }
 
 export function guardToPromiseFn(
@@ -271,8 +277,6 @@ export function isAsyncFunction(fn: Function): boolean {
 }
 /**
  * Allows differentiating lazy components from functional components and essor-class-component
-
- *
  * @param component
  */
 export function isRouteComponent(component: RawRouteComponent): component is RouteComponent {

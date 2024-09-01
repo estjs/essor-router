@@ -1,8 +1,8 @@
-import { h, isSignal, template, useComputed } from 'essor';
+import { h, isSignal, template, useComputed, useInject } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
-import { routerStore } from './store';
+import { routeLocationKey, routerKey } from './injectionSymbols';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 export interface RouterLinkOptions {
@@ -38,8 +38,8 @@ export interface RouterLinkProps extends RouterLinkOptions {
   ariaCurrentValue?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
 }
 function useLink(props: RouterLinkProps) {
-  const router = routerStore.getRouter.value as any;
-  const currentRoute = routerStore.getCurrentRouter.value as unknown as any;
+  const router = useInject(routerKey)!;
+  const currentRoute = useInject(routeLocationKey)!;
 
   let hasPrevious = false;
   let previousTo: unknown = null;
@@ -83,7 +83,7 @@ function useLink(props: RouterLinkProps) {
 
     return matched.length > 1 &&
       getOriginalPath(matched.at(-1)) === parentRecordPath &&
-      currentMatched.at(-1).path !== parentRecordPath
+      currentMatched!.at(-1)!.path !== parentRecordPath
       ? currentMatched.findIndex((record: RouteRecord) => isSameRouteRecord(record, matched.at(-2)))
       : index;
   });
@@ -101,7 +101,7 @@ function useLink(props: RouterLinkProps) {
 
   function navigate(e: MouseEvent = {} as MouseEvent): Promise<void | NavigationFailure> {
     if (guardEvent(e)) {
-      const to = isSignal(props.to) ? props.to.peek() : props.to;
+      const to = isSignal(props.to) ? (props.to.peek() as string) : props.to;
       // avoid uncaught errors are they are logged anyway
       return router[props.replace ? 'replace' : 'push'](to).catch(noop);
     }
@@ -175,7 +175,8 @@ const getLinkClass = (
 export const RouterLink = props => {
   const link = useLink({ to: props.to, replace: props.replace });
 
-  const { options } = routerStore.getRouter as any;
+  const { options } = useInject(routerKey)!;
+
   const elClass = useComputed(() => ({
     [getLinkClass(props.activeClass, options?.linkActiveClass, 'router-link-active')]:
       link.isActive,

@@ -53,7 +53,7 @@
   "scripts": {
     "build": "tsup && cross-env NODE_ENV=production tsup --clean=false --treeshake --sourcemap=false",
     "dev": "tsup --watch",
-    "lint": "eslint ./ --fix",
+    "lint": "eslint ./ --fix --cache",
     "typecheck": "tsc --noEmit -p ./tsconfig.build.json",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
@@ -65,8 +65,7 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag && pnpm -r publish --access public"
   },
   "peerDependencies": {
-    "essor": "^0.0.8",
-    "essor-shared": "^0.0.8"
+    "essor": "lastest"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^1.2.4",

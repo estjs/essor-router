@@ -49,5 +49,5 @@ export const routeLocationKey = Symbol(
 
  */
 export const routerViewLocationKey = Symbol(__DEV__ ? 'router view location' : '') as InjectionKey<
-  Signal<RouteLocationNormalizedLoaded>
+  Computed<RouteLocationNormalizedLoaded>
 >;

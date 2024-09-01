@@ -11,7 +11,7 @@ import { assign, noop } from '../utils';
 import { type RouteRecordMatcher, createRouteRecordMatcher } from './pathMatcher';
 import { comparePathParserScore } from './pathParserRanker';
 import type { RouteRecordNormalized } from './types';
-import type { PathParams, PathParserOptions, _PathParserOptions } from './pathParserRanker';
+import type { PathParams, PathParserOptions } from './pathParserRanker';
 type _RouteRecordProps = any;
 
 /**
