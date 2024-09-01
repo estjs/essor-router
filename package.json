@@ -1,7 +1,7 @@
 {
   "name": "essor-router",
   "version": "0.0.8",
-  "packageManager": "pnpm@9.7.0",
+  "packageManager": "pnpm@9.9.0",
   "description": "",
   "type": "module",
   "keywords": [],
