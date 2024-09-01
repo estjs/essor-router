@@ -1,4 +1,4 @@
-import { RouterLink, RouterView, createRouter } from 'essor-router';
+import { RouterLink } from 'essor-router';
 
 export default function Home() {
   return (

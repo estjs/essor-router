@@ -1,6 +1,6 @@
 import process from 'node:process';
 import { type ConstructorOptions, JSDOM } from 'jsdom';
-import { h as _h$, template as _template$, h } from 'essor';
+import { h as _h$, template as _template$ } from 'essor';
 import {
   type RouteRecordNormalized,
   type Router,
@@ -143,8 +143,6 @@ export const components = {
   Nested: () => {
     return _h$(_template$('<div><h2>Nested</h2></div>'), {
       '1': {
-        // TODO: need fix
-        // @ts-expect-error
         children: [[() => _h$(RouterView, {}), null]],
       },
     });
@@ -163,11 +161,13 @@ export function newRouter(options: Partial<RouterOptions> & { routes: RouteRecor
 
 export function mount(code, props = {}) {
   const container = document.createElement('div');
-  const nodes = h(code, props).mount(container);
+  const nodes = _h$(code, props).mount(container);
 
   return {
     nodes,
+    innerHTML: () => container.innerHTML,
     text: () => container.textContent,
+    get: name => container.querySelector(name),
   };
 }
 
