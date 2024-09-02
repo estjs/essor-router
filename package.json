@@ -65,7 +65,7 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag"
   },
   "peerDependencies": {
-    "essor": "lastest"
+    "essor": "^0.0.10"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^1.2.5",
