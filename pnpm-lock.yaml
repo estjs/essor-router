@@ -24,7 +24,7 @@ importers:
       '@types/node':
         specifier: ^22.5.2
         version: 22.5.2
-      '@vitest/coverage-v8':
+      '@vitest/coverage-istanbul':
         specifier: ^2.0.5
         version: 2.0.5(vitest@2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0))
       bumpp:
@@ -98,8 +98,8 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
       unplugin-essor:
-        specifier: ^0.0.10
-        version: 0.0.10(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
+        specifier: ^0.0.11
+        version: 0.0.11(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
       vite:
         specifier: ^5.4.2
         version: 5.4.2(@types/node@22.5.2)
@@ -135,8 +135,8 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
       unplugin-essor:
-        specifier: ^0.0.10
-        version: 0.0.10(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
+        specifier: ^0.0.11
+        version: 0.0.11(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
       vite:
         specifier: ^5.4.2
         version: 5.4.2(@types/node@22.5.2)
@@ -172,8 +172,8 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
       unplugin-essor:
-        specifier: ^0.0.10
-        version: 0.0.10(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
+        specifier: ^0.0.11
+        version: 0.0.11(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
       vite:
         specifier: ^5.4.2
         version: 5.4.2(@types/node@22.5.2)
@@ -209,8 +209,8 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
       unplugin-essor:
-        specifier: ^0.0.10
-        version: 0.0.10(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
+        specifier: ^0.0.11
+        version: 0.0.11(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2))
       vite:
         specifier: ^5.4.2
         version: 5.4.2(@types/node@22.5.2)
@@ -300,9 +300,6 @@ packages:
   '@babel/types@7.25.6':
     resolution: {integrity: sha512-/l42B1qxpG6RdfYf343Uw1vmDjeNhneUXtzhojE7pDgfpEypmRhI6j1kr17XCVv4Cgl9HdAiQY2x0GwKm7rWCw==}
     engines: {node: '>=6.9.0'}
-
-  '@bcoe/v8-coverage@0.2.3':
-    resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
   '@conventional-changelog/git-client@1.0.0':
     resolution: {integrity: sha512-PkUIv8bcY8/mIJig+3CGneb1hfXvjUotuBcroBHyVO4obIz5WGJpBWTuo17XV4p1sTmbGa8TxAmdMzhlPU+tLA==}
@@ -643,6 +640,9 @@ packages:
   '@estjs/shared@0.0.10':
     resolution: {integrity: sha512-R3QPRXZFn0d5uTHb7cjGVR7tVoBAU7qWahtpW/WMh+PiUxccYJLYPj6wkvYj+nDRPbIuv3fnpjw5bUFSMiKf3A==}
 
+  '@estjs/shared@0.0.11':
+    resolution: {integrity: sha512-wfv6aSj+rVsZywdjKBUsPvXfd6DfBYLpusx3wkzZeIjdBsm5pPOjXZ99cuV3V61H5Mn1bnSSfP92gK9dWvgDww==}
+
   '@estjs/signal@0.0.10':
     resolution: {integrity: sha512-3lBW0VJJRU2lXP0r2B93yeMj1PriLY4wYNgykEZzpsS9IQA1IU5sdwXDHhhejSsgQjCmhH/veJLftAVMZvNKog==}
 
@@ -927,8 +927,8 @@ packages:
     resolution: {integrity: sha512-y1E3jhRfORBHvhA0/dYK/tVBT5/YtJDrV3Y3ytJ5r8HdPqhDYucKV4Ihk2vDthIxzLlxzzwn2YZeSZEdbt0/IQ==}
     engines: {node: '>=14'}
 
-  '@vitest/coverage-v8@2.0.5':
-    resolution: {integrity: sha512-qeFcySCg5FLO2bHHSa0tAZAOnAUbp4L6/A5JDuj9+bt53JREl8hpLjLHEWF0e/gWc8INVpJaqA7+Ene2rclpZg==}
+  '@vitest/coverage-istanbul@2.0.5':
+    resolution: {integrity: sha512-BvjWKtp7fiMAeYUD0mO5cuADzn1gmjTm54jm5qUEnh/O08riczun8rI4EtQlg3bWoRo2lT3FO8DmjPDX9ZthPw==}
     peerDependencies:
       vitest: 2.0.5
 
@@ -1054,8 +1054,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  babel-plugin-essor@0.0.10:
-    resolution: {integrity: sha512-H1xhJVxGRHqv/J/RqVfC/rbl/m5Pc4TQyuvNjy3vD0SEF0jvCGfY55OK9diengnJfACHPDR2jTmLJznpHHbdPQ==}
+  babel-plugin-essor@0.0.11:
+    resolution: {integrity: sha512-Ho/YLrIvdh+37UJThoeyrFVWX2FxYyTl0tyehzFhmeOH+KMXCIASP9UTkg7K08nGYPP2niXKcXpvX+UA3A/Z0Q==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -2133,6 +2133,10 @@ packages:
   istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
+
+  istanbul-lib-instrument@6.0.3:
+    resolution: {integrity: sha512-Vtgk7L/R2JHyyGW07spoFlB8/lpjiOLTjMdms6AFMraYt3BaJauod/NGrfnVG/y4Ix1JEuMRPDPEj2ua+zz1/Q==}
+    engines: {node: '>=10'}
 
   istanbul-lib-report@3.0.1:
     resolution: {integrity: sha512-GCfE1mtsHGOELCU8e/Z7YWzpmybrx/+dSTfLrvY8qRmaY6zXTKWn6WQIjaAFw069icm6GVMNkgu0NzI4iPZUNw==}
@@ -3221,8 +3225,8 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unplugin-essor@0.0.10:
-    resolution: {integrity: sha512-tFq1DHBOlYfMPY8EiK+n+uZSRhnj8YFHqXgbFMDNFQeK6DOtkc5yXhUz4bVKnugCBetQ2romAwyTGbio6mmdZA==}
+  unplugin-essor@0.0.11:
+    resolution: {integrity: sha512-rIQ9cMV16v0wKJwjiA+V27toDzERrTV6i83/OSI61IZKbKNBTHN51w3+KwedxijrgyAxV80ThqqxlAlYc3WQ6A==}
     peerDependencies:
       esbuild: '*'
       rollup: ^4
@@ -3585,8 +3589,6 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
-  '@bcoe/v8-coverage@0.2.3': {}
-
   '@conventional-changelog/git-client@1.0.0(conventional-commits-parser@6.0.0)':
     dependencies:
       '@types/semver': 7.5.8
@@ -3821,6 +3823,8 @@ snapshots:
       - vitest
 
   '@estjs/shared@0.0.10': {}
+
+  '@estjs/shared@0.0.11': {}
 
   '@estjs/signal@0.0.10':
     dependencies:
@@ -4116,18 +4120,16 @@ snapshots:
       - supports-color
       - typescript
 
-  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0))':
+  '@vitest/coverage-istanbul@2.0.5(vitest@2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0))':
     dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@bcoe/v8-coverage': 0.2.3
+      '@istanbuljs/schema': 0.1.3
       debug: 4.3.6
       istanbul-lib-coverage: 3.2.2
+      istanbul-lib-instrument: 6.0.3
       istanbul-lib-report: 3.0.1
       istanbul-lib-source-maps: 5.0.6
       istanbul-reports: 3.1.7
-      magic-string: 0.30.11
       magicast: 0.3.4
-      std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
       vitest: 2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0)
@@ -4285,11 +4287,11 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  babel-plugin-essor@0.0.10:
+  babel-plugin-essor@0.0.11:
     dependencies:
       '@babel/core': 7.25.2
       '@babel/types': 7.25.6
-      '@estjs/shared': 0.0.10
+      '@estjs/shared': 0.0.11
     transitivePeerDependencies:
       - supports-color
 
@@ -5588,6 +5590,16 @@ snapshots:
 
   istanbul-lib-coverage@3.2.2: {}
 
+  istanbul-lib-instrument@6.0.3:
+    dependencies:
+      '@babel/core': 7.25.2
+      '@babel/parser': 7.25.3
+      '@istanbuljs/schema': 0.1.3
+      istanbul-lib-coverage: 3.2.2
+      semver: 7.6.3
+    transitivePeerDependencies:
+      - supports-color
+
   istanbul-lib-report@3.0.1:
     dependencies:
       istanbul-lib-coverage: 3.2.2
@@ -6735,10 +6747,10 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-essor@0.0.10(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2)):
+  unplugin-essor@0.0.11(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.2(@types/node@22.5.2)):
     dependencies:
       '@babel/core': 7.25.2
-      babel-plugin-essor: 0.0.10
+      babel-plugin-essor: 0.0.11
       unplugin: 1.12.3
     optionalDependencies:
       esbuild: 0.23.1
