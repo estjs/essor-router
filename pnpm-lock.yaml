@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.0.10 || ^0.0.11
+        version: 0.0.11
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.5
@@ -24,7 +24,7 @@ importers:
       '@types/node':
         specifier: ^22.5.2
         version: 22.5.2
-      '@vitest/coverage-v8':
+      '@vitest/coverage-istanbul':
         specifier: ^2.0.5
         version: 2.0.5(vitest@2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0))
       bumpp:
@@ -76,8 +76,8 @@ importers:
   examples/async-router:
     dependencies:
       essor:
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.0.11
+        version: 0.0.11
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -113,8 +113,8 @@ importers:
   examples/basic:
     dependencies:
       essor:
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.0.11
+        version: 0.0.11
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -150,8 +150,8 @@ importers:
   examples/option-router:
     dependencies:
       essor:
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.0.11
+        version: 0.0.11
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -187,8 +187,8 @@ importers:
   examples/use-api:
     dependencies:
       essor:
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.0.11
+        version: 0.0.11
       essor-router:
         specifier: workspace:*
         version: link:../..
@@ -300,9 +300,6 @@ packages:
   '@babel/types@7.25.6':
     resolution: {integrity: sha512-/l42B1qxpG6RdfYf343Uw1vmDjeNhneUXtzhojE7pDgfpEypmRhI6j1kr17XCVv4Cgl9HdAiQY2x0GwKm7rWCw==}
     engines: {node: '>=6.9.0'}
-
-  '@bcoe/v8-coverage@0.2.3':
-    resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
   '@conventional-changelog/git-client@1.0.0':
     resolution: {integrity: sha512-PkUIv8bcY8/mIJig+3CGneb1hfXvjUotuBcroBHyVO4obIz5WGJpBWTuo17XV4p1sTmbGa8TxAmdMzhlPU+tLA==}
@@ -643,11 +640,14 @@ packages:
   '@estjs/shared@0.0.10':
     resolution: {integrity: sha512-R3QPRXZFn0d5uTHb7cjGVR7tVoBAU7qWahtpW/WMh+PiUxccYJLYPj6wkvYj+nDRPbIuv3fnpjw5bUFSMiKf3A==}
 
-  '@estjs/signal@0.0.10':
-    resolution: {integrity: sha512-3lBW0VJJRU2lXP0r2B93yeMj1PriLY4wYNgykEZzpsS9IQA1IU5sdwXDHhhejSsgQjCmhH/veJLftAVMZvNKog==}
+  '@estjs/shared@0.0.11':
+    resolution: {integrity: sha512-wfv6aSj+rVsZywdjKBUsPvXfd6DfBYLpusx3wkzZeIjdBsm5pPOjXZ99cuV3V61H5Mn1bnSSfP92gK9dWvgDww==}
 
-  '@estjs/template@0.0.10':
-    resolution: {integrity: sha512-i7EiG0/DVN35hNskny59ihdLsCoCd0kVOhe7cFkibFYgdIZliAt/jChV93f5k9A2nTu/Mg9Lmw92nQCI+4apKw==}
+  '@estjs/signal@0.0.11':
+    resolution: {integrity: sha512-x9APv2b89ZsPGuGumtruan2Ma0epTyIqadiqjRcXizZRL6ldris05ic8K/FpPA+C9hE3r1KCwbUVRekWNbjHbA==}
+
+  '@estjs/template@0.0.11':
+    resolution: {integrity: sha512-U84AQCKzs6oSArYbzhwqXfpjcssNWEep+liirbuyRGVPfVyguni1/WJjIyWt95gDTRg00qlGOU164Z2OzIyP6Q==}
 
   '@humanwhocodes/module-importer@1.0.1':
     resolution: {integrity: sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA==}
@@ -927,8 +927,8 @@ packages:
     resolution: {integrity: sha512-y1E3jhRfORBHvhA0/dYK/tVBT5/YtJDrV3Y3ytJ5r8HdPqhDYucKV4Ihk2vDthIxzLlxzzwn2YZeSZEdbt0/IQ==}
     engines: {node: '>=14'}
 
-  '@vitest/coverage-v8@2.0.5':
-    resolution: {integrity: sha512-qeFcySCg5FLO2bHHSa0tAZAOnAUbp4L6/A5JDuj9+bt53JREl8hpLjLHEWF0e/gWc8INVpJaqA7+Ene2rclpZg==}
+  '@vitest/coverage-istanbul@2.0.5':
+    resolution: {integrity: sha512-BvjWKtp7fiMAeYUD0mO5cuADzn1gmjTm54jm5qUEnh/O08riczun8rI4EtQlg3bWoRo2lT3FO8DmjPDX9ZthPw==}
     peerDependencies:
       vitest: 2.0.5
 
@@ -1654,8 +1654,8 @@ packages:
     resolution: {integrity: sha512-KmfKL3b6G+RXvP8N1vr3Tq1kL/oCFgn2NYXEtqP8/L3pKapUA4G8cFVaoF3SU323CD4XypR/ffioHmkti6/Tag==}
     engines: {node: '>=4.0'}
 
-  essor@0.0.10:
-    resolution: {integrity: sha512-ZlCR9Og/+9gVzVRn218q/oTMdVtmcgDoWMbXtduaswbN3f+Q3sen/8Z0vLKr0XqkejVtlOjm7fF5Ym/+JqU9Yg==}
+  essor@0.0.11:
+    resolution: {integrity: sha512-BTfeyUuwGBXTTZLlUU+rAd1NuFVD5ypmybuCs6UZyu+len4wy9FNx4d6rqqQ+UHnvTpEgw5pTJ1RHrdj1iyHBw==}
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -2133,6 +2133,10 @@ packages:
   istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
+
+  istanbul-lib-instrument@6.0.3:
+    resolution: {integrity: sha512-Vtgk7L/R2JHyyGW07spoFlB8/lpjiOLTjMdms6AFMraYt3BaJauod/NGrfnVG/y4Ix1JEuMRPDPEj2ua+zz1/Q==}
+    engines: {node: '>=10'}
 
   istanbul-lib-report@3.0.1:
     resolution: {integrity: sha512-GCfE1mtsHGOELCU8e/Z7YWzpmybrx/+dSTfLrvY8qRmaY6zXTKWn6WQIjaAFw069icm6GVMNkgu0NzI4iPZUNw==}
@@ -3585,8 +3589,6 @@ snapshots:
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
-  '@bcoe/v8-coverage@0.2.3': {}
-
   '@conventional-changelog/git-client@1.0.0(conventional-commits-parser@6.0.0)':
     dependencies:
       '@types/semver': 7.5.8
@@ -3822,14 +3824,16 @@ snapshots:
 
   '@estjs/shared@0.0.10': {}
 
-  '@estjs/signal@0.0.10':
-    dependencies:
-      '@estjs/shared': 0.0.10
+  '@estjs/shared@0.0.11': {}
 
-  '@estjs/template@0.0.10':
+  '@estjs/signal@0.0.11':
     dependencies:
-      '@estjs/shared': 0.0.10
-      '@estjs/signal': 0.0.10
+      '@estjs/shared': 0.0.11
+
+  '@estjs/template@0.0.11':
+    dependencies:
+      '@estjs/shared': 0.0.11
+      '@estjs/signal': 0.0.11
       csstype: 3.1.3
 
   '@humanwhocodes/module-importer@1.0.1': {}
@@ -4116,18 +4120,16 @@ snapshots:
       - supports-color
       - typescript
 
-  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0))':
+  '@vitest/coverage-istanbul@2.0.5(vitest@2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0))':
     dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@bcoe/v8-coverage': 0.2.3
+      '@istanbuljs/schema': 0.1.3
       debug: 4.3.6
       istanbul-lib-coverage: 3.2.2
+      istanbul-lib-instrument: 6.0.3
       istanbul-lib-report: 3.0.1
       istanbul-lib-source-maps: 5.0.6
       istanbul-reports: 3.1.7
-      magic-string: 0.30.11
       magicast: 0.3.4
-      std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
       vitest: 2.0.5(@types/node@22.5.2)(happy-dom@15.7.3)(jsdom@25.0.0)
@@ -5103,11 +5105,11 @@ snapshots:
     dependencies:
       estraverse: 5.3.0
 
-  essor@0.0.10:
+  essor@0.0.11:
     dependencies:
-      '@estjs/shared': 0.0.10
-      '@estjs/signal': 0.0.10
-      '@estjs/template': 0.0.10
+      '@estjs/shared': 0.0.11
+      '@estjs/signal': 0.0.11
+      '@estjs/template': 0.0.11
 
   estraverse@5.3.0: {}
 
@@ -5587,6 +5589,16 @@ snapshots:
   isexe@2.0.0: {}
 
   istanbul-lib-coverage@3.2.2: {}
+
+  istanbul-lib-instrument@6.0.3:
+    dependencies:
+      '@babel/core': 7.25.2
+      '@babel/parser': 7.25.3
+      '@istanbuljs/schema': 0.1.3
+      istanbul-lib-coverage: 3.2.2
+      semver: 7.6.3
+    transitivePeerDependencies:
+      - supports-color
 
   istanbul-lib-report@3.0.1:
     dependencies:
