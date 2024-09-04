@@ -65,7 +65,7 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag"
   },
   "peerDependencies": {
-    "essor": "^0.0.10"
+    "essor": ">0.0.10"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^1.2.5",
@@ -79,7 +79,7 @@
     "faked-promise": "^2.2.2",
     "jsdom": "^25.0.0",
     "lint-staged": "^15.2.10",
-    "picocolors": "^1.0.1",
+    "picocolors": "^1.1.0",
     "pnpm": "^9.9.0",
     "prettier": "^3.3.3",
     "simple-git-hooks": "^2.11.1",

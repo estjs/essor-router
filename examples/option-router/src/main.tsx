@@ -4,7 +4,7 @@ import About from './About';
 import notFound from './NotFound';
 
 createRouter({
-  history: 'hash',
+  history: 'history',
   routes: [
     {
       path: '/',
