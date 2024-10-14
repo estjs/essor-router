@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: ../essor/packages/core
-        version: link:../essor/packages/core
+        specifier: ^0.0.13-beta.3
+        version: 0.0.13-beta.3
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.5
@@ -660,11 +660,20 @@ packages:
   '@estjs/shared@0.0.13-beta.2':
     resolution: {integrity: sha512-CprbLrAKYK76SZ56qNOtYD2daGQ6VWijLAPv7qzdr++hp//EsYBGO/iHrrM+E/AaUKgJkld6d4qegtiEPGEXhg==}
 
+  '@estjs/shared@0.0.13-beta.3':
+    resolution: {integrity: sha512-A6DLJn6353IswDa7WTVWi6CUWVO6EIciYxlgNjLe7SoX1YmgQmZITyHzNO6mRxLXLEaL1b/F6ATpOrYeNz4jmQ==}
+
   '@estjs/signal@0.0.13-beta.2':
     resolution: {integrity: sha512-iKGmPbkYdxk8Yh8fq5AeSqkncdUx9BP/apM9S1UTqnY+M/PUW/wfM6S6/V4sdsx1IG/2ts1Z0MqH3GXOm4jtBQ==}
 
+  '@estjs/signal@0.0.13-beta.3':
+    resolution: {integrity: sha512-2jHD6xgpnnNEwULcExufewBClv+/aLMkF+vhLRKbXU4x29Zap/rph37uXoSToOcBhv5MIqNJ8p+HWXIEvshzgA==}
+
   '@estjs/template@0.0.13-beta.2':
     resolution: {integrity: sha512-m8U9kLSvCbdq+Bc4DcpQT0n3lPnHUE4XFOq4s8Ge99kbRC4E2aROnInFAVDgBYa8blRSHMGP3ibNdYQoarwntw==}
+
+  '@estjs/template@0.0.13-beta.3':
+    resolution: {integrity: sha512-2o54p4UpNazORkKNLvqnyUXmlxlfaTX6wvWqt3A3lYd/kmjZOCKRdEw94hKbfaw2yaRxhx1eM33ZsPYS8W1nIQ==}
 
   '@humanfs/core@0.19.0':
     resolution: {integrity: sha512-2cbWIHbZVEweE853g8jymffCA+NCMiuqeECeBBLm8dg2oFdjuGJhgN4UAbI+6v0CKbbhvtXA4qV8YR5Ji86nmw==}
@@ -1703,6 +1712,9 @@ packages:
 
   essor@0.0.13-beta.2:
     resolution: {integrity: sha512-YKUjzsefWlsRjt6q9IF7kPK0Oj6FSq2vhkk32yo+DfR2hnoVliFpYHFA9QeF9Ykn+Xkl3pLRgedF252gKaafrQ==}
+
+  essor@0.0.13-beta.3:
+    resolution: {integrity: sha512-5QAmpp4z5alC7Hg1QmS81MLKoAvqy0Pmy2v0O5SNnZSJRwSPP2Rcq/9miQvNVuFJS9KsLnijhFCbJY4sVUnj2A==}
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -3886,14 +3898,26 @@ snapshots:
 
   '@estjs/shared@0.0.13-beta.2': {}
 
+  '@estjs/shared@0.0.13-beta.3': {}
+
   '@estjs/signal@0.0.13-beta.2':
     dependencies:
       '@estjs/shared': 0.0.13-beta.2
+
+  '@estjs/signal@0.0.13-beta.3':
+    dependencies:
+      '@estjs/shared': 0.0.13-beta.3
 
   '@estjs/template@0.0.13-beta.2':
     dependencies:
       '@estjs/shared': 0.0.13-beta.2
       '@estjs/signal': 0.0.13-beta.2
+      csstype: 3.1.3
+
+  '@estjs/template@0.0.13-beta.3':
+    dependencies:
+      '@estjs/shared': 0.0.13-beta.3
+      '@estjs/signal': 0.0.13-beta.3
       csstype: 3.1.3
 
   '@humanfs/core@0.19.0': {}
@@ -5191,6 +5215,12 @@ snapshots:
       '@estjs/shared': 0.0.13-beta.2
       '@estjs/signal': 0.0.13-beta.2
       '@estjs/template': 0.0.13-beta.2
+
+  essor@0.0.13-beta.3:
+    dependencies:
+      '@estjs/shared': 0.0.13-beta.3
+      '@estjs/signal': 0.0.13-beta.3
+      '@estjs/template': 0.0.13-beta.3
 
   estraverse@5.3.0: {}
 
