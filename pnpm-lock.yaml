@@ -9,38 +9,38 @@ importers:
   .:
     dependencies:
       essor:
-        specifier: ^0.0.13-beta.3
-        version: 0.0.13-beta.3
+        specifier: '>=0.0.13-beta.6'
+        version: 0.0.13-beta.6
     devDependencies:
       '@estjs/eslint-config':
-        specifier: ^1.2.5
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
+        specifier: ^1.2.7
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
       '@playwright/test':
-        specifier: ^1.46.1
+        specifier: ^1.48.0
         version: 1.48.0
       '@types/jsdom':
         specifier: ^21.1.7
         version: 21.1.7
       '@types/node':
-        specifier: ^22.5.2
+        specifier: ^22.7.5
         version: 22.7.5
       '@vitest/coverage-istanbul':
-        specifier: ^2.0.5
-        version: 2.1.2(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
+        specifier: ^2.1.3
+        version: 2.1.3(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
       bumpp:
-        specifier: ^9.5.2
+        specifier: ^9.7.1
         version: 9.7.1(magicast@0.3.4)
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
       eslint:
-        specifier: ^9.9.1
+        specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       faked-promise:
         specifier: ^2.2.2
         version: 2.2.2
       jsdom:
-        specifier: ^25.0.0
+        specifier: ^25.0.1
         version: 25.0.1
       lint-staged:
         specifier: ^15.2.10
@@ -49,7 +49,7 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       pnpm:
-        specifier: ^9.9.0
+        specifier: ^9.12.1
         version: 9.12.1
       prettier:
         specifier: ^3.3.3
@@ -61,165 +61,165 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       tsup:
-        specifier: ^8.2.4
+        specifier: ^8.3.0
         version: 8.3.0(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.6.3)(yaml@2.5.0)
       tsx:
-        specifier: ^4.19.0
+        specifier: ^4.19.1
         version: 4.19.1
       typescript:
-        specifier: ^5.5.4
+        specifier: ^5.6.3
         version: 5.6.3
       vitest:
-        specifier: ^2.0.5
-        version: 2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
+        specifier: ^2.1.3
+        version: 2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
 
   examples/async-router:
     dependencies:
       essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6
       essor-router:
         specifier: workspace:*
         version: link:../..
     devDependencies:
       '@estjs/eslint-config':
-        specifier: ^1.2.5
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
+        specifier: ^1.2.7
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
       '@types/node':
-        specifier: ^22.5.3
+        specifier: ^22.7.5
         version: 22.7.5
       eslint:
-        specifier: ^9.9.1
+        specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.3
+        specifier: ^15.7.4
         version: 15.7.4
       typescript:
-        specifier: ^5.5.4
+        specifier: ^5.6.3
         version: 5.6.3
       unplugin-essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
-        specifier: ^5.4.3
-        version: 5.4.8(@types/node@22.7.5)
+        specifier: ^5.4.9
+        version: 5.4.9(@types/node@22.7.5)
       vite-plugin-inspect:
         specifier: ^0.8.7
-        version: 0.8.7(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vitest:
-        specifier: ^2.0.5
-        version: 2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
+        specifier: ^2.1.3
+        version: 2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
 
   examples/basic:
     dependencies:
       essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6
       essor-router:
         specifier: workspace:*
         version: link:../..
     devDependencies:
       '@estjs/eslint-config':
-        specifier: ^1.2.5
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
+        specifier: ^1.2.7
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
       '@types/node':
-        specifier: ^22.5.3
+        specifier: ^22.7.5
         version: 22.7.5
       eslint:
-        specifier: ^9.9.1
+        specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.3
+        specifier: ^15.7.4
         version: 15.7.4
       typescript:
-        specifier: ^5.5.4
+        specifier: ^5.6.3
         version: 5.6.3
       unplugin-essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
-        specifier: ^5.4.3
-        version: 5.4.8(@types/node@22.7.5)
+        specifier: ^5.4.9
+        version: 5.4.9(@types/node@22.7.5)
       vite-plugin-inspect:
         specifier: ^0.8.7
-        version: 0.8.7(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vitest:
-        specifier: ^2.0.5
-        version: 2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
+        specifier: ^2.1.3
+        version: 2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
 
   examples/option-router:
     dependencies:
       essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6
       essor-router:
         specifier: workspace:*
         version: link:../..
     devDependencies:
       '@estjs/eslint-config':
-        specifier: ^1.2.5
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
+        specifier: ^1.2.7
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
       '@types/node':
-        specifier: ^22.5.3
+        specifier: ^22.7.5
         version: 22.7.5
       eslint:
-        specifier: ^9.9.1
+        specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.3
+        specifier: ^15.7.4
         version: 15.7.4
       typescript:
-        specifier: ^5.5.4
+        specifier: ^5.6.3
         version: 5.6.3
       unplugin-essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
-        specifier: ^5.4.3
-        version: 5.4.8(@types/node@22.7.5)
+        specifier: ^5.4.9
+        version: 5.4.9(@types/node@22.7.5)
       vite-plugin-inspect:
         specifier: ^0.8.7
-        version: 0.8.7(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vitest:
-        specifier: ^2.0.5
-        version: 2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
+        specifier: ^2.1.3
+        version: 2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
 
   examples/use-api:
     dependencies:
       essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6
       essor-router:
         specifier: workspace:*
         version: link:../..
     devDependencies:
       '@estjs/eslint-config':
-        specifier: ^1.2.5
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
+        specifier: ^1.2.7
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
       '@types/node':
-        specifier: ^22.5.3
+        specifier: ^22.7.5
         version: 22.7.5
       eslint:
-        specifier: ^9.9.1
+        specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.3
+        specifier: ^15.7.4
         version: 15.7.4
       typescript:
-        specifier: ^5.5.4
+        specifier: ^5.6.3
         version: 5.6.3
       unplugin-essor:
-        specifier: ^0.0.13-beta.2
-        version: 0.0.13-beta.2(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        specifier: ^0.0.13-beta.6
+        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
-        specifier: ^5.4.3
-        version: 5.4.8(@types/node@22.7.5)
+        specifier: ^5.4.9
+        version: 5.4.9(@types/node@22.7.5)
       vite-plugin-inspect:
         specifier: ^0.8.7
-        version: 0.8.7(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5))
+        version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vitest:
-        specifier: ^2.0.5
-        version: 2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
+        specifier: ^2.1.3
+        version: 2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
 
 packages:
 
@@ -657,23 +657,14 @@ packages:
     peerDependencies:
       eslint: '>=8.40.0'
 
-  '@estjs/shared@0.0.13-beta.2':
-    resolution: {integrity: sha512-CprbLrAKYK76SZ56qNOtYD2daGQ6VWijLAPv7qzdr++hp//EsYBGO/iHrrM+E/AaUKgJkld6d4qegtiEPGEXhg==}
+  '@estjs/shared@0.0.13-beta.6':
+    resolution: {integrity: sha512-f/oXuzALi5cx2eON64Ekix1x/H+tyeJSQxhADfPpvznB4sQ2bLhXOLhM2IsVYrEbZ52U2RjEQjR/I8pr4qJHwg==}
 
-  '@estjs/shared@0.0.13-beta.3':
-    resolution: {integrity: sha512-A6DLJn6353IswDa7WTVWi6CUWVO6EIciYxlgNjLe7SoX1YmgQmZITyHzNO6mRxLXLEaL1b/F6ATpOrYeNz4jmQ==}
+  '@estjs/signal@0.0.13-beta.6':
+    resolution: {integrity: sha512-MFDLUriZhIExhioDZpJKHfmQau5Aj5FhzIA3Vibog+6tRmPuU6Lyr2cXI6gSVyQqAVpFvCoICp8hgttdhg1KWg==}
 
-  '@estjs/signal@0.0.13-beta.2':
-    resolution: {integrity: sha512-iKGmPbkYdxk8Yh8fq5AeSqkncdUx9BP/apM9S1UTqnY+M/PUW/wfM6S6/V4sdsx1IG/2ts1Z0MqH3GXOm4jtBQ==}
-
-  '@estjs/signal@0.0.13-beta.3':
-    resolution: {integrity: sha512-2jHD6xgpnnNEwULcExufewBClv+/aLMkF+vhLRKbXU4x29Zap/rph37uXoSToOcBhv5MIqNJ8p+HWXIEvshzgA==}
-
-  '@estjs/template@0.0.13-beta.2':
-    resolution: {integrity: sha512-m8U9kLSvCbdq+Bc4DcpQT0n3lPnHUE4XFOq4s8Ge99kbRC4E2aROnInFAVDgBYa8blRSHMGP3ibNdYQoarwntw==}
-
-  '@estjs/template@0.0.13-beta.3':
-    resolution: {integrity: sha512-2o54p4UpNazORkKNLvqnyUXmlxlfaTX6wvWqt3A3lYd/kmjZOCKRdEw94hKbfaw2yaRxhx1eM33ZsPYS8W1nIQ==}
+  '@estjs/template@0.0.13-beta.6':
+    resolution: {integrity: sha512-ljsG17B5tWYDXcBlLSA3TkvOmxMsFq3VrAEdBGFUISbwviKo4dVNOGRUTxT6yZHB5qFqHPZyqsT/GPQRGVb9/g==}
 
   '@humanfs/core@0.19.0':
     resolution: {integrity: sha512-2cbWIHbZVEweE853g8jymffCA+NCMiuqeECeBBLm8dg2oFdjuGJhgN4UAbI+6v0CKbbhvtXA4qV8YR5Ji86nmw==}
@@ -967,18 +958,18 @@ packages:
     resolution: {integrity: sha512-L4pm8L96OvE99FK+fZHQBXxsu+B/yvhf471Mf5o3idaq+pzptfpZcKKRXCeQKSAYbC80IV4Fm1V5dFxOHbDdPg==}
     engines: {node: '>=14'}
 
-  '@vitest/coverage-istanbul@2.1.2':
-    resolution: {integrity: sha512-dg7ex3GKrTIenAV0oEp78JucTVFsPMzjl1gYWun22O7SBDxcHFC/REZjWLhMTHRHY8ihm4uBCvmu+CvEu5/Adg==}
+  '@vitest/coverage-istanbul@2.1.3':
+    resolution: {integrity: sha512-FByj6ni54EzA4SXl5X3ugSeeBSI6MSEQBbvPefF6x6GCajePLeZSNYt7u0NOKUQbWpQpAdHHstrqR9ALEpnAxA==}
     peerDependencies:
-      vitest: 2.1.2
+      vitest: 2.1.3
 
-  '@vitest/expect@2.1.2':
-    resolution: {integrity: sha512-FEgtlN8mIUSEAAnlvn7mP8vzaWhEaAEvhSXCqrsijM7K6QqjB11qoRZYEd4AKSCDz8p0/+yH5LzhZ47qt+EyPg==}
+  '@vitest/expect@2.1.3':
+    resolution: {integrity: sha512-SNBoPubeCJhZ48agjXruCI57DvxcsivVDdWz+SSsmjTT4QN/DfHk3zB/xKsJqMs26bLZ/pNRLnCf0j679i0uWQ==}
 
-  '@vitest/mocker@2.1.2':
-    resolution: {integrity: sha512-ExElkCGMS13JAJy+812fw1aCv2QO/LBK6CyO4WOPAzLTmve50gydOlWhgdBJPx2ztbADUq3JVI0C5U+bShaeEA==}
+  '@vitest/mocker@2.1.3':
+    resolution: {integrity: sha512-eSpdY/eJDuOvuTA3ASzCjdithHa+GIF1L4PqtEELl6Qa3XafdMLBpBlZCIUCX2J+Q6sNmjmxtosAG62fK4BlqQ==}
     peerDependencies:
-      '@vitest/spy': 2.1.2
+      '@vitest/spy': 2.1.3
       msw: ^2.3.5
       vite: ^5.0.0
     peerDependenciesMeta:
@@ -987,20 +978,20 @@ packages:
       vite:
         optional: true
 
-  '@vitest/pretty-format@2.1.2':
-    resolution: {integrity: sha512-FIoglbHrSUlOJPDGIrh2bjX1sNars5HbxlcsFKCtKzu4+5lpsRhOCVcuzp0fEhAGHkPZRIXVNzPcpSlkoZ3LuA==}
+  '@vitest/pretty-format@2.1.3':
+    resolution: {integrity: sha512-XH1XdtoLZCpqV59KRbPrIhFCOO0hErxrQCMcvnQete3Vibb9UeIOX02uFPfVn3Z9ZXsq78etlfyhnkmIZSzIwQ==}
 
-  '@vitest/runner@2.1.2':
-    resolution: {integrity: sha512-UCsPtvluHO3u7jdoONGjOSil+uON5SSvU9buQh3lP7GgUXHp78guN1wRmZDX4wGK6J10f9NUtP6pO+SFquoMlw==}
+  '@vitest/runner@2.1.3':
+    resolution: {integrity: sha512-JGzpWqmFJ4fq5ZKHtVO3Xuy1iF2rHGV4d/pdzgkYHm1+gOzNZtqjvyiaDGJytRyMU54qkxpNzCx+PErzJ1/JqQ==}
 
-  '@vitest/snapshot@2.1.2':
-    resolution: {integrity: sha512-xtAeNsZ++aRIYIUsek7VHzry/9AcxeULlegBvsdLncLmNCR6tR8SRjn8BbDP4naxtccvzTqZ+L1ltZlRCfBZFA==}
+  '@vitest/snapshot@2.1.3':
+    resolution: {integrity: sha512-qWC2mWc7VAXmjAkEKxrScWHWFyCQx/cmiZtuGqMi+WwqQJ2iURsVY4ZfAK6dVo6K2smKRU6l3BPwqEBvhnpQGg==}
 
-  '@vitest/spy@2.1.2':
-    resolution: {integrity: sha512-GSUi5zoy+abNRJwmFhBDC0yRuVUn8WMlQscvnbbXdKLXX9dE59YbfwXxuJ/mth6eeqIzofU8BB5XDo/Ns/qK2A==}
+  '@vitest/spy@2.1.3':
+    resolution: {integrity: sha512-Nb2UzbcUswzeSP7JksMDaqsI43Sj5+Kry6ry6jQJT4b5gAK+NS9NED6mDb8FlMRCX8m5guaHCDZmqYMMWRy5nQ==}
 
-  '@vitest/utils@2.1.2':
-    resolution: {integrity: sha512-zMO2KdYy6mx56btx9JvAqAZ6EyS3g49krMPPrgOp1yxGZiA93HumGk+bZ5jIZtOg5/VBYl5eBmGRQHqq4FG6uQ==}
+  '@vitest/utils@2.1.3':
+    resolution: {integrity: sha512-xpiVfDSg1RrYT0tX6czgerkpcKFmFOF/gCr30+Mve5V2kewCy4Prn1/NDMSRwaSmT7PRaOF83wu+bEtsY1wrvA==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -1106,8 +1097,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  babel-plugin-essor@0.0.13-beta.2:
-    resolution: {integrity: sha512-u68XPMvY5lwB4DqtgiokM0V/1/xz4ieRCzR6NEs5mtT2GFtOHK2sNQAvQ58UUHFZWMZ9GuloUu+TB9/E7pFInw==}
+  babel-plugin-essor@0.0.13-beta.6:
+    resolution: {integrity: sha512-jsPRwQB0MaRn5/CtGWhjBT4+FgSQmpJ3W8Imeua8VGjTI1FC0iLPJe4nLwJOLZxFi4falVd7xvCiVGPsPBkNGg==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1271,7 +1262,7 @@ packages:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
 
   concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   confbox@0.1.7:
     resolution: {integrity: sha512-uJcB/FKZtBMCJpK8MQji6bJHgu1tixKPxRLeGkNzBoOZzpnZUJm0jm2/sBDWcuBx1dYgxV4JU+g5hmNxCyAmdA==}
@@ -1499,10 +1490,6 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  escalade@3.1.2:
-    resolution: {integrity: sha512-ErCHMCae19vR8vQGe50xIsVomy19rg6gFu3+r3jkEO46suLMWBksvVyoGgQV+jOfl84ZSOSlmv6Gxa89PmTGmA==}
-    engines: {node: '>=6'}
-
   escalade@3.2.0:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}
     engines: {node: '>=6'}
@@ -1710,11 +1697,8 @@ packages:
     resolution: {integrity: sha512-KmfKL3b6G+RXvP8N1vr3Tq1kL/oCFgn2NYXEtqP8/L3pKapUA4G8cFVaoF3SU323CD4XypR/ffioHmkti6/Tag==}
     engines: {node: '>=4.0'}
 
-  essor@0.0.13-beta.2:
-    resolution: {integrity: sha512-YKUjzsefWlsRjt6q9IF7kPK0Oj6FSq2vhkk32yo+DfR2hnoVliFpYHFA9QeF9Ykn+Xkl3pLRgedF252gKaafrQ==}
-
-  essor@0.0.13-beta.3:
-    resolution: {integrity: sha512-5QAmpp4z5alC7Hg1QmS81MLKoAvqy0Pmy2v0O5SNnZSJRwSPP2Rcq/9miQvNVuFJS9KsLnijhFCbJY4sVUnj2A==}
+  essor@0.0.13-beta.6:
+    resolution: {integrity: sha512-HCT1YlUhui3cd8/rlSaRFC34bMMxJxVEW6+zqo3XjGcSWt49h1F9bvDIKIVdih0cQf0KedY2p3DH5AvB9fkm/w==}
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -3281,8 +3265,8 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unplugin-essor@0.0.13-beta.2:
-    resolution: {integrity: sha512-cmpkjHz/Von13fqtcftSpQN0lA+1ULnZ1892yaLdsM4bvrr1630snCNnYIKtMPXjet+1cV5zLvjF77p8FS2D/g==}
+  unplugin-essor@0.0.13-beta.6:
+    resolution: {integrity: sha512-N+v904tTpUgVvAW5tIrOCoKFuBRy1Acr/6hwIYwqI//SHmZliRZrv+OCuyoVY+uJlsN5XKjQBqD3QV3hrEjU+g==}
     peerDependencies:
       esbuild: '*'
       rollup: ^4
@@ -3322,8 +3306,8 @@ packages:
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
 
-  vite-node@2.1.2:
-    resolution: {integrity: sha512-HPcGNN5g/7I2OtPjLqgOtCRu/qhVvBxTUD3qzitmL0SrG1cWFzxzhMDWussxSbrRYWqnKf8P2jiNhPMSN+ymsQ==}
+  vite-node@2.1.3:
+    resolution: {integrity: sha512-I1JadzO+xYX887S39Do+paRePCKoiDrWRRjp9kkG5he0t7RXNvPAJPCQSJqbGN4uCrFFeS3Kj3sLqY8NMYBEdA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
 
@@ -3337,8 +3321,8 @@ packages:
       '@nuxt/kit':
         optional: true
 
-  vite@5.4.8:
-    resolution: {integrity: sha512-FqrItQ4DT1NC4zCUqMB4c4AZORMKIa0m8/URVCZ77OZ/QSNeJ54bU1vrFADbDsuwfIPcgknRkmqakQcgnL4GiQ==}
+  vite@5.4.9:
+    resolution: {integrity: sha512-20OVpJHh0PAM0oSOELa5GaZNWeDjcAvQjGXy2Uyr+Tp+/D2/Hdz6NLgpJLsarPTA2QJ6v8mX2P1ZfbsSKvdMkg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -3368,15 +3352,15 @@ packages:
       terser:
         optional: true
 
-  vitest@2.1.2:
-    resolution: {integrity: sha512-veNjLizOMkRrJ6xxb+pvxN6/QAWg95mzcRjtmkepXdN87FNfxAss9RKe2far/G9cQpipfgP2taqg0KiWsquj8A==}
+  vitest@2.1.3:
+    resolution: {integrity: sha512-Zrxbg/WiIvUP2uEzelDNTXmEMJXuzJ1kCpbDvaKByFA9MNeO95V+7r/3ti0qzJzrxdyuUw5VduN7k+D3VmVOSA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
       '@edge-runtime/vm': '*'
       '@types/node': ^18.0.0 || >=20.0.0
-      '@vitest/browser': 2.1.2
-      '@vitest/ui': 2.1.2
+      '@vitest/browser': 2.1.3
+      '@vitest/ui': 2.1.3
       happy-dom: '*'
       jsdom: '*'
     peerDependenciesMeta:
@@ -3854,7 +3838,7 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
-  '@estjs/eslint-config@1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))':
+  '@estjs/eslint-config@1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))':
     dependencies:
       '@eslint-types/jsdoc': 48.2.2
       '@eslint-types/typescript-eslint': 7.5.0
@@ -3879,7 +3863,7 @@ snapshots:
       eslint-plugin-toml: 0.11.1(eslint@9.12.0(jiti@1.21.6))
       eslint-plugin-unicorn: 55.0.0(eslint@9.12.0(jiti@1.21.6))
       eslint-plugin-unused-imports: 4.1.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))
-      eslint-plugin-vitest: 0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
+      eslint-plugin-vitest: 0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))
       eslint-plugin-vue: 9.29.0(eslint@9.12.0(jiti@1.21.6))
       eslint-plugin-yml: 1.14.0(eslint@9.12.0(jiti@1.21.6))
       globals: 15.9.0
@@ -3896,28 +3880,16 @@ snapshots:
       - typescript
       - vitest
 
-  '@estjs/shared@0.0.13-beta.2': {}
+  '@estjs/shared@0.0.13-beta.6': {}
 
-  '@estjs/shared@0.0.13-beta.3': {}
-
-  '@estjs/signal@0.0.13-beta.2':
+  '@estjs/signal@0.0.13-beta.6':
     dependencies:
-      '@estjs/shared': 0.0.13-beta.2
+      '@estjs/shared': 0.0.13-beta.6
 
-  '@estjs/signal@0.0.13-beta.3':
+  '@estjs/template@0.0.13-beta.6':
     dependencies:
-      '@estjs/shared': 0.0.13-beta.3
-
-  '@estjs/template@0.0.13-beta.2':
-    dependencies:
-      '@estjs/shared': 0.0.13-beta.2
-      '@estjs/signal': 0.0.13-beta.2
-      csstype: 3.1.3
-
-  '@estjs/template@0.0.13-beta.3':
-    dependencies:
-      '@estjs/shared': 0.0.13-beta.3
-      '@estjs/signal': 0.0.13-beta.3
+      '@estjs/shared': 0.0.13-beta.6
+      '@estjs/signal': 0.0.13-beta.6
       csstype: 3.1.3
 
   '@humanfs/core@0.19.0': {}
@@ -4215,7 +4187,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@vitest/coverage-istanbul@2.1.2(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))':
+  '@vitest/coverage-istanbul@2.1.3(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1))':
     dependencies:
       '@istanbuljs/schema': 0.1.3
       debug: 4.3.6
@@ -4227,47 +4199,47 @@ snapshots:
       magicast: 0.3.4
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
+      vitest: 2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/expect@2.1.2':
+  '@vitest/expect@2.1.3':
     dependencies:
-      '@vitest/spy': 2.1.2
-      '@vitest/utils': 2.1.2
+      '@vitest/spy': 2.1.3
+      '@vitest/utils': 2.1.3
       chai: 5.1.1
       tinyrainbow: 1.2.0
 
-  '@vitest/mocker@2.1.2(@vitest/spy@2.1.2)(vite@5.4.8(@types/node@22.7.5))':
+  '@vitest/mocker@2.1.3(@vitest/spy@2.1.3)(vite@5.4.9(@types/node@22.7.5))':
     dependencies:
-      '@vitest/spy': 2.1.2
+      '@vitest/spy': 2.1.3
       estree-walker: 3.0.3
       magic-string: 0.30.11
     optionalDependencies:
-      vite: 5.4.8(@types/node@22.7.5)
+      vite: 5.4.9(@types/node@22.7.5)
 
-  '@vitest/pretty-format@2.1.2':
+  '@vitest/pretty-format@2.1.3':
     dependencies:
       tinyrainbow: 1.2.0
 
-  '@vitest/runner@2.1.2':
+  '@vitest/runner@2.1.3':
     dependencies:
-      '@vitest/utils': 2.1.2
+      '@vitest/utils': 2.1.3
       pathe: 1.1.2
 
-  '@vitest/snapshot@2.1.2':
+  '@vitest/snapshot@2.1.3':
     dependencies:
-      '@vitest/pretty-format': 2.1.2
+      '@vitest/pretty-format': 2.1.3
       magic-string: 0.30.11
       pathe: 1.1.2
 
-  '@vitest/spy@2.1.2':
+  '@vitest/spy@2.1.3':
     dependencies:
       tinyspy: 3.0.0
 
-  '@vitest/utils@2.1.2':
+  '@vitest/utils@2.1.3':
     dependencies:
-      '@vitest/pretty-format': 2.1.2
+      '@vitest/pretty-format': 2.1.3
       loupe: 3.1.1
       tinyrainbow: 1.2.0
 
@@ -4389,11 +4361,11 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  babel-plugin-essor@0.0.13-beta.2:
+  babel-plugin-essor@0.0.13-beta.6:
     dependencies:
       '@babel/core': 7.25.8
       '@babel/types': 7.25.8
-      '@estjs/shared': 0.0.13-beta.2
+      '@estjs/shared': 0.0.13-beta.6
     transitivePeerDependencies:
       - supports-color
 
@@ -4889,8 +4861,6 @@ snapshots:
       '@esbuild/win32-ia32': 0.23.1
       '@esbuild/win32-x64': 0.23.1
 
-  escalade@3.1.2: {}
-
   escalade@3.2.0: {}
 
   escape-string-regexp@1.0.5: {}
@@ -5098,13 +5068,13 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)
 
-  eslint-plugin-vitest@0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)):
+  eslint-plugin-vitest@0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)):
     dependencies:
       '@typescript-eslint/utils': 7.18.0(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)
       eslint: 9.12.0(jiti@1.21.6)
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)
-      vitest: 2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
+      vitest: 2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5210,17 +5180,11 @@ snapshots:
     dependencies:
       estraverse: 5.3.0
 
-  essor@0.0.13-beta.2:
+  essor@0.0.13-beta.6:
     dependencies:
-      '@estjs/shared': 0.0.13-beta.2
-      '@estjs/signal': 0.0.13-beta.2
-      '@estjs/template': 0.0.13-beta.2
-
-  essor@0.0.13-beta.3:
-    dependencies:
-      '@estjs/shared': 0.0.13-beta.3
-      '@estjs/signal': 0.0.13-beta.3
-      '@estjs/template': 0.0.13-beta.3
+      '@estjs/shared': 0.0.13-beta.6
+      '@estjs/signal': 0.0.13-beta.6
+      '@estjs/template': 0.0.13-beta.6
 
   estraverse@5.3.0: {}
 
@@ -6855,15 +6819,15 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-essor@0.0.13-beta.2(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5)):
+  unplugin-essor@0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5)):
     dependencies:
       '@babel/core': 7.25.8
-      babel-plugin-essor: 0.0.13-beta.2
+      babel-plugin-essor: 0.0.13-beta.6
       unplugin: 1.14.1
     optionalDependencies:
       esbuild: 0.23.1
       rollup: 4.21.1
-      vite: 5.4.8(@types/node@22.7.5)
+      vite: 5.4.9(@types/node@22.7.5)
     transitivePeerDependencies:
       - supports-color
       - webpack-sources
@@ -6876,7 +6840,7 @@ snapshots:
   update-browserslist-db@1.1.0(browserslist@4.24.0):
     dependencies:
       browserslist: 4.24.0
-      escalade: 3.1.2
+      escalade: 3.2.0
       picocolors: 1.1.0
 
   uri-js@4.4.1:
@@ -6890,12 +6854,12 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  vite-node@2.1.2(@types/node@22.7.5):
+  vite-node@2.1.3(@types/node@22.7.5):
     dependencies:
       cac: 6.7.14
       debug: 4.3.6
       pathe: 1.1.2
-      vite: 5.4.8(@types/node@22.7.5)
+      vite: 5.4.9(@types/node@22.7.5)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -6907,7 +6871,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-inspect@0.8.7(rollup@4.21.1)(vite@5.4.8(@types/node@22.7.5)):
+  vite-plugin-inspect@0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5)):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.21.1)
@@ -6918,12 +6882,12 @@ snapshots:
       perfect-debounce: 1.0.0
       picocolors: 1.1.0
       sirv: 2.0.4
-      vite: 5.4.8(@types/node@22.7.5)
+      vite: 5.4.9(@types/node@22.7.5)
     transitivePeerDependencies:
       - rollup
       - supports-color
 
-  vite@5.4.8(@types/node@22.7.5):
+  vite@5.4.9(@types/node@22.7.5):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -6932,15 +6896,15 @@ snapshots:
       '@types/node': 22.7.5
       fsevents: 2.3.3
 
-  vitest@2.1.2(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1):
+  vitest@2.1.3(@types/node@22.7.5)(happy-dom@15.7.4)(jsdom@25.0.1):
     dependencies:
-      '@vitest/expect': 2.1.2
-      '@vitest/mocker': 2.1.2(@vitest/spy@2.1.2)(vite@5.4.8(@types/node@22.7.5))
-      '@vitest/pretty-format': 2.1.2
-      '@vitest/runner': 2.1.2
-      '@vitest/snapshot': 2.1.2
-      '@vitest/spy': 2.1.2
-      '@vitest/utils': 2.1.2
+      '@vitest/expect': 2.1.3
+      '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.9(@types/node@22.7.5))
+      '@vitest/pretty-format': 2.1.3
+      '@vitest/runner': 2.1.3
+      '@vitest/snapshot': 2.1.3
+      '@vitest/spy': 2.1.3
+      '@vitest/utils': 2.1.3
       chai: 5.1.1
       debug: 4.3.6
       magic-string: 0.30.11
@@ -6950,8 +6914,8 @@ snapshots:
       tinyexec: 0.3.0
       tinypool: 1.0.1
       tinyrainbow: 1.2.0
-      vite: 5.4.8(@types/node@22.7.5)
-      vite-node: 2.1.2(@types/node@22.7.5)
+      vite: 5.4.9(@types/node@22.7.5)
+      vite-node: 2.1.3(@types/node@22.7.5)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.7.5
