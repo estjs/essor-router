@@ -99,7 +99,7 @@ importers:
         version: 5.6.3
       unplugin-essor:
         specifier: ^0.0.13-beta.6
-        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
+        version: 0.0.13-beta.7(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
         specifier: ^5.4.9
         version: 5.4.9(@types/node@22.7.5)
@@ -136,7 +136,7 @@ importers:
         version: 5.6.3
       unplugin-essor:
         specifier: ^0.0.13-beta.6
-        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
+        version: 0.0.13-beta.7(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
         specifier: ^5.4.9
         version: 5.4.9(@types/node@22.7.5)
@@ -173,7 +173,7 @@ importers:
         version: 5.6.3
       unplugin-essor:
         specifier: ^0.0.13-beta.6
-        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
+        version: 0.0.13-beta.7(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
         specifier: ^5.4.9
         version: 5.4.9(@types/node@22.7.5)
@@ -210,7 +210,7 @@ importers:
         version: 5.6.3
       unplugin-essor:
         specifier: ^0.0.13-beta.6
-        version: 0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
+        version: 0.0.13-beta.7(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5))
       vite:
         specifier: ^5.4.9
         version: 5.4.9(@types/node@22.7.5)
@@ -660,6 +660,9 @@ packages:
   '@estjs/shared@0.0.13-beta.6':
     resolution: {integrity: sha512-f/oXuzALi5cx2eON64Ekix1x/H+tyeJSQxhADfPpvznB4sQ2bLhXOLhM2IsVYrEbZ52U2RjEQjR/I8pr4qJHwg==}
 
+  '@estjs/shared@0.0.13-beta.7':
+    resolution: {integrity: sha512-ACz/KcFByz9K20npm+st193YwjgLnXyFiqigse7SGHx1xSRCJXIKRniIsgZJeF4f6KlWOj+HmUyx2EEQCBwrBA==}
+
   '@estjs/signal@0.0.13-beta.6':
     resolution: {integrity: sha512-MFDLUriZhIExhioDZpJKHfmQau5Aj5FhzIA3Vibog+6tRmPuU6Lyr2cXI6gSVyQqAVpFvCoICp8hgttdhg1KWg==}
 
@@ -1097,8 +1100,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  babel-plugin-essor@0.0.13-beta.6:
-    resolution: {integrity: sha512-jsPRwQB0MaRn5/CtGWhjBT4+FgSQmpJ3W8Imeua8VGjTI1FC0iLPJe4nLwJOLZxFi4falVd7xvCiVGPsPBkNGg==}
+  babel-plugin-essor@0.0.13-beta.7:
+    resolution: {integrity: sha512-PHUfQPayLb93U72MEC844E0Tw5nw0S7zdakeynRzGMLjRVff00zXmZdESXuQ1pP2PLJPPDfhrtCIqDYcMQFAYg==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -3265,8 +3268,8 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unplugin-essor@0.0.13-beta.6:
-    resolution: {integrity: sha512-N+v904tTpUgVvAW5tIrOCoKFuBRy1Acr/6hwIYwqI//SHmZliRZrv+OCuyoVY+uJlsN5XKjQBqD3QV3hrEjU+g==}
+  unplugin-essor@0.0.13-beta.7:
+    resolution: {integrity: sha512-Opr4Bjvmd+HbSXqSHIzDcpWC9boFpvqYEkpTmvBQquSxfEKrgfOc/FqPPWI9BOYxtmeAPNfuoFw+sfd+jv+ooA==}
     peerDependencies:
       esbuild: '*'
       rollup: ^4
@@ -3882,6 +3885,8 @@ snapshots:
 
   '@estjs/shared@0.0.13-beta.6': {}
 
+  '@estjs/shared@0.0.13-beta.7': {}
+
   '@estjs/signal@0.0.13-beta.6':
     dependencies:
       '@estjs/shared': 0.0.13-beta.6
@@ -4361,11 +4366,11 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  babel-plugin-essor@0.0.13-beta.6:
+  babel-plugin-essor@0.0.13-beta.7:
     dependencies:
       '@babel/core': 7.25.8
       '@babel/types': 7.25.8
-      '@estjs/shared': 0.0.13-beta.6
+      '@estjs/shared': 0.0.13-beta.7
     transitivePeerDependencies:
       - supports-color
 
@@ -6819,10 +6824,10 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-essor@0.0.13-beta.6(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5)):
+  unplugin-essor@0.0.13-beta.7(esbuild@0.23.1)(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.5)):
     dependencies:
       '@babel/core': 7.25.8
-      babel-plugin-essor: 0.0.13-beta.6
+      babel-plugin-essor: 0.0.13-beta.7
       unplugin: 1.14.1
     optionalDependencies:
       esbuild: 0.23.1
