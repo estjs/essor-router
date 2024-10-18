@@ -1,8 +1,0 @@
-{
-  "cSpell.words": ["bumpp", "essor", "pnpm", "unplugin", "vitest"],
-  "prettier.enable": false,
-  "eslint.experimental.useFlatConfig": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  }
-}
