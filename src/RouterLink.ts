@@ -1,4 +1,4 @@
-import { h, isSignal, template, useComputed, useInject } from 'essor';
+import { h, isSignal, useComputed, useInject } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
@@ -199,18 +199,14 @@ export const RouterLink = props => {
   };
 
   return props.custom
-    ? h(template(''), {
-        '0': {
-          children: [[() => props.children, null]],
-        },
+    ? h('', {
+        children: [[() => props.children, null]],
       })
-    : h(template('<a></a>'), {
-        '1': {
-          ariaCurrent: link.isExactActive ? props.ariaCurrentValue : null,
-          href: link.href,
-          onClick: handleClick,
-          class: elClass.value,
-          children: [[() => props.children, null]],
-        },
+    : h('a', {
+        ariaCurrent: link.isExactActive ? props.ariaCurrentValue : null,
+        href: link.href,
+        onClick: handleClick,
+        class: elClass.value,
+        children: [[() => props.children, null]],
       });
 };

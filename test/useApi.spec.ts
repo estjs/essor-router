@@ -1,6 +1,6 @@
 import { h as _h$, template as _template$ } from 'essor';
 import { RouterView, createRouter, useRoute, useRouter } from '../src';
-import { mount } from './utils';
+import { mount, sleep } from './utils';
 
 let router;
 let wrapper;
@@ -24,8 +24,6 @@ createRouter({
     },
   ],
 });
-
-const sleep = time => new Promise(resolve => setTimeout(resolve, time));
 
 const App = () => {
   return _h$(RouterView, {});
