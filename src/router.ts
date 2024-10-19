@@ -1,4 +1,4 @@
-import { type Signal, useComputed, useProvide, useReactive, useShallowSignal } from 'essor';
+import { type Signal, shallowSignal, useComputed, useProvide, useReactive } from 'essor';
 import { applyToParams, assign, isArray, isBrowser, isObject, isString, noop } from './utils';
 import {
   type Lazy,
@@ -336,7 +336,7 @@ export function createRouter(options: RouterOptions): Router {
   const beforeGuards = useCallbacks<NavigationGuardWithThis<undefined>>();
   const beforeResolveGuards = useCallbacks<NavigationGuardWithThis<undefined>>();
   const afterGuards = useCallbacks<NavigationHookAfter>();
-  const currentRoute = useShallowSignal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
+  const currentRoute = shallowSignal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
   let pendingLocation: RouteLocation = START_LOCATION_NORMALIZED;
 
   const normalizeParams = applyToParams.bind(null, paramValue => `${paramValue}`);
