@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.7
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       '@playwright/test':
         specifier: ^1.48.1
         version: 1.48.1
@@ -22,7 +22,7 @@ importers:
         version: 22.7.6
       '@vitest/coverage-istanbul':
         specifier: ^2.1.3
-        version: 2.1.3(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+        version: 2.1.3(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       bumpp:
         specifier: ^9.7.1
         version: 9.7.1(magicast@0.3.4)
@@ -70,7 +70,7 @@ importers:
         version: 5.6.3
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
 
   examples/async-router:
     dependencies:
@@ -83,7 +83,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.7
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       '@types/node':
         specifier: ^22.7.6
         version: 22.7.6
@@ -91,8 +91,8 @@ importers:
         specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.4
-        version: 15.7.4
+        specifier: ^20.0.0
+        version: 20.0.11
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -107,7 +107,7 @@ importers:
         version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.6))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
 
   examples/basic:
     dependencies:
@@ -120,7 +120,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.7
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       '@types/node':
         specifier: ^22.7.6
         version: 22.7.6
@@ -128,8 +128,8 @@ importers:
         specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.4
-        version: 15.7.4
+        specifier: ^20.0.0
+        version: 20.0.11
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -144,7 +144,7 @@ importers:
         version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.6))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
 
   examples/option-router:
     dependencies:
@@ -157,7 +157,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.7
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       '@types/node':
         specifier: ^22.7.6
         version: 22.7.6
@@ -165,8 +165,8 @@ importers:
         specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.4
-        version: 15.7.4
+        specifier: ^20.0.0
+        version: 20.0.11
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -181,7 +181,7 @@ importers:
         version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.6))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
 
   examples/router-link:
     dependencies:
@@ -194,7 +194,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.7
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       '@types/node':
         specifier: ^22.7.6
         version: 22.7.6
@@ -202,8 +202,8 @@ importers:
         specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.4
-        version: 15.7.4
+        specifier: ^20.0.0
+        version: 20.0.11
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -218,7 +218,7 @@ importers:
         version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.6))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
 
   examples/use-api:
     dependencies:
@@ -231,7 +231,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^1.2.7
-        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+        version: 1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       '@types/node':
         specifier: ^22.7.6
         version: 22.7.6
@@ -239,8 +239,8 @@ importers:
         specifier: ^9.12.0
         version: 9.12.0(jiti@1.21.6)
       happy-dom:
-        specifier: ^15.7.4
-        version: 15.7.4
+        specifier: ^20.0.0
+        version: 20.0.11
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -255,7 +255,7 @@ importers:
         version: 0.8.7(rollup@4.21.1)(vite@5.4.9(@types/node@22.7.6))
       vitest:
         specifier: ^2.1.3
-        version: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+        version: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
 
 packages:
 
@@ -647,9 +647,11 @@ packages:
 
   '@eslint-types/jsdoc@48.2.2':
     resolution: {integrity: sha512-HpyW7wipVZGkCMOMMzjZ/wieIoinafxg1M617s8UPEchEGH/Xgs7pLZMaNR3Kdyx3Rz8STHYzCmKJfV2orjFJg==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@eslint-types/typescript-eslint@7.5.0':
     resolution: {integrity: sha512-zKvsPBDq6o0L4p2sRtq8fxOtGc+mm37aZSXLsiD4DIRl2kYUxKNO9CKDTAgmuMYUzih9J7lbLxAomreLrdAiVQ==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
 
   '@eslint/config-array@0.18.0':
     resolution: {integrity: sha512-fTxvnS1sRMu3+JjXwJG0j/i4RT9u4qJ+lqS/yCGap4lH4zZGzQ7tu+xZqQmcMZq5OBZDL4QRxQzRjkWcGt8IVw==}
@@ -872,6 +874,9 @@ packages:
   '@types/mdast@3.0.15':
     resolution: {integrity: sha512-LnwD+mUEfxWMa1QpDraczIn6k0Ee3SMicuYSSzS6ZYl2gKS09EClnJYGd8Du6rfc5r/GZEk5o1mRb8TaTj03sQ==}
 
+  '@types/node@20.19.25':
+    resolution: {integrity: sha512-ZsJzA5thDQMSQO788d7IocwwQbI8B5OPzmqNvpf3NY/+MHDAS759Wo0gd2WQeXYt5AAAQjzcrTVC6SKCuYgoCQ==}
+
   '@types/node@22.7.6':
     resolution: {integrity: sha512-/d7Rnj0/ExXDMcioS78/kf1lMzYk4BZV8MZGTBKzTGZ6/406ukkbYlIsZmMPhcR5KlkunDHQLrtAVmSq7r+mSw==}
 
@@ -886,6 +891,9 @@ packages:
 
   '@types/unist@2.0.11':
     resolution: {integrity: sha512-CmBKiL6NNo/OqgmMn95Fk9Whlp2mtvIv+KNpQKN2F4SjvrEesubTRWGYSg+BnWZOnlCaSTU1sMpsBOzgbYhnsA==}
+
+  '@types/whatwg-mimetype@3.0.2':
+    resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
 
   '@typescript-eslint/eslint-plugin@8.8.1':
     resolution: {integrity: sha512-xfvdgA8AP/vxHgtgU310+WBnLB4uJQ9XdyP17RebG26rLtDrQJV3ZYrcopX91GrHmMoH8bdSwMRh2a//TiJ1jQ==}
@@ -1574,6 +1582,7 @@ packages:
   eslint-plugin-markdown@5.1.0:
     resolution: {integrity: sha512-SJeyKko1K6GwI0AN6xeCDToXDkfKZfXcexA6B+O2Wr2btUS9GrC+YgwSyVli5DJnctUHjFXcQ2cqTaAmVoLi2A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: Please use @eslint/markdown instead
     peerDependencies:
       eslint: '>=8'
 
@@ -1939,9 +1948,9 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
 
-  happy-dom@15.7.4:
-    resolution: {integrity: sha512-r1vadDYGMtsHAAsqhDuk4IpPvr6N8MGKy5ntBo7tSdim+pWDxus2PNqOcOt8LuDZ4t3KJHE+gCuzupcx/GKnyQ==}
-    engines: {node: '>=18.0.0'}
+  happy-dom@20.0.11:
+    resolution: {integrity: sha512-QsCdAUHAmiDeKeaNojb1OHOPF7NjcWPBR7obdu3NwH2a/oyQaLg5d0aaCy/9My6CdPChYF07dvz5chaXBGaD4g==}
+    engines: {node: '>=20.0.0'}
 
   has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
@@ -2973,6 +2982,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
@@ -3277,6 +3287,9 @@ packages:
 
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+
+  undici-types@6.21.0:
+    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
   unicorn-magic@0.1.0:
     resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
@@ -3848,7 +3861,7 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
-  '@estjs/eslint-config@1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))':
+  '@estjs/eslint-config@1.2.7(eslint@9.12.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))':
     dependencies:
       '@eslint-types/jsdoc': 48.2.2
       '@eslint-types/typescript-eslint': 7.5.0
@@ -3873,7 +3886,7 @@ snapshots:
       eslint-plugin-toml: 0.11.1(eslint@9.12.0(jiti@1.21.6))
       eslint-plugin-unicorn: 55.0.0(eslint@9.12.0(jiti@1.21.6))
       eslint-plugin-unused-imports: 4.1.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))
-      eslint-plugin-vitest: 0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))
+      eslint-plugin-vitest: 0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))
       eslint-plugin-vue: 9.29.0(eslint@9.12.0(jiti@1.21.6))
       eslint-plugin-yml: 1.14.0(eslint@9.12.0(jiti@1.21.6))
       globals: 15.9.0
@@ -4045,6 +4058,10 @@ snapshots:
     dependencies:
       '@types/unist': 2.0.11
 
+  '@types/node@20.19.25':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/node@22.7.6':
     dependencies:
       undici-types: 6.19.8
@@ -4056,6 +4073,8 @@ snapshots:
   '@types/tough-cookie@4.0.2': {}
 
   '@types/unist@2.0.11': {}
+
+  '@types/whatwg-mimetype@3.0.2': {}
 
   '@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)':
     dependencies:
@@ -4197,7 +4216,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@vitest/coverage-istanbul@2.1.3(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1))':
+  '@vitest/coverage-istanbul@2.1.3(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1))':
     dependencies:
       '@istanbuljs/schema': 0.1.3
       debug: 4.3.6
@@ -4209,7 +4228,7 @@ snapshots:
       magicast: 0.3.4
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+      vitest: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -5078,13 +5097,13 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)
 
-  eslint-plugin-vitest@0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)):
+  eslint-plugin-vitest@0.5.4(@typescript-eslint/eslint-plugin@8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)(vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)):
     dependencies:
       '@typescript-eslint/utils': 7.18.0(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)
       eslint: 9.12.0(jiti@1.21.6)
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 8.8.1(@typescript-eslint/parser@8.8.1(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.12.0(jiti@1.21.6))(typescript@5.6.3)
-      vitest: 2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1)
+      vitest: 2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5440,10 +5459,10 @@ snapshots:
     optionalDependencies:
       uglify-js: 3.19.2
 
-  happy-dom@15.7.4:
+  happy-dom@20.0.11:
     dependencies:
-      entities: 4.5.0
-      webidl-conversions: 7.0.0
+      '@types/node': 20.19.25
+      '@types/whatwg-mimetype': 3.0.2
       whatwg-mimetype: 3.0.0
 
   has-bigints@1.0.2: {}
@@ -6821,6 +6840,8 @@ snapshots:
 
   undici-types@6.19.8: {}
 
+  undici-types@6.21.0: {}
+
   unicorn-magic@0.1.0: {}
 
   unist-util-stringify-position@2.0.3:
@@ -6906,7 +6927,7 @@ snapshots:
       '@types/node': 22.7.6
       fsevents: 2.3.3
 
-  vitest@2.1.3(@types/node@22.7.6)(happy-dom@15.7.4)(jsdom@25.0.1):
+  vitest@2.1.3(@types/node@22.7.6)(happy-dom@20.0.11)(jsdom@25.0.1):
     dependencies:
       '@vitest/expect': 2.1.3
       '@vitest/mocker': 2.1.3(@vitest/spy@2.1.3)(vite@5.4.9(@types/node@22.7.6))
@@ -6929,7 +6950,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.7.6
-      happy-dom: 15.7.4
+      happy-dom: 20.0.11
       jsdom: 25.0.1
     transitivePeerDependencies:
       - less
