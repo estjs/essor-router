@@ -1,14 +1,7 @@
-import { h as _h$, template as _template$ } from 'essor';
-import { newRouter as createRouter, noGuard } from '../utils';
+import { components, newRouter as createRouter, noGuard } from '../utils';
 import type { RouteRecordRaw } from '../../src/types';
-function Home() {
-  return _h$(_template$('<div>Home</div>'), {});
-}
-
-function Foo() {
-  return _h$(_template$('<div>Foo</div>'), {});
-}
-
+const Home = components.Home;
+const Foo = components.Foo
 const nested = {
   parent: vitest.fn(),
   nestedEmpty: vitest.fn(),

@@ -1,38 +1,30 @@
 import fakePromise from 'faked-promise';
-import { h as _h$, template as _template$ } from 'essor';
-import { createDom, newRouter as createRouter, noGuard, tick } from '../utils';
+import { components, createDom, newRouter as createRouter, noGuard, tick } from '../utils';
 import type { RouteRecordRaw } from '../../src/types';
-function Home() {
-  return _h$(_template$('<div>Home</div>'), {});
-}
-
-function Foo() {
-  return _h$(_template$('<div>Foo</div>'), {});
-}
 
 const beforeEnter = vitest.fn();
 const beforeEnters = [vitest.fn(), vitest.fn()];
 const nested = vitest.fn();
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', component: Home },
-  { path: '/home', component: Home, beforeEnter },
-  { path: '/foo', component: Foo },
+  { path: '/', component:  components.Home },
+  { path: '/home', component:  components.Home, beforeEnter },
+  { path: '/foo', component:  components.Foo },
   {
     path: '/guard/:n',
-    component: Foo,
+    component:  components.Foo,
     beforeEnter,
   },
   {
     path: '/multiple',
     beforeEnter: beforeEnters,
-    component: Foo,
+    component:  components.Foo,
   },
   {
     path: '/nested',
     component: {
-      ...Home,
-      beforeRouteEnter: nested,
+      component:components.Home,
+      beforeRouteEnter:  components.Nested,
     },
   },
 ];

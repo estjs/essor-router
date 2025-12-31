@@ -1,21 +1,8 @@
 import fakePromise from 'faked-promise';
-import { h as _h$, template as _template$ } from 'essor';
-import { createDom, newRouter as createRouter, noGuard } from '../utils';
+import { components, createDom, newRouter as createRouter, noGuard } from '../utils';
 import type { RouteRecordRaw } from '../../src/types';
-function Home() {
-  return _h$(_template$('<div>Home</div>'), {});
-}
-
-function Foo() {
-  return _h$(_template$('<div>Foo</div>'), {});
-}
-
-const beforeRouteEnter = vitest.fn();
-const named = {
-  default: vitest.fn(),
-  other: vitest.fn(),
-};
-
+const Home = components.Home;
+const Foo = components.Foo
 const nested = {
   parent: vitest.fn(),
   nestedEmpty: vitest.fn(),
@@ -25,7 +12,11 @@ const nested = {
   nestedNestedFoo: vitest.fn(),
   nestedNestedParam: vitest.fn(),
 };
-
+const beforeRouteEnter = vitest.fn();
+const named = {
+  default: vitest.fn(),
+  other: vitest.fn(),
+};
 const routes: RouteRecordRaw[] = [
   { path: '/', component: Home },
   { path: '/foo', component: Foo },

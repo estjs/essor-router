@@ -1,21 +1,11 @@
 import fakePromise from 'faked-promise';
-import { h as _h$, template as _template$ } from 'essor';
-import { createDom, newRouter as createRouter, noGuard } from '../utils';
-import { onBeforeRouteUpdate } from '../../src';
+import { components, createDom, newRouter as createRouter, noGuard } from '../utils';
 import type { RouteRecordRaw } from '../../src/types';
 
 const beforeRouteUpdate = vitest.fn();
 
-function Home() {
-  onBeforeRouteUpdate(beforeRouteUpdate);
-  return _h$(_template$('<div>Home</div>'), {});
-}
-
-function Foo() {
-  onBeforeRouteUpdate(beforeRouteUpdate);
-  return _h$(_template$('<div>Foo</div>'), {});
-}
-
+const Home = components.Home;
+const Foo = components.Foo
 const routes: RouteRecordRaw[] = [
   { path: '/', component: Home },
   { path: '/foo', component: Foo },

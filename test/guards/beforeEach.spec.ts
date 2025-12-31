@@ -1,28 +1,18 @@
 import fakePromise from 'faked-promise';
-import { h as _h$, template as _template$ } from 'essor';
-import { createDom, newRouter as createRouter, noGuard, tick } from '../utils';
+import { components, createDom, newRouter as createRouter, noGuard, tick } from '../utils';
 import type { RouteLocationRaw, RouteRecordRaw } from '../../src/types';
-function Home() {
-  return _h$(_template$('<div>Home</div>'), {});
-}
 
-function Foo() {
-  return _h$(_template$('<div>Foo</div>'), {});
-}
-function Nested() {
-  return _h$(_template$('<div>Nested</div>'), {});
-}
 const routes: RouteRecordRaw[] = [
-  { path: '/', component: Home },
-  { path: '/foo', component: Foo },
-  { path: '/other', component: Foo },
-  { path: '/n/:i', name: 'n', component: Home, meta: { requiresLogin: true } },
+  { path: '/', component: components.Home },
+  { path: '/foo', component: components.Foo },
+  { path: '/other', component:  components.Foo },
+  { path: '/n/:i', name: 'n', component:  components.Home, meta: { requiresLogin: true } },
   {
     path: '/nested',
-    component: Nested,
+    component:  components.Nested,
     children: [
-      { path: '', name: 'nested-default', component: Foo },
-      { path: 'home', name: 'nested-home', component: Home },
+      { path: '', name: 'nested-default', component:  components.Foo },
+      { path: 'home', name: 'nested-home', component:  components.Home },
     ],
   },
   {

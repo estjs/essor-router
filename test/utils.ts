@@ -161,11 +161,9 @@ export function User(props) {
 }
 
 export function Nested() {
-  const _$tmpl = _template$('<div><h2>Nested</h2></div>');
+  const _$tmpl = _template$('<div>Nested</div>');
   return (() => {
     const _$el = _$tmpl();
-    const _$nodes = mapNodes(_$el, [1]);
-    insert(_$nodes[0], createComponent(RouterView, {}));
     return _$el;
   })();
 }

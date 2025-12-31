@@ -1,17 +1,10 @@
-import { h as _h$, template as _template$ } from 'essor';
-import { createDom, newRouter as createRouter } from '../utils';
+import { components, createDom, newRouter as createRouter } from '../utils';
 import type { RouteRecordRaw } from '../../src/types';
-function Home() {
-  return _h$(_template$('<div>Home</div>'), {});
-}
 
-function Foo() {
-  return _h$(_template$('<div>Foo</div>'), {});
-}
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', component: Home },
-  { path: '/foo', component: Foo },
+  { path: '/', component: components.Home },
+  { path: '/foo', component:  components.Foo },
 ];
 
 describe('router.beforeEach', () => {

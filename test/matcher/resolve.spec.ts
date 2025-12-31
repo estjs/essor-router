@@ -1,5 +1,4 @@
-import { h as _h$, template as _template$ } from 'essor';
-import { mockWarn } from '../utils';
+import {components as compts, mockWarn } from '../utils';
 import { createRouterMatcher, normalizeRouteRecord } from '../../src/matcher';
 import {
   type MatcherLocation,
@@ -9,9 +8,8 @@ import {
   START_LOCATION_NORMALIZED,
 } from '../../src/types';
 import type { MatcherLocationNormalizedLoose } from '../utils';
-const component: RouteComponent = () => {
-  return _h$(_template$('<div>Home</div>'), {});
-};
+
+const component = compts.Home
 
 // for normalized records
 const components = { default: component };

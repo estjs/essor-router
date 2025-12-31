@@ -7,7 +7,6 @@ let wrapper;
 export function Home() {
   const _$tmpl = _template$('<div>Query:</div>');
   const route = useRoute();
-  console.log(route);
 
   return (() => {
     const _$el = _$tmpl();
@@ -17,9 +16,7 @@ export function Home() {
   })();
 }
 
-const App = () => {
-  return _h$(RouterView, {});
-};
+
 describe('use apis', () => {
   beforeEach(async () => {
     router = createRouter({
@@ -31,6 +28,9 @@ describe('use apis', () => {
         },
       ],
     });
+    const App = () => {
+  return _h$(RouterView, {router});
+};
     wrapper = mount(App);
     // router is async, need to wait
     await sleep(200);
