@@ -1,3 +1,10 @@
+// Enhanced router options interface for better type safety
+interface RouterOptionsWithLinkClasses {
+  linkActiveClass?: string;
+  linkExactActiveClass?: string;
+  [key: string]: unknown;
+}
+
 import { computed, createComponent, inject, isSignal } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
@@ -7,6 +14,17 @@ import { LinkComponent } from './linkComponent';
 import { routeLocationKey, routerKey } from './injectionSymbols';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
+import { validateRouterLinkProps, validateRouteLocation, withPropValidation } from './validation';
+import type { RouteLocationNormalized } from './types';
+
+// Define specific types for RouterLink children
+export type RouterLinkChildren = 
+  | string 
+  | number 
+  | (() => string | number | HTMLElement | null)
+  | HTMLElement
+  | null
+  | undefined;
 
 export interface RouterLinkOptions {
   /**
@@ -42,20 +60,48 @@ export interface RouterLinkProps extends RouterLinkOptions {
    * Whether to use View Transitions API when navigating.
    */
   viewTransition?: boolean;
+  /**
+   * Children content for the link
+   */
+  children?: RouterLinkChildren;
 }
 
 function useLink(props: RouterLinkProps) {
-  const router = inject(routerKey)!;
-  const currentRoute = inject(routeLocationKey)!;
+  // Runtime prop validation in development mode
+  validateRouterLinkProps(props as Record<string, unknown>);
+  
+  const router = inject(routerKey);
+  const currentRoute = inject(routeLocationKey);
+
+  // Validate router injection
+  if (!router) {
+    throw new Error(
+      'useLink() must be used within a RouterView component. ' +
+      'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
+      'Check that your router instance is properly created and provided to RouterView.'
+    );
+  }
+
+  // Validate route injection
+  if (!currentRoute) {
+    throw new Error(
+      'useLink() requires route context. ' +
+      'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
+      'This error typically occurs when RouterLink is used outside of a router context.'
+    );
+  };
 
   let hasPrevious = false;
   let previousTo: unknown = null;
 
-  const route = computed<any>(() => {
+  const route = computed<RouteLocationNormalized>(() => {
     const to = props.to;
 
     if (!hasPrevious || to !== previousTo) {
-      if (typeof to !== 'string' && typeof to !== 'object') {
+      // Runtime validation of the 'to' prop
+      try {
+        validateRouteLocation(to, 'RouterLink.to');
+      } catch (error) {
         if (hasPrevious) {
           warn(
             `Invalid value for prop "to" in useLink()\n- to:`,
@@ -74,11 +120,34 @@ function useLink(props: RouterLinkProps) {
       hasPrevious = true;
     }
 
-    return router.resolve(to);
+    // Safe router.resolve call
+    try {
+      return router.resolve(to);
+    } catch (error) {
+      warn(`Failed to resolve route for "to" prop:`, to, `\nError:`, error);
+      // Return a safe fallback route
+      return {
+        path: '/',
+        name: undefined,
+        params: {},
+        query: {},
+        hash: '',
+        fullPath: '/',
+        matched: [],
+        meta: {},
+        href: '/',
+        redirectedFrom: undefined
+      };
+    }
   });
 
   const activeRecordIndex = computed(() => {
-    const matched = route.value.matched;
+    const routeValue = route.value;
+    if (!routeValue || !routeValue.matched || !currentRoute || !currentRoute.matched) {
+      return -1;
+    }
+
+    const matched = routeValue.matched;
     const currentMatched = currentRoute.matched;
     const index = currentMatched.findIndex((record: RouteRecord) =>
       isSameRouteRecord(record, matched),
@@ -95,40 +164,58 @@ function useLink(props: RouterLinkProps) {
       : index;
   });
 
-  const isActive = computed(
-    () => activeRecordIndex.value > -1 && includesParams(currentRoute.params, route.value.params),
-  );
+  const isActive = computed(() => {
+    if (!currentRoute || !currentRoute.params || !route.value || !route.value.params) {
+      return false;
+    }
+    return activeRecordIndex.value > -1 && includesParams(currentRoute.params, route.value.params);
+  });
 
-  const isExactActive = computed(
-    () =>
+  const isExactActive = computed(() => {
+    if (!currentRoute || !currentRoute.matched || !currentRoute.params || !route.value || !route.value.params) {
+      return false;
+    }
+    return (
       activeRecordIndex.value > -1 &&
       activeRecordIndex.value === currentRoute.matched.length - 1 &&
-      isSameRouteLocationParams(currentRoute.params, route.value.params),
-  );
+      isSameRouteLocationParams(currentRoute.params, route.value.params)
+    );
+  });
 
   function navigate(e: MouseEvent = {} as MouseEvent): Promise<void | NavigationFailure> {
     if (guardEvent(e)) {
-      const to = isSignal(props.to) ? (props.to.peek() as string) : props.to;
+      const to = isSignal(props.to) ? (props.to.peek()) : props.to;
 
-      if (
-        props.viewTransition &&
-        typeof document !== 'undefined' &&
-        'startViewTransition' in document
-      ) {
-        return (document as any).startViewTransition(() =>
-          router[props.replace ? 'replace' : 'push'](to).catch(noop),
-        ).finished;
+      // Ensure router is still available
+      if (!router) {
+        warn('Router is not available for navigation');
+        return Promise.resolve();
       }
 
-      // avoid uncaught errors are they are logged anyway
-      return router[props.replace ? 'replace' : 'push'](to).catch(noop);
+      try {
+        if (
+          props.viewTransition &&
+          typeof document !== 'undefined' &&
+          'startViewTransition' in document
+        ) {
+          return (document as any).startViewTransition(() =>
+            router[props.replace ? 'replace' : 'push'](to as any).catch(noop),
+          ).finished;
+        }
+
+        // avoid uncaught errors are they are logged anyway
+        return router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
+      } catch (error) {
+        warn('Navigation failed:', error);
+        return Promise.resolve();
+      }
     }
     return Promise.resolve();
   }
 
   return {
     route,
-    href: route.value.href,
+    href: computed(() => route.value?.href || '#'),
     isActive,
     isExactActive,
     navigate,
@@ -189,7 +276,7 @@ const getLinkClass = (
   defaultClass: string,
 ): string => (propClass != null ? propClass : globalClass != null ? globalClass : defaultClass);
 
-export const RouterLink = (props: RouterLinkProps & { children: unknown }) => {
+export const RouterLink = (props: RouterLinkProps) => {
   const link = useLink({
     to: props.to,
     replace: props.replace,
@@ -198,20 +285,23 @@ export const RouterLink = (props: RouterLinkProps & { children: unknown }) => {
 
   const { options } = useRouter();
 
-  const elClass = computed(() => ({
-    [getLinkClass(props.activeClass, options?.linkActiveClass, 'router-link-active')]:
-      link.isActive,
-    // [getLinkClass(
-    //   props.inactiveClass,
-    //   options.linkInactiveClass,
-    //   'router-link-inactive'
-    // )]: !link.isExactActive,
-    [getLinkClass(
-      props.exactActiveClass,
-      options?.linkExactActiveClass,
-      'router-link-exact-active',
-    )]: link.isExactActive,
-  }));
+  const elClass = computed(() => {
+    const classes: string[] = [];
+    
+    if (link.isActive.value) {
+      classes.push(getLinkClass(props.activeClass, options?.linkActiveClass, 'router-link-active'));
+    }
+    
+    if (link.isExactActive.value) {
+      classes.push(getLinkClass(
+        props.exactActiveClass,
+        options?.linkExactActiveClass,
+        'router-link-exact-active',
+      ));
+    }
+    
+    return classes.join(' ');
+  });
 
   const handleClick = (e: MouseEvent) => {
     if (link.navigate && !props.custom) {
@@ -222,10 +312,10 @@ export const RouterLink = (props: RouterLinkProps & { children: unknown }) => {
   return props.custom
     ? [() => props.children]
     : createComponent(LinkComponent, {
-      ariaCurrent: link.isExactActive ? props.ariaCurrentValue : null,
-      href: link.href,
+      ariaCurrent: link.isExactActive.value ? props.ariaCurrentValue : null,
+      href: link.href.value,
       onClick: handleClick,
-      className: elClass.value,
-      children: [() => props.children],
+      class: elClass.value,
+      children: props.children,
     });
 };

@@ -166,14 +166,14 @@ export function createRouterError<E extends RouterError>(
  * ```
  */
 export function isNavigationFailure(
-  error: any,
+  error: unknown,
   type?: ErrorTypes.NAVIGATION_GUARD_REDIRECT,
 ): error is NavigationRedirectError;
 export function isNavigationFailure(
-  error: any,
+  error: unknown,
   type?: ErrorTypes | NavigationFailureType,
 ): error is NavigationFailure;
-export function isNavigationFailure(error: any, type?: number): error is NavigationFailure {
+export function isNavigationFailure(error: unknown, type?: number): error is NavigationFailure {
   return (
     error instanceof Error &&
     NavigationFailureSymbol in error &&

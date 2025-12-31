@@ -46,13 +46,12 @@ import type { RouteRecord, RouteRecordNormalized } from './matcher/types';
  * @param error - error thrown
  * @param to - location we were navigating to when the error happened
  * @param from - location we were navigating from when the error happened
-
  */
 export interface _ErrorListener {
-  (error: any, to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded): any;
+  (error: Error, to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded): void;
 }
 // resolve, reject arguments of Promise constructor
-type OnReadyCallback = [() => void, (reason?: any) => void];
+type OnReadyCallback = [() => void, (reason?: Error) => void];
 
 type History = 'history' | 'hash' | 'memory';
 /**
@@ -316,8 +315,6 @@ export function createHistory(mode: History | RouterHistory, base?: string): Rou
   }
 }
 
-export let initRouter: () => void;
-export let unMountRouter: () => void;
 /**
  * Creates a Router instance that can be used by a essor app.
  *
@@ -993,7 +990,7 @@ export function createRouter(options: RouterOptions): Router {
    * @returns the error as a rejected promise
    */
   function triggerError(
-    error: any,
+    error: Error,
     to: RouteLocationNormalized,
     from: RouteLocationNormalizedLoaded,
   ): Promise<unknown> {
@@ -1067,52 +1064,6 @@ export function createRouter(options: RouterOptions): Router {
   function runGuardQueue(guards: Lazy<any>[]): Promise<void> {
     return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
   }
-
-  initRouter = () => {
-    // this initial navigation is only necessary on client, on server it doesn't
-    // make sense because it will create an extra unnecessary navigation and could
-    // lead to problems
-    if (
-      isBrowser &&
-      // used for the initial navigation client side to avoid pushing
-      // multiple times when the router is used in multiple apps
-      !started &&
-      currentRoute.value === START_LOCATION_NORMALIZED
-    ) {
-      // see above
-      started = true;
-      push(routerHistory.location).catch(error => {
-        if (__DEV__) warn('Unexpected error when starting the router:', error);
-      });
-    }
-
-    const reactiveRoute = {} as RouteLocationNormalizedLoaded;
-    for (const key in START_LOCATION_NORMALIZED) {
-      Object.defineProperty(reactiveRoute, key, {
-        get: () => currentRoute.value[key as keyof RouteLocationNormalized],
-        enumerable: true,
-      });
-    }
-
-    provide(routerKey, router);
-    provide(routeLocationKey, reactiveRoute);
-    provide(routerViewLocationKey, currentRoute);
-
-    return {
-      router,
-      reactiveRoute,
-      currentRoute,
-    };
-  };
-
-  unMountRouter = () => {
-    pendingLocation = START_LOCATION_NORMALIZED;
-    removeHistoryListener && removeHistoryListener();
-    removeHistoryListener = null;
-    currentRoute.value = START_LOCATION_NORMALIZED;
-    started = false;
-    ready = false;
-  };
 
   return router;
 }

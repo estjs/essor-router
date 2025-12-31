@@ -22,6 +22,7 @@ import { isAsyncFunction, isESModule, isFunction, isPromise } from './utils';
 import { warn } from './warning';
 import { matchedRouteKey } from './injectionSymbols';
 import type { RouteRecordNormalized } from './matcher/types';
+import { validateNavigationGuard } from './validation';
 
 function registerGuard(
   record: RouteRecordNormalized,
@@ -45,10 +46,13 @@ function registerGuard(
  * @param leaveGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
+  // Runtime validation of the guard function
+  validateNavigationGuard(leaveGuard, 'onBeforeRouteLeave');
+  
   const activeRecord: RouteRecordNormalized | undefined = inject(
     matchedRouteKey,
     // to avoid warning
-    {} as any,
+    {} as RouteRecordNormalized,
   )!.value;
   if (!activeRecord) {
     __DEV__ &&
@@ -69,10 +73,13 @@ export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
  * @param updateGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteUpdate(updateGuard: NavigationGuard) {
+  // Runtime validation of the guard function
+  validateNavigationGuard(updateGuard, 'onBeforeRouteUpdate');
+  
   const activeRecord: RouteRecordNormalized | undefined = inject(
     matchedRouteKey,
     // to avoid warning
-    {} as any,
+    {} as RouteRecordNormalized,
   )!.value;
   if (!activeRecord) {
     __DEV__ &&
@@ -151,7 +158,7 @@ export function guardToPromiseFn(
         from,
         __DEV__ ? canOnlyBeCalledOnce(next, to, from) : next,
       );
-      let guardCall: any = Promise.resolve(guardReturn);
+      let guardCall: Promise<void> = Promise.resolve(guardReturn);
 
       if (guard.length < 3) {
         guardCall = guardCall.then(next);
@@ -160,7 +167,7 @@ export function guardToPromiseFn(
         const message = `The "next" callback was never called inside of ${guard.name ? `"${guard.name}"` : ''
           }:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
         if (isPromise(guardReturn)) {
-          guardCall = guardCall.then((resolvedValue: any) => {
+          guardCall = guardCall.then((resolvedValue: void) => {
             // @ts-expect-error: _called is added at canOnlyBeCalledOnce
             if (!next._called) {
               warn(message);
@@ -177,7 +184,7 @@ export function guardToPromiseFn(
           return;
         }
       }
-      guardCall.catch((error: any) => reject(error));
+      guardCall.catch((error: Error) => reject(error));
     });
 }
 

@@ -2,8 +2,8 @@ import type { RouteComponent, RouteParamValueRaw, RouteParams, RouteParamsRaw } 
 
 export * from './env';
 
-export function isESModule(obj: any): obj is { default: RouteComponent } {
-  return obj.__esModule || obj[Symbol.toStringTag] === 'Module';
+export function isESModule(obj: unknown): obj is { default: RouteComponent } {
+  return obj !== null && typeof obj === 'object' && ('__esModule' in obj || obj[Symbol.toStringTag] === 'Module');
 }
 
 export const assign = Object.assign;

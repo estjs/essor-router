@@ -500,7 +500,7 @@ export interface NavigationGuardNext {
   // _called: boolean
 }
 
-export type NavigationGuardNextCallback = (vm: any) => any;
+export type NavigationGuardNextCallback = (vm: RouteComponent) => void;
 
 export type NavigationGuardReturn = void | Error | RouteLocationRaw | boolean;
 
@@ -535,7 +535,7 @@ export interface NavigationHookAfter {
     to: RouteLocationNormalized,
     from: RouteLocationNormalized,
     failure?: NavigationFailure | void,
-  ): any;
+  ): void;
 }
 
 export * from './typeGuards';
