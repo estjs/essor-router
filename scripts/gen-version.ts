@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import pkg from '../package.json';
+import pkg from '../package.json' assert { type: 'json' };
 
 (() => {
   const srcPath = path.join(path.resolve(), './packages/core/src');

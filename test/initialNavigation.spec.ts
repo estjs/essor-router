@@ -37,7 +37,7 @@ describe('initial Navigation', () => {
     return { history, router };
   }
 
-  beforeAll(() => {
+  beforeEach(() => {
     dom = createDom();
   });
 

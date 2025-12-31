@@ -123,6 +123,7 @@ function useHistoryListeners(
     teardowns = [];
     window.removeEventListener('popstate', popStateHandler);
     window.removeEventListener('beforeunload', beforeUnloadListener);
+    window.removeEventListener('pagehide', beforeUnloadListener);
   }
 
   // set up the listeners and prepare teardown callbacks
@@ -130,6 +131,9 @@ function useHistoryListeners(
   // TODO: could we use 'pagehide' or 'visibilitychange' instead?
   // https://developer.chrome.com/blog/page-lifecycle-api/
   window.addEventListener('beforeunload', beforeUnloadListener, {
+    passive: true,
+  });
+  window.addEventListener('pagehide', beforeUnloadListener, {
     passive: true,
   });
 
@@ -251,7 +255,7 @@ function useHistoryStateNavigation(base: string) {
     if (__DEV__ && !history.state) {
       warn(
         `history.state seems to have been manually replaced without preserving the necessary values. Make sure to preserve existing history state if you are manually calling history.replaceState:\n\n` +
-          `history.replaceState(history.state, '', url)\n\n`,
+        `history.replaceState(history.state, '', url)\n\n`,
       );
     }
 

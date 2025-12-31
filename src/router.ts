@@ -1,4 +1,4 @@
-import { type Signal, shallowSignal, useComputed, useProvide, useReactive } from 'essor';
+import { type Signal, provide, signal, toRaw } from 'essor';
 import { applyToParams, assign, isArray, isBrowser, isObject, isString, noop } from './utils';
 import {
   type Lazy,
@@ -111,23 +111,23 @@ export interface RouterOptions extends PathParserOptions {
    */
   parseQuery?: typeof parseQuery;
   /**
-   * Custom implementation to stringify a query object. Should not prepend a leading `?`.
+   * Custom implementation to stringify a query object. Should not prepend a leading `? `.
    * {@link RouterOptions.parseQuery | parseQuery} counterpart to handle query parsing.
    */
   stringifyQuery?: typeof stringifyQuery;
   /**
    * Default class applied to active {@link RouterLink}. If none is provided,
-   * `router-link-active` will be applied.
+   * `router - link - active` will be applied.
    */
   linkActiveClass?: string;
   /**
    * Default class applied to exact active {@link RouterLink}. If none is provided,
-   * `router-link-exact-active` will be applied.
+   * `router - link - exact - active` will be applied.
    */
   linkExactActiveClass?: string;
   /**
    * Default class applied to non-active {@link RouterLink}. If none is provided,
-   * `router-link-inactive` will be applied.
+   * `router - link - inactive` will be applied.
    */
   // linkInactiveClass?: string
 }
@@ -270,7 +270,7 @@ export interface Router {
    * ```js
    * router.afterEach((to, from, failure) => {
    *   if (isNavigationFailure(failure)) {
-   *     console.log('failed navigation', failure)
+   * console.log('failed navigation', failure)
    *   }
    * })
    * ```
@@ -316,8 +316,8 @@ export function createHistory(mode: History | RouterHistory, base?: string): Rou
   }
 }
 
-export let initRouter;
-export let unMountRouter;
+export let initRouter: () => void;
+export let unMountRouter: () => void;
 /**
  * Creates a Router instance that can be used by a essor app.
  *
@@ -336,7 +336,7 @@ export function createRouter(options: RouterOptions): Router {
   const beforeGuards = useCallbacks<NavigationGuardWithThis<undefined>>();
   const beforeResolveGuards = useCallbacks<NavigationGuardWithThis<undefined>>();
   const afterGuards = useCallbacks<NavigationHookAfter>();
-  const currentRoute = shallowSignal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
+  const currentRoute = signal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
   let pendingLocation: RouteLocation = START_LOCATION_NORMALIZED;
 
   const normalizeParams = applyToParams.bind(null, paramValue => `${paramValue}`);
@@ -356,6 +356,20 @@ export function createRouter(options: RouterOptions): Router {
       record = route!;
     } else {
       record = parentOrRoute;
+    }
+
+    if (__DEV__ && record.name) {
+      const existingRecord = matcher.getRecordMatcher(record.name);
+      if (existingRecord) {
+        warn(
+          `Alias "${String(record.name)}" is already used by another route.This will cause issues when navigating by name.`,
+        );
+      }
+      if (parent && parent.record.name === record.name) {
+        warn(
+          `Route "${String(record.name)}" has the same name as its parent.This will cause issues when navigating by name.`,
+        );
+      }
     }
 
     return matcher.addRoute(record, parent);
@@ -393,7 +407,7 @@ export function createRouter(options: RouterOptions): Router {
       if (__DEV__) {
         if (href.startsWith('//'))
           warn(
-            `Location "${rawLocation}" resolved to "${href}". A resolved location cannot start with multiple slashes.`,
+            `Location "${rawLocation}" resolved to "${href}".A resolved location cannot start with multiple slashes.`,
           );
         else if (matchedRoute.matched.length === 0) {
           warn(`No match found for location with path "${rawLocation}"`);
@@ -411,7 +425,7 @@ export function createRouter(options: RouterOptions): Router {
 
     if (__DEV__ && !isRouteLocation(rawLocation)) {
       warn(
-        `router.resolve() was passed an invalid location. This will fail in production.\n- Location:`,
+        `router.resolve() was passed an invalid location.This will fail in production.\n - Location: `,
         rawLocation,
       );
       rawLocation = {};
@@ -429,7 +443,7 @@ export function createRouter(options: RouterOptions): Router {
         Object.keys(rawLocation.params).length > 0
       ) {
         warn(
-          `Path "${rawLocation.path}" was passed with params but they will be ignored. Use a named route alongside params instead.`,
+          `Path "${rawLocation.path}" was passed with params but they will be ignored.Use a named route alongside params instead.`,
         );
       }
       matcherLocation = assign({}, rawLocation, {
@@ -481,8 +495,7 @@ export function createRouter(options: RouterOptions): Router {
         );
       } else if (matchedRoute.matched.length === 0) {
         warn(
-          `No match found for location with path "${
-            rawLocation.path != null ? rawLocation.path : rawLocation
+          `No match found for location with path "${rawLocation.path != null ? rawLocation.path : rawLocation
           }"`,
         );
       }
@@ -550,7 +563,7 @@ export function createRouter(options: RouterOptions): Router {
           newTargetLocation.includes('?') || newTargetLocation.includes('#')
             ? (newTargetLocation = locationAsObject(newTargetLocation))
             : // force empty params
-              { path: newTargetLocation };
+            { path: newTargetLocation };
         // @ts-expect-error: force empty params when a string is passed to let
         // the router parse them again
         newTargetLocation.params = {};
@@ -562,8 +575,7 @@ export function createRouter(options: RouterOptions): Router {
             newTargetLocation,
             null,
             2,
-          )}\n when navigating to "${
-            to.fullPath
+          )}\n when navigating to "${to.fullPath
           }". A redirect must contain a name or path. This will break in production.`,
         );
         throw new Error('Invalid redirect');
@@ -611,7 +623,7 @@ export function createRouter(options: RouterOptions): Router {
     toLocation.redirectedFrom = redirectedFrom;
     let failure: NavigationFailure | void | undefined;
 
-    if (!force && isSameRouteLocation(currentStringifyQuery, from, targetLocation)) {
+    if (!force && isSameRouteLocation(currentStringifyQuery, toRaw(from), targetLocation)) {
       failure = createRouterError<NavigationFailure>(ErrorTypes.NAVIGATION_DUPLICATED, {
         to: toLocation,
         from,
@@ -622,11 +634,11 @@ export function createRouter(options: RouterOptions): Router {
       .catch((error: NavigationFailure | NavigationRedirectError) => {
         return isNavigationFailure(error)
           ? // navigation redirects still mark the router as ready
-            isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
+          isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
             ? error
             : markAsReady(error) // also returns the error
           : // reject any unknown error
-            triggerError(error, toLocation, from);
+          triggerError(error, toLocation, from);
       })
       .then((failure: NavigationFailure | NavigationRedirectError | void) => {
         if (failure) {
@@ -640,7 +652,7 @@ export function createRouter(options: RouterOptions): Router {
               // @ts-expect-error: added only in dev
               (redirectedFrom._count = redirectedFrom._count
                 ? // @ts-expect-error
-                  redirectedFrom._count + 1
+                redirectedFrom._count + 1
                 : 1) > 30
             ) {
               warn(
@@ -676,7 +688,11 @@ export function createRouter(options: RouterOptions): Router {
             data,
           );
         }
-        triggerAfterEach(toLocation as RouteLocationNormalizedLoaded, from, failure);
+        if (failure && !isNavigationFailure(failure, ErrorTypes.NAVIGATION_DUPLICATED)) {
+          triggerAfterEach(toLocation as RouteLocationNormalizedLoaded, from, failure);
+        } else if (!failure) {
+          triggerAfterEach(toLocation as RouteLocationNormalizedLoaded, from, failure);
+        }
         return failure;
       });
   }
@@ -710,6 +726,15 @@ export function createRouter(options: RouterOptions): Router {
       record.leaveGuards.forEach(guard => {
         guards.push(guardToPromiseFn(guard, to, from));
       });
+      if (record.beforeLeave && Object.values(record.instances).some(instance => !!instance)) {
+        if (Array.isArray(record.beforeLeave)) {
+          for (const guard of record.beforeLeave) {
+            guards.push(guardToPromiseFn(guard, to, from));
+          }
+        } else {
+          guards.push(guardToPromiseFn(record.beforeLeave, to, from));
+        }
+      }
     }
 
     const canceledNavigationCheck = checkCanceledNavigationAndReject.bind(null, to, from);
@@ -841,7 +866,7 @@ export function createRouter(options: RouterOptions): Router {
       else routerHistory.push(toLocation.fullPath, data);
     }
 
-    currentRoute.value = toLocation;
+    currentRoute.value = toRaw(toLocation);
     markAsReady();
   }
 
@@ -1069,12 +1094,15 @@ export function createRouter(options: RouterOptions): Router {
       });
     }
 
-    useProvide(routerKey, router);
-    useProvide(routeLocationKey, useReactive(reactiveRoute));
-    useProvide(
-      routerViewLocationKey,
-      useComputed(() => currentRoute.value!),
-    );
+    provide(routerKey, router);
+    provide(routeLocationKey, reactiveRoute);
+    provide(routerViewLocationKey, currentRoute);
+
+    return {
+      router,
+      reactiveRoute,
+      currentRoute,
+    };
   };
 
   unMountRouter = () => {
@@ -1098,14 +1126,14 @@ function extractChangingRecords(to: RouteLocationNormalized, from: RouteLocation
   for (let i = 0; i < len; i++) {
     const recordFrom = from.matched[i];
     if (recordFrom) {
-      if (to.matched.some(record => isSameRouteRecord(record, recordFrom)))
+      if (to.matched.some(record => isSameRouteRecord(toRaw(record), toRaw(recordFrom))))
         updatingRecords.push(recordFrom);
       else leavingRecords.push(recordFrom);
     }
     const recordTo = to.matched[i];
     if (
       recordTo && // the type doesn't matter because we are comparing per reference
-      !from.matched.some(record => isSameRouteRecord(record, recordTo))
+      !from.matched.some(record => isSameRouteRecord(toRaw(record), toRaw(recordTo)))
     ) {
       enteringRecords.push(recordTo);
     }

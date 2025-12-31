@@ -1,4 +1,5 @@
 import { RouterLink, RouterView, createRouter } from 'essor-router';
+import { createApp } from 'essor';
 
 function Home() {
   return (
@@ -18,7 +19,7 @@ function About() {
 function notFound() {
   return <div class="notfound">404</div>;
 }
-createRouter({
+const router = createRouter({
   history: 'hash',
   routes: [
     {
@@ -40,4 +41,4 @@ const App = () => {
   return <RouterView></RouterView>;
 };
 
-(<App />).mount(document.querySelector('#app')!);
+createApp(App, '#app');

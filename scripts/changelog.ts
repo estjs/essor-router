@@ -4,7 +4,7 @@ import { createWriteStream, readFileSync, writeFileSync } from 'node:fs';
 import { promisify } from 'node:util';
 import process from 'node:process';
 import standardChangelog from 'standard-changelog';
-import { version as _version } from '../package.json';
+import { version as _version } from '../package.json' assert { type: 'json' };
 const execPromise = promisify(exec);
 
 const VERSION_REG = /\d+\.\d+\.\d+/;

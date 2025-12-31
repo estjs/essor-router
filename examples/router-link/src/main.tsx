@@ -1,4 +1,5 @@
 import { RouterView, createRouter } from 'essor-router';
+import { createApp } from 'essor';
 import Home from './Home';
 import About from './About';
 import notFound from './NotFound';
@@ -25,4 +26,4 @@ const App = () => {
   return <RouterView></RouterView>;
 };
 
-(<App />).mount(document.querySelector('#app')!);
+createApp(App, '#app');

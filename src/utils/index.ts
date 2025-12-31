@@ -27,12 +27,45 @@ export function applyToParams(
 export const noop = () => {};
 
 /**
- * Typesafe alternative to Array.isArray
- * https://github.com/microsoft/TypeScript/pull/48228
+ * Reference to Object.prototype.toString
+ * @type {Function}
  */
-export const isArray: (arg: ArrayLike<any> | any) => arg is ReadonlyArray<any> = Array.isArray;
-export const isObject = (val: unknown): val is Record<any, any> =>
+export const _toString = Object.prototype.toString;
+
+export const isObject = (val: unknown): val is Record<any, unknown> =>
   val !== null && typeof val === 'object';
+
+/**
+ * Checks if a value is a Promise
+ * @template T - The type of the Promise's resolved value
+ * @param {unknown} val - The value to check
+ * @returns {boolean} - Returns true if the value is a Promise, false otherwise
+ */
+export function isPromise<T = unknown>(val: unknown): val is Promise<T> {
+  return _toString.call(val) === '[object Promise]';
+}
+
+/**
+ * Checks if a value is an Array
+ * @type {(arg: unknown ) => arg is unknown []}
+ */
+export const isArray = Array.isArray;
+
+/**
+ * Checks if a value is a string
+ * @param {unknown} val - The value to check
+ * @returns {boolean} - Returns true if the value is a string, false otherwise
+ */
 export function isString(val: unknown): val is string {
   return typeof val === 'string';
 }
+
+export function isAsyncFunction(fn: Function): boolean {
+  return _toString.call(fn) === '[object AsyncFunction]';
+}
+/**
+ * Checks if a value is a function
+ * @param {unknown} val - The value to check
+ * @returns {boolean} - Returns true if the value is a function, false otherwise
+ */
+export const isFunction = (val: unknown): val is Function => typeof val === 'function';

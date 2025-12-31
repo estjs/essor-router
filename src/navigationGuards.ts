@@ -1,4 +1,4 @@
-import { onDestroy, useInject } from 'essor';
+import { inject, onDestroy } from 'essor';
 import {
   type NavigationGuard,
   type NavigationGuardNext,
@@ -18,7 +18,7 @@ import {
   createRouterError,
 } from './errors';
 
-import { isESModule } from './utils';
+import { isAsyncFunction, isESModule, isFunction, isPromise } from './utils';
 import { warn } from './warning';
 import { matchedRouteKey } from './injectionSymbols';
 import type { RouteRecordNormalized } from './matcher/types';
@@ -45,12 +45,11 @@ function registerGuard(
  * @param leaveGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
-  const activeRecord: RouteRecordNormalized | undefined = useInject(
+  const activeRecord: RouteRecordNormalized | undefined = inject(
     matchedRouteKey,
     // to avoid warning
     {} as any,
   )!.value;
-
   if (!activeRecord) {
     __DEV__ &&
       warn(
@@ -70,7 +69,7 @@ export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
  * @param updateGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteUpdate(updateGuard: NavigationGuard) {
-  const activeRecord: RouteRecordNormalized | undefined = useInject(
+  const activeRecord: RouteRecordNormalized | undefined = inject(
     matchedRouteKey,
     // to avoid warning
     {} as any,
@@ -158,11 +157,10 @@ export function guardToPromiseFn(
         guardCall = guardCall.then(next);
       }
       if (__DEV__ && guard.length > 2) {
-        const message = `The "next" callback was never called inside of ${
-          guard.name ? `"${guard.name}"` : ''
-        }:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
-        if (typeof guardReturn === 'object' && 'then' in guardReturn) {
-          guardCall = guardCall.then(resolvedValue => {
+        const message = `The "next" callback was never called inside of ${guard.name ? `"${guard.name}"` : ''
+          }:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
+        if (isPromise(guardReturn)) {
+          guardCall = guardCall.then((resolvedValue: any) => {
             // @ts-expect-error: _called is added at canOnlyBeCalledOnce
             if (!next._called) {
               warn(message);
@@ -179,7 +177,7 @@ export function guardToPromiseFn(
           return;
         }
       }
-      guardCall.catch(error => reject(error));
+      guardCall.catch((error: any) => reject(error));
     });
 }
 
@@ -215,7 +213,7 @@ export function extractComponentsGuards(
     if (__DEV__ && !record.components && record.children.length === 0) {
       warn(
         `Record with path "${record.path}" is either missing a "component(s)"` +
-          ` or "children" property.`,
+        ` or "children" property.`,
       );
     }
     for (const name in record.components) {
@@ -226,7 +224,7 @@ export function extractComponentsGuards(
       ) {
         warn(
           `Component "${name}" in record with path "${record.path}" is not` +
-            ` a valid component. Received "${String(rawComponent)}".`,
+          ` a valid component. Received "${String(rawComponent)}".`,
         );
         // throw to ensure we stop here but warn to ensure the message isn't
         // missed by the user
@@ -237,7 +235,8 @@ export function extractComponentsGuards(
       if (guardType !== 'beforeRouteEnter' && !record.instances[name]) continue;
 
       if (isRouteComponent(rawComponent)) {
-        const guard = record[guardType];
+        const option = rawComponent.options || rawComponent;
+        const guard = option[guardType];
         guard && guards.push(guardToPromiseFn(guard, to, from, record, name));
       } else {
         // start requesting the chunk already
@@ -270,17 +269,13 @@ export function extractComponentsGuards(
 
   return guards;
 }
-export const _toString = Object.prototype.toString;
 
-export function isAsyncFunction(fn: Function): boolean {
-  return _toString.call(fn) === '[object AsyncFunction]';
-}
 /**
  * Allows differentiating lazy components from functional components and essor-class-component
  * @param component
  */
 export function isRouteComponent(component: RawRouteComponent): component is RouteComponent {
-  return typeof component === 'function' && !isAsyncFunction(component);
+  return isFunction(component) && !isAsyncFunction(component);
 }
 
 /**
@@ -294,47 +289,47 @@ export function loadRouteLocation(
   return route.matched.every(record => record.redirect)
     ? Promise.reject(new Error('Cannot load a route that redirects.'))
     : Promise.all(
-        route.matched.map(
-          record =>
-            record.components &&
-            Promise.all(
-              Object.keys(record.components).reduce(
-                (promises, name) => {
-                  const rawComponent = record.components![name];
-                  if ('then' in rawComponent && !('displayName' in rawComponent)) {
-                    let componentPromise: Promise<RouteComponent | null | undefined | void> =
-                      rawComponent;
-                    if (__DEV__ && !('catch' in componentPromise)) {
-                      warn(
-                        `Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`,
-                      );
-                      componentPromise = Promise.resolve(componentPromise as RouteComponent);
-                    }
-
-                    promises.push(
-                      (componentPromise as RouteComponent).then(resolved => {
-                        if (!resolved)
-                          return Promise.reject(
-                            new Error(
-                              `Couldn't resolve component "${name}" at "${record.path}". Ensure you passed a function that returns a promise.`,
-                            ),
-                          );
-                        const resolvedComponent = isESModule(resolved)
-                          ? resolved.default
-                          : resolved;
-
-                        // replace the function with the resolved component
-                        // cannot be null or undefined because we went into the for loop
-                        record.components![name] = resolvedComponent;
-                        return;
-                      }),
+      route.matched.map(
+        record =>
+          record.components &&
+          Promise.all(
+            Object.keys(record.components).reduce(
+              (promises, name) => {
+                const rawComponent = record.components![name];
+                if ('then' in rawComponent && !('displayName' in rawComponent)) {
+                  let componentPromise: Promise<RouteComponent | null | undefined | void> =
+                    rawComponent;
+                  if (__DEV__ && !('catch' in componentPromise)) {
+                    warn(
+                      `Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`,
                     );
+                    componentPromise = Promise.resolve(componentPromise as RouteComponent);
                   }
-                  return promises;
-                },
-                [] as Array<Promise<RouteComponent | null | undefined>>,
-              ),
+
+                  promises.push(
+                    componentPromise.then(resolved => {
+                      if (!resolved)
+                        return Promise.reject(
+                          new Error(
+                            `Couldn't resolve component "${name}" at "${record.path}". Ensure you passed a function that returns a promise.`,
+                          ),
+                        );
+                      const resolvedComponent = isESModule(resolved)
+                        ? resolved.default
+                        : resolved;
+
+                      // replace the function with the resolved component
+                      // cannot be null or undefined because we went into the for loop
+                      record.components![name] = resolvedComponent;
+                      return;
+                    }),
+                  );
+                }
+                return promises;
+              },
+              [] as Array<Promise<RouteComponent | null | undefined>>,
             ),
-        ),
-      ).then(() => route as RouteLocationNormalizedLoaded);
+          ),
+      ),
+    ).then(() => route as RouteLocationNormalizedLoaded);
 }

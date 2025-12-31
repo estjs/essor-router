@@ -1,4 +1,5 @@
 import { RouterView, createRouter, useRoute, useRouter } from 'essor-router';
+import { createApp } from 'essor/*';
 let router;
 function Home() {
   const route = useRoute();
@@ -23,4 +24,4 @@ setTimeout(() => {
   router.push('/xx/?q=hi');
 }, 10000);
 
-(<App />).mount(document.querySelector('#app')!);
+createApp(App, '#app');

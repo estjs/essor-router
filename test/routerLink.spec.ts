@@ -1,4 +1,4 @@
-import { h } from 'essor';
+import { createComponent as h } from 'essor';
 import { RouterLink, RouterView, createMemoryHistory, createRouter } from '../src';
 import { mount, sleep } from './utils';
 
@@ -27,15 +27,23 @@ describe('routerLink', () => {
     await sleep(100);
   });
 
+  afterEach(() => {
+    wrapper && wrapper.unmount();
+    wrapper = null;
+  });
+
   it('renders an anchor tag by default', () => {
     expect(wrapper.get('a').textContent).toBe('Home');
   });
 
-  it('uses replace when replace prop is true', () => {
-    const replaceWrapper = mount(RouterLink, {
-      to: '/about',
-      replace: true,
-      children: 'About',
+  it('uses replace when replace prop is true', async () => {
+    await router.push('/non-existent');
+    const replaceWrapper = mount(RouterView, {
+      children: h(RouterLink, {
+        to: '/about',
+        replace: true,
+        children: 'About',
+      }),
     });
     const spy = vi.spyOn(router, 'replace');
     replaceWrapper.get('a').click();
@@ -43,19 +51,25 @@ describe('routerLink', () => {
   });
 
   it('applies custom active class when provided', async () => {
-    const customWrapper = mount(RouterLink, {
-      to: '/',
-      activeClass: 'my-active-class',
-      children: 'Home',
+    await router.push('/non-existent');
+    const customWrapper = mount(RouterView, {
+      children: h(RouterLink, {
+        to: '/',
+        activeClass: 'my-active-class',
+        children: 'Home',
+      }),
     });
     await router.push('/');
     expect(customWrapper.get('a').classList.contains('my-active-class')).toBe(true);
   });
 
-  it('handles object as "to" prop', () => {
-    const objectWrapper = mount(RouterLink, {
-      to: { name: 'user', params: { id: '123' } },
-      children: 'User',
+  it('handles object as "to" prop', async () => {
+    await router.push('/non-existent');
+    const objectWrapper = mount(RouterView, {
+      children: h(RouterLink, {
+        to: { name: 'user', params: { id: '123' } },
+        children: 'User',
+      }),
     });
     const spy = vi.spyOn(router, 'push');
     objectWrapper.get('a').click();

@@ -77,7 +77,7 @@ async function newRouter(options: Partial<Parameters<typeof createRouter>[0]> = 
 describe('router', () => {
   mockWarn();
 
-  beforeAll(() => {
+  beforeEach(() => {
     createDom();
   });
 
@@ -206,7 +206,7 @@ describe('router', () => {
       history: 'memory',
       routes: [{ path: '/', component: components.Home }],
     });
-    expect(router.currentRoute.value).toBe(START_LOCATION_NORMALIZED);
+    expect(router.currentRoute.value).toEqual(START_LOCATION_NORMALIZED);
     await router.push('/');
     expect(router.currentRoute.value).not.toBe(START_LOCATION_NORMALIZED);
   });
@@ -941,7 +941,7 @@ describe('router', () => {
         },
       });
 
-      router.push('/dynamic/child').catch(() => {});
+      router.push('/dynamic/child').catch(() => { });
       await tick();
       expect(router.currentRoute.value).toMatchObject({
         name: 'dynamic child',

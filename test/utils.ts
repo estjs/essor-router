@@ -1,6 +1,11 @@
-import process from 'node:process';
 import { type ConstructorOptions, JSDOM } from 'jsdom';
-import { h as _h$, template as _template$ } from 'essor';
+import {
+  template as _template$,
+  createComponent,
+  createComponent as h,
+  insert,
+  mapNodes,
+} from 'essor';
 import {
   type RouteRecordNormalized,
   type Router,
@@ -101,55 +106,76 @@ export function createDom(options?: ConstructorOptions) {
     contentType: 'text/html',
     ...options,
   });
-
   try {
     // @ts-expect-error: not the same window
-    global.window = dom.window;
-    global.location = dom.window.location;
-    global.history = dom.window.history;
-    global.document = dom.window.document;
-  } catch {
-    // it's okay, some are readonly
-  }
-
+    global.window = dom.window as any;
+    global.location = dom.window.location as any;
+    global.history = dom.window.history as any;
+    global.document = dom.window.document as any;
+  } catch { }
   return dom;
 }
 
 export const noGuard = (to, from, next) => {
   next();
 };
-function Home() {
-  return _h$(_template$('<div>Home</div>'), {});
+
+export function Home() {
+  const _$tmpl = _template$('<div>Home</div>');
+  return (() => {
+    const _$el = _$tmpl();
+    return _$el;
+  })();
 }
-function Foo() {
-  return _h$(_template$('<div>Foo</div>'), {});
-}
-function Bar() {
-  return _h$(_template$('<div>Bar</div>'), {});
+export function Foo() {
+  const _$tmpl = _template$('<div>Foo</div>');
+  return (() => {
+    const _$el = _$tmpl();
+    return _$el;
+  })();
 }
 
+export function Bar() {
+  const _$tmpl = _template$('<div>Bar</div>');
+  return (() => {
+    const _$el = _$tmpl();
+    return _$el;
+  })();
+}
+export function BeforeLeave() {
+  const _$tmpl = _template$('<div>before leave</div>');
+  return (() => {
+    const _$el = _$tmpl();
+    return _$el;
+  })();
+}
+
+export function User(props) {
+  const _$tmpl = _template$('<div>User:</div>');
+  return (() => {
+    const _$el = _$tmpl();
+    const _$nodes = mapNodes(_$el, [1]);
+    insert(_$nodes[0], () => props.id);
+    return _$el;
+  })();
+}
+
+export function Nested() {
+  const _$tmpl = _template$('<div><h2>Nested</h2></div>');
+  return (() => {
+    const _$el = _$tmpl();
+    const _$nodes = mapNodes(_$el, [1]);
+    insert(_$nodes[0], createComponent(RouterView, {}));
+    return _$el;
+  })();
+}
 export const components = {
   Home,
   Foo,
   Bar,
-  User: {
-    props: {
-      id: {
-        default: 'default',
-      },
-    },
-  },
-
-  Nested: () => {
-    return _h$(_template$('<div><h2>Nested</h2></div>'), {
-      '1': {
-        children: [[() => _h$(RouterView, {}), null]],
-      },
-    });
-  },
-  BeforeLeave: () => {
-    return _h$(_template$('<div>before leave</div>'), {});
-  },
+  User,
+  Nested,
+  BeforeLeave,
 };
 
 export function newRouter(options: Partial<RouterOptions> & { routes: RouteRecordRaw[] }) {
@@ -161,13 +187,15 @@ export function newRouter(options: Partial<RouterOptions> & { routes: RouteRecor
 
 export function mount(code, props = {}) {
   const container = document.createElement('div');
-  const nodes = _h$(code, props).mount(container);
+  const instance = h(code, props);
+  const nodes = instance.mount(container);
 
   return {
     nodes,
     innerHTML: () => container.innerHTML,
     text: () => container.textContent,
     get: name => container.querySelector(name),
+    unmount: () => instance.destroy(),
   };
 }
 

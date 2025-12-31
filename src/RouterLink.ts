@@ -1,10 +1,13 @@
-import { h, isSignal, useComputed, useInject } from 'essor';
+import { computed, createComponent, inject, isSignal } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
+import { useRouter } from './useApi';
+import { LinkComponent } from './linkComponent';
 import { routeLocationKey, routerKey } from './injectionSymbols';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
+
 export interface RouterLinkOptions {
   /**
    * Route Location the link should navigate to when clicked on.
@@ -19,7 +22,6 @@ export interface RouterLinkOptions {
 export interface RouterLinkProps extends RouterLinkOptions {
   /**
    * Whether RouterLink should not wrap its content in an `a` tag. Useful when
-   * using `v-slot` to create a custom RouterLink
    */
   custom?: boolean;
   /**
@@ -36,15 +38,20 @@ export interface RouterLinkProps extends RouterLinkOptions {
    * @defaultValue `'page'`
    */
   ariaCurrentValue?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
+  /**
+   * Whether to use View Transitions API when navigating.
+   */
+  viewTransition?: boolean;
 }
+
 function useLink(props: RouterLinkProps) {
-  const router = useInject(routerKey)!;
-  const currentRoute = useInject(routeLocationKey)!;
+  const router = inject(routerKey)!;
+  const currentRoute = inject(routeLocationKey)!;
 
   let hasPrevious = false;
   let previousTo: unknown = null;
 
-  const route = useComputed<any>(() => {
+  const route = computed<any>(() => {
     const to = props.to;
 
     if (!hasPrevious || to !== previousTo) {
@@ -70,7 +77,7 @@ function useLink(props: RouterLinkProps) {
     return router.resolve(to);
   });
 
-  const activeRecordIndex = useComputed(() => {
+  const activeRecordIndex = computed(() => {
     const matched = route.value.matched;
     const currentMatched = currentRoute.matched;
     const index = currentMatched.findIndex((record: RouteRecord) =>
@@ -88,11 +95,11 @@ function useLink(props: RouterLinkProps) {
       : index;
   });
 
-  const isActive = useComputed(
+  const isActive = computed(
     () => activeRecordIndex.value > -1 && includesParams(currentRoute.params, route.value.params),
   );
 
-  const isExactActive = useComputed(
+  const isExactActive = computed(
     () =>
       activeRecordIndex.value > -1 &&
       activeRecordIndex.value === currentRoute.matched.length - 1 &&
@@ -102,6 +109,17 @@ function useLink(props: RouterLinkProps) {
   function navigate(e: MouseEvent = {} as MouseEvent): Promise<void | NavigationFailure> {
     if (guardEvent(e)) {
       const to = isSignal(props.to) ? (props.to.peek() as string) : props.to;
+
+      if (
+        props.viewTransition &&
+        typeof document !== 'undefined' &&
+        'startViewTransition' in document
+      ) {
+        return (document as any).startViewTransition(() =>
+          router[props.replace ? 'replace' : 'push'](to).catch(noop),
+        ).finished;
+      }
+
       // avoid uncaught errors are they are logged anyway
       return router[props.replace ? 'replace' : 'push'](to).catch(noop);
     }
@@ -110,14 +128,14 @@ function useLink(props: RouterLinkProps) {
 
   return {
     route,
-    href: route.value.pathname,
+    href: route.value.href,
     isActive,
     isExactActive,
     navigate,
   };
 }
 
-function guardEvent(e) {
+function guardEvent(e: MouseEvent) {
   // don't redirect with control keys
   if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return;
   // don't redirect when preventDefault called
@@ -125,8 +143,8 @@ function guardEvent(e) {
   // don't redirect on right click
   if (e.button !== undefined && e.button !== 0) return;
   // don't redirect if `target="_blank"`
-  if (e.currentTarget && e.currentTarget.getAttribute) {
-    const target = e.currentTarget.getAttribute('target');
+  if (e.currentTarget) {
+    const target = (e.currentTarget as Element).getAttribute('target');
     if (target && /\b_blank\b/i.test(target)) return;
   }
   e.preventDefault();
@@ -159,7 +177,6 @@ function includesParams(
 function getOriginalPath(record: RouteRecord | undefined): string {
   return record ? (record.aliasOf ? record.aliasOf.path : record.path) : '';
 }
-
 /**
  * Utility class to get the active class based on defaults.
  * @param propClass
@@ -172,12 +189,16 @@ const getLinkClass = (
   defaultClass: string,
 ): string => (propClass != null ? propClass : globalClass != null ? globalClass : defaultClass);
 
-export const RouterLink = props => {
-  const link = useLink({ to: props.to, replace: props.replace });
+export const RouterLink = (props: RouterLinkProps & { children: unknown }) => {
+  const link = useLink({
+    to: props.to,
+    replace: props.replace,
+    viewTransition: props.viewTransition,
+  });
 
-  const { options } = useInject(routerKey)!;
+  const { options } = useRouter();
 
-  const elClass = useComputed(() => ({
+  const elClass = computed(() => ({
     [getLinkClass(props.activeClass, options?.linkActiveClass, 'router-link-active')]:
       link.isActive,
     // [getLinkClass(
@@ -192,21 +213,19 @@ export const RouterLink = props => {
     )]: link.isExactActive,
   }));
 
-  const handleClick = e => {
+  const handleClick = (e: MouseEvent) => {
     if (link.navigate && !props.custom) {
       link.navigate(e);
     }
   };
 
   return props.custom
-    ? h('', {
-        children: [[() => props.children, null]],
-      })
-    : h('a', {
-        ariaCurrent: link.isExactActive ? props.ariaCurrentValue : null,
-        href: link.href,
-        onClick: handleClick,
-        class: elClass.value,
-        children: [[() => props.children, null]],
-      });
+    ? [() => props.children]
+    : createComponent(LinkComponent, {
+      ariaCurrent: link.isExactActive ? props.ariaCurrentValue : null,
+      href: link.href,
+      onClick: handleClick,
+      className: elClass.value,
+      children: [() => props.children],
+    });
 };

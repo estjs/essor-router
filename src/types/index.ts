@@ -1,3 +1,4 @@
+import type { Signal } from 'essor';
 import type { PathParserOptions } from '@/matcher/pathParserRanker';
 import type { LocationQuery, LocationQueryRaw } from '../query';
 import type { RouteRecord, RouteRecordNormalized } from '../matcher/types';
@@ -18,7 +19,7 @@ export type Immutable<T> = {
 
  */
 export type essorUseOptions<T> = {
-  [k in keyof T]: any | T[k];
+  [k in keyof T]: T[k] | Signal<T[k]>;
 };
 
 export type TODO = any;
@@ -124,8 +125,8 @@ export type RouteLocationRaw = string | RouteLocationPathRaw | RouteLocationName
  */
 export interface RouteLocationNamedRaw
   extends RouteQueryAndHash,
-    LocationAsRelativeRaw,
-    RouteLocationOptions {}
+  LocationAsRelativeRaw,
+  RouteLocationOptions { }
 
 /**
  * Route Location that can infer the possible paths.
@@ -134,8 +135,8 @@ export interface RouteLocationNamedRaw
  */
 export interface RouteLocationPathRaw
   extends RouteQueryAndHash,
-    MatcherLocationAsPath,
-    RouteLocationOptions {}
+  MatcherLocationAsPath,
+  RouteLocationOptions { }
 
 export interface RouteLocationMatched extends RouteRecordNormalized {
   // components cannot be Lazy<RouteComponent>
@@ -167,6 +168,10 @@ export interface _RouteLocationBase
    * on the current location.
    */
   redirectedFrom: RouteLocation | undefined;
+  /**
+   * The percentage encoded URL of the current location.
+   */
+  href: string;
 }
 
 // matched contains resolved components
@@ -209,8 +214,10 @@ export interface RouteLocationNormalized extends _RouteLocationBase {
 /**
  * Allowed Component in {@link RouteLocationMatched}
  */
-// TODO: component
-export type RouteComponent = any;
+/**
+ * Allowed Component in {@link RouteLocationMatched}
+ */
+export type RouteComponent = any; // Essor component type
 /**
  * Allowed Component definitions in route records provided by the user
  */
@@ -300,7 +307,7 @@ export interface _RouteRecordBase extends PathParserOptions {
  *  }
  * ```
  */
-export interface RouteMeta extends Record<string | number | symbol, unknown> {}
+export interface RouteMeta extends Record<string | number | symbol, any> { }
 
 /**
 
@@ -427,6 +434,7 @@ export const START_LOCATION_NORMALIZED: RouteLocationNormalizedLoaded = {
   matched: [],
   meta: {},
   redirectedFrom: undefined,
+  href: '/',
 };
 
 // make matched non-enumerable for easy printing
@@ -492,7 +500,7 @@ export interface NavigationGuardNext {
   // _called: boolean
 }
 
-export type NavigationGuardNextCallback = (vm: any) => unknown;
+export type NavigationGuardNextCallback = (vm: any) => any;
 
 export type NavigationGuardReturn = void | Error | RouteLocationRaw | boolean;
 

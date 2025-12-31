@@ -6,7 +6,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/': `${resolve(dirname, 'src')}/`,
-      '@/tests/': `${resolve(dirname, 'tests')}/`,
     },
   },
   define: {

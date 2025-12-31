@@ -1,41 +1,43 @@
-import { h as _h$, template as _template$ } from 'essor';
-import { RouterView, createRouter, useRoute, useRouter } from '../src';
+import { createComponent as _h$, template as _template$, insert, mapNodes } from 'essor';
+import { RouterView, createRouter, useRoute } from '../src';
 import { mount, sleep } from './utils';
 
 let router;
 let wrapper;
-const _tmpl$ = _template$('<div>Query: ');
-function Home() {
+export function Home() {
+  const _$tmpl = _template$('<div>Query:</div>');
   const route = useRoute();
-  router = useRouter();
-  return _h$(_tmpl$, {
-    '1': {
-      children: [[() => route.query.q, null]],
-    },
-  });
-}
+  console.log(route);
 
-createRouter({
-  history: 'memory',
-  routes: [
-    {
-      path: '/:any(.*)',
-      component: Home,
-    },
-  ],
-});
+  return (() => {
+    const _$el = _$tmpl();
+    const _$nodes = mapNodes(_$el, [1]);
+    insert(_$nodes[0], () => route.query.q);
+    return _$el;
+  })();
+}
 
 const App = () => {
   return _h$(RouterView, {});
 };
 describe('use apis', () => {
   beforeEach(async () => {
+    router = createRouter({
+      history: 'memory',
+      routes: [
+        {
+          path: '/:any(.*)',
+          component: Home,
+        },
+      ],
+    });
     wrapper = mount(App);
     // router is async, need to wait
-    await sleep(100);
+    await sleep(200);
   });
 
   afterEach(() => {
+    wrapper && wrapper.unmount();
     wrapper = null;
   });
 

@@ -1,21 +1,23 @@
-import { type Signal, h, useComputed, useInject, useProvide } from 'essor';
+import { type Signal, computed, createComponent, inject, provide, signal } from 'essor';
 import { matchedRouteKey, routerViewLocationKey, viewDepthKey } from './injectionSymbols';
 import { initRouter } from './router';
-import type { RouteLocationNormalized } from './types';
+import { type RouteLocationNormalized, START_LOCATION_NORMALIZED } from './types';
+import type { Router } from './router';
 export interface RouterViewProps {
   name?: string;
   route?: RouteLocationNormalized;
-  children?: any;
+  children?: unknown;
+  router: Router;
 }
 
 export const RouterView = (props: RouterViewProps) => {
-  initRouter && initRouter();
-  const injectedRoute = useInject(routerViewLocationKey)!;
-  const injectedDepth = useInject(viewDepthKey, 0) as Signal<number>;
-  const routeToDisplay = useComputed<RouteLocationNormalized>(
-    () => props.route || injectedRoute.value,
+  const state = initRouter && (initRouter() as any);
+  const injectedRoute = inject(routerViewLocationKey) || (state && state.currentRoute);
+  const routeToDisplay = computed<RouteLocationNormalized>(
+    () => props.route || (injectedRoute ? injectedRoute.value : START_LOCATION_NORMALIZED),
   );
-  const depth = useComputed<number>(() => {
+  const injectedDepth = inject<Signal<number>>(viewDepthKey, signal(0));
+  const depth = computed<number>(() => {
     let initialDepth = injectedDepth.value || 0;
     const { matched } = routeToDisplay.value! as RouteLocationNormalized;
     let matchedRoute;
@@ -25,18 +27,18 @@ export const RouterView = (props: RouterViewProps) => {
     return initialDepth;
   });
 
-  const matchedRouteRef = useComputed<any>(() => routeToDisplay.value!.matched[depth.value]);
-  useProvide(viewDepthKey, useComputed(() => depth.value + 1) as any);
+  const matchedRouteRef = computed<any>(() => routeToDisplay.value!.matched[depth.value]);
 
-  useProvide(matchedRouteKey, matchedRouteRef);
-  useProvide(routerViewLocationKey, routeToDisplay);
+  // Keep these for backward compatibility with existing useRoute/onBeforeRouteLeave etc.
+  provide(viewDepthKey, computed(() => depth.value + 1) as any);
+  provide(matchedRouteKey, matchedRouteRef);
+  provide(routerViewLocationKey, routeToDisplay);
 
-  const renderView = useComputed(() => {
+  const renderView = computed(() => {
     const ViewComponent =
       matchedRouteRef.value && matchedRouteRef.value.components[props.name || 'default'];
-    return ViewComponent ? h(ViewComponent, {}) : props.children;
+
+    return ViewComponent ? createComponent(ViewComponent, {}) : props.children;
   });
-  return h('', {
-    children: [[() => renderView.value, null]],
-  });
+  return [() => renderView.value];
 };

@@ -1,4 +1,5 @@
 import { RouterView, createRouter } from 'essor-router';
+import { createApp } from 'essor/*';
 
 createRouter({
   history: 'hash',
@@ -22,4 +23,4 @@ const App = () => {
   return <RouterView></RouterView>;
 };
 
-(<App />).mount(document.querySelector('#app')!);
+createApp(App, '#app');

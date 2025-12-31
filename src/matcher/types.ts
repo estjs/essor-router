@@ -61,7 +61,6 @@ export interface RouteRecordNormalized {
   /**
    * Registered beforeRouteEnter callbacks passed to `next` or returned in guards
    *
-
    */
   enterCallbacks: Record<string, NavigationGuardNextCallback[]>;
   /**

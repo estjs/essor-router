@@ -1,4 +1,4 @@
-import { useInject } from 'essor';
+import { inject } from 'essor';
 import { routeLocationKey, routerKey } from './injectionSymbols';
 import type { Router } from './router';
 import type { RouteLocationNormalizedLoaded } from './types';
@@ -8,7 +8,7 @@ import type { RouteLocationNormalizedLoaded } from './types';
  * templates.
  */
 export function useRouter(): Router {
-  return useInject(routerKey)!;
+  return inject(routerKey)!;
 }
 
 /**
@@ -16,5 +16,5 @@ export function useRouter(): Router {
  * templates.
  */
 export function useRoute(): RouteLocationNormalizedLoaded {
-  return useInject(routeLocationKey)!;
+  return inject(routeLocationKey)!;
 }

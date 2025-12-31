@@ -25,7 +25,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 describe('router.afterEach', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     createDom();
   });
 

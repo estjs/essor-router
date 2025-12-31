@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 describe('router.beforeEach', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     createDom();
   });
 

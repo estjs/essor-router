@@ -109,7 +109,7 @@ beforeEach(() => {
 });
 
 describe('beforeRouteEnter', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     createDom();
   });
 

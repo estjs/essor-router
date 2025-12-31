@@ -25,4 +25,4 @@ const App = () => {
   return <RouterView></RouterView>;
 };
 
-(<App />).mount(document.querySelector('#app')!);
+createApp(App, '#app');

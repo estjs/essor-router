@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 describe('beforeEnter', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     createDom();
   });
 

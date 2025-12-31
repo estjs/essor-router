@@ -1,11 +1,7 @@
-import { h as _h$, template as _template$ } from 'essor';
 import { type RouterHistory, createMemoryHistory, createRouter } from '../src';
-import { createDom } from './utils';
+import { components, createDom } from './utils';
 
 const delay = (t: number) => new Promise(resolve => setTimeout(resolve, t));
-function Foo() {
-  return _h$(_template$('<div>Foo</div>'), {});
-}
 
 function newRouter(options: Partial<Parameters<typeof createRouter>[0]> = {}) {
   const history = (options.history || createMemoryHistory('/')) as RouterHistory;
@@ -14,7 +10,7 @@ function newRouter(options: Partial<Parameters<typeof createRouter>[0]> = {}) {
     routes: [
       {
         path: '/:pathMatch(.*)',
-        component: Foo,
+        component: components.Foo,
       },
     ],
     ...options,
@@ -24,7 +20,7 @@ function newRouter(options: Partial<Parameters<typeof createRouter>[0]> = {}) {
 }
 
 describe('multiple apps', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     createDom();
     const rootEl = document.createElement('div');
     rootEl.id = 'app';

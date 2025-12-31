@@ -1,23 +1,27 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["esnext", "DOM"],
-    "baseUrl": ".",
-    "rootDir": ".",
-    "module": "esnext",
+    "jsx": "preserve",
+    "module": "ESNext",
     "moduleResolution": "node",
     "paths": {
-      "@/*": ["src/*"],
-      "@/tests/*": ["tests/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     "resolveJsonModule": true,
-    "types": ["vitest/globals"],
+    "types": [
+      "vitest/globals"
+    ],
+    "allowJs": true,
+    "checkJs": true,
     "strict": true,
     "noImplicitAny": false,
+    "noEmit": true,
     "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
-  },
-  "exclude": ["node_modules", "dist", "./dist/**/*"]
+  }
 }

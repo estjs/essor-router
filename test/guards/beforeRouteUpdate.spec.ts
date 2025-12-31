@@ -31,7 +31,7 @@ beforeEach(() => {
 });
 
 describe('beforeRouteUpdate', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     createDom();
   });
 
