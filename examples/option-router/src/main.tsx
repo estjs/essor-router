@@ -3,7 +3,7 @@ import Home from './Home';
 import About from './About';
 import notFound from './NotFound';
 
-createRouter({
+const router = createRouter({
   history: 'history',
   routes: [
     {
@@ -22,7 +22,7 @@ createRouter({
 });
 
 const App = () => {
-  return <RouterView></RouterView>;
+  return <RouterView router={router}></RouterView>;
 };
 
 createApp(App, '#app');

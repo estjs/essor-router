@@ -38,7 +38,7 @@ const router = createRouter({
 });
 
 const App = () => {
-  return <RouterView></RouterView>;
+  return <RouterView router={router}></RouterView>;
 };
 
 createApp(App, '#app');

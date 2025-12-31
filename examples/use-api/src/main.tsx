@@ -1,13 +1,24 @@
 import { RouterView, createRouter, useRoute, useRouter } from 'essor-router';
-import { createApp } from 'essor/*';
-let router;
+import { createApp } from 'essor';
+
+import { template as _template$, mapNodes as _mapNodes$, insert as _insert$ } from "essor";
+const _$tmpl = _template$("<div>route.query:</div>");
 function Home() {
   const route = useRoute();
-  router = useRouter();
-  return <div>route.query: {route.query.q}</div>;
-}
+  const router = useRouter();
 
-createRouter({
+  // Demo navigation after component mounts
+  setTimeout(() => {
+    router.push('/xx/?q=hi');
+  }, 1000);
+  return (() => {
+    const _$el = _$tmpl();
+    const _$nodes = _mapNodes$(_$el, [1]);
+    _insert$(_$nodes[0], () => route.query.q);
+    return _$el;
+  })();
+}
+const router = createRouter({
   history: 'memory',
   routes: [
     {
@@ -16,12 +27,9 @@ createRouter({
     },
   ],
 });
-const App = () => {
-  return <RouterView></RouterView>;
-};
 
-setTimeout(() => {
-  router.push('/xx/?q=hi');
-}, 10000);
+const App = () => {
+  return <RouterView router={router}></RouterView>;
+};
 
 createApp(App, '#app');

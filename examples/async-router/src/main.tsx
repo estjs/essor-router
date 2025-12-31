@@ -1,7 +1,7 @@
 import { RouterView, createRouter } from 'essor-router';
 import { createApp } from 'essor/*';
 
-createRouter({
+const router = createRouter({
   history: 'hash',
   routes: [
     {
@@ -20,7 +20,7 @@ createRouter({
 });
 
 const App = () => {
-  return <RouterView></RouterView>;
+  return <RouterView router={router}></RouterView>;
 };
 
 createApp(App, '#app');
