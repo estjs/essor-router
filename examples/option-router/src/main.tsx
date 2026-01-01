@@ -1,4 +1,5 @@
 import { RouterView, createRouter } from 'essor-router';
+import { createApp } from 'essor';
 import Home from './Home';
 import About from './About';
 import notFound from './NotFound';

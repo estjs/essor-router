@@ -209,11 +209,7 @@ function useHistoryStateNavigation(base: string) {
       history[replace ? 'replaceState' : 'pushState'](state, '', url);
       historyState.value = state;
     } catch (error) {
-      if (__DEV__) {
-        warn('Error with push/replace State', error);
-      } else {
-        console.error(error);
-      }
+      warn('Error with push/replace State', error);
       // Force the navigation, this also resets the call count
       location[replace ? 'replace' : 'assign'](url);
     }
@@ -255,7 +251,7 @@ function useHistoryStateNavigation(base: string) {
     if (__DEV__ && !history.state) {
       warn(
         `history.state seems to have been manually replaced without preserving the necessary values. Make sure to preserve existing history state if you are manually calling history.replaceState:\n\n` +
-        `history.replaceState(history.state, '', url)\n\n`,
+          `history.replaceState(history.state, '', url)\n\n`,
       );
     }
 

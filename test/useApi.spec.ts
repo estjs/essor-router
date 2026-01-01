@@ -16,7 +16,6 @@ export function Home() {
   })();
 }
 
-
 describe('use apis', () => {
   beforeEach(async () => {
     router = createRouter({
@@ -29,8 +28,8 @@ describe('use apis', () => {
       ],
     });
     const App = () => {
-  return _h$(RouterView, {router});
-};
+      return _h$(RouterView, { router });
+    };
     wrapper = mount(App);
     // router is async, need to wait
     await sleep(200);
