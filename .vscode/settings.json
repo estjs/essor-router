@@ -1,4 +1,6 @@
 {
   "vitest.disableWorkspaceWarning": true,
-  "cSpell.words": ["essor"]
+  "cSpell.words": [
+    "essor"
+  ]
 }

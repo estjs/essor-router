@@ -344,9 +344,17 @@ export function createRouter(options: RouterOptions): Router {
     // @ts-expect-error: intentionally avoid the type check
     applyToParams.bind(null, decode);
 
+  /**
+   * Adds a new route to the router
+   * @param parentOrRoute - Parent route name or route record
+   * @param route - Route record (when first param is parent name)
+   * @returns Function to remove the added route
+   */
   function addRoute(parentOrRoute: RouteRecordName | RouteRecordRaw, route?: RouteRecordRaw) {
     let parent: Parameters<(typeof matcher)['addRoute']>[1] | undefined;
     let record: RouteRecordRaw;
+
+    // Determine if first param is parent name or route record
     if (isRouteName(parentOrRoute)) {
       parent = matcher.getRecordMatcher(parentOrRoute);
       if (__DEV__ && !parent) {
@@ -357,16 +365,17 @@ export function createRouter(options: RouterOptions): Router {
       record = parentOrRoute;
     }
 
+    // Development-only validations
     if (__DEV__ && record.name) {
       const existingRecord = matcher.getRecordMatcher(record.name);
       if (existingRecord) {
         warn(
-          `Alias "${String(record.name)}" is already used by another route.This will cause issues when navigating by name.`,
+          `Alias "${String(record.name)}" is already used by another route. This will cause issues when navigating by name.`,
         );
       }
       if (parent && parent.record.name === record.name) {
         warn(
-          `Route "${String(record.name)}" has the same name as its parent.This will cause issues when navigating by name.`,
+          `Route "${String(record.name)}" has the same name as its parent. This will cause issues when navigating by name.`,
         );
       }
     }
@@ -551,45 +560,50 @@ export function createRouter(options: RouterOptions): Router {
     return push(assign(locationAsObject(to), { replace: true }));
   }
 
+  /**
+   * Handles redirect records by processing the redirect property
+   * @param to - Target route location
+   * @returns New target location if redirect exists, undefined otherwise
+   */
   function handleRedirectRecord(to: RouteLocation): RouteLocationRaw | void {
     const lastMatched = to.matched.at(-1);
-    if (lastMatched && lastMatched.redirect) {
-      const { redirect } = lastMatched;
-      let newTargetLocation = typeof redirect === 'function' ? redirect(to) : redirect;
+    if (!lastMatched || !lastMatched.redirect) return;
 
-      if (typeof newTargetLocation === 'string') {
-        newTargetLocation =
-          newTargetLocation.includes('?') || newTargetLocation.includes('#')
-            ? (newTargetLocation = locationAsObject(newTargetLocation))
-            : // force empty params
-            { path: newTargetLocation };
-        // @ts-expect-error: force empty params when a string is passed to let
-        // the router parse them again
-        newTargetLocation.params = {};
-      }
+    const { redirect } = lastMatched;
+    let newTargetLocation = typeof redirect === 'function' ? redirect(to) : redirect;
 
-      if (__DEV__ && newTargetLocation.path == null && !('name' in newTargetLocation)) {
-        warn(
-          `Invalid redirect found:\n${JSON.stringify(
-            newTargetLocation,
-            null,
-            2,
-          )}\n when navigating to "${to.fullPath
-          }". A redirect must contain a name or path. This will break in production.`,
-        );
-        throw new Error('Invalid redirect');
-      }
-
-      return assign(
-        {
-          query: to.query,
-          hash: to.hash,
-          // avoid transferring params if the redirect has a path
-          params: newTargetLocation.path != null ? {} : to.params,
-        },
-        newTargetLocation,
-      );
+    // Normalize string redirects
+    if (typeof newTargetLocation === 'string') {
+      const hasQueryOrHash = newTargetLocation.includes('?') || newTargetLocation.includes('#');
+      newTargetLocation = hasQueryOrHash
+        ? locationAsObject(newTargetLocation)
+        : { path: newTargetLocation };
+      // @ts-expect-error: force empty params when a string is passed to let the router parse them again
+      newTargetLocation.params = {};
     }
+
+    // Validate redirect in development
+    if (__DEV__ && newTargetLocation.path == null && !('name' in newTargetLocation)) {
+      warn(
+        `Invalid redirect found:\n${JSON.stringify(
+          newTargetLocation,
+          null,
+          2,
+        )}\n when navigating to "${to.fullPath}". A redirect must contain a name or path. This will break in production.`,
+      );
+      throw new Error('Invalid redirect');
+    }
+
+    // Merge query, hash, and params from original location
+    return assign(
+      {
+        query: to.query,
+        hash: to.hash,
+        // Avoid transferring params if the redirect has a path
+        params: newTargetLocation.path != null ? {} : to.params,
+      },
+      newTargetLocation,
+    );
   }
 
   function pushWithRedirect(
@@ -832,6 +846,15 @@ export function createRouter(options: RouterOptions): Router {
    * - Changes the url if necessary
    * - Calls the scrollBehavior
    */
+  /**
+   * Finalizes the navigation by updating the URL and current route
+   * @param toLocation - Target location
+   * @param from - Current location
+   * @param isPush - Whether this is a push navigation
+   * @param replace - Whether to replace the history entry
+   * @param data - History state data
+   * @returns NavigationFailure if navigation was cancelled
+   */
   function finalizeNavigation(
     toLocation: RouteLocationNormalizedLoaded,
     from: RouteLocationNormalizedLoaded,
@@ -839,30 +862,25 @@ export function createRouter(options: RouterOptions): Router {
     replace?: boolean,
     data?: HistoryState,
   ): NavigationFailure | void {
-    // a more recent navigation took place
+    // Check if a more recent navigation took place
     const error = checkCanceledNavigation(toLocation, from);
     if (error) return error;
 
-    // only consider as push if it's not the first navigation
     const isFirstNavigation = from === START_LOCATION_NORMALIZED;
     const state: Partial<HistoryState> | null = !isBrowser ? {} : history.state;
 
-    // change URL only if the user did a push/replace and if it's not the initial navigation because
-    // it's just reflecting the url
+    // Update URL only if user initiated push/replace (not initial navigation)
     if (isPush) {
-      // on the initial navigation, we want to reuse the scroll position from
-      // history state if it exists
-      if (replace || isFirstNavigation)
-        routerHistory.replace(
-          toLocation.fullPath,
-          assign(
-            {
-              scroll: isFirstNavigation && state && state.scroll,
-            },
-            data,
-          ),
-        );
-      else routerHistory.push(toLocation.fullPath, data);
+      const shouldReplace = replace || isFirstNavigation;
+      const historyState = shouldReplace
+        ? assign({ scroll: isFirstNavigation && state && state.scroll }, data)
+        : data;
+
+      if (shouldReplace) {
+        routerHistory.replace(toLocation.fullPath, historyState);
+      } else {
+        routerHistory.push(toLocation.fullPath, historyState);
+      }
     }
 
     currentRoute.value = toRaw(toLocation);
@@ -1034,37 +1052,42 @@ export function createRouter(options: RouterOptions): Router {
     }
     return err;
   }
-  let started: boolean | undefined
+  let started: boolean | undefined;
 
+  /**
+   * Initializes the router and performs initial navigation on client side
+   */
+  function init() {
+    // Initial navigation is only necessary on client, not server
+    // Avoid pushing multiple times when router is used in multiple apps
+    const shouldPerformInitialNavigation =
+      isBrowser && !started && toRaw<any>(currentRoute) === START_LOCATION_NORMALIZED;
 
-  function init(){
-          // this initial navigation is only necessary on client, on server it doesn't
-      // make sense because it will create an extra unnecessary navigation and could
-      // lead to problems
-      if (
-        isBrowser &&
-        // used for the initial navigation client side to avoid pushing
-        // multiple times when the router is used in multiple apps
-        !started &&
-        toRaw<any>(currentRoute) === START_LOCATION_NORMALIZED
-      ) {
-        // see above
-        started = true
-        push(routerHistory.location).catch(err => {
-          if (__DEV__) warn('Unexpected error when starting the router:', err)
-        })
-      }
+    if (shouldPerformInitialNavigation) {
+      started = true;
+      push(routerHistory.location).catch(err => {
+        if (__DEV__) warn('Unexpected error when starting the router:', err);
+      });
+    }
   }
 
-
-  function destroy(){
-          // invalidate the current navigation
-          pendingLocation = START_LOCATION_NORMALIZED
-          removeHistoryListener && removeHistoryListener()
-          removeHistoryListener = null
-          currentRoute.value = START_LOCATION_NORMALIZED
-          started = false
-          ready = false
+  /**
+   * Destroys the router and cleans up all listeners and state
+   */
+  function destroy() {
+    // Invalidate the current navigation
+    pendingLocation = START_LOCATION_NORMALIZED;
+    
+    // Remove history listener
+    if (removeHistoryListener) {
+      removeHistoryListener();
+      removeHistoryListener = null;
+    }
+    
+    // Reset router state
+    currentRoute.value = START_LOCATION_NORMALIZED;
+    started = false;
+    ready = false;
   }
   const go = (delta: number) => routerHistory.go(delta);
 

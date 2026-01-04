@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@estjs/shared':
+        specifier: ^0.0.15-beta.5
+        version: 0.0.15-beta.6
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -25,7 +28,7 @@ importers:
         specifier: ^25.0.3
         version: 25.0.3
       '@vitest/coverage-v8':
-        specifier: ^4.0.16
+        specifier: 4.0.16
         version: 4.0.16(vitest@4.0.16(@types/node@25.0.3)(happy-dom@20.0.11)(jiti@2.6.1)(jsdom@27.4.0)(tsx@4.21.0)(yaml@2.8.2))
       bumpp:
         specifier: ^10.3.2
