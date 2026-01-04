@@ -14,7 +14,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
-      provider: 'istanbul',
+      provider: 'v8',
       include: ['src/**'],
       exclude: [
         'playground/**/*',
