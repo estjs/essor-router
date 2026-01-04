@@ -1,19 +1,19 @@
 /**
  * Test Utilities and Helpers
- * 
+ *
  * This module provides utility functions for creating test scenarios,
  * generating test data, and common test patterns using Vitest.
  */
 
+import { createMemoryHistory, createRouter } from '../../src';
 import type {
-  RouteLocationRaw,
-  RouteRecordRaw,
-  RouteParams,
   LocationQuery,
   NavigationGuard,
+  RouteLocationRaw,
+  RouteParams,
+  RouteRecordRaw,
 } from '../../src/types';
 import type { Router } from '../../src/router';
-import { createRouter, createMemoryHistory } from '../../src';
 
 /**
  * Generate random route parameters for testing
@@ -22,9 +22,8 @@ export function generateRouteParams(count: number = 3): RouteParams {
   const params: RouteParams = {};
   for (let i = 0; i < count; i++) {
     const key = `param${i}`;
-    params[key] = Math.random() > 0.5 
-      ? `value${Math.floor(Math.random() * 100)}`
-      : [`val${i}`, `val${i + 1}`];
+    params[key] =
+      Math.random() > 0.5 ? `value${Math.floor(Math.random() * 100)}` : [`val${i}`, `val${i + 1}`];
   }
   return params;
 }
@@ -70,7 +69,7 @@ export function generateRouteLocation(asObject: boolean = false): RouteLocationR
     const hash = Math.random() > 0.5 ? '#section' : '';
     return `${path}${query}${hash}`;
   }
-  
+
   return {
     path: generateRoutePath(Math.floor(Math.random() * 4)),
     query: Math.random() > 0.5 ? generateLocationQuery(2) : undefined,
@@ -161,10 +160,7 @@ export async function waitForRouter(router: Router, timeout: number = 1000): Pro
  * Generate test data for multiple iterations
  * Useful for testing with various inputs
  */
-export function generateTestCases<T>(
-  generator: () => T,
-  count: number = 10,
-): T[] {
+export function generateTestCases<T>(generator: () => T, count: number = 10): T[] {
   const cases: T[] = [];
   for (let i = 0; i < count; i++) {
     cases.push(generator());
@@ -189,8 +185,8 @@ export async function testWithMultipleInputs<T>(
       // Add context to the error
       const enhancedError = new Error(
         `Test failed on iteration ${i + 1}/${iterations}\n` +
-        `Input: ${JSON.stringify(input, null, 2)}\n` +
-        `Original error: ${error instanceof Error ? error.message : String(error)}`
+          `Input: ${JSON.stringify(input, null, 2)}\n` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
       );
       enhancedError.stack = error instanceof Error ? error.stack : undefined;
       throw enhancedError;
@@ -204,8 +200,8 @@ export async function testWithMultipleInputs<T>(
 export function assertOneOf<T>(actual: T, expected: T[], message?: string): void {
   if (!expected.includes(actual)) {
     throw new Error(
-      message || 
-      `Expected value to be one of ${JSON.stringify(expected)}, but got ${JSON.stringify(actual)}`
+      message ||
+        `Expected value to be one of ${JSON.stringify(expected)}, but got ${JSON.stringify(actual)}`,
     );
   }
 }

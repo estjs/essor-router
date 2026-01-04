@@ -298,8 +298,8 @@ export interface Router {
    */
   isReady(): Promise<void>;
 
-  init,
-  destroy
+  init;
+  destroy;
 }
 
 export function createHistory(mode: History | RouterHistory, base?: string): RouterHistory {
@@ -503,7 +503,8 @@ export function createRouter(options: RouterOptions): Router {
         );
       } else if (matchedRoute.matched.length === 0) {
         warn(
-          `No match found for location with path "${rawLocation.path != null ? rawLocation.path : rawLocation
+          `No match found for location with path "${
+            rawLocation.path != null ? rawLocation.path : rawLocation
           }"`,
         );
       }
@@ -647,11 +648,11 @@ export function createRouter(options: RouterOptions): Router {
       .catch((error: NavigationFailure | NavigationRedirectError) => {
         return isNavigationFailure(error)
           ? // navigation redirects still mark the router as ready
-          isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
+            isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
             ? error
             : markAsReady(error) // also returns the error
           : // reject any unknown error
-          triggerError(error, toLocation, from);
+            triggerError(error, toLocation, from);
       })
       .then((failure: NavigationFailure | NavigationRedirectError | void) => {
         if (failure) {
@@ -665,7 +666,7 @@ export function createRouter(options: RouterOptions): Router {
               // @ts-expect-error: added only in dev
               (redirectedFrom._count = redirectedFrom._count
                 ? // @ts-expect-error
-                redirectedFrom._count + 1
+                  redirectedFrom._count + 1
                 : 1) > 30
             ) {
               warn(
@@ -1065,8 +1066,8 @@ export function createRouter(options: RouterOptions): Router {
 
     if (shouldPerformInitialNavigation) {
       started = true;
-      push(routerHistory.location).catch(err => {
-        if (__DEV__) warn('Unexpected error when starting the router:', err);
+      push(routerHistory.location).catch(error => {
+        if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
   }
@@ -1077,13 +1078,13 @@ export function createRouter(options: RouterOptions): Router {
   function destroy() {
     // Invalidate the current navigation
     pendingLocation = START_LOCATION_NORMALIZED;
-    
+
     // Remove history listener
     if (removeHistoryListener) {
       removeHistoryListener();
       removeHistoryListener = null;
     }
-    
+
     // Reset router state
     currentRoute.value = START_LOCATION_NORMALIZED;
     started = false;
@@ -1114,15 +1115,12 @@ export function createRouter(options: RouterOptions): Router {
     onError: errorListeners.add,
     isReady,
     init,
-    destroy
-  
+    destroy,
   };
   // TODO: type this as NavigationGuardReturn or similar instead of any
   function runGuardQueue(guards: Lazy<any>[]): Promise<void> {
     return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
   }
-
-
 
   return router;
 }

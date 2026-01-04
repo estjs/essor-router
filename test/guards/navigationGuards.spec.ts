@@ -1,33 +1,27 @@
-/**
- * Navigation Guards Core Functions Tests
- * 
- * Comprehensive tests for navigationGuards.ts core functions including
- * guardToPromiseFn, extractComponentsGuards, loadRouteLocation, and guard registration.
- * 
- * Target Coverage: 55.1% → 85%+
- * Uncovered Lines: 134, 160-161, 168-170, 185, 207, 218-224, 247, 282-327
- */
-
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  guardToPromiseFn,
   extractComponentsGuards,
-  loadRouteLocation,
+  guardToPromiseFn,
   isRouteComponent,
+  loadRouteLocation,
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
 } from '../../src/navigationGuards';
+import { ErrorTypes } from '../../src/errors';
+import {
+  createAsyncMockGuard,
+  createMockGuard,
+  testWithMultipleInputs,
+} from '../helpers/test-utils';
 import type {
   NavigationGuard,
   RouteLocationNormalized,
   RouteLocationNormalizedLoaded,
 } from '../../src/types';
 import type { RouteRecordNormalized } from '../../src/matcher/types';
-import { ErrorTypes } from '../../src/errors';
-import { testWithMultipleInputs, createMockGuard, createAsyncMockGuard } from '../helpers/test-utils';
 
 // Mock essor functions
-vi.mock('essor', async (importOriginal) => {
+vi.mock('essor', async importOriginal => {
   const actual = await importOriginal<typeof import('essor')>();
   return {
     ...actual,
@@ -186,7 +180,7 @@ describe('navigationGuards', () => {
       const guardFn = guardToPromiseFn(guard, mockTo, mockFrom, mockRecord, 'default');
       await guardFn();
 
-      expect(mockRecord.enterCallbacks['default']).toContain(callback);
+      expect(mockRecord.enterCallbacks.default).toContain(callback);
     });
 
     it('should not add callback if enterCallbackArray changed', async () => {
@@ -198,7 +192,7 @@ describe('navigationGuards', () => {
       const callback = vi.fn();
       const guard: NavigationGuard = (to, from, next) => {
         // Simulate array change
-        mockRecord.enterCallbacks['default'] = [];
+        mockRecord.enterCallbacks.default = [];
         next(callback);
       };
 
@@ -206,7 +200,7 @@ describe('navigationGuards', () => {
       await guardFn();
 
       // Callback should not be added because array changed
-      expect(mockRecord.enterCallbacks['default']).not.toContain(callback);
+      expect(mockRecord.enterCallbacks.default).not.toContain(callback);
     });
 
     it('should handle guards with multiple random configurations', async () => {
@@ -219,18 +213,18 @@ describe('navigationGuards', () => {
           if (rand < 0.8) return createMockGuard('error');
           return createAsyncMockGuard('pass', 5);
         },
-        async (guard) => {
+        async guard => {
           const guardFn = guardToPromiseFn(guard, mockTo, mockFrom);
           try {
             await guardFn();
             // If it resolves, guard should have been 'pass'
             expect(guard).toHaveBeenCalled();
-          } catch (error) {
+          } catch {
             // If it rejects, guard should have been 'fail', 'redirect', or 'error'
             expect(guard).toHaveBeenCalled();
           }
         },
-        50
+        50,
       );
     });
   });
@@ -357,7 +351,7 @@ describe('navigationGuards', () => {
       const guards = extractComponentsGuards([mockRecord], 'beforeRouteEnter', mockTo, mockFrom);
       expect(guards).toHaveLength(1);
 
-      await expect(guards[0]()).rejects.toThrow('Couldn\'t resolve component');
+      await expect(guards[0]()).rejects.toThrow("Couldn't resolve component");
     });
 
     it('should throw error for invalid component', () => {
@@ -413,7 +407,7 @@ describe('navigationGuards', () => {
 
   describe('isRouteComponent', () => {
     it('should return true for regular functions', () => {
-      const component = function() {};
+      const component = function () {};
       expect(isRouteComponent(component)).toBe(true);
     });
 
@@ -448,14 +442,14 @@ describe('navigationGuards', () => {
         query: {},
         hash: '',
         fullPath: '/test',
-        matched: [
-          { redirect: '/other' } as any,
-        ],
+        matched: [{ redirect: '/other' } as any],
         meta: {},
         redirectedFrom: undefined,
       };
 
-      await expect(loadRouteLocation(mockRoute)).rejects.toThrow('Cannot load a route that redirects');
+      await expect(loadRouteLocation(mockRoute)).rejects.toThrow(
+        'Cannot load a route that redirects',
+      );
     });
 
     it('should resolve when route has no lazy components', async () => {
@@ -555,7 +549,7 @@ describe('navigationGuards', () => {
         redirectedFrom: undefined,
       };
 
-      await expect(loadRouteLocation(mockRoute)).rejects.toThrow('Couldn\'t resolve component');
+      await expect(loadRouteLocation(mockRoute)).rejects.toThrow("Couldn't resolve component");
     });
 
     it('should handle multiple lazy components', async () => {
@@ -630,7 +624,7 @@ describe('navigationGuards', () => {
       (essor.inject as any).mockReturnValue({ value: undefined });
 
       const mockGuard = vi.fn();
-      
+
       // Should not throw, just warn
       expect(() => onBeforeRouteLeave(mockGuard)).not.toThrow();
       expect(() => onBeforeRouteUpdate(mockGuard)).not.toThrow();

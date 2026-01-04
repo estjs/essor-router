@@ -1,4 +1,13 @@
-import { ComponentProps, type Signal, computed, createComponent, inject, onDestroy, provide, signal } from 'essor';
+import {
+  type ComponentProps,
+  type Signal,
+  computed,
+  createComponent,
+  inject,
+  onDestroy,
+  provide,
+  signal,
+} from 'essor';
 import {
   matchedRouteKey,
   routeLocationKey,
@@ -93,10 +102,7 @@ function createReactiveRoute(router: Router): RouteLocationNormalized {
  * @param route - Current route to display
  * @returns Computed depth value
  */
-function calculateViewDepth(
-  injectedDepth: Signal<number>,
-  route: RouteLocationNormalized,
-): number {
+function calculateViewDepth(injectedDepth: Signal<number>, route: RouteLocationNormalized): number {
   let depth = injectedDepth.value || 0;
 
   if (!route?.matched) return depth;

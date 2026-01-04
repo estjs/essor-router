@@ -200,7 +200,7 @@ function useLink(props: RouterLinkProps) {
    * @param e - Mouse event
    * @returns Promise that resolves when navigation completes
    */
-  async function navigate(e: MouseEvent = {} as MouseEvent): Promise<void | NavigationFailure> {
+  function navigate(e: MouseEvent = {} as MouseEvent): Promise<void | NavigationFailure> {
     if (!guardEvent(e)) {
       return Promise.resolve();
     }

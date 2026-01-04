@@ -334,7 +334,7 @@ describe('history HTMl5', () => {
       const customState = { userId: 123, data: 'test' };
 
       history.push('/page1', customState);
-      
+
       // State should be accessible
       expect(history.state).toMatchObject(
         expect.objectContaining({
@@ -414,12 +414,12 @@ describe('history HTMl5', () => {
 
     it('maintains state position correctly', () => {
       const history = createWebHistory();
-      
+
       const initialPosition = history.state.position;
-      
+
       history.push('/page1');
       const afterPushPosition = history.state.position;
-      
+
       expect(afterPushPosition).toBeGreaterThan(initialPosition);
 
       history.destroy();

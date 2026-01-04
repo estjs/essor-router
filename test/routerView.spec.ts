@@ -1,17 +1,15 @@
-/**
- * Comprehensive RouterView Tests
- * 
- * This test suite provides comprehensive coverage for RouterView component,
- * including initialization, route resolution, depth calculation, and component rendering.
- */
-
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createComponent as h } from 'essor';
-import { RouteLocationNormalized, RouterView, createMemoryHistory, createRouter } from '../src';
+import {
+  type RouteLocationNormalized,
+  RouterView,
+  createMemoryHistory,
+  createRouter,
+} from '../src';
 import { mount, sleep } from './utils';
 import type { Router } from '../src/router';
 
-describe('RouterView - Comprehensive Tests', () => {
+describe('routerView - Comprehensive Tests', () => {
   let router: Router;
   let wrapper: any;
 
@@ -40,35 +38,33 @@ describe('RouterView - Comprehensive Tests', () => {
     }
   });
 
-  describe('Initialization', () => {
+  describe('initialization', () => {
     it('should log error when router is not provided', () => {
       // Test that RouterView logs error when router is missing
       // Essor catches the error during mount, so we check console.error
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      
+
       try {
         mount(() => h(RouterView, {}));
-      } catch (e) {
+      } catch {
         // Expected to fail during mount
       }
-      
+
       // Check that error was logged - look in the second call which contains the actual error
       expect(consoleSpy).toHaveBeenCalled();
       const calls = consoleSpy.mock.calls;
-      const hasRouterError = calls.some(call => 
-        call.some(arg => String(arg).includes('RouterView requires a router instance'))
+      const hasRouterError = calls.some(call =>
+        call.some(arg => String(arg).includes('RouterView requires a router instance')),
       );
       expect(hasRouterError).toBe(true);
-      
+
       consoleSpy.mockRestore();
     });
 
     it('should accept router via props', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -81,9 +77,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should initialize and destroy router', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       const initSpy = vi.spyOn(router, 'init');
@@ -104,9 +98,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should provide router context for child components', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -118,8 +110,8 @@ describe('RouterView - Comprehensive Tests', () => {
     });
   });
 
-  describe('Route Resolution', () => {
-    beforeEach(async () => {
+  describe('route Resolution', () => {
+    beforeEach(() => {
       router = createRouter({
         history: createMemoryHistory(),
         routes: [
@@ -187,7 +179,7 @@ describe('RouterView - Comprehensive Tests', () => {
     });
   });
 
-  describe('Depth Calculation', () => {
+  describe('depth Calculation', () => {
     it('should calculate depth for nested RouterViews', async () => {
       const NestedComponent = () => h(RouterView, { router });
 
@@ -198,9 +190,7 @@ describe('RouterView - Comprehensive Tests', () => {
             path: '/',
             name: 'parent',
             component: NestedComponent,
-            children: [
-              { path: 'child', name: 'child', component: SimpleComponent },
-            ],
+            children: [{ path: 'child', name: 'child', component: SimpleComponent }],
           },
         ],
       });
@@ -221,9 +211,7 @@ describe('RouterView - Comprehensive Tests', () => {
             path: '/',
             name: 'parent',
             // No component for parent
-            children: [
-              { path: 'child', name: 'child', component: SimpleComponent },
-            ],
+            children: [{ path: 'child', name: 'child', component: SimpleComponent }],
           },
         ],
       });
@@ -252,9 +240,7 @@ describe('RouterView - Comprehensive Tests', () => {
                 path: 'level1',
                 name: 'level1',
                 component: Level2,
-                children: [
-                  { path: 'level2', name: 'level2', component: SimpleComponent },
-                ],
+                children: [{ path: 'level2', name: 'level2', component: SimpleComponent }],
               },
             ],
           },
@@ -270,8 +256,8 @@ describe('RouterView - Comprehensive Tests', () => {
     });
   });
 
-  describe('Component Rendering', () => {
-    beforeEach(async () => {
+  describe('component Rendering', () => {
+    beforeEach(() => {
       router = createRouter({
         history: createMemoryHistory(),
         routes: [
@@ -314,10 +300,10 @@ describe('RouterView - Comprehensive Tests', () => {
       wrapper = mount(() => h(RouterView, { router }));
       await router.push('/');
       await sleep(50);
-      
+
       // Default view should render
       expect(wrapper.text()).toContain('Home');
-      
+
       // Named views are supported by the router configuration
       const route = router.currentRoute.value;
       expect(route.matched[0]?.components?.sidebar).toBeDefined();
@@ -339,7 +325,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       // Should not crash when route has no component
       expect(wrapper).toBeTruthy();
-      
+
       // Verify route matched but has no component
       const route = router.currentRoute.value;
       expect(route.matched.length).toBeGreaterThan(0);
@@ -349,9 +335,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should handle missing component gracefully', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: undefined as any },
-        ],
+        routes: [{ path: '/', name: 'home', component: undefined as any }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -365,9 +349,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should handle null component', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: null as any },
-        ],
+        routes: [{ path: '/', name: 'home', component: null as any }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -379,7 +361,7 @@ describe('RouterView - Comprehensive Tests', () => {
     });
   });
 
-  describe('Error Handling', () => {
+  describe('error Handling', () => {
     it('should handle component rendering errors gracefully', async () => {
       const ErrorComponent = () => {
         throw new Error('Component error');
@@ -389,9 +371,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: ErrorComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: ErrorComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -400,7 +380,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       // Error should be logged by essor
       expect(consoleSpy).toHaveBeenCalled();
-      
+
       consoleSpy.mockRestore();
     });
 
@@ -419,9 +399,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: ErrorComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: ErrorComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router, fallback: FallbackComponent }));
@@ -430,7 +408,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       // Should not crash even if component fails
       expect(wrapper).toBeTruthy();
-      
+
       consoleSpy.mockRestore();
     });
 
@@ -447,9 +425,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: ErrorComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: ErrorComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router, fallback: ErrorFallback }));
@@ -458,7 +434,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       // Should not crash even if fallback fails
       expect(wrapper).toBeTruthy();
-      
+
       consoleSpy.mockRestore();
     });
 
@@ -471,9 +447,7 @@ describe('RouterView - Comprehensive Tests', () => {
 
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: ErrorComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: ErrorComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -482,12 +456,12 @@ describe('RouterView - Comprehensive Tests', () => {
 
       // Error should be logged
       expect(consoleSpy).toHaveBeenCalled();
-      
+
       consoleSpy.mockRestore();
     });
   });
 
-  describe('Reactive Route', () => {
+  describe('reactive Route', () => {
     it('should create reactive route for useRoute hook', async () => {
       router = createRouter({
         history: createMemoryHistory(),
@@ -512,9 +486,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should handle null currentRoute', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -527,9 +499,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should handle invalid currentRoute object', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -540,7 +510,7 @@ describe('RouterView - Comprehensive Tests', () => {
     });
   });
 
-  describe('View Name Resolution', () => {
+  describe('view Name Resolution', () => {
     it('should default to "default" view name', async () => {
       router = createRouter({
         history: createMemoryHistory(),
@@ -613,13 +583,11 @@ describe('RouterView - Comprehensive Tests', () => {
     });
   });
 
-  describe('Edge Cases and Coverage', () => {
+  describe('edge Cases ', () => {
     it('should handle route prop with custom route object', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       const customRoute: RouteLocationNormalized = {
@@ -629,19 +597,21 @@ describe('RouterView - Comprehensive Tests', () => {
         query: {},
         hash: '',
         fullPath: '/custom',
-        matched: [{
-          path: '/custom',
-          name: 'custom',
-          components: { default: AboutComponent },
-          meta: {},
-          props: {},
-          children: [],
-          instances: {},
-          leaveGuards: new Set(),
-          updateGuards: new Set(),
-          enterCallbacks: {},
-          aliasOf: undefined,
-        }],
+        matched: [
+          {
+            path: '/custom',
+            name: 'custom',
+            components: { default: AboutComponent },
+            meta: {},
+            props: {},
+            children: [],
+            instances: {},
+            leaveGuards: new Set(),
+            updateGuards: new Set(),
+            enterCallbacks: {},
+            aliasOf: undefined,
+          },
+        ],
         meta: {},
         redirectedFrom: undefined,
       };
@@ -656,9 +626,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should handle injected route as signal', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       wrapper = mount(() => h(RouterView, { router }));
@@ -779,9 +747,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should handle route with empty matched array', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       const emptyRoute: RouteLocationNormalized = {
@@ -806,9 +772,7 @@ describe('RouterView - Comprehensive Tests', () => {
     it('should handle route without matched property', async () => {
       router = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: HomeComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: HomeComponent }],
       });
 
       const invalidRoute = {

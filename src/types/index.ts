@@ -394,7 +394,7 @@ export interface RouteRecordMultipleViewsWithChildren extends _RouteRecordBase {
  * as it is never rendered.
  */
 export interface RouteRecordRedirect extends _RouteRecordBase {
-  redirect: RouteRecordRedirectOption;
+  redirect?: RouteRecordRedirectOption;
   component?: never;
   components?: never;
   props?: never;

@@ -1,6 +1,6 @@
 /**
  * RouterLink Tests
- * 
+ *
  * Comprehensive test suite for RouterLink component covering:
  * - Basic rendering and navigation
  * - Click event handling with modifiers
@@ -11,14 +11,14 @@
  * - Href generation
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createComponent as h } from 'essor';
 import { RouterLink, RouterView, createMemoryHistory, createRouter } from '../src';
 import { mount, sleep } from './utils';
-import { testWithMultipleInputs, generateRouteLocation, randomBoolean } from './helpers/test-utils';
+import { generateRouteLocation, randomBoolean, testWithMultipleInputs } from './helpers/test-utils';
 import type { Router } from '../src/router';
 
-describe('RouterLink', () => {
+describe('routerLink', () => {
   let router: Router;
   let wrapper: any;
 
@@ -62,7 +62,7 @@ describe('RouterLink', () => {
     }
   });
 
-  describe('Basic Rendering', () => {
+  describe('basic Rendering', () => {
     it('renders an anchor tag by default', async () => {
       // Wait for component to render properly
       await sleep(50);
@@ -72,12 +72,12 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Navigation Behavior', () => {
+  describe('navigation Behavior', () => {
     it('uses replace when replace prop is true', async () => {
       // Navigate to home first
       await router.push('/');
       await sleep(50);
-      
+
       // Get the anchor from the rendered Home component (which contains a RouterLink to /about)
       const anchor = wrapper.get('a');
       expect(anchor).toBeTruthy();
@@ -153,22 +153,22 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Error Handling', () => {
+  describe('error Handling', () => {
     it('should throw error when router is not provided', () => {
       // Test that useLink throws when router context is missing
       // The error is caught by essor's error handling, so we just verify the warning is logged
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      
+
       try {
         mount(() => h(RouterLink, { to: '/', children: 'Test' }));
-      } catch (error) {
+      } catch {
         // Error is expected
       }
-      
+
       // Verify error was logged (but suppressed from console)
       expect(consoleErrorSpy).toHaveBeenCalled();
-      
+
       consoleWarnSpy.mockRestore();
       consoleErrorSpy.mockRestore();
     });
@@ -183,16 +183,15 @@ describe('RouterLink', () => {
       await sleep(50);
 
       // Create a link with invalid "to" prop
-      const InvalidLink = () => h(RouterLink, { 
-        to: { name: 'non-existent-route' } as any,
-        children: 'Invalid'
-      });
+      const InvalidLink = () =>
+        h(RouterLink, {
+          to: { name: 'non-existent-route' } as any,
+          children: 'Invalid',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: InvalidLink },
-        ],
+        routes: [{ path: '/', name: 'home', component: InvalidLink }],
       });
 
       const invalidWrapper = mount(() => h(RouterView, { router: testRouter }));
@@ -218,10 +217,11 @@ describe('RouterLink', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      const TestComponent = () => h(RouterLink, {
-        to: { path: undefined as any },
-        children: 'Test'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { path: undefined as any },
+          children: 'Test',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -245,10 +245,11 @@ describe('RouterLink', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -281,12 +282,13 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Click Event Handling', () => {
+  describe('click Event Handling', () => {
     it('should not navigate with ctrl key pressed', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -313,10 +315,11 @@ describe('RouterLink', () => {
     });
 
     it('should not navigate with meta key pressed', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -343,10 +346,11 @@ describe('RouterLink', () => {
     });
 
     it('should not navigate with shift key pressed', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -373,10 +377,11 @@ describe('RouterLink', () => {
     });
 
     it('should not navigate with alt key pressed', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -403,10 +408,11 @@ describe('RouterLink', () => {
     });
 
     it('should not navigate on right click', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -433,10 +439,11 @@ describe('RouterLink', () => {
     });
 
     it('should not navigate when preventDefault is called', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -454,9 +461,13 @@ describe('RouterLink', () => {
       const anchor = testWrapper.get('a');
 
       // Add event listener that prevents default
-      anchor.addEventListener('click', (e: Event) => {
-        e.preventDefault();
-      }, { capture: true });
+      anchor.addEventListener(
+        'click',
+        (e: Event) => {
+          e.preventDefault();
+        },
+        { capture: true },
+      );
 
       anchor.click();
       await sleep(50);
@@ -467,10 +478,11 @@ describe('RouterLink', () => {
 
     it('should handle target attribute', async () => {
       // Test that RouterLink passes through the target attribute
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -492,7 +504,7 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Active Class Logic', () => {
+  describe('active Class Logic', () => {
     it('applies custom active class when provided', async () => {
       // Create a component that renders RouterLink with custom activeClass
       const TestComponent = () =>
@@ -512,7 +524,7 @@ describe('RouterLink', () => {
 
       const customWrapper = mount(() => h(RouterView, { router: testRouter }));
       await sleep(100);
-      
+
       // Ensure we're on the root route to make the link active
       await testRouter.push('/');
       await sleep(100);
@@ -525,10 +537,11 @@ describe('RouterLink', () => {
     });
 
     it('should apply active class for partial match', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/nested',
-        children: 'Nested'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/nested',
+          children: 'Nested',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -540,7 +553,7 @@ describe('RouterLink', () => {
       });
 
       const testWrapper = mount(() => h(RouterView, { router: testRouter }));
-      
+
       // Navigate to nested route first
       await testRouter.push('/nested');
       await sleep(100);
@@ -553,10 +566,11 @@ describe('RouterLink', () => {
     });
 
     it('should apply exact active class only for exact match', async () => {
-      const AboutComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const AboutComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -578,17 +592,16 @@ describe('RouterLink', () => {
     });
 
     it('should handle custom active class', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/',
-        activeClass: 'custom-active',
-        children: 'Home'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          activeClass: 'custom-active',
+          children: 'Home',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: TestComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
       });
 
       const testWrapper = mount(() => h(RouterView, { router: testRouter }));
@@ -602,17 +615,16 @@ describe('RouterLink', () => {
     });
 
     it('should handle custom exact active class', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/',
-        exactActiveClass: 'custom-exact-active',
-        children: 'Home'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          exactActiveClass: 'custom-exact-active',
+          children: 'Home',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: TestComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
       });
 
       const testWrapper = mount(() => h(RouterView, { router: testRouter }));
@@ -626,17 +638,16 @@ describe('RouterLink', () => {
     });
 
     it('should combine user class with active classes', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/',
-        class: 'user-class',
-        children: 'Home'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          class: 'user-class',
+          children: 'Home',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: TestComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
       });
 
       const testWrapper = mount(() => h(RouterView, { router: testRouter }));
@@ -651,15 +662,16 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Custom Rendering', () => {
+  describe('custom Rendering', () => {
     it('should support custom rendering mode', async () => {
       // Custom mode allows rendering custom children instead of anchor tag
       // In custom mode, RouterLink returns the children directly
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        custom: true,
-        children: 'Custom Content'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          custom: true,
+          children: 'Custom Content',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -680,19 +692,18 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Aria Attributes', () => {
+  describe('aria Attributes', () => {
     it('should set aria-current when exact active', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/',
-        ariaCurrentValue: 'page',
-        children: 'Home'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          ariaCurrentValue: 'page',
+          children: 'Home',
+        } as const);
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
-        routes: [
-          { path: '/', name: 'home', component: TestComponent },
-        ],
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
       });
 
       const testWrapper = mount(() => h(RouterView, { router: testRouter }));
@@ -705,11 +716,12 @@ describe('RouterLink', () => {
     });
 
     it('should not set aria-current when not exact active', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        ariaCurrentValue: 'page',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          ariaCurrentValue: 'page',
+          children: 'About',
+        } as const);
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -729,12 +741,13 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Href Generation', () => {
+  describe('href Generation', () => {
     it('should generate correct href for string paths', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: '/about',
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -754,10 +767,11 @@ describe('RouterLink', () => {
     });
 
     it('should generate correct href for named routes', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: { name: 'about' },
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { name: 'about' },
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -777,10 +791,11 @@ describe('RouterLink', () => {
     });
 
     it('should generate correct href with params', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: { name: 'user', params: { id: '123' } },
-        children: 'User'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { name: 'user', params: { id: '123' } },
+          children: 'User',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -800,10 +815,11 @@ describe('RouterLink', () => {
     });
 
     it('should generate correct href with query', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: { path: '/about', query: { foo: 'bar' } },
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { path: '/about', query: { foo: 'bar' } },
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -823,10 +839,11 @@ describe('RouterLink', () => {
     });
 
     it('should generate correct href with hash', async () => {
-      const TestComponent = () => h(RouterLink, {
-        to: { path: '/about', hash: '#section' },
-        children: 'About'
-      });
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { path: '/about', hash: '#section' },
+          children: 'About',
+        });
 
       const testRouter = createRouter({
         history: createMemoryHistory(),
@@ -846,11 +863,11 @@ describe('RouterLink', () => {
     });
   });
 
-  describe('Multiple Input Testing', () => {
+  describe('multiple Input Testing', () => {
     it('should handle various route locations correctly', async () => {
       await testWithMultipleInputs(
         () => generateRouteLocation(randomBoolean()),
-        async (location) => {
+        location => {
           const testRouter = createRouter({
             history: createMemoryHistory(),
             routes: [
@@ -864,11 +881,11 @@ describe('RouterLink', () => {
             const resolved = testRouter.resolve(location);
             expect(resolved).toBeDefined();
             expect(resolved.href).toBeDefined();
-          } catch (error) {
+          } catch {
             // Some random locations might not resolve, that's okay
           }
         },
-        50 // Test with 50 random locations
+        50, // Test with 50 random locations
       );
     });
   });
