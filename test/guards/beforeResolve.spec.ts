@@ -1,10 +1,9 @@
 import { components, createDom, newRouter as createRouter } from '../utils';
 import type { RouteRecordRaw } from '../../src/types';
 
-
 const routes: RouteRecordRaw[] = [
   { path: '/', component: components.Home },
-  { path: '/foo', component:  components.Foo },
+  { path: '/foo', component: components.Foo },
 ];
 
 describe('router.beforeEach', () => {

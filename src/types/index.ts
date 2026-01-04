@@ -124,9 +124,7 @@ export type RouteLocationRaw = string | RouteLocationPathRaw | RouteLocationName
 
  */
 export interface RouteLocationNamedRaw
-  extends RouteQueryAndHash,
-  LocationAsRelativeRaw,
-  RouteLocationOptions { }
+  extends RouteQueryAndHash, LocationAsRelativeRaw, RouteLocationOptions {}
 
 /**
  * Route Location that can infer the possible paths.
@@ -134,9 +132,7 @@ export interface RouteLocationNamedRaw
 
  */
 export interface RouteLocationPathRaw
-  extends RouteQueryAndHash,
-  MatcherLocationAsPath,
-  RouteLocationOptions { }
+  extends RouteQueryAndHash, MatcherLocationAsPath, RouteLocationOptions {}
 
 export interface RouteLocationMatched extends RouteRecordNormalized {
   // components cannot be Lazy<RouteComponent>
@@ -148,8 +144,10 @@ export interface RouteLocationMatched extends RouteRecordNormalized {
  *
 
  */
-export interface _RouteLocationBase
-  extends Pick<MatcherLocation, 'name' | 'path' | 'params' | 'meta'> {
+export interface _RouteLocationBase extends Pick<
+  MatcherLocation,
+  'name' | 'path' | 'params' | 'meta'
+> {
   /**
    * The whole location including the `search` and `hash`. This string is
    * percentage encoded.
@@ -307,7 +305,7 @@ export interface _RouteRecordBase extends PathParserOptions {
  *  }
  * ```
  */
-export interface RouteMeta extends Record<string | number | symbol, any> { }
+export interface RouteMeta extends Record<string | number | symbol, any> {}
 
 /**
 

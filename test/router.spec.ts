@@ -941,7 +941,7 @@ describe('router', () => {
         },
       });
 
-      router.push('/dynamic/child').catch(() => { });
+      router.push('/dynamic/child').catch(() => {});
       await tick();
       expect(router.currentRoute.value).toMatchObject({
         name: 'dynamic child',

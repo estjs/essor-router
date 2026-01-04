@@ -3,6 +3,7 @@ import {
   type NavigationGuard,
   type NavigationGuardNext,
   type NavigationGuardNextCallback,
+  type NavigationGuardReturn,
   type RawRouteComponent,
   type RouteComponent,
   type RouteLocationNormalized,
@@ -45,11 +46,7 @@ function registerGuard(
  * @param leaveGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
-  const activeRecord: RouteRecordNormalized | undefined = inject(
-    matchedRouteKey,
-    // to avoid warning
-    {} as RouteRecordNormalized,
-  )!.value;
+  const activeRecord: RouteRecordNormalized | undefined = inject(matchedRouteKey)!.value;
   if (!activeRecord) {
     __DEV__ &&
       warn(
@@ -69,11 +66,7 @@ export function onBeforeRouteLeave(leaveGuard: NavigationGuard) {
  * @param updateGuard - {@link NavigationGuard}
  */
 export function onBeforeRouteUpdate(updateGuard: NavigationGuard) {
-  const activeRecord: RouteRecordNormalized | undefined = inject(
-    matchedRouteKey,
-    // to avoid warning
-    {} as RouteRecordNormalized,
-  )!.value;
+  const activeRecord: RouteRecordNormalized | undefined = inject(matchedRouteKey)!.value;
   if (!activeRecord) {
     __DEV__ &&
       warn(
@@ -151,7 +144,7 @@ export function guardToPromiseFn(
         from,
         __DEV__ ? canOnlyBeCalledOnce(next, to, from) : next,
       );
-      let guardCall: Promise<void> = Promise.resolve(guardReturn);
+      let guardCall: Promise<NavigationGuardReturn> = Promise.resolve(guardReturn);
 
       if (guard.length < 3) {
         guardCall = guardCall.then(next);
@@ -161,13 +154,12 @@ export function guardToPromiseFn(
           guard.name ? `"${guard.name}"` : ''
         }:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
         if (isPromise(guardReturn)) {
-          guardCall = guardCall.then((resolvedValue: void) => {
+          guardCall = guardCall.then((resolvedValue: NavigationGuardReturn) => {
             // @ts-expect-error: _called is added at canOnlyBeCalledOnce
             if (!next._called) {
               warn(message);
-              return Promise.reject(new Error('Invalid navigation guard'));
+              next(resolvedValue as any);
             }
-            return resolvedValue;
           });
         } else if (
           guardReturn !== undefined && // @ts-expect-error: _called is added at canOnlyBeCalledOnce

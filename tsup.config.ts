@@ -4,7 +4,6 @@ import pkg from './package.json';
 
 const env = process.env.NODE_ENV;
 
-
 const banner = `/**
 * ${pkg.name} v${pkg.version}
 * (c) 2023-Present jiangxd <jiangxd2016@gmail.com>

@@ -1,18 +1,7 @@
+import process from 'node:process';
 import { type ConstructorOptions, JSDOM } from 'jsdom';
-import {
-  template as _template$,
-  createComponent,
-  createComponent as h,
-  insert,
-  mapNodes,
-} from 'essor';
-import {
-  type RouteRecordNormalized,
-  type Router,
-  type RouterOptions,
-  RouterView,
-  createRouter,
-} from '../src';
+import { template as _template$, createComponent as h, insert, mapNodes } from 'essor';
+import { type RouteRecordNormalized, type Router, type RouterOptions, createRouter } from '../src';
 import type {
   MatcherLocation,
   RouteComponent,
@@ -52,8 +41,10 @@ export function nextNavigation(router: Router) {
   });
 }
 
-export interface RouteRecordViewLoose
-  extends Pick<RouteRecordMultipleViews, 'path' | 'name' | 'meta' | 'beforeEnter'> {
+export interface RouteRecordViewLoose extends Pick<
+  RouteRecordMultipleViews,
+  'path' | 'name' | 'meta' | 'beforeEnter'
+> {
   leaveGuards?: any;
   updateGuards?: any;
   instances: Record<string, any>;
@@ -107,12 +98,11 @@ export function createDom(options?: ConstructorOptions) {
     ...options,
   });
   try {
-    // @ts-expect-error: not the same window
     global.window = dom.window as any;
     global.location = dom.window.location as any;
     global.history = dom.window.history as any;
     global.document = dom.window.document as any;
-  } catch { }
+  } catch {}
   return dom;
 }
 

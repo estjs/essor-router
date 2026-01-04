@@ -2,7 +2,7 @@ import fakePromise from 'faked-promise';
 import { components, createDom, newRouter as createRouter, noGuard } from '../utils';
 import type { RouteRecordRaw } from '../../src/types';
 const Home = components.Home;
-const Foo = components.Foo
+const Foo = components.Foo;
 const nested = {
   parent: vitest.fn(),
   nestedEmpty: vitest.fn(),

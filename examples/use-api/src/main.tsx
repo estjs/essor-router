@@ -1,8 +1,12 @@
 import { RouterView, createRouter, useRoute, useRouter } from 'essor-router';
-import { createApp } from 'essor';
+import {
+  insert as _insert$,
+  mapNodes as _mapNodes$,
+  template as _template$,
+  createApp,
+} from 'essor';
 
-import { template as _template$, mapNodes as _mapNodes$, insert as _insert$ } from "essor";
-const _$tmpl = _template$("<div>route.query:</div>");
+const _$tmpl = _template$('<div>route.query:</div>');
 function Home() {
   const route = useRoute();
   const router = useRouter();

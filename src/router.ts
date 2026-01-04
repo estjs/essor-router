@@ -1,4 +1,4 @@
-import { type Signal, provide, signal, toRaw } from 'essor';
+import { type Signal, signal, toRaw } from 'essor';
 import { applyToParams, assign, isArray, isBrowser, isObject, isString, noop } from './utils';
 import {
   type Lazy,
@@ -36,7 +36,6 @@ import { warn } from './warning';
 import { createWebHistory } from './history/html5';
 import { createWebHashHistory } from './history/hash';
 import { createMemoryHistory } from './history/memory';
-import { routeLocationKey, routerKey, routerViewLocationKey } from './injectionSymbols';
 import type { PathParserOptions } from './matcher/pathParserRanker';
 import type { RouteRecord, RouteRecordNormalized } from './matcher/types';
 
@@ -492,7 +491,8 @@ export function createRouter(options: RouterOptions): Router {
         );
       } else if (matchedRoute.matched.length === 0) {
         warn(
-          `No match found for location with path "${rawLocation.path != null ? rawLocation.path : rawLocation
+          `No match found for location with path "${
+            rawLocation.path != null ? rawLocation.path : rawLocation
           }"`,
         );
       }
@@ -560,7 +560,7 @@ export function createRouter(options: RouterOptions): Router {
           newTargetLocation.includes('?') || newTargetLocation.includes('#')
             ? (newTargetLocation = locationAsObject(newTargetLocation))
             : // force empty params
-            { path: newTargetLocation };
+              { path: newTargetLocation };
         // @ts-expect-error: force empty params when a string is passed to let
         // the router parse them again
         newTargetLocation.params = {};
@@ -572,7 +572,8 @@ export function createRouter(options: RouterOptions): Router {
             newTargetLocation,
             null,
             2,
-          )}\n when navigating to "${to.fullPath
+          )}\n when navigating to "${
+            to.fullPath
           }". A redirect must contain a name or path. This will break in production.`,
         );
         throw new Error('Invalid redirect');
@@ -631,11 +632,11 @@ export function createRouter(options: RouterOptions): Router {
       .catch((error: NavigationFailure | NavigationRedirectError) => {
         return isNavigationFailure(error)
           ? // navigation redirects still mark the router as ready
-          isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
+            isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
             ? error
             : markAsReady(error) // also returns the error
           : // reject any unknown error
-          triggerError(error, toLocation, from);
+            triggerError(error, toLocation, from);
       })
       .then((failure: NavigationFailure | NavigationRedirectError | void) => {
         if (failure) {
@@ -649,7 +650,7 @@ export function createRouter(options: RouterOptions): Router {
               // @ts-expect-error: added only in dev
               (redirectedFrom._count = redirectedFrom._count
                 ? // @ts-expect-error
-                redirectedFrom._count + 1
+                  redirectedFrom._count + 1
                 : 1) > 30
             ) {
               warn(
@@ -1019,10 +1020,10 @@ export function createRouter(options: RouterOptions): Router {
    * only be called once, otherwise does nothing.
    * @param err - optional error
    */
-  function markAsReady<E = any>(err: E): E;
+  function markAsReady<E extends Error = Error>(err: E): E;
   // eslint-disable-next-line unused-imports/no-unused-vars
-  function markAsReady<E = any>(): void;
-  function markAsReady<E = any>(err?: E): E | void {
+  function markAsReady<E extends Error = Error>(): void;
+  function markAsReady<E extends Error = Error>(err?: E): E | void {
     if (!ready) {
       // still not ready if an error happened
       ready = !err;
@@ -1034,8 +1035,6 @@ export function createRouter(options: RouterOptions): Router {
   }
 
   const go = (delta: number) => routerHistory.go(delta);
-
-  let started: boolean | undefined;
 
   const router: Router = {
     currentRoute,

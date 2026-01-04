@@ -5,14 +5,14 @@ import type { RouteLocationRaw, RouteRecordRaw } from '../../src/types';
 const routes: RouteRecordRaw[] = [
   { path: '/', component: components.Home },
   { path: '/foo', component: components.Foo },
-  { path: '/other', component:  components.Foo },
-  { path: '/n/:i', name: 'n', component:  components.Home, meta: { requiresLogin: true } },
+  { path: '/other', component: components.Foo },
+  { path: '/n/:i', name: 'n', component: components.Home, meta: { requiresLogin: true } },
   {
     path: '/nested',
-    component:  components.Nested,
+    component: components.Nested,
     children: [
-      { path: '', name: 'nested-default', component:  components.Foo },
-      { path: 'home', name: 'nested-home', component:  components.Home },
+      { path: '', name: 'nested-default', component: components.Foo },
+      { path: 'home', name: 'nested-home', component: components.Home },
     ],
   },
   {

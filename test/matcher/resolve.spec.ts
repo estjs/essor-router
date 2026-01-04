@@ -1,15 +1,14 @@
-import {components as compts, mockWarn } from '../utils';
+import { components as compts, mockWarn } from '../utils';
 import { createRouterMatcher, normalizeRouteRecord } from '../../src/matcher';
 import {
   type MatcherLocation,
   type MatcherLocationRaw,
-  type RouteComponent,
   type RouteRecordRaw,
   START_LOCATION_NORMALIZED,
 } from '../../src/types';
 import type { MatcherLocationNormalizedLoose } from '../utils';
 
-const component = compts.Home
+const component = compts.Home;
 
 // for normalized records
 const components = { default: component };

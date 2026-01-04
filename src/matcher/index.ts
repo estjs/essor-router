@@ -167,9 +167,9 @@ export function createRouterMatcher(
 
     return originalMatcher
       ? () => {
-        // since other matchers are aliases, they should be removed by the original matcher
-        removeRoute(originalMatcher!);
-      }
+          // since other matchers are aliases, they should be removed by the original matcher
+          removeRoute(originalMatcher!);
+        }
       : noop;
   }
 
@@ -254,10 +254,10 @@ export function createRouterMatcher(
         ),
         // discard any existing params in the current location that do not exist here
         location.params &&
-        paramsFromLocation(
-          location.params,
-          matcher.keys.map(k => k.name),
-        ),
+          paramsFromLocation(
+            location.params,
+            matcher.keys.map(k => k.name),
+          ),
       );
       // throws if cannot be stringified
       path = matcher.stringify(params);
@@ -279,7 +279,6 @@ export function createRouterMatcher(
         // we know the matcher works because we tested the regexp
         params = matcher.parse(path)!;
         name = matcher.record.name;
-
       }
       // location is a relative path
     } else {

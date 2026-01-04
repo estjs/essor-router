@@ -1,5 +1,5 @@
-import { RouteRecordRaw } from '@/types';
 import { components, createDom, newRouter as createRouter } from '../utils';
+import type { RouteRecordRaw } from '@/types';
 
 const routes: RouteRecordRaw[] = [
   { path: '/', component: components.Home },

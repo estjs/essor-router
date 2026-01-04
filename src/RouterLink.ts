@@ -122,17 +122,23 @@ function useLink(props: RouterLinkProps) {
     const matched = routeValue.matched;
     const currentMatched = currentRoute.matched;
     const index = currentMatched.findIndex((record: RouteRecord) =>
-      isSameRouteRecord(record, matched),
+      matched.some(r => isSameRouteRecord(record, r)),
     );
 
     if (index > -1) return index;
 
     const parentRecordPath = getOriginalPath(matched.at(-2) as RouteRecord | undefined);
 
+    const lastMatched = matched.at(-1);
+    const lastCurrentMatched = currentMatched.at(-1);
+
     return matched.length > 1 &&
-      getOriginalPath(matched.at(-1)) === parentRecordPath &&
-      currentMatched!.at(-1)!.path !== parentRecordPath
-      ? currentMatched.findIndex((record: RouteRecord) => isSameRouteRecord(record, matched.at(-2)))
+      getOriginalPath(lastMatched) === parentRecordPath &&
+      lastCurrentMatched &&
+      lastCurrentMatched.path !== parentRecordPath
+      ? currentMatched.findIndex((record: RouteRecord) =>
+          isSameRouteRecord(record, matched.at(-2) as RouteRecord),
+        )
       : index;
   });
 

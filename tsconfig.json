@@ -5,14 +5,10 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "resolveJsonModule": true,
-    "types": [
-      "vitest/globals"
-    ],
+    "types": ["vitest/globals"],
     "allowJs": true,
     "checkJs": true,
     "strict": true,

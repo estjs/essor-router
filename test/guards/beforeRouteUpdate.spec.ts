@@ -5,7 +5,7 @@ import type { RouteRecordRaw } from '../../src/types';
 const beforeRouteUpdate = vitest.fn();
 
 const Home = components.Home;
-const Foo = components.Foo
+const Foo = components.Foo;
 const routes: RouteRecordRaw[] = [
   { path: '/', component: Home },
   { path: '/foo', component: Foo },

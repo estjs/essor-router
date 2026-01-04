@@ -132,21 +132,7 @@ export function isSameRouteLocation(
     isSameRouteLocationParams(a.params, b.params) &&
     stringifyQuery(a.query) === stringifyQuery(b.query) &&
     a.hash === b.hash;
-  if (!res && a.path.includes('aliases')) {
-    console.log('isSameRouteLocation failed:', {
-      aLastIndex,
-      bLastIndex,
-      sameRecord:
-        aLastIndex > -1 &&
-        bLastIndex > -1 &&
-        isSameRouteRecord(a.matched[aLastIndex], b.matched[bLastIndex]),
-      sameParams: isSameRouteLocationParams(a.params, b.params),
-      sameQuery: stringifyQuery(a.query) === stringifyQuery(b.query),
-      sameHash: a.hash === b.hash,
-      aPath: a.path,
-      bPath: b.path,
-    });
-  }
+
   return res;
 }
 

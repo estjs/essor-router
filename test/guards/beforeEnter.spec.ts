@@ -7,24 +7,24 @@ const beforeEnters = [vitest.fn(), vitest.fn()];
 const nested = vitest.fn();
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', component:  components.Home },
-  { path: '/home', component:  components.Home, beforeEnter },
-  { path: '/foo', component:  components.Foo },
+  { path: '/', component: components.Home },
+  { path: '/home', component: components.Home, beforeEnter },
+  { path: '/foo', component: components.Foo },
   {
     path: '/guard/:n',
-    component:  components.Foo,
+    component: components.Foo,
     beforeEnter,
   },
   {
     path: '/multiple',
     beforeEnter: beforeEnters,
-    component:  components.Foo,
+    component: components.Foo,
   },
   {
     path: '/nested',
     component: {
-      component:components.Home,
-      beforeRouteEnter:  components.Nested,
+      component: components.Home,
+      beforeRouteEnter: components.Nested,
     },
   },
 ];
