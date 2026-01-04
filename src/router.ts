@@ -297,6 +297,9 @@ export interface Router {
    * picks it up from the URL.
    */
   isReady(): Promise<void>;
+
+  init,
+  destroy
 }
 
 export function createHistory(mode: History | RouterHistory, base?: string): RouterHistory {
@@ -491,8 +494,7 @@ export function createRouter(options: RouterOptions): Router {
         );
       } else if (matchedRoute.matched.length === 0) {
         warn(
-          `No match found for location with path "${
-            rawLocation.path != null ? rawLocation.path : rawLocation
+          `No match found for location with path "${rawLocation.path != null ? rawLocation.path : rawLocation
           }"`,
         );
       }
@@ -560,7 +562,7 @@ export function createRouter(options: RouterOptions): Router {
           newTargetLocation.includes('?') || newTargetLocation.includes('#')
             ? (newTargetLocation = locationAsObject(newTargetLocation))
             : // force empty params
-              { path: newTargetLocation };
+            { path: newTargetLocation };
         // @ts-expect-error: force empty params when a string is passed to let
         // the router parse them again
         newTargetLocation.params = {};
@@ -572,8 +574,7 @@ export function createRouter(options: RouterOptions): Router {
             newTargetLocation,
             null,
             2,
-          )}\n when navigating to "${
-            to.fullPath
+          )}\n when navigating to "${to.fullPath
           }". A redirect must contain a name or path. This will break in production.`,
         );
         throw new Error('Invalid redirect');
@@ -632,11 +633,11 @@ export function createRouter(options: RouterOptions): Router {
       .catch((error: NavigationFailure | NavigationRedirectError) => {
         return isNavigationFailure(error)
           ? // navigation redirects still mark the router as ready
-            isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
+          isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
             ? error
             : markAsReady(error) // also returns the error
           : // reject any unknown error
-            triggerError(error, toLocation, from);
+          triggerError(error, toLocation, from);
       })
       .then((failure: NavigationFailure | NavigationRedirectError | void) => {
         if (failure) {
@@ -650,7 +651,7 @@ export function createRouter(options: RouterOptions): Router {
               // @ts-expect-error: added only in dev
               (redirectedFrom._count = redirectedFrom._count
                 ? // @ts-expect-error
-                  redirectedFrom._count + 1
+                redirectedFrom._count + 1
                 : 1) > 30
             ) {
               warn(
@@ -1033,7 +1034,38 @@ export function createRouter(options: RouterOptions): Router {
     }
     return err;
   }
+  let started: boolean | undefined
 
+
+  function init(){
+          // this initial navigation is only necessary on client, on server it doesn't
+      // make sense because it will create an extra unnecessary navigation and could
+      // lead to problems
+      if (
+        isBrowser &&
+        // used for the initial navigation client side to avoid pushing
+        // multiple times when the router is used in multiple apps
+        !started &&
+        toRaw<any>(currentRoute) === START_LOCATION_NORMALIZED
+      ) {
+        // see above
+        started = true
+        push(routerHistory.location).catch(err => {
+          if (__DEV__) warn('Unexpected error when starting the router:', err)
+        })
+      }
+  }
+
+
+  function destroy(){
+          // invalidate the current navigation
+          pendingLocation = START_LOCATION_NORMALIZED
+          removeHistoryListener && removeHistoryListener()
+          removeHistoryListener = null
+          currentRoute.value = START_LOCATION_NORMALIZED
+          started = false
+          ready = false
+  }
   const go = (delta: number) => routerHistory.go(delta);
 
   const router: Router = {
@@ -1058,11 +1090,16 @@ export function createRouter(options: RouterOptions): Router {
 
     onError: errorListeners.add,
     isReady,
+    init,
+    destroy
+  
   };
   // TODO: type this as NavigationGuardReturn or similar instead of any
   function runGuardQueue(guards: Lazy<any>[]): Promise<void> {
     return guards.reduce((promise, guard) => promise.then(() => guard()), Promise.resolve());
   }
+
+
 
   return router;
 }

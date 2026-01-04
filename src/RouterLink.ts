@@ -57,6 +57,10 @@ export interface RouterLinkProps extends RouterLinkOptions {
    * Children content for the link
    */
   children?: RouterLinkChildren;
+  /**
+   * Additional CSS class to apply to the link element
+   */
+  class?: string;
 }
 
 function useLink(props: RouterLinkProps) {
@@ -271,6 +275,11 @@ export const RouterLink = (props: RouterLinkProps) => {
 
   const elClass = computed(() => {
     const classes: string[] = [];
+
+    // Add user-provided class first
+    if (props.class) {
+      classes.push(props.class);
+    }
 
     if (link.isActive.value) {
       classes.push(getLinkClass(props.activeClass, options?.linkActiveClass, 'router-link-active'));

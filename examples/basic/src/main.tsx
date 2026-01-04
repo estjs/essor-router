@@ -20,7 +20,7 @@ function notFound() {
   return <div class="notfound">404</div>;
 }
 const router = createRouter({
-  history: 'hash',
+  history: 'history',
   routes: [
     {
       path: '/',

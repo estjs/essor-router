@@ -1,4 +1,4 @@
-import { type Signal, computed, createComponent, inject, provide, signal } from 'essor';
+import { type Signal, computed, createComponent, inject, onDestroy, provide, signal } from 'essor';
 import {
   matchedRouteKey,
   routeLocationKey,
@@ -49,6 +49,11 @@ export const RouterView = (props: RouterViewProps) => {
     );
   }
 
+  router.init()
+
+  onDestroy(()=>{
+    router.destroy()
+  })
   // Provide router and route for useRouter/useRoute hooks
   provide(routerKey, router);
 

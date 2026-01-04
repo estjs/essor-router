@@ -5,7 +5,7 @@ import { mount, sleep } from './utils';
 let router;
 let wrapper;
 export function Home() {
-  const _$tmpl = _template$('<div>Query:</div>');
+  const _$tmpl = _template$('<div>Query: </div>');
   const route = useRoute();
 
   return (() => {
@@ -33,6 +33,9 @@ describe('use apis', () => {
     wrapper = mount(App);
     // router is async, need to wait
     await sleep(200);
+    // Ensure router has navigated to initial route
+    await router.push('/');
+    await sleep(50);
   });
 
   afterEach(() => {
