@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@estjs/shared':
         specifier: ^0.0.15-beta.5
-        version: 0.0.15-beta.6
+        version: 0.0.15-beta.7
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.1.5
@@ -687,9 +687,6 @@ packages:
       '@biomejs/biome': '>=2.1.3'
       eslint: '>=9'
       prettier: '>=3'
-
-  '@estjs/shared@0.0.15-beta.6':
-    resolution: {integrity: sha512-WAwtSR/JcNpb5M286JtA2wli8T/UjBn3hnH1/OJps9VNLAc+hRoHCK6/p6qI7zEnekdftPtW0Z9CNnnzIol9uA==}
 
   '@estjs/shared@0.0.15-beta.7':
     resolution: {integrity: sha512-03f3OriNunIqchFB6USYydnHvpJUR8zoR5zl9oVVzVzctEixyq4hy/SYeQOkd3wYKDZUk/39WhrULRCsKhHQMA==}
@@ -4031,8 +4028,6 @@ snapshots:
       - supports-color
       - typescript
       - vitest
-
-  '@estjs/shared@0.0.15-beta.6': {}
 
   '@estjs/shared@0.0.15-beta.7': {}
 
