@@ -5,11 +5,12 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
-  release:
-    permissions:
-      id-token: write
-      contents: write
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -35,5 +36,9 @@ jobs:
       - name: Publish to NPM
         run: pnpm -r publish --access public --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NPM_CONFIG_PROVENANCE: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
