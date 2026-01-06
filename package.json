@@ -53,6 +53,9 @@
   "scripts": {
     "build": "tsup && cross-env NODE_ENV=production tsup --clean=false --treeshake --sourcemap=false",
     "dev": "tsup --watch",
+    "docs:dev": "rspress dev",
+    "docs:build": "rspress build",
+    "docs:preview": "rspress preview",
     "lint": "eslint ./ --fix --cache",
     "typecheck": "tsc --noEmit -p ./tsconfig.build.json",
     "test:unit": "vitest",
@@ -68,7 +71,7 @@
     "essor": "^0.0.15-beta.5"
   },
   "dependencies": {
-    "@estjs/shared": "^0.0.15-beta.5"
+    "@estjs/shared": "^0.0.15-beta.7"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^2.1.5",
@@ -79,19 +82,20 @@
     "bumpp": "^10.3.2",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
-    "essor": "^0.0.15-beta.6",
+    "essor": "^0.0.15-beta.7",
     "faked-promise": "^2.2.2",
     "jsdom": "^27.4.0",
     "lint-staged": "^16.2.7",
     "picocolors": "^1.1.1",
     "pnpm": "^10.27.0",
     "prettier": "^3.7.4",
+    "rspress": "^1.40.2",
     "simple-git-hooks": "^2.13.1",
     "standard-changelog": "6.0.0",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "unplugin-essor": "^0.0.15-beta.6",
+    "unplugin-essor": "^0.0.15-beta.7",
     "vitest": "^4.0.16"
   },
   "simple-git-hooks": {

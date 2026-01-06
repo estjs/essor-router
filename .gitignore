@@ -17,7 +17,7 @@ components.d.ts
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-
+doc_build
 
 
 
