@@ -172,6 +172,7 @@ const routes = [
 ```tsx
 import { RouterLink } from 'essor-router';
 
+<>
 // 字符串路径
 <RouterLink to="/about">关于</RouterLink>
 
@@ -193,6 +194,7 @@ import { RouterLink } from 'essor-router';
 <RouterLink to="/about" activeClass="active" exactActiveClass="exact-active">
   关于
 </RouterLink>
+</>
 ```
 
 #### 编程式导航

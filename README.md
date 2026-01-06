@@ -167,30 +167,32 @@ const routes = [
 
 #### Declarative Navigation
 
-```ts
+```tsx
 import { RouterLink } from 'essor-router';
 
-// String path
-<RouterLink to="/about">About</RouterLink>
+<>
+  {/* String path */}
+  <RouterLink to="/about">About</RouterLink>
 
-// Object with path
-<RouterLink to={{ path: '/user/123' }}>User</RouterLink>
+  {/* Object with path */}
+  <RouterLink to={{ path: '/user/123' }}>User</RouterLink>
 
-// Named route with params
-<RouterLink to={{ name: 'user', params: { id: '123' } }}>User</RouterLink>
+  {/* Named route with params */}
+  <RouterLink to={{ name: 'user', params: { id: '123' } }}>User</RouterLink>
 
-// With query and hash
-<RouterLink to={{ path: '/search', query: { q: 'essor' }, hash: '#results' }}>
-  Search
-</RouterLink>
+  {/* With query and hash */}
+  <RouterLink to={{ path: '/search', query: { q: 'essor' }, hash: '#results' }}>
+    Search
+  </RouterLink>
 
-// Replace instead of push
-<RouterLink to="/about" replace>About</RouterLink>
+  {/* Replace instead of push */}
+  <RouterLink to="/about" replace>About</RouterLink>
 
-// Active class customization
-<RouterLink to="/about" activeClass="active" exactActiveClass="exact-active">
-  About
-</RouterLink>
+  {/* Active class customization */}
+  <RouterLink to="/about" activeClass="active" exactActiveClass="exact-active">
+    About
+  </RouterLink>
+</>
 ```
 
 #### Programmatic Navigation
