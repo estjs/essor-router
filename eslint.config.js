@@ -15,7 +15,7 @@ export default estjs(
       '@typescript-eslint/no-unused-expressions': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
     },
-    ignores: ['dist', 'doc_build',"docs"],
+    ignores: ['dist', 'doc_build', 'docs'],
   },
   {
     react: false,

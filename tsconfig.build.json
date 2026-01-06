@@ -12,6 +12,8 @@
     "examples",
     "playground",
     "**/test/**/*",
-    "docs"
+    "docs",
+    "doc_build",
+    "rspress.config.ts"
   ]
 }
