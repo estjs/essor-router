@@ -254,7 +254,7 @@ console.log('路由器已就绪');
 检查值是否为导航失败：
 
 ```tsx
-import { isNavigationFailure, NavigationFailureType } from 'essor-router';
+import { NavigationFailureType, isNavigationFailure } from 'essor-router';
 
 const result = await router.push('/path');
 

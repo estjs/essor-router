@@ -112,7 +112,7 @@ const routes = [
 当在使用相同组件的路由之间导航时（例如从 `/user/1` 到 `/user/2`），组件会被复用。使用 `onBeforeRouteUpdate` 来响应变化：
 
 ```tsx
-import { useRoute, onBeforeRouteUpdate } from 'essor-router';
+import { onBeforeRouteUpdate, useRoute } from 'essor-router';
 
 function User() {
   const route = useRoute();

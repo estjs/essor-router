@@ -5,5 +5,13 @@
     "declaration": true,
     "stripInternal": true
   },
-  "exclude": ["node_modules", "dist", "./dist/**/*", "examples", "playground", "**/test/**/*"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "./dist/**/*",
+    "examples",
+    "playground",
+    "**/test/**/*",
+    "docs"
+  ]
 }

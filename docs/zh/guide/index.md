@@ -49,7 +49,7 @@ const routes = [
 使用 hooks 访问路由器和路由信息：
 
 ```tsx
-import { useRouter, useRoute } from 'essor-router';
+import { useRoute, useRouter } from 'essor-router';
 
 function MyComponent() {
   const router = useRouter();

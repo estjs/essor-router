@@ -107,7 +107,7 @@ async function navigate() {
 ### 导航失败
 
 ```tsx
-import { isNavigationFailure, NavigationFailureType } from 'essor-router';
+import { NavigationFailureType, isNavigationFailure } from 'essor-router';
 
 const result = await router.push('/users');
 

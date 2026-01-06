@@ -59,8 +59,8 @@ location / {
 #### Node.js (Express)
 
 ```js
+const path = require('node:path');
 const express = require('express');
-const path = require('path');
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -162,7 +162,7 @@ const router = createRouter({
 ### 示例：测试
 
 ```tsx
-import { createRouter, createMemoryHistory } from 'essor-router';
+import { createMemoryHistory, createRouter } from 'essor-router';
 
 function createTestRouter() {
   return createRouter({

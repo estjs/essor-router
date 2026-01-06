@@ -202,7 +202,7 @@ function PrefetchLink({ to, children }) {
     const route = router.resolve(to);
     try {
       await loadRouteLocation(route);
-    } catch (e) {
+    } catch {
       // 忽略预取错误
     }
   };

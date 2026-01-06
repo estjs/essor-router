@@ -67,7 +67,7 @@ const routes = [
     component: SearchResults,
     props: (route) => ({
       query: route.query.q,
-      page: parseInt(route.query.page) || 1,
+      page: Number.parseInt(route.query.page) || 1,
       sort: route.query.sort || 'relevance',
     }),
   },
@@ -189,7 +189,7 @@ const routes = [
     component: SearchResults,
     props: (route): SearchProps => ({
       query: route.query.q as string || '',
-      page: parseInt(route.query.page as string) || 1,
+      page: Number.parseInt(route.query.page as string) || 1,
       sort: (route.query.sort as SearchProps['sort']) || 'relevance',
     }),
   },

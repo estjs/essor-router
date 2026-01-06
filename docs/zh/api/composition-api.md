@@ -243,10 +243,10 @@ function PreloadLink({ to, children }) {
 
 ```tsx
 import { 
-  useRouter, 
-  useRoute, 
   onBeforeRouteLeave, 
-  onBeforeRouteUpdate 
+  onBeforeRouteUpdate, 
+  useRoute, 
+  useRouter 
 } from 'essor-router';
 
 function UserEditor() {

@@ -167,7 +167,7 @@ const routes = [
 
 #### Declarative Navigation
 
-```tsx
+```ts
 import { RouterLink } from 'essor-router';
 
 // String path

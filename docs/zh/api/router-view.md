@@ -153,7 +153,7 @@ function User() {
 ## 示例
 
 ```tsx
-import { createRouter, RouterView, RouterLink } from 'essor-router';
+import { RouterLink, RouterView, createRouter } from 'essor-router';
 
 const router = createRouter({
   history: 'history',

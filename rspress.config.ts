@@ -6,10 +6,10 @@ export default defineConfig({
   description: 'The official router for Essor framework',
   icon: '/logo.svg',
   logo: '/logo.svg',
-  
+
   // 默认语言
   lang: 'en',
-  
+
   // 多语言配置
   locales: [
     {

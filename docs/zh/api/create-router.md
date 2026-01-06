@@ -19,15 +19,15 @@ function createRouter(options: RouterOptions): Router
 
 ```tsx
 // 字符串简写
+// 或使用工厂函数
+import { createMemoryHistory, createWebHashHistory, createWebHistory } from 'essor-router';
+
 createRouter({
   history: 'history', // HTML5 History
   // history: 'hash',  // Hash 模式
   // history: 'memory', // Memory 模式
   routes: [],
 });
-
-// 或使用工厂函数
-import { createWebHistory, createWebHashHistory, createMemoryHistory } from 'essor-router';
 
 createRouter({
   history: createWebHistory('/base/'),
@@ -182,7 +182,7 @@ interface RouteRecordRaw {
   beforeEnter?: NavigationGuard | NavigationGuard[];
   beforeLeave?: NavigationGuard | NavigationGuard[];
   meta?: RouteMeta;
-  props?: boolean | Object | Function;
+  props?: boolean | object | Function;
   sensitive?: boolean;
   strict?: boolean;
 }

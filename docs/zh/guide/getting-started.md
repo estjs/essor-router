@@ -61,7 +61,7 @@ export const router = createRouter({
 
 ```tsx
 // App.tsx
-import { RouterView, RouterLink } from 'essor-router';
+import { RouterLink, RouterView } from 'essor-router';
 import { router } from './router';
 
 function App() {
@@ -98,7 +98,7 @@ createApp(App, '#app');
 
 ```tsx
 import { createApp } from 'essor';
-import { createRouter, RouterView, RouterLink } from 'essor-router';
+import { RouterLink, RouterView, createRouter } from 'essor-router';
 
 // 组件
 function Home() {
@@ -162,7 +162,7 @@ createApp(App, '#app');
 在组件中访问路由信息：
 
 ```tsx
-import { useRouter, useRoute } from 'essor-router';
+import { useRoute, useRouter } from 'essor-router';
 
 function User() {
   const router = useRouter();

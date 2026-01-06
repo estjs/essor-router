@@ -315,7 +315,7 @@ function useRouteMatch(pattern: string | RegExp) {
   const route = useRoute();
   
   if (typeof pattern === 'string') {
-    return route.path === pattern || route.path.startsWith(pattern + '/');
+    return route.path === pattern || route.path.startsWith(`${pattern  }/`);
   }
   
   return pattern.test(route.path);
