@@ -4,7 +4,7 @@
 
 [build]
   publish = "doc_build"
-  command = "npx pnpm i --store=node_modules/.pnpm-store && npx pnpm run docs:build"
+  command = "npx pnpm run docs:build"
 
 [[redirects]]
   from = "/*"
