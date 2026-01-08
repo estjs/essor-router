@@ -5,6 +5,16 @@ toc: false
 docClass: timeline
 ---
 
+## [0.0.16-beta.3](https://github.com/estjs/essor-router/compare/v0.0.16-beta.2...v0.0.16-beta.3) `2026-01-08`
+
+
+### Features
+
+* update release tag ([01c0238](https://github.com/estjs/essor-router/commit/01c023801eceaa7eda1f232f8dd00c6da530eacf))
+
+
+
+
 
 
 
