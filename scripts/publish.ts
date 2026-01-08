@@ -2,27 +2,11 @@
 
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import process from 'node:process';
 import { $ } from 'zx';
-
-let version = process.argv[2];
-
-if (!version) {
-  throw new Error('No tag specified');
-}
-
-if (version.startsWith('v')) {
-  version = version.slice(1);
-}
 
 const pkgPath = fileURLToPath(new URL('../package.json', import.meta.url));
 const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-
-if (pkg.version !== version) {
-  throw new Error(
-    `Package version from tag "${version}" mismatches with the current version "${pkg.version}"`,
-  );
-}
+const version = pkg.version;
 
 const releaseTag = version.includes('beta')
   ? 'beta'
