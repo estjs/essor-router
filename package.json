@@ -1,6 +1,6 @@
 {
   "name": "essor-router",
-  "version": "0.0.16-beta.1",
+  "version": "0.0.16-beta.2",
   "packageManager": "pnpm@10.27.0",
   "description": "",
   "type": "module",
