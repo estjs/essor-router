@@ -65,7 +65,7 @@
     "coverage": "vitest run --coverage",
     "changelog": "tsx scripts/changelog.ts",
     "prerelease": "pnpm run lint && pnpm run build && pnpm run typecheck && pnpm run test",
-    "publish": "tsx scripts/publish.ts",
+    "publish-ci": "tsx scripts/publish-ci.ts",
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag"
   },
   "peerDependencies": {
