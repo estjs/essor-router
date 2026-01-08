@@ -34,9 +34,7 @@ jobs:
         run: pnpm run build
 
       - name: Publish to NPM
-        run: pnpm publish --no-git-checks --access public
-        env:
-          NPM_CONFIG_PROVENANCE: true
+        run: pnpm run publish ${{ github.ref_name }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

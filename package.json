@@ -65,6 +65,7 @@
     "coverage": "vitest run --coverage",
     "changelog": "tsx scripts/changelog.ts",
     "prerelease": "pnpm run lint && pnpm run build && pnpm run typecheck && pnpm run test",
+    "publish": "tsx scripts/publish.ts",
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag"
   },
   "peerDependencies": {
@@ -96,7 +97,8 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "unplugin-essor": "^0.0.15-beta.7",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.16",
+    "zx": "^8.8.5"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged --concurrent false",
