@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@estjs/shared':
         specifier: ^0.0.15-beta.7
-        version: 0.0.15-beta.7
+        version: 0.0.15-beta.8
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.1.5
@@ -703,6 +703,9 @@ packages:
 
   '@estjs/shared@0.0.15-beta.7':
     resolution: {integrity: sha512-03f3OriNunIqchFB6USYydnHvpJUR8zoR5zl9oVVzVzctEixyq4hy/SYeQOkd3wYKDZUk/39WhrULRCsKhHQMA==}
+
+  '@estjs/shared@0.0.15-beta.8':
+    resolution: {integrity: sha512-U0xKfs1A5wd3c7+ULnC+JOtAlkvi/ctQX8bAyGG4IB8f50mFKEuHkn48rgufBylP6jG8S+cV/fGqhKJykWeZ8g==}
 
   '@estjs/signals@0.0.15-beta.7':
     resolution: {integrity: sha512-23Gut2VYyhT/YdwZ+x8b7a17a/UXCRutLLsEXYFMo59yo6RJUw1N+eRHroB49ZfP0jiuI+lWNOAGfsm5G70B+w==}
@@ -4910,8 +4913,8 @@ packages:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
     engines: {node: '>=18'}
 
-  watchpack@2.4.4:
-    resolution: {integrity: sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==}
+  watchpack@2.5.0:
+    resolution: {integrity: sha512-e6vZvY6xboSwLz2GD36c16+O/2Z6fKvIf4pOXptw2rY9MVwE/TXc6RGqxD3I3x0a28lwBY7DE+76uTPSsBrrCA==}
     engines: {node: '>=10.13.0'}
 
   web-namespaces@2.0.1:
@@ -5463,6 +5466,8 @@ snapshots:
       - vitest
 
   '@estjs/shared@0.0.15-beta.7': {}
+
+  '@estjs/shared@0.0.15-beta.8': {}
 
   '@estjs/signals@0.0.15-beta.7':
     dependencies:
@@ -10544,7 +10549,7 @@ snapshots:
     dependencies:
       xml-name-validator: 5.0.0
 
-  watchpack@2.4.4:
+  watchpack@2.5.0:
     dependencies:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
@@ -10582,7 +10587,7 @@ snapshots:
       schema-utils: 4.3.3
       tapable: 2.3.0
       terser-webpack-plugin: 5.3.16(esbuild@0.27.2)(webpack@5.104.1(esbuild@0.27.2))
-      watchpack: 2.4.4
+      watchpack: 2.5.0
       webpack-sources: 3.3.3
     transitivePeerDependencies:
       - '@swc/core'
