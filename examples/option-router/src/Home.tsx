@@ -12,12 +12,14 @@ export default function Home() {
   };
 
   return (
-    <>
-      <div onClick={onClick} class="home">
+    <div>
+      <div onClick={onClick} class="to-home">
         to about
       </div>
 
-      <div onClick={onRandomClick}>random router</div>
-    </>
+      <div onClick={onRandomClick} class="to-random">
+        random router
+      </div>
+    </div>
   );
 }

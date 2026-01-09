@@ -3,6 +3,7 @@ import { createApp } from 'essor';
 import Home from './Home';
 import About from './About';
 import notFound from './NotFound';
+import Random from './Random';
 
 const router = createRouter({
   history: 'history',
@@ -14,6 +15,10 @@ const router = createRouter({
     {
       path: '/about',
       component: About,
+    },
+    {
+      path: '/random',
+      component: Random,
     },
     {
       path: '/:pathMatch(.*)*',
