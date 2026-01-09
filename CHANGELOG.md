@@ -5,6 +5,17 @@ toc: false
 docClass: timeline
 ---
 
+## [0.0.16-beta.6](https://github.com/estjs/essor-router/compare/v0.0.16-beta.5...v0.0.16-beta.6) `2026-01-09`
+
+
+### Features
+
+* lint file ([2794d8f](https://github.com/estjs/essor-router/commit/2794d8f4f94f1ba430fac6d2e24d0ba2e1e5b6b2))
+* provide move init ([f94abc4](https://github.com/estjs/essor-router/commit/f94abc485c4156aafb38ca0779f1d29c6d9ad4b3))
+
+
+
+
 
 
 
