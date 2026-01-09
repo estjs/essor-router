@@ -69,7 +69,7 @@
     "release": "pnpm run prerelease && pnpm run changelog && bumpp package.json --no-git-checks --commit --push --tag"
   },
   "peerDependencies": {
-    "essor": "^0.0.15-beta.5"
+    "essor": "^0.0.15-beta.7"
   },
   "dependencies": {
     "@estjs/shared": "^0.0.15-beta.7"
