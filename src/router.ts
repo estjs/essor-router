@@ -504,7 +504,8 @@ export function createRouter(options: RouterOptions): Router {
         );
       } else if (matchedRoute.matched.length === 0) {
         warn(
-          `No match found for location with path "${rawLocation.path != null ? rawLocation.path : rawLocation
+          `No match found for location with path "${
+            rawLocation.path != null ? rawLocation.path : rawLocation
           }"`,
         );
       }
@@ -648,11 +649,11 @@ export function createRouter(options: RouterOptions): Router {
       .catch((error: NavigationFailure | NavigationRedirectError) => {
         return isNavigationFailure(error)
           ? // navigation redirects still mark the router as ready
-          isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
+            isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
             ? error
             : markAsReady(error) // also returns the error
           : // reject any unknown error
-          triggerError(error, toLocation, from);
+            triggerError(error, toLocation, from);
       })
       .then((failure: NavigationFailure | NavigationRedirectError | void) => {
         if (failure) {
@@ -666,7 +667,7 @@ export function createRouter(options: RouterOptions): Router {
               // @ts-expect-error: added only in dev
               (redirectedFrom._count = redirectedFrom._count
                 ? // @ts-expect-error
-                redirectedFrom._count + 1
+                  redirectedFrom._count + 1
                 : 1) > 30
             ) {
               warn(

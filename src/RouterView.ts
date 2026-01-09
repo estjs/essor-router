@@ -134,8 +134,8 @@ export const RouterView = (props: RouterViewProps) => {
   if (!router) {
     throw new Error(
       'RouterView requires a router instance. ' +
-      'Please provide a router via props or ensure RouterView is used within a router context. ' +
-      'Make sure you have created a router instance and passed it to RouterView, or that a parent component provides the router through injection.',
+        'Please provide a router via props or ensure RouterView is used within a router context. ' +
+        'Make sure you have created a router instance and passed it to RouterView, or that a parent component provides the router through injection.',
     );
   }
 
