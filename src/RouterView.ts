@@ -10,7 +10,6 @@ import {
 } from 'essor';
 import {
   matchedRouteKey,
-  routeLocationKey,
   routerKey,
   routerViewLocationKey,
   viewDepthKey,
@@ -61,39 +60,6 @@ export interface RouterViewProps extends ComponentProps {
    * Error handler callback for component rendering errors
    */
   onError?: (error: Error) => void;
-}
-
-/**
- * Creates a reactive route object for the useRoute hook
- * @param router - Router instance
- * @returns Reactive route object
- */
-function createReactiveRoute(router: Router): RouteLocationNormalized {
-  const reactiveRoute = {} as RouteLocationNormalized;
-
-  for (const key in START_LOCATION_NORMALIZED) {
-    Object.defineProperty(reactiveRoute, key, {
-      get: () => {
-        // Safe access to router.currentRoute with null checks
-        if (!router?.currentRoute) {
-          return START_LOCATION_NORMALIZED[key as keyof RouteLocationNormalized];
-        }
-
-        const currentRoute = router.currentRoute.value;
-        if (!currentRoute || typeof currentRoute !== 'object') {
-          return START_LOCATION_NORMALIZED[key as keyof RouteLocationNormalized];
-        }
-
-        return (
-          currentRoute[key as keyof RouteLocationNormalized] ??
-          START_LOCATION_NORMALIZED[key as keyof RouteLocationNormalized]
-        );
-      },
-      enumerable: true,
-    });
-  }
-
-  return reactiveRoute;
 }
 
 /**
@@ -168,8 +134,8 @@ export const RouterView = (props: RouterViewProps) => {
   if (!router) {
     throw new Error(
       'RouterView requires a router instance. ' +
-        'Please provide a router via props or ensure RouterView is used within a router context. ' +
-        'Make sure you have created a router instance and passed it to RouterView, or that a parent component provides the router through injection.',
+      'Please provide a router via props or ensure RouterView is used within a router context. ' +
+      'Make sure you have created a router instance and passed it to RouterView, or that a parent component provides the router through injection.',
     );
   }
 
@@ -178,13 +144,6 @@ export const RouterView = (props: RouterViewProps) => {
   onDestroy(() => {
     router.destroy();
   });
-
-  // Provide router context for child components
-  provide(routerKey, router);
-
-  // Create and provide reactive route for useRoute hook
-  const reactiveRoute = createReactiveRoute(router);
-  provide(routeLocationKey, reactiveRoute);
 
   // Get route to display (from props or injection)
   const injectedRoute = inject(routerViewLocationKey) || router.currentRoute;

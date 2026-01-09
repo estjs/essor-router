@@ -1,4 +1,4 @@
-import { type Signal, signal, toRaw } from 'essor';
+import { type Signal, provide, shallowReactive, signal, toRaw } from 'essor';
 import { applyToParams, assign, isArray, isBrowser, isObject, isString, noop } from './utils';
 import {
   type Lazy,
@@ -36,6 +36,7 @@ import { warn } from './warning';
 import { createWebHistory } from './history/html5';
 import { createWebHashHistory } from './history/hash';
 import { createMemoryHistory } from './history/memory';
+import { routeLocationKey, routerKey, routerViewLocationKey } from './injectionSymbols';
 import type { PathParserOptions } from './matcher/pathParserRanker';
 import type { RouteRecord, RouteRecordNormalized } from './matcher/types';
 
@@ -503,8 +504,7 @@ export function createRouter(options: RouterOptions): Router {
         );
       } else if (matchedRoute.matched.length === 0) {
         warn(
-          `No match found for location with path "${
-            rawLocation.path != null ? rawLocation.path : rawLocation
+          `No match found for location with path "${rawLocation.path != null ? rawLocation.path : rawLocation
           }"`,
         );
       }
@@ -648,11 +648,11 @@ export function createRouter(options: RouterOptions): Router {
       .catch((error: NavigationFailure | NavigationRedirectError) => {
         return isNavigationFailure(error)
           ? // navigation redirects still mark the router as ready
-            isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
+          isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)
             ? error
             : markAsReady(error) // also returns the error
           : // reject any unknown error
-            triggerError(error, toLocation, from);
+          triggerError(error, toLocation, from);
       })
       .then((failure: NavigationFailure | NavigationRedirectError | void) => {
         if (failure) {
@@ -666,7 +666,7 @@ export function createRouter(options: RouterOptions): Router {
               // @ts-expect-error: added only in dev
               (redirectedFrom._count = redirectedFrom._count
                 ? // @ts-expect-error
-                  redirectedFrom._count + 1
+                redirectedFrom._count + 1
                 : 1) > 30
             ) {
               warn(
@@ -884,7 +884,7 @@ export function createRouter(options: RouterOptions): Router {
       }
     }
 
-    currentRoute.value = toRaw(toLocation);
+    currentRoute.value = toLocation;
     markAsReady();
   }
 
@@ -1058,7 +1058,7 @@ export function createRouter(options: RouterOptions): Router {
   /**
    * Initializes the router and performs initial navigation on client side
    */
-  function init() {
+  const init = () => {
     // Initial navigation is only necessary on client, not server
     // Avoid pushing multiple times when router is used in multiple apps
     const shouldPerformInitialNavigation =
@@ -1070,12 +1070,24 @@ export function createRouter(options: RouterOptions): Router {
         if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
-  }
+
+    const reactiveRoute = {} as RouteLocationNormalizedLoaded;
+    for (const key in START_LOCATION_NORMALIZED) {
+      Object.defineProperty(reactiveRoute, key, {
+        get: () => currentRoute.value[key as keyof RouteLocationNormalized],
+        enumerable: true,
+      });
+    }
+
+    provide(routerKey, router);
+    provide(routeLocationKey, shallowReactive(reactiveRoute));
+    provide(routerViewLocationKey, currentRoute);
+  };
 
   /**
    * Destroys the router and cleans up all listeners and state
    */
-  function destroy() {
+  const destroy = () => {
     // Invalidate the current navigation
     pendingLocation = START_LOCATION_NORMALIZED;
 
@@ -1089,7 +1101,7 @@ export function createRouter(options: RouterOptions): Router {
     currentRoute.value = START_LOCATION_NORMALIZED;
     started = false;
     ready = false;
-  }
+  };
   const go = (delta: number) => routerHistory.go(delta);
 
   const router: Router = {
