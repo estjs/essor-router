@@ -1,4 +1,4 @@
-import { type Signal, provide, shallowReactive, signal, toRaw } from 'essor';
+import { type Signal, computed, provide, signal, toRaw } from 'essor';
 import { applyToParams, assign, isArray, isBrowser, isObject, isString, noop } from './utils';
 import {
   type Lazy,
@@ -337,6 +337,15 @@ export function createRouter(options: RouterOptions): Router {
   const beforeResolveGuards = useCallbacks<NavigationGuardWithThis<undefined>>();
   const afterGuards = useCallbacks<NavigationHookAfter>();
   const currentRoute = signal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
+  const reactiveRoute = {} as RouteLocationNormalizedLoaded;
+  for (const key in START_LOCATION_NORMALIZED) {
+    const s = computed(() => currentRoute.value[key as keyof RouteLocationNormalizedLoaded]);
+    Object.defineProperty(reactiveRoute, key, {
+      get: () => s.value,
+      enumerable: true,
+      configurable: true,
+    });
+  }
   let pendingLocation: RouteLocation = START_LOCATION_NORMALIZED;
 
   const normalizeParams = applyToParams.bind(null, paramValue => `${paramValue}`);
@@ -1071,17 +1080,8 @@ export function createRouter(options: RouterOptions): Router {
         if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
-
-    const reactiveRoute = {} as RouteLocationNormalizedLoaded;
-    for (const key in START_LOCATION_NORMALIZED) {
-      Object.defineProperty(reactiveRoute, key, {
-        get: () => currentRoute.value[key as keyof RouteLocationNormalized],
-        enumerable: true,
-      });
-    }
-
     provide(routerKey, router);
-    provide(routeLocationKey, shallowReactive(reactiveRoute));
+    provide(routeLocationKey, currentRoute);
     provide(routerViewLocationKey, currentRoute);
   };
 

@@ -38,9 +38,9 @@ export const routerKey = Symbol(__DEV__ ? 'router' : '') as InjectionKey<Router>
  *
 
  */
-export const routeLocationKey = Symbol(
-  __DEV__ ? 'route location' : '',
-) as InjectionKey<RouteLocationNormalizedLoaded>;
+export const routeLocationKey = Symbol(__DEV__ ? 'route location' : '') as InjectionKey<
+  Signal<RouteLocationNormalizedLoaded>
+>;
 
 /**
  * Allows overriding the current route used by router-view. Internally this is

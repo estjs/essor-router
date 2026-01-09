@@ -3,9 +3,9 @@ import { computed, createComponent, inject, isSignal } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
-import { useRouter } from './useApi';
+import { useRoute, useRouter } from './useApi';
 import { LinkComponent } from './linkComponent';
-import { routeLocationKey, routerKey } from './injectionSymbols';
+import { routerKey } from './injectionSymbols';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouteLocationNormalized } from './types';
@@ -87,7 +87,7 @@ const FALLBACK_ROUTE: RouteLocationNormalized = {
  */
 function useLink(props: RouterLinkProps) {
   const router = inject(routerKey);
-  const currentRoute = inject(routeLocationKey);
+  const currentRoute = useRoute();
 
   // Validate router injection
   if (!router) {
