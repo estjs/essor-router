@@ -18,7 +18,7 @@ components.d.ts
 /blob-report/
 /playwright/.cache/
 doc_build
-
+typed-router.d.ts
 
 
 

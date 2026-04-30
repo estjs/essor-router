@@ -1,5 +1,5 @@
 import { RouterView, createRouter } from 'essor-router';
-import { createApp } from 'essor/*';
+import { createApp } from 'essor';
 
 const router = createRouter({
   history: 'hash',

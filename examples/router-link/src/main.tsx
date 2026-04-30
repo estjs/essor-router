@@ -22,6 +22,8 @@ const router = createRouter({
   ],
 });
 
+router.replace('/');
+
 const App = () => {
   return <RouterView router={router}></RouterView>;
 };

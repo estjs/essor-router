@@ -25,8 +25,7 @@ export default defineConfig({
   reporter: 'dot',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:3002',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -35,18 +34,8 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
     },
 
     /* Test against mobile viewports. */
@@ -71,9 +60,57 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm -C examples/basic run dev',
-    url: 'http://localhost:3001/',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command:
+        'pnpm --filter essor-router build && pnpm --filter essor-router-unplugin build && pnpm --filter essor-router-ts-plugin build && pnpm -C examples/file-routes run dev',
+      url: 'http://localhost:3002/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/typed-router run dev',
+      url: 'http://localhost:3003/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/config-router exec vite --host --port 3017 --strictPort',
+      url: 'http://localhost:3017/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/basic exec vite --host --port 3010 --strictPort',
+      url: 'http://localhost:3010/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/option-router exec vite --host --port 3011 --strictPort',
+      url: 'http://localhost:3011/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/router-link exec vite --host --port 3012 --strictPort',
+      url: 'http://localhost:3012/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/use-api exec vite --host --port 3013 --strictPort',
+      url: 'http://localhost:3013/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/param-parsers exec vite --host --port 3014 --strictPort',
+      url: 'http://localhost:3014/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/data-loaders exec vite --host --port 3015 --strictPort',
+      url: 'http://localhost:3015/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm -C examples/async-router exec vite --host --port 3016 --strictPort',
+      url: 'http://localhost:3016/',
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });

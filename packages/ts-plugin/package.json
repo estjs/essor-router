@@ -1,0 +1,22 @@
+{
+  "name": "essor-router-ts-plugin",
+  "version": "0.0.16-beta.7",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "tinyglobby": "^0.2.15"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

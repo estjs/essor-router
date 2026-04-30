@@ -14,7 +14,7 @@ import { RouterLink } from 'essor-router';
 
 ### to
 
-- **Type:** `string | RouteLocationRaw`
+- **Type:** `string | RouteLocationRaw | (() => RouteLocationRaw)`
 - **Required:** Yes
 
 The target location:
@@ -35,6 +35,15 @@ The target location:
 // With hash
 <RouterLink to={{ path: '/about', hash: '#team' }}>Team</RouterLink>
 ```
+
+You can also pass a getter for reactive targets:
+
+```tsx
+const $to = signal('/about')
+<RouterLink to={() => $to.value}>Dynamic</RouterLink>
+```
+
+Note: In JSX, `$`-prefixed signals are transformed to `.value` reads. If you pass `to={$to}` in JSX, it becomes a static value. Use a getter for reactive `to` updates.
 
 ### replace
 
@@ -93,6 +102,8 @@ Value for `aria-current` when exactly active:
 ```tsx
 <RouterLink to="/about" ariaCurrentValue="page">About</RouterLink>
 ```
+
+If not provided, `aria-current="page"` is applied when the link is exact active.
 
 ### viewTransition
 

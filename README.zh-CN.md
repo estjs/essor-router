@@ -31,12 +31,61 @@
 ```bash
 # npm
 npm install essor-router
+npm install -D essor-router-unplugin
 
 # pnpm
 pnpm add essor-router
+pnpm add -D essor-router-unplugin
 
 # yarn
 yarn add essor-router
+yarn add -D essor-router-unplugin
+```
+
+### Monorepo 拆分说明
+
+- `essor-router`: 运行时包（history、matcher、router API）
+- `essor-router-unplugin`: 文件路由与代码生成插件包
+- `essor-router-ts-plugin`: TypeScript 语言服务插件，为 `useRoute()` 提供路由级精确类型
+- 文件路由以代码文件（`.tsx/.ts/.jsx/.js`）为核心，不依赖 SFC route block。
+
+### TypeScript 插件（路由感知 `useRoute`）
+
+安装：
+
+```bash
+pnpm add -D essor-router-ts-plugin
+```
+
+`tsconfig.json`：
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "essor-router-ts-plugin",
+        "moduleName": "essor-router",
+        "routesFolder": "src/pages",
+        "typedRouterDts": "typed-router.d.ts"
+      }
+    ]
+  }
+}
+```
+
+该插件会把当前页面文件映射为对应路由名，并生成按文件拆分的代理模块，从而让 `useRoute()` 获得更精确的 `name/path/params` 类型提示。
+
+### 文件路由 API
+
+```ts
+import { defineRoute } from 'essor-router/experimental';
+
+export const route = defineRoute({
+  name: 'home',
+  path: '/',
+  alias: ['/home'],
+});
 ```
 
 ## 快速开始

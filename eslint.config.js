@@ -19,5 +19,6 @@ export default estjs(
   },
   {
     react: false,
+    unocss: false,
   },
 );

@@ -29,6 +29,11 @@
 
 - [TypeScript 定义](/zh/api/types) - 类型定义和接口
 
+## 构建插件
+
+- [Unplugin API](/zh/api/unplugin) - 文件路由、生成模块与配置项
+- [TypeScript 插件 API](/zh/api/ts-plugin) - 编辑器/TS 检查中的路由感知 `useRoute` 类型收窄
+
 ## 工具函数
 
 - [isNavigationFailure](/zh/api/router-instance#isnavigationfailure) - 检查导航失败

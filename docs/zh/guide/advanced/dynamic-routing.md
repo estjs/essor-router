@@ -1,5 +1,7 @@
 # 动态路由
 
+> 如果你在找文件路由，请查看[Unplugin 文件路由完整指南](/zh/guide/advanced/file-based-routing-unplugin)。
+
 动态路由允许你在运行时添加或删除路由，实现基于权限的菜单和插件系统等功能。
 
 ## 添加路由

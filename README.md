@@ -29,12 +29,61 @@ The official router for [Essor](https://github.com/estjs/essor) - A lightweight,
 ```bash
 # npm
 npm install essor-router
+npm install -D essor-router-unplugin
 
 # pnpm
 pnpm add essor-router
+pnpm add -D essor-router-unplugin
 
 # yarn
 yarn add essor-router
+yarn add -D essor-router-unplugin
+```
+
+### Monorepo Split Notes
+
+- `essor-router`: runtime package (history, matcher, router APIs)
+- `essor-router-unplugin`: file-based routes and codegen plugin package
+- `essor-router-ts-plugin`: TypeScript language service plugin for route-aware `useRoute()` narrowing
+- File-based routing is code-file driven (`.tsx/.ts/.jsx/.js`) and does not rely on SFC route blocks.
+
+### TypeScript Plugin (Route-aware `useRoute`)
+
+Install:
+
+```bash
+pnpm add -D essor-router-ts-plugin
+```
+
+`tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "essor-router-ts-plugin",
+        "moduleName": "essor-router",
+        "routesFolder": "src/pages",
+        "typedRouterDts": "typed-router.d.ts"
+      }
+    ]
+  }
+}
+```
+
+This plugin maps page files to generated route names and creates per-file proxy modules so `useRoute()` gets precise `name/path/params` types.
+
+### File Route API
+
+```ts
+import { defineRoute } from 'essor-router/experimental';
+
+export const route = defineRoute({
+  name: 'home',
+  path: '/',
+  alias: ['/home'],
+});
 ```
 
 ## Quick Start

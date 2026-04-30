@@ -1,5 +1,7 @@
 # Dynamic Routing
 
+> Looking for file-based routing? See [File-Based Routing with Unplugin](/guide/advanced/file-based-routing-unplugin).
+
 Dynamic routing allows you to add or remove routes at runtime, enabling features like permission-based menus and plugin systems.
 
 ## Adding Routes

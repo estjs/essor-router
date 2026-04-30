@@ -29,6 +29,11 @@ This section contains the complete API reference for essor-router.
 
 - [TypeScript Definitions](/api/types) - Type definitions and interfaces
 
+## Build Plugin
+
+- [Unplugin API](/api/unplugin) - File-based routing, generated modules, and options
+- [TypeScript Plugin API](/api/ts-plugin) - Route-aware `useRoute()` narrowing in editor/TS checks
+
 ## Utilities
 
 - [isNavigationFailure](/api/router-instance#isnavigationfailure) - Check navigation failures

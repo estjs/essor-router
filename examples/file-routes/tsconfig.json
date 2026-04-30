@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "jsx": "preserve",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "plugins": [
+      {
+        "name": "essor-router-ts-plugin"
+      }
+    ],
+    "paths": {
+      "essor-router": [
+        "./node_modules/essor-router"
+      ]
+    },
+    "types": [
+      "vite/client"
+    ],
+    "strict": true
+  },
+  "include": [
+    "src"
+  ]
+}
