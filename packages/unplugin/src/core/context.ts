@@ -1,4 +1,4 @@
-import { promises as fs } from 'node:fs';
+import { promises as fs, type Stats } from 'node:fs';
 import { glob } from 'tinyglobby';
 import { dirname, parse as parsePathe, relative, resolve } from 'pathe';
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
@@ -133,7 +133,7 @@ export function createRoutesContext(options: ResolvedOptions) {
                 cwd: folder,
                 ignoreInitial: true,
                 ignorePermissionErrors: true,
-                ignored: (filePath, stats) => {
+                ignored: (filePath: string, stats?: Stats) => {
                   // let folders pass, they are ignored by the glob pattern
                   if (!stats || stats.isDirectory()) {
                     return false;
@@ -265,7 +265,7 @@ export function createRoutesContext(options: ResolvedOptions) {
       if (normalizedFile === normalizedDir || normalizedFile.startsWith(`${normalizedDir}/`)) {
         const affectedNode = routeTree.getChild(filePath);
         definePageFileFlags.delete(filePath);
-        routeTree.remove(filePath);
+        routeTree.removeChild(filePath);
         if (affectedNode) {
           affectedNode.hasDefinePage = Array.from(affectedNode.value.components.values()).some(
             componentPath => definePageFileFlags.get(componentPath),

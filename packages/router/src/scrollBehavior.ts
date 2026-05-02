@@ -109,9 +109,18 @@ export function getScrollKey(path: string, delta: number): string {
 }
 
 export const scrollPositions = new Map<string, _ScrollPositionNormalized>();
+const MAX_SCROLL_POSITIONS = 50;
 
 export function saveScrollPosition(key: string, scrollPosition: _ScrollPositionNormalized) {
+  if (scrollPositions.has(key)) {
+    scrollPositions.delete(key);
+  }
   scrollPositions.set(key, scrollPosition);
+  while (scrollPositions.size > MAX_SCROLL_POSITIONS) {
+    const oldestKey = scrollPositions.keys().next().value;
+    if (oldestKey == null) break;
+    scrollPositions.delete(oldestKey);
+  }
 }
 
 export function getSavedScrollPosition(key: string) {

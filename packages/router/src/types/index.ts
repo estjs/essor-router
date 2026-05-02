@@ -1,4 +1,4 @@
-import type { Signal } from '@estjs/signals';
+import type { Signal } from 'essor';
 import type { PathParserOptions } from '../matcher/pathParserRanker';
 import type { LocationQuery, LocationQueryRaw } from '../query';
 import type { RouteRecord, RouteRecordNormalized } from '../matcher/types';
@@ -310,6 +310,7 @@ export type RouteSearchValidator = (input: unknown) => unknown;
 export interface RouteStartOptions {
   ssr?: boolean;
   prerender?: boolean;
+  prerenderPaths?: string[] | (() => string[] | Promise<string[]>);
   preload?: 'intent' | 'render' | 'viewport';
 }
 

@@ -9,6 +9,8 @@ export interface UsePrefetchOptions {
 export function usePrefetch(options: UsePrefetchOptions) {
   let prefetched = false;
   let viewportObserved = false;
+  let observer: IntersectionObserver | undefined;
+  let targetEl: Element | null = null;
 
   const runPreload = () => {
     if (!isBrowser || prefetched) return;
@@ -38,25 +40,41 @@ export function usePrefetch(options: UsePrefetchOptions) {
     }
 
     const target =
-      typeof document !== 'undefined'
+      targetEl ||
+      (typeof document !== 'undefined'
         ? document.querySelector(`[data-router-prefetch-id="${options.id}"]`)
-        : null;
+        : null);
 
     if (!target) return;
 
-    const observer = new IntersectionObserver(entries => {
+    const createdObserver = new IntersectionObserver(entries => {
       if (entries.some(entry => entry.isIntersecting)) {
         runPreload();
-        observer.disconnect();
+        createdObserver.disconnect();
+        if (observer === createdObserver) {
+          observer = undefined;
+        }
       }
     });
 
-    observer.observe(target);
+    observer = createdObserver;
+    createdObserver.observe(target);
+  };
+
+  const dispose = () => {
+    observer?.disconnect();
+    observer = undefined;
+  };
+
+  const setTarget = (target: Element | null) => {
+    targetEl = target;
   };
 
   return {
     onIntent,
     onRender,
     onViewport,
+    dispose,
+    setTarget,
   };
 }

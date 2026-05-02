@@ -1,4 +1,4 @@
-import { toRaw } from '@estjs/signals';
+import { toRaw } from 'essor';
 import { ErrorTypes, type NavigationFailure, isNavigationFailure } from '../errors';
 import { isSameRouteRecord } from '../location';
 import { extractComponentsGuards, guardToPromiseFn } from '../navigationGuards';

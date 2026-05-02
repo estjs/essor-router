@@ -315,6 +315,48 @@ describe('history HTMl5', () => {
 
     });
 
+    it('suppresses consecutive go(_, false) popstate callbacks', async () => {
+      const originalAddEventListener = window.addEventListener.bind(window);
+      let popstateHandler: ((event: { state: any }) => void) | undefined;
+      const addEventListenerSpy = vitest
+        .spyOn(window, 'addEventListener')
+        .mockImplementation((type, listener, options) => {
+          if (type === 'popstate') {
+            popstateHandler = listener as (event: { state: any }) => void;
+            return;
+          }
+          return originalAddEventListener(type, listener as any, options as any);
+        });
+
+      const history = createTestHistory();
+      const listener = vitest.fn();
+      history.listen(listener);
+
+      history.push('/page1');
+      const page1State = window.history.state;
+      history.push('/page2');
+      const page2State = window.history.state;
+      history.push('/page3');
+
+      listener.mockClear();
+
+      const goSpy = vitest.spyOn(window.history, 'go').mockImplementation(() => {});
+      history.go(-1, false);
+      history.go(-1, false);
+
+      window.history.replaceState(page2State, '', '/page2');
+      popstateHandler?.({ state: page2State });
+
+      window.history.replaceState(page1State, '', '/page1');
+      popstateHandler?.({ state: page1State });
+
+      expect(listener).not.toHaveBeenCalled();
+      expect(history.location).toBe('/page1');
+
+      goSpy.mockRestore();
+      addEventListenerSpy.mockRestore();
+    });
+
     it('removes popstate listener on destroy', () => {
       const removeEventListenerSpy = vitest.spyOn(window, 'removeEventListener');
       const history = createTestHistory();

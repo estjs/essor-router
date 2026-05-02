@@ -1,10 +1,13 @@
 // Enhanced router options interface for better type safety
 import {
   createComponent,
-  error as logError,
+  computed,
+  effect,
   inject,
+  onDestroy,
+  signal,
+  stop,
 } from 'essor';
-import { type Computed, type Signal, computed, isSignal } from '@estjs/signals';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
@@ -15,6 +18,12 @@ import { usePrefetch } from './router/usePrefetch';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouteLocationNormalized, RouteLocationRawTyped } from './types';
+
+function logRouterError(...args: unknown[]) {
+  if (__DEV__) {
+    console.error(...args);
+  }
+}
 
 // Define specific types for RouterLink children
 export type RouterLinkChildren =
@@ -38,8 +47,16 @@ export interface RouterLinkOptions {
 
 export type RouterLinkTo =
   | RouteLocationRawTyped
-  | Signal<RouteLocationRawTyped>
+  | SignalLike<RouteLocationRawTyped>
   | (() => RouteLocationRawTyped);
+
+interface ReadonlyValue<T> {
+  readonly value: T;
+}
+
+interface SignalLike<T> extends ReadonlyValue<T> {
+  peek?: () => T;
+}
 
 export interface RouterLinkProps extends RouterLinkOptions {
   /**
@@ -84,23 +101,28 @@ export interface RouterLinkProps extends RouterLinkOptions {
 }
 
 export interface UseLinkReturn {
-  route: Computed<RouteLocationNormalized>;
-  href: Computed<string>;
-  isActive: Computed<boolean>;
-  isExactActive: Computed<boolean>;
+  route: ReadonlyValue<RouteLocationNormalized>;
+  href: ReadonlyValue<string>;
+  isActive: ReadonlyValue<boolean>;
+  isExactActive: ReadonlyValue<boolean>;
   navigate(e?: MouseEvent): Promise<void | NavigationFailure>;
 }
 
+const isSignalLike = (value: unknown): value is SignalLike<unknown> =>
+  !!value && typeof value === 'object' && 'value' in value;
+
 const readTo = (to: RouterLinkProps['to']) => {
-  if (isSignal(to)) return to.value
-  if (typeof to === 'function') return (to as any)()
-  return to
-}
+  if (isSignalLike(to)) return to.value;
+  if (typeof to === 'function') return (to as () => RouteLocationRawTyped)();
+  return to;
+};
+
 const peekTo = (to: RouterLinkProps['to']) => {
-  if (!isSignal(to)) return typeof to === 'function' ? (to as any)() : to
-  const maybePeek = (to as any).peek
-  return typeof maybePeek === 'function' ? maybePeek.call(to) : to.value
-}
+  if (!isSignalLike(to)) {
+    return typeof to === 'function' ? (to as () => RouteLocationRawTyped)() : to;
+  }
+  return typeof to.peek === 'function' ? to.peek() : to.value;
+};
 
 /**
  * Fallback route used when route resolution fails
@@ -118,6 +140,7 @@ const FALLBACK_ROUTE: RouteLocationNormalized = {
   redirectedFrom: undefined,
 };
 let routerLinkPrefetchId = 0;
+const routerPrefetchCounters = new WeakMap<object, number>();
 
 /**
  * Hook that provides reactive link properties and navigation handler
@@ -126,12 +149,12 @@ let routerLinkPrefetchId = 0;
  */
 export function useLink(props: RouterLinkProps): UseLinkReturn {
   const router = inject(routerKey);
-  const routeSignal = inject(routeLocationKey);
+  const routeContext = inject(routeLocationKey);
 
   // Validate router injection
   if (!router) {
     if (__DEV__) {
-      logError(
+      logRouterError(
         'useLink() must be used within a RouterView component. ' +
           'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
           'Check that your router instance is properly created and provided to RouterView.',
@@ -145,9 +168,9 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
   }
 
   // Validate route injection
-  if (!routeSignal) {
+  if (!routeContext) {
     if (__DEV__) {
-      logError(
+      logRouterError(
         'useLink() requires route context. ' +
           'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
           'This error typically occurs when RouterLink is used outside of a router context.',
@@ -156,27 +179,26 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     throw new Error(
       'useLink() requires route context. ' +
         'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
-        'This error typically occurs when RouterLink is used outside of a router context.',
+      'This error typically occurs when RouterLink is used outside of a router context.',
     );
   }
 
   const currentRoute = useRoute();
+  const trackedTo =
+    typeof props.to === 'function' || isSignalLike(props.to) ? signal(peekTo(props.to)) : null;
 
-  // Cache for route resolution optimization
-  let hasPrevious = false;
-  let previousTo: unknown = null;
+  if (trackedTo) {
+    const trackedToRunner = effect(() => {
+      trackedTo.value = readTo(props.to);
+    });
+    onDestroy(() => stop(trackedToRunner));
+  }
 
   /**
    * Resolved route location
    */
   const route = computed<RouteLocationNormalized>(() => {
-    const to = readTo(props.to);
-
-    // Update cache
-    if (!hasPrevious || to !== previousTo) {
-      previousTo = to;
-      hasPrevious = true;
-    }
+    const to = trackedTo ? trackedTo.value : readTo(props.to);
 
     // Safe router.resolve call with error handling
     try {
@@ -268,21 +290,23 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     }
 
     try {
+      const startNavigation = () => router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
+      const navigation = new Promise<void | NavigationFailure>(resolve => {
+        setTimeout(() => {
+          startNavigation().then(resolve);
+        }, 0);
+      });
+
       // Use View Transitions API if available and enabled
       if (
         props.viewTransition &&
         typeof document !== 'undefined' &&
         'startViewTransition' in document
       ) {
-        return (document as any)
-          .startViewTransition(() =>
-            router[props.replace ? 'replace' : 'push'](to as any).catch(noop),
-          )
-          .finished.catch(noop);
+        (document as any).startViewTransition(() => navigation);
       }
 
-      // Standard navigation
-      return router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
+      return navigation;
     } catch (error) {
       if (__DEV__) {
         warn('Navigation failed:', error);
@@ -291,13 +315,26 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     }
   }
 
+  const href = signal(route.value?.href || '#');
+  const hrefRunner = effect(() => {
+    href.value = route.value?.href || '#';
+  });
+  onDestroy(() => stop(hrefRunner));
+
   return {
     route,
-    href: computed(() => route.value?.href || '#'),
+    href,
     isActive,
     isExactActive,
     navigate,
   };
+}
+
+function getNextPrefetchId(router: object) {
+  const nextId = (routerPrefetchCounters.get(router) || 0) + 1;
+  routerPrefetchCounters.set(router, nextId);
+  routerLinkPrefetchId++;
+  return `essor-router-prefetch-${nextId}-${routerLinkPrefetchId}`;
 }
 
 /**
@@ -392,10 +429,10 @@ export const RouterLink = (props: RouterLinkProps): any => {
 
   const router = useRouter();
   const { options } = router;
-  const ariaCurrent = computed(() =>
+  const ariaCurrent = signal<RouterLinkProps['ariaCurrentValue'] | null>(
     link.isExactActive.value ? (props.ariaCurrentValue ?? 'page') : null,
   );
-  const prefetchId = `essor-router-prefetch-${++routerLinkPrefetchId}`;
+  const prefetchId = getNextPrefetchId(router);
 
   const resolvePrefetchMode = () => {
     if (props.prefetch === false) return false;
@@ -418,11 +455,12 @@ export const RouterLink = (props: RouterLinkProps): any => {
   } else {
     Promise.resolve().then(prefetch.onViewport);
   }
+  onDestroy(() => prefetch.dispose());
 
   /**
    * Computed class string combining user classes and active states
    */
-  const elClass = computed(() => {
+  const buildClass = () => {
     const classes: string[] = [];
 
     // Add user-provided class first
@@ -447,7 +485,13 @@ export const RouterLink = (props: RouterLinkProps): any => {
     }
 
     return classes.join(' ');
+  };
+  const elClass = signal(buildClass());
+  const domStateRunner = effect(() => {
+    ariaCurrent.value = link.isExactActive.value ? (props.ariaCurrentValue ?? 'page') : null;
+    elClass.value = buildClass();
   });
+  onDestroy(() => stop(domStateRunner));
 
   /**
    * Click handler that delegates to link.navigate
@@ -460,7 +504,7 @@ export const RouterLink = (props: RouterLinkProps): any => {
 
   // Custom rendering or default anchor element
   return props.custom
-    ? [() => props.children]
+    ? (typeof props.children === 'function' ? props.children() : props.children)
     : createComponent(LinkComponent, {
         'ariaCurrent': ariaCurrent,
         'href': link.href,
@@ -468,6 +512,7 @@ export const RouterLink = (props: RouterLinkProps): any => {
         'onMouseenter': prefetch.onIntent,
         'onFocus': prefetch.onIntent,
         'onTouchstart': prefetch.onIntent,
+        'onElement': prefetch.setTarget,
         'data-router-prefetch-id': prefetchId,
         'class': elClass,
         'children': props.children,

@@ -1,4 +1,4 @@
-import { toRaw } from '@estjs/signals';
+import { nextTick, toRaw } from 'essor';
 import {
   ErrorTypes,
   type NavigationFailure,
@@ -43,8 +43,9 @@ export interface NavigationCoordinator {
     isPush: boolean,
     replace?: boolean,
     data?: HistoryState,
+    delta?: number,
   ) => NavigationFailure | void;
-  runRouteDataHooks: (to: RouteLocationNormalized) => Promise<void>;
+  runRouteDataHooks: (to: RouteLocationNormalized, abortActive?: boolean) => Promise<void>;
 }
 
 interface CreateNavigationCoordinatorOptions {
@@ -78,6 +79,7 @@ interface CreateNavigationCoordinatorOptions {
     from: RouteLocationNormalizedLoaded,
     isPush: boolean,
     isFirstNavigation: boolean,
+    delta?: number,
   ) => Promise<unknown>;
 }
 
@@ -86,6 +88,37 @@ export function createNavigationCoordinator(
 ): NavigationCoordinator {
   const preloadRouteCache = new Map<string, Promise<RouteLocationNormalizedLoaded>>();
   const routeDataCache = new Map<string, Promise<void>>();
+  const routeDataControllers = new Map<string, AbortController>();
+  const PRELOAD_CACHE_LIMIT = 32;
+  const ROUTE_DATA_CACHE_LIMIT = 32;
+
+  function touchCacheEntry<T>(cache: Map<string, T>, key: string) {
+    const value = cache.get(key);
+    if (value === undefined) return undefined;
+    cache.delete(key);
+    cache.set(key, value);
+    return value;
+  }
+
+  function setCacheEntry<T>(cache: Map<string, T>, key: string, value: T, limit: number) {
+    if (cache.has(key)) {
+      cache.delete(key);
+    }
+    cache.set(key, value);
+    while (cache.size > limit) {
+      const oldestKey = cache.keys().next().value;
+      if (oldestKey == null) break;
+      cache.delete(oldestKey);
+    }
+  }
+
+  function abortActiveRouteDataHooks(exceptKey?: string) {
+    routeDataControllers.forEach((controller, key) => {
+      if (key === exceptKey) return;
+      controller.abort();
+      routeDataControllers.delete(key);
+    });
+  }
 
   function checkCanceledNavigation(
     to: RouteLocationNormalized,
@@ -200,7 +233,7 @@ export function createNavigationCoordinator(
             : options.markAsReady(error)
           : options.triggerError(error, toLocation, from);
       })
-      .then((failure: NavigationFailure | NavigationRedirectError | void) => {
+      .then(async (failure: NavigationFailure | NavigationRedirectError | void) => {
         if (failure) {
           if (isNavigationFailure(failure, ErrorTypes.NAVIGATION_GUARD_REDIRECT)) {
             if (
@@ -242,6 +275,9 @@ export function createNavigationCoordinator(
             replace,
             data,
           );
+          if (!failure) {
+            await nextTick();
+          }
         }
 
         options.triggerAfterEach(toLocation as RouteLocationNormalizedLoaded, from, failure as any);
@@ -253,19 +289,29 @@ export function createNavigationCoordinator(
     return route.fullPath;
   }
 
-  async function runRouteDataHooks(to: RouteLocationNormalized): Promise<void> {
+  async function runRouteDataHooks(
+    to: RouteLocationNormalized,
+    abortActive = false,
+  ): Promise<void> {
     const key = createPreloadRouteKey(to);
-    const cached = routeDataCache.get(key);
+    const cached = touchCacheEntry(routeDataCache, key);
     if (cached) {
       return cached;
     }
 
+    if (abortActive) {
+      abortActiveRouteDataHooks(key);
+    }
+
     const search = to.query;
+    const controller = new AbortController();
+    routeDataControllers.set(key, controller);
     const task = (async () => {
       for (const record of to.matched) {
         const ctx: RouteLoaderContext = {
           params: to.params as RouteParams,
           search,
+          signal: controller.signal,
         };
         if (record.beforeLoad) {
           await record.beforeLoad(ctx);
@@ -274,19 +320,25 @@ export function createNavigationCoordinator(
           await record.loader(ctx);
         }
       }
-    })().catch(error => {
-      routeDataCache.delete(key);
-      throw error;
-    });
+    })()
+      .catch(error => {
+        routeDataCache.delete(key);
+        throw error;
+      })
+      .finally(() => {
+        if (routeDataControllers.get(key) === controller) {
+          routeDataControllers.delete(key);
+        }
+      });
 
-    routeDataCache.set(key, task);
+    setCacheEntry(routeDataCache, key, task, ROUTE_DATA_CACHE_LIMIT);
     return task;
   }
 
   async function preloadRoute(to: RouteLocationRaw): Promise<RouteLocationNormalizedLoaded> {
     const resolved = options.resolve(to) as RouteLocationNormalized;
     const key = createPreloadRouteKey(resolved);
-    const existing = preloadRouteCache.get(key);
+    const existing = touchCacheEntry(preloadRouteCache, key);
     if (existing) {
       return existing;
     }
@@ -301,7 +353,7 @@ export function createNavigationCoordinator(
         throw error;
       });
 
-    preloadRouteCache.set(key, task);
+    setCacheEntry(preloadRouteCache, key, task, PRELOAD_CACHE_LIMIT);
     return task;
   }
 
@@ -311,6 +363,7 @@ export function createNavigationCoordinator(
     isPush: boolean,
     replace?: boolean,
     data?: HistoryState,
+    delta = 0,
   ): NavigationFailure | void {
     const error = checkCanceledNavigation(toLocation, from);
     if (error) return error;
@@ -332,11 +385,12 @@ export function createNavigationCoordinator(
     }
 
     options.currentRoute.value = toLocation;
-    options.handleScroll(toLocation, from, isPush, isFirstNavigation);
+    options.handleScroll(toLocation, from, isPush, isFirstNavigation, delta);
     options.markAsReady();
   }
 
   function clearCaches() {
+    abortActiveRouteDataHooks();
     preloadRouteCache.clear();
     routeDataCache.clear();
   }

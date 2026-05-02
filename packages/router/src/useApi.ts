@@ -1,9 +1,6 @@
-import { inject, onDestroy } from 'essor';
-import { type Signal, effect, shallowReactive, stop } from '@estjs/signals';
+import { inject } from 'essor';
 import { routeLocationKey, routerKey } from './injectionSymbols';
-import { assign } from './utils';
 import type {
-  RouteLocationNormalizedLoaded,
   RouteLocationNormalizedTyped,
   RouteLocationRawTyped,
 } from './types';
@@ -22,26 +19,7 @@ export function useRouter(): Router {
  * templates.
  */
 export function useRoute(): RouteLocationNormalizedTyped {
-  const routeSignal = inject<Signal<RouteLocationNormalizedLoaded>>(routeLocationKey)!;
-  // create reactive
-  const route = shallowReactive(assign({}, routeSignal.value));
-
-  let disposed = false;
-  const runner = effect(() => {
-    if (disposed) return;
-    assign(route, routeSignal.value);
-  });
-
-  onDestroy(() => {
-    disposed = true;
-    if (typeof queueMicrotask === 'function') {
-      queueMicrotask(() => stop(runner));
-      return;
-    }
-    Promise.resolve().then(() => stop(runner));
-  });
-
-  return route;
+  return inject(routeLocationKey)!;
 }
 
 /**

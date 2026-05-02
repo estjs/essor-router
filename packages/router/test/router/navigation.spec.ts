@@ -19,7 +19,11 @@ const currentRoute = {
 describe('createNavigationCoordinator', () => {
   function createCoordinator() {
     let pending: any = currentRoute.value;
-    return createNavigationCoordinator({
+    return {
+      setPending: (location: any) => {
+        pending = location;
+      },
+      coordinator: createNavigationCoordinator({
       resolve: (to: any) =>
         typeof to === 'string'
           ? {
@@ -52,11 +56,12 @@ describe('createNavigationCoordinator', () => {
       markAsReady: () => undefined,
       triggerError: async error => Promise.reject(error),
       handleScroll: async () => undefined,
-    });
+      }),
+    };
   }
 
   it('normalizes redirect records and preserves query/hash', () => {
-    const coordinator = createCoordinator();
+    const { coordinator } = createCoordinator();
     const redirected = coordinator.handleRedirectRecord({
       ...currentRoute.value,
       query: { q: 'abc' },
@@ -73,7 +78,7 @@ describe('createNavigationCoordinator', () => {
   });
 
   it('caches route data hooks by fullPath', async () => {
-    const coordinator = createCoordinator();
+    const { coordinator } = createCoordinator();
     const loader = vi.fn(async () => undefined);
     const route = {
       ...currentRoute.value,
@@ -85,5 +90,64 @@ describe('createNavigationCoordinator', () => {
     await coordinator.runRouteDataHooks(route);
 
     expect(loader).toHaveBeenCalledTimes(1);
+  });
+
+  it('evicts the oldest cached route data task when cache grows beyond the limit', async () => {
+    const { coordinator } = createCoordinator();
+    const routeCount = 33;
+    const loaders = Array.from({ length: routeCount }, () => vi.fn(async () => undefined));
+
+    for (const [index, loader] of loaders.entries()) {
+      await coordinator.runRouteDataHooks({
+        ...currentRoute.value,
+        fullPath: `/users/${index}`,
+        matched: [{ loader }],
+      } as any);
+    }
+
+    await coordinator.runRouteDataHooks({
+      ...currentRoute.value,
+      fullPath: '/users/0',
+      matched: [{ loader: loaders[0] }],
+    } as any);
+
+    expect(loaders[0]).toHaveBeenCalledTimes(2);
+  });
+
+  it('aborts the previous route data hook when a new navigation starts', async () => {
+    const { coordinator, setPending } = createCoordinator();
+    let resolveFirstLoader!: () => void;
+    let firstSignal: AbortSignal | undefined;
+    const firstLoader = vi.fn(
+      ({ signal }: { signal?: AbortSignal }) =>
+        new Promise<void>(resolve => {
+          firstSignal = signal;
+          resolveFirstLoader = resolve;
+        }),
+    );
+    const secondLoader = vi.fn(async () => undefined);
+
+    const firstRoute = {
+      ...currentRoute.value,
+      fullPath: '/users/1',
+      matched: [{ loader: firstLoader }],
+    } as any;
+    const secondRoute = {
+      ...currentRoute.value,
+      fullPath: '/users/2',
+      matched: [{ loader: secondLoader }],
+    } as any;
+
+    setPending(firstRoute);
+    const firstTask = coordinator.runRouteDataHooks(firstRoute, true);
+    await Promise.resolve();
+
+    setPending(secondRoute);
+    await coordinator.runRouteDataHooks(secondRoute, true);
+
+    expect(firstSignal?.aborted).toBe(true);
+
+    resolveFirstLoader();
+    await firstTask;
   });
 });

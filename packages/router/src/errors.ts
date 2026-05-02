@@ -1,4 +1,5 @@
 import { assign } from './utils';
+import { isBrowser } from './utils/env';
 import type {
   MatcherLocation,
   MatcherLocationRaw,
@@ -117,8 +118,10 @@ export function createRouterError<E extends RouterError>(
   type: E['type'],
   params: Omit<E, 'type' | keyof Error>,
 ): E {
+  const browserFlag = typeof __BROWSER__ !== 'undefined' ? __BROWSER__ : isBrowser;
+
   // keep full error messages in cjs versions
-  if (__DEV__ || !__BROWSER__) {
+  if (__DEV__ || !browserFlag) {
     return assign(
       new Error(ErrorTypeMessages[type](params as any)),
       {

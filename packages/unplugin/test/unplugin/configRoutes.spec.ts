@@ -22,6 +22,12 @@ const __dirname = (() => {
   return existsSync(rooted) ? rooted : process.cwd();
 })();
 
+const normalizedTestRoot = __dirname.replaceAll('\\', '/');
+
+function normalizeSnapshotPaths(value: string) {
+  return value.replaceAll('\\', '/').replaceAll(normalizedTestRoot, '<TEST_ROOT>');
+}
+
 describe('config-based routes parser', () => {
   it('should parse basic routes correctly and populate PrefixTree', () => {
     const configPath = join(__dirname, 'fixtures', 'routes.config.ts');
@@ -44,7 +50,7 @@ describe('config-based routes parser', () => {
     // Generate RouteNamedMap from the tree to verify types
     const routeNamedMap = generateRouteNamedMap(tree, options, new Map());
 
-    expect(routeNamedMap).toMatchSnapshot('RouteNamedMap');
+    expect(normalizeSnapshotPaths(routeNamedMap)).toMatchSnapshot('RouteNamedMap');
   });
 
   it('should generate stable route records for config-based routes', () => {
@@ -60,8 +66,8 @@ describe('config-based routes parser', () => {
     const importsMap = new ImportsMap();
     const output = generateRouteRecords(tree, options, importsMap);
 
-    expect(output).toMatchSnapshot('RouteRecords');
-    expect(importsMap.toString()).toMatchSnapshot('RouteRecordsImports');
+    expect(normalizeSnapshotPaths(output)).toMatchSnapshot('RouteRecords');
+    expect(normalizeSnapshotPaths(importsMap.toString())).toMatchSnapshot('RouteRecordsImports');
   });
 
   it('should generate stable resolver for config-based routes', () => {
@@ -77,8 +83,8 @@ describe('config-based routes parser', () => {
     const importsMap = new ImportsMap();
     const output = generateRouteResolver(tree, options, importsMap, new Map());
 
-    expect(output).toMatchSnapshot('RouteResolver');
-    expect(importsMap.toString()).toMatchSnapshot('RouteResolverImports');
+    expect(normalizeSnapshotPaths(output)).toMatchSnapshot('RouteResolver');
+    expect(normalizeSnapshotPaths(importsMap.toString())).toMatchSnapshot('RouteResolverImports');
   });
 
   it('should correctly merge file-based and config-based routes', () => {
@@ -98,10 +104,10 @@ describe('config-based routes parser', () => {
     tree.insert('contact', join(__dirname, 'fixtures', 'pages', 'Contact.tsx'));
 
     const routeNamedMap = generateRouteNamedMap(tree, options, new Map());
-    expect(routeNamedMap).toMatchSnapshot('MixedRouteNamedMap');
+    expect(normalizeSnapshotPaths(routeNamedMap)).toMatchSnapshot('MixedRouteNamedMap');
 
     const importsMap = new ImportsMap();
     const recordsOutput = generateRouteRecords(tree, options, importsMap);
-    expect(recordsOutput).toMatchSnapshot('MixedRouteRecords');
+    expect(normalizeSnapshotPaths(recordsOutput)).toMatchSnapshot('MixedRouteRecords');
   });
 });

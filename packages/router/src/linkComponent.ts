@@ -1,51 +1,81 @@
 import {
+  isSignal,
   insert,
-  mapNodes,
+  memoEffect,
   omitProps,
   patchAttr,
-  setEvent,
-  template,
 } from 'essor';
-import { isSignal, memoEffect } from '@estjs/signals';
-const _$tmpl = template('<a></a>');
+
 export function LinkComponent(props) {
-  const _$el = _$tmpl() as Element;
-  const _$nodes = mapNodes(_$el, [1]) as Element[];
+  if (typeof document === 'undefined') {
+    return null;
+  }
 
-  const attachEvent = (event: string, handler: unknown) => {
-    if (typeof handler !== 'function') return;
-    setEvent(_$nodes[0], event, handler as EventListener);
-  };
+  const el = document.createElement('a');
+  props.onElement?.(el);
 
-  attachEvent('click', props.onClick);
-  attachEvent('mouseenter', props.onMouseenter);
-  attachEvent('focus', props.onFocus);
-  attachEvent('touchstart', props.onTouchstart);
+  el.addEventListener('click', event => {
+    props.onClick?.(event);
 
-  insert(_$nodes[0], () => {
+    const currentTarget = event.currentTarget as Element | null;
+    const target = currentTarget?.getAttribute('target');
+    const shouldPreventDefault =
+      !event.defaultPrevented &&
+      !event.metaKey &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      (event.button === undefined || event.button === 0) &&
+      !(target && /\b_blank\b/i.test(target));
+
+    if (shouldPreventDefault) {
+      event.preventDefault();
+    }
+  });
+  el.addEventListener('mouseenter', event => props.onMouseenter?.(event));
+  el.addEventListener('focus', event => props.onFocus?.(event));
+  el.addEventListener('touchstart', event => props.onTouchstart?.(event));
+
+  insert(el, () => {
     let child = typeof props.children === 'function' ? props.children() : props.children;
     if (isSignal(child) || (child && typeof child === 'object' && 'value' in child)) {
       child = child.value;
     }
     return child;
   });
+
   memoEffect(
     (_p$: any) => {
-      const _v$0 = omitProps(props, ['children']);
-      const _next$0: Record<string, any> = {};
-      for (const key in _v$0) {
-        const value = _v$0[key];
-        _next$0[key] =
+      const source = omitProps(props, [
+        'children',
+        'onClick',
+        'onMouseenter',
+        'onFocus',
+        'onTouchstart',
+        'onElement',
+      ]);
+      const next: Record<string, any> = {};
+
+      for (const key in source) {
+        const value = source[key];
+        next[key] =
           isSignal(value) || (value && typeof value === 'object' && 'value' in value)
             ? value.value
             : value;
       }
-      _next$0 !== _p$._0 && patchAttr(_$nodes[0], '_$spread$', _p$._0, (_p$._0 = _next$0));
+
+      if ('ariaCurrent' in next) {
+        next['aria-current'] = next.ariaCurrent;
+        delete next.ariaCurrent;
+      }
+
+      next !== _p$._0 && patchAttr(el, '_$spread$', _p$._0, (_p$._0 = next));
       return _p$;
     },
     {
       _0: undefined,
     },
   );
-  return _$el;
+
+  return el;
 }

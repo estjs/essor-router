@@ -1,5 +1,4 @@
-import { provide } from 'essor';
-import { toRaw } from '@estjs/signals';
+import { nextTick, toRaw } from 'essor';
 import {
   ErrorTypes,
   type NavigationFailure,
@@ -12,7 +11,6 @@ import { noop } from '../utils';
 import { useCallbacks } from '../utils/callbacks';
 import { isBrowser } from '../utils/env';
 import { warn } from '../warning';
-import { routeLocationKey, routerKey, routerViewLocationKey } from '../injectionSymbols';
 import { computeScrollPosition, getScrollKey, saveScrollPosition } from '../scrollBehavior';
 import type {
   RouteLocation,
@@ -42,6 +40,7 @@ interface LifecycleOptions {
     isPush: boolean,
     replace?: boolean,
     data?: any,
+    delta?: number,
   ) => NavigationFailure | void;
   triggerAfterEach: (
     to: RouteLocationNormalizedLoaded,
@@ -119,10 +118,21 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
           }
           return triggerError(error, toLocation, from);
         })
-        .then((failure: NavigationFailure | void) => {
+        .then(async (failure: NavigationFailure | void) => {
           failure =
             failure ||
-            options.finalizeNavigation(toLocation as RouteLocationNormalizedLoaded, from, false);
+            options.finalizeNavigation(
+              toLocation as RouteLocationNormalizedLoaded,
+              from,
+              false,
+              false,
+              undefined,
+              info.delta,
+            );
+
+          if (!failure) {
+            await nextTick();
+          }
 
           if (failure) {
             if (info.delta && !isNavigationFailure(failure, ErrorTypes.NAVIGATION_CANCELLED)) {
@@ -189,10 +199,6 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
         if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
-
-    provide(routerKey, routerInstance);
-    provide(routeLocationKey, options.currentRoute);
-    provide(routerViewLocationKey, options.currentRoute);
   }
 
   function destroy() {

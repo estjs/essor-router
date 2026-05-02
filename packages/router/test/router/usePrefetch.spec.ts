@@ -145,4 +145,86 @@ describe('usePrefetch', () => {
 
     expect(preload).not.toHaveBeenCalled();
   });
+
+  it('disconnects a pending viewport observer when disposed', async () => {
+    const preload = vi.fn(async () => {});
+    const target = document.createElement('a');
+    target.setAttribute('data-router-prefetch-id', 'link-dispose');
+    document.body.appendChild(target);
+
+    const disconnect = vi.fn();
+
+    class FakeIntersectionObserver {
+      observe() {}
+
+      disconnect() {
+        disconnect();
+      }
+    }
+
+    const originalIO = (globalThis as any).IntersectionObserver;
+    // @ts-expect-error test override
+    globalThis.IntersectionObserver = FakeIntersectionObserver as any;
+
+    try {
+      const prefetch = usePrefetch({
+        mode: 'viewport',
+        id: 'link-dispose',
+        preload,
+      });
+
+      prefetch.onViewport();
+      prefetch.dispose();
+
+      expect(disconnect).toHaveBeenCalledTimes(1);
+      expect(preload).not.toHaveBeenCalled();
+    } finally {
+      target.remove();
+      // @ts-expect-error test override
+      globalThis.IntersectionObserver = originalIO;
+    }
+  });
+
+  it('observes an explicitly registered detached target in viewport mode', async () => {
+    const preload = vi.fn(async () => {});
+    const target = document.createElement('a');
+
+    const disconnect = vi.fn();
+    const observe = vi.fn((el: Element) => {
+      expect(el).toBe(target);
+    });
+
+    class FakeIntersectionObserver {
+      observe(el: Element) {
+        observe(el);
+      }
+
+      disconnect() {
+        disconnect();
+      }
+    }
+
+    const originalIO = (globalThis as any).IntersectionObserver;
+    // @ts-expect-error test override
+    globalThis.IntersectionObserver = FakeIntersectionObserver as any;
+
+    try {
+      const prefetch = usePrefetch({
+        mode: 'viewport',
+        id: 'detached-target',
+        preload,
+      });
+
+      prefetch.setTarget(target);
+      prefetch.onViewport();
+      prefetch.dispose();
+
+      expect(observe).toHaveBeenCalledTimes(1);
+      expect(disconnect).toHaveBeenCalledTimes(1);
+      expect(preload).not.toHaveBeenCalled();
+    } finally {
+      // @ts-expect-error test override
+      globalThis.IntersectionObserver = originalIO;
+    }
+  });
 });

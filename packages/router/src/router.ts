@@ -1,4 +1,4 @@
-import { type Signal, signal } from '@estjs/signals';
+import { shallowReactive, type Signal, signal } from 'essor';
 import { isBrowser, isObject, isString } from './utils';
 import {
   type NavigationGuardWithThis,
@@ -87,6 +87,12 @@ export interface Router {
   getRouteRenderMode(name: RouteRecordName): RouteRenderMode;
 }
 
+const routeLocationContextKey = Symbol(__DEV__ ? 'router route location' : '');
+
+type RouterWithRouteLocationContext = Router & {
+  [routeLocationContextKey]: RouteLocationNormalizedLoaded;
+};
+
 export type RouteRenderMode = 'csr' | 'ssr' | 'prerender';
 
 export interface PrerenderPathInfo {
@@ -124,7 +130,7 @@ export function createRouter(options: RouterOptions): Router {
     : (options.history as RouterHistory);
 
   const currentRoute = signal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
-  const reactiveRoute = createReactiveRoute(currentRoute);
+  const routeLocationContext = shallowReactive(createReactiveRoute(currentRoute));
 
   const resolver = createRouteResolver(
     matcher,
@@ -142,12 +148,13 @@ export function createRouter(options: RouterOptions): Router {
     from: RouteLocationNormalizedLoaded,
     isPush: boolean,
     isFirstNavigation: boolean,
+    delta = 0,
   ): Promise<unknown> => {
     const { scrollBehavior } = options;
     if (!isBrowser || !scrollBehavior) return Promise.resolve();
 
     const scrollPosition: _ScrollPositionNormalized | null =
-      (!isPush && getSavedScrollPosition(getScrollKey(to.fullPath, 0))) ||
+      (!isPush && getSavedScrollPosition(getScrollKey(from.fullPath, delta))) ||
       ((isFirstNavigation || !isPush) && history.state && (history.state as any).scroll) ||
       null;
 
@@ -179,7 +186,7 @@ export function createRouter(options: RouterOptions): Router {
         to,
         from,
         navigation.checkCanceledNavigationAndReject,
-        navigation.runRouteDataHooks,
+        routeToLoad => navigation.runRouteDataHooks(routeToLoad, true),
       ),
     markAsReady: err => markAsReady(err),
     triggerError: (error, to, from) => triggerError(error, to, from),
@@ -256,7 +263,7 @@ export function createRouter(options: RouterOptions): Router {
     init: () => {},
     destroy: () => {},
     getPrerenderPaths: getPrerenderPathInfos,
-    getPrerenderPathsAsync: async () => getPrerenderPathInfos(),
+    getPrerenderPathsAsync: async () => collectPrerenderPathsAsync(getAllRouteRecords()),
     getRouteRenderMode: (name: RouteRecordName): RouteRenderMode => {
       const record = matcher.getRecordMatcher(name)?.record;
       if (record?.start?.prerender) return 'prerender';
@@ -278,7 +285,7 @@ export function createRouter(options: RouterOptions): Router {
         to,
         from,
         navigation.checkCanceledNavigationAndReject,
-        navigation.runRouteDataHooks,
+        routeToLoad => navigation.runRouteDataHooks(routeToLoad, true),
       ),
     finalizeNavigation: navigation.finalizeNavigation,
     triggerAfterEach: pipeline.triggerAfterEach,
@@ -295,9 +302,13 @@ export function createRouter(options: RouterOptions): Router {
   router.init = () => lifecycle.init(router);
   router.destroy = lifecycle.destroy;
 
-  void reactiveRoute;
+  (router as RouterWithRouteLocationContext)[routeLocationContextKey] = routeLocationContext;
 
   return router;
+}
+
+export function getRouteLocationContext(router: Router): RouteLocationNormalizedLoaded {
+  return (router as RouterWithRouteLocationContext)[routeLocationContextKey];
 }
 
 function collectPrerenderPaths(
@@ -305,10 +316,90 @@ function collectPrerenderPaths(
 ) {
   return records
     .filter(record => record.start?.prerender)
-    .map(record => ({
+    .flatMap(record => {
+      const paths = resolvePrerenderPathsSync(record);
+      return paths.length === 0
+        ? []
+        : [
+            {
+              name: record.name,
+              pathTemplate: record.path,
+              paths,
+              meta: record.meta || {},
+            },
+          ];
+    });
+}
+
+async function collectPrerenderPathsAsync(
+  records: Array<{ name?: RouteRecordName; path: string; meta: any; start?: any }>,
+) {
+  const collected: PrerenderPathInfo[] = [];
+  for (const record of records) {
+    if (!record.start?.prerender) continue;
+    const paths = await resolvePrerenderPathsAsync(record);
+    if (paths.length === 0) continue;
+    collected.push({
       name: record.name,
       pathTemplate: record.path,
-      paths: [record.path],
+      paths,
       meta: record.meta || {},
-    }));
+    });
+  }
+  return collected;
+}
+
+function isDynamicRoutePath(path: string) {
+  return path.includes(':');
+}
+
+function warnMissingPrerenderPaths(path: string) {
+  if (__DEV__) {
+    warn(
+      `Dynamic prerender route "${path}" requires "start.prerenderPaths" to provide concrete output paths.`,
+    );
+  }
+}
+
+function resolvePrerenderPathsSync(record: { path: string; start?: any }): string[] {
+  const configuredPaths = record.start?.prerenderPaths;
+  if (configuredPaths) {
+    if (typeof configuredPaths === 'function') {
+      const resolved = configuredPaths();
+      if (resolved instanceof Promise) {
+        if (__DEV__) {
+          warn(
+            `Dynamic prerender route "${record.path}" returned an async "start.prerenderPaths". Use "getPrerenderPathsAsync()" to resolve it.`,
+          );
+        }
+        return [];
+      }
+      return resolved;
+    }
+    return configuredPaths;
+  }
+
+  if (isDynamicRoutePath(record.path)) {
+    warnMissingPrerenderPaths(record.path);
+    return [];
+  }
+
+  return [record.path];
+}
+
+async function resolvePrerenderPathsAsync(record: { path: string; start?: any }): Promise<string[]> {
+  const configuredPaths = record.start?.prerenderPaths;
+  if (configuredPaths) {
+    if (typeof configuredPaths === 'function') {
+      return await configuredPaths();
+    }
+    return configuredPaths;
+  }
+
+  if (isDynamicRoutePath(record.path)) {
+    warnMissingPrerenderPaths(record.path);
+    return [];
+  }
+
+  return [record.path];
 }

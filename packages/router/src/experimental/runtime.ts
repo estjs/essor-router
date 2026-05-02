@@ -36,6 +36,7 @@ export type DefineRouteLoader<
 export interface DefineRouteStartOptions {
   ssr?: boolean;
   prerender?: boolean;
+  prerenderPaths?: string[] | (() => string[] | Promise<string[]>);
   preload?: 'intent' | 'render' | 'viewport';
 }
 

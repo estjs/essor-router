@@ -60,4 +60,25 @@ describe('createGuardPipeline', () => {
 
     expect(result).toBe(cancelError);
   });
+
+  it('creates router errors when __BROWSER__ is not injected', () => {
+    const globals = globalThis as typeof globalThis & { __BROWSER__?: boolean };
+    const hadBrowserFlag = '__BROWSER__' in globals;
+    const previousBrowserFlag = globals.__BROWSER__;
+
+    delete globals.__BROWSER__;
+
+    try {
+      expect(() =>
+        createRouterError(ErrorTypes.NAVIGATION_ABORTED, {
+          from: { ...baseRoute },
+          to: { ...baseRoute, fullPath: '/next', path: '/next' },
+        }),
+      ).not.toThrow();
+    } finally {
+      if (hadBrowserFlag) {
+        globals.__BROWSER__ = previousBrowserFlag;
+      }
+    }
+  });
 });

@@ -1,8 +1,7 @@
-import type { RouteLocationNormalizedLoaded } from './types';
 import type { RouteRecordNormalized } from './matcher/types';
-import type { Computed, Signal } from '@estjs/signals';
-import type { InjectionKey } from 'essor';
+import type { Computed, InjectionKey, Signal } from 'essor';
 import type { Router } from './router';
+import type { RouteLocationNormalizedLoaded } from './types';
 
 /**
  * RouteRecord being rendered by the closest ancestor Router View. Used for
@@ -40,7 +39,7 @@ export const routerKey = Symbol(__DEV__ ? 'router' : '') as InjectionKey<Router>
 
  */
 export const routeLocationKey = Symbol(__DEV__ ? 'route location' : '') as InjectionKey<
-  Signal<RouteLocationNormalizedLoaded>
+  RouteLocationNormalizedLoaded
 >;
 
 /**

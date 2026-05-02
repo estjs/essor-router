@@ -181,18 +181,44 @@ describe('router', () => {
           meta: { from: 'meta' },
           start: { prerender: true },
         },
+        {
+          path: '/users/:id',
+          name: 'users-id',
+          component: components.Home,
+          meta: { section: 'users' },
+          start: {
+            prerender: true,
+            prerenderPaths: ['/users/1', '/users/2'],
+          },
+        },
+        {
+          path: '/posts/:id',
+          name: 'posts-id',
+          component: components.Home,
+          start: { prerender: true },
+        },
       ],
     });
 
     const paths = router.getPrerenderPaths();
-    expect(paths).toEqual([
+    expect(paths).toHaveLength(2);
+    expect(paths).toEqual(
+      expect.arrayContaining([
       {
         name: 'prerender',
         pathTemplate: '/prerender',
         paths: ['/prerender'],
         meta: { from: 'meta' },
       },
-    ]);
+      {
+        name: 'users-id',
+        pathTemplate: '/users/:id',
+        paths: ['/users/1', '/users/2'],
+        meta: { section: 'users' },
+      },
+      ]),
+    );
+    expect('requires "start.prerenderPaths"').toHaveBeenWarned();
   });
 
   it('calls history.replace with router.replace', async () => {
@@ -313,6 +339,18 @@ describe('router', () => {
     expect(router.currentRoute.value).toEqual(START_LOCATION_NORMALIZED);
     await router.push('/');
     expect(router.currentRoute.value).not.toBe(START_LOCATION_NORMALIZED);
+  });
+
+  it('resets currentRoute to START_LOCATION_NORMALIZED on destroy', async () => {
+    const router = createRouter({
+      history: 'memory',
+      routes: [{ path: '/', component: components.Home }],
+    });
+
+    await router.push('/');
+    router.destroy();
+
+    expect(router.currentRoute.value).toEqual(START_LOCATION_NORMALIZED);
   });
 
   it('resolves hash history as a relative hash link', async () => {

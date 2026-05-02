@@ -53,9 +53,7 @@ function useHistoryListeners(
 ) {
   const listeners: NavigationCallback[] = [];
   let teardowns: Array<() => void> = [];
-  // TODO: should it be a stack? a Dict. Check if the popstate listener
-  // can trigger twice
-  let pauseState: HistoryLocation | null = null;
+  let pauseState = 0;
 
   const popStateHandler: PopStateListener = ({ state }: { state: StateEntry | null }) => {
     const to = createCurrentLocation(base, location);
@@ -68,8 +66,8 @@ function useHistoryListeners(
       historyState.value = state;
 
       // ignore the popstate and reset the pauseState
-      if (pauseState && pauseState === from) {
-        pauseState = null;
+      if (pauseState > 0) {
+        pauseState--;
         return;
       }
       delta = fromState ? state.position - fromState.position : 0;
@@ -96,7 +94,7 @@ function useHistoryListeners(
   };
 
   function pauseListeners() {
-    pauseState = currentLocation.value;
+    pauseState++;
   }
 
   function listen(callback: NavigationCallback) {

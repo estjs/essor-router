@@ -12,9 +12,10 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createComponent as h } from 'essor';
+import { computed, createComponent as h, signal } from 'essor';
 import { RouterLink, RouterView, createMemoryHistory, createRouter } from '../src';
 import type { RouteLocationRawTyped } from '../src';
+import { LinkComponent } from '../src/linkComponent';
 import { mount, sleep } from './utils';
 import { generateRouteLocation, randomBoolean, testWithMultipleInputs } from './helpers/test-utils';
 import type { Router } from '../src/router';
@@ -170,6 +171,82 @@ describe('routerLink', () => {
       testWrapper.unmount();
     });
 
+    it('updates href when "to" is a getter backed by a signal', async () => {
+      const toSignal = signal<RouteLocationRawTyped>('/about');
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: () => toSignal.value,
+          children: 'Dynamic',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      toSignal.value = '/';
+      await sleep(50);
+
+      expect(anchor.getAttribute('href')).toBe('/');
+
+      testWrapper.unmount();
+    });
+
+    it('disconnects viewport prefetch observer when the link unmounts', async () => {
+      const disconnect = vi.fn();
+
+      class FakeIntersectionObserver {
+        observe() {}
+
+        disconnect() {
+          disconnect();
+        }
+      }
+
+      const originalIO = (globalThis as any).IntersectionObserver;
+      // @ts-expect-error test override
+      globalThis.IntersectionObserver = FakeIntersectionObserver as any;
+
+      try {
+        const TestComponent = () =>
+          h(RouterLink, {
+            to: '/about',
+            prefetch: 'viewport',
+            children: 'Viewport',
+          });
+
+        const testRouter = createRouter({
+          history: createMemoryHistory(),
+          routes: [
+            { path: '/', name: 'home', component: TestComponent },
+            { path: '/about', name: 'about', component: SimpleComponent },
+          ],
+        });
+
+        const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+        await testRouter.push('/');
+        await sleep(50);
+
+        testWrapper.unmount();
+        await sleep(0);
+
+        expect(disconnect).toHaveBeenCalledTimes(1);
+      } finally {
+        // @ts-expect-error test override
+        globalThis.IntersectionObserver = originalIO;
+      }
+    });
+
     it('uses replace when replace prop is true', async () => {
       // Navigate to home first
       await router.push('/');
@@ -201,12 +278,12 @@ describe('routerLink', () => {
       await testRouter.push('/');
       await sleep(50);
 
-      const testSpy = vi.spyOn(testRouter, 'replace');
+      const testSpy = vi.spyOn(testRouter, 'replace').mockResolvedValue(undefined);
       const testAnchor = testWrapper.get('a');
       expect(testAnchor).toBeTruthy();
 
       // Trigger click event
-      testAnchor.click();
+      testAnchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
       await sleep(50); // Allow time for async navigation
 
       expect(testSpy).toHaveBeenCalledTimes(1);
@@ -260,10 +337,9 @@ describe('routerLink', () => {
         ],
       });
 
-      const spy = vi.spyOn(testRouter, 'push');
+      const spy = vi.spyOn(testRouter, 'push').mockResolvedValue(undefined);
 
       const objectWrapper = mount(() => h(RouterView, { router: testRouter }));
-      await sleep(100);
       await testRouter.push('/');
       await sleep(50);
 
@@ -271,7 +347,7 @@ describe('routerLink', () => {
       expect(anchor).toBeTruthy();
 
       // Trigger click event
-      anchor.click();
+      anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
       await sleep(150); // Allow time for async navigation
 
       expect(spy).toHaveBeenCalledWith({ name: 'user', params: { id: '123' } });
@@ -282,21 +358,19 @@ describe('routerLink', () => {
 
   describe('error Handling', () => {
     it('should throw error when router is not provided', () => {
-      // Test that useLink throws when router context is missing
-      // The error is caught by essor's error handling, so we just verify the warning is logged
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      wrapper?.unmount();
+      wrapper = null;
+
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      let threw = false;
 
       try {
         mount(() => h(RouterLink, { to: '/', children: 'Test' }));
       } catch {
-        // Error is expected
+        threw = true;
       }
 
-      // Verify error was logged (but suppressed from console)
-      expect(consoleErrorSpy).toHaveBeenCalled();
-
-      consoleWarnSpy.mockRestore();
+      expect(threw || consoleErrorSpy.mock.calls.length > 0).toBe(true);
       consoleErrorSpy.mockRestore();
     });
 
@@ -1012,6 +1086,47 @@ describe('routerLink', () => {
   });
 
   describe('reactive "to" prop', () => {
+    it('updates LinkComponent attributes when passed a signal prop', async () => {
+      const href = signal('/about');
+      const testWrapper = mount(() =>
+        h(LinkComponent as any, {
+          href,
+          children: 'Raw',
+        }),
+      );
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      href.value = '/';
+      await sleep(50);
+
+      expect(anchor.getAttribute('href')).toBe('/');
+
+      testWrapper.unmount();
+    });
+
+    it('updates LinkComponent attributes when passed a computed prop', async () => {
+      const hrefSource = signal('/about');
+      const href = computed(() => hrefSource.value);
+      const testWrapper = mount(() =>
+        h(LinkComponent as any, {
+          href,
+          children: 'Computed',
+        }),
+      );
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      hrefSource.value = '/';
+      await sleep(50);
+
+      expect(anchor.getAttribute('href')).toBe('/');
+
+      testWrapper.unmount();
+    });
+
     it('uses getter value on render', async () => {
       let currentTo: RouteLocationRawTyped = '/about';
 

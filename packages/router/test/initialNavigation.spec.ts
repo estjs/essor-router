@@ -1,5 +1,6 @@
-import { type RouterHistory, createRouter, createWebHistory } from '../src';
-import { components, createDom, nextNavigation } from './utils';
+import { createComponent as h } from 'essor';
+import { RouterView, type RouterHistory, createRouter, createWebHistory } from '../src';
+import { components, createDom, mount, nextNavigation, sleep } from './utils';
 import type { RouteRecordRaw } from '../src/types';
 import type { JSDOM } from 'jsdom';
 
@@ -69,5 +70,56 @@ describe('initial Navigation', () => {
     history.go(-1);
     await nextNavigation(router);
     expect(router.currentRoute.value).toMatchObject({ path: '/' });
+  });
+
+  it('performs initial navigation when mounted through RouterView', async () => {
+    const { router } = newRouter('/foo', {
+      routes: [
+        { path: '/', component },
+        { path: '/foo', component },
+      ],
+    });
+
+    const wrapper = mount(() => h(RouterView, { router }));
+
+    try {
+      await sleep(50);
+      expect(router.currentRoute.value).toMatchObject({ path: '/foo' });
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it('restores saved scroll position on pop navigation', async () => {
+    Object.defineProperty(window, 'scrollX', {
+      value: 12,
+      configurable: true,
+    });
+    Object.defineProperty(window, 'scrollY', {
+      value: 34,
+      configurable: true,
+    });
+
+    const scrollBehavior = vitest.fn(() => false);
+    const { history, router } = newRouter('/', {
+      routes: [
+        { path: '/', component },
+        { path: '/foo', component },
+      ],
+      scrollBehavior,
+    });
+
+    await router.push('/');
+    await router.push('/foo');
+    scrollBehavior.mockClear();
+
+    history.go(-1);
+    await nextNavigation(router);
+
+    expect(scrollBehavior).toHaveBeenCalledWith(
+      expect.objectContaining({ fullPath: '/' }),
+      expect.objectContaining({ fullPath: '/foo' }),
+      { left: 12, top: 34 },
+    );
   });
 });

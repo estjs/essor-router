@@ -265,6 +265,30 @@ Clean up the router:
 router.destroy();
 ```
 
+## Prerender Paths
+
+### getPrerenderPaths
+
+Returns prerender entries for routes marked with `start.prerender`:
+
+```tsx
+const entries = router.getPrerenderPaths();
+```
+
+For static routes, `paths` contains the route path itself. For dynamic routes, provide concrete paths with `start.prerenderPaths`; otherwise the route is skipped.
+
+```tsx
+{
+  path: '/users/:id',
+  start: {
+    prerender: true,
+    prerenderPaths: ['/users/1', '/users/2'],
+  },
+}
+```
+
+Use `router.getPrerenderPathsAsync()` if `start.prerenderPaths` is an async function.
+
 ## Navigation Failure
 
 ### isNavigationFailure

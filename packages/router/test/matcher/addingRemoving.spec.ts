@@ -285,6 +285,30 @@ describe('matcher: adding and removing records', () => {
     });
   });
 
+  it('does not remove the last inserted route when named matcher is missing from the ordered list', () => {
+    const matcher = createRouterMatcher([], {});
+    matcher.addRoute({
+      path: '/',
+      component,
+      name: 'home',
+    });
+    matcher.addRoute({
+      path: '/about',
+      component,
+      name: 'about',
+    });
+
+    const homeMatcher = matcher.getRecordMatcher('home')!;
+    const routes = matcher.getRoutes();
+    routes.splice(routes.indexOf(homeMatcher), 1);
+
+    matcher.removeRoute('home');
+
+    expect(matcher.resolve({ path: '/about' }, currentLocation)).toMatchObject({
+      name: 'about',
+    });
+  });
+
   it('removes all children alias when removing parent by name', () => {
     const matcher = createRouterMatcher([], {});
     matcher.addRoute({

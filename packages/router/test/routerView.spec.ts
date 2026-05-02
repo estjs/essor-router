@@ -109,6 +109,43 @@ describe('routerView - Comprehensive Tests', () => {
       // Router context is provided, component renders successfully
       expect(wrapper.text()).toContain('Home');
     });
+
+    it('should prefer the explicit router prop over an existing router-view context', async () => {
+      const FirstRouterComponent = () => {
+        const div = document.createElement('div');
+        div.textContent = 'First Router';
+        return div;
+      };
+
+      const SecondRouterComponent = () => {
+        const div = document.createElement('div');
+        div.textContent = 'Second Router';
+        return div;
+      };
+
+      const firstRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'first', component: FirstRouterComponent }],
+      });
+      const secondRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'second', component: SecondRouterComponent }],
+      });
+
+      const firstWrapper = mount(() => h(RouterView, { router: firstRouter }));
+      await firstRouter.push('/');
+      await sleep(50);
+
+      const secondWrapper = mount(() => h(RouterView, { router: secondRouter }));
+      await secondRouter.push('/');
+      await sleep(50);
+
+      expect(secondWrapper.text()).toContain('Second Router');
+      expect(secondWrapper.text()).not.toContain('First Router');
+
+      secondWrapper.unmount();
+      firstWrapper.unmount();
+    });
   });
 
   describe('route Resolution', () => {

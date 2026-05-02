@@ -80,42 +80,42 @@ declare module 'essor-router' {
     'home': RouteTreeNodeInfo<
       'home',
       '/',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Home.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Home.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Home.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Home.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Home.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Home.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Home.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Home.tsx?definePage&lang.tsx')>>
     >,
     'catch-all': RouteTreeNodeInfo<
       'catch-all',
       '/:all(.*)*',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/NotFound.tsx?definePage&lang.tsx')>>
     >,
     'settings': RouteTreeNodeInfo<
       'settings',
       '/settings',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Settings.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Settings.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Settings.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Settings.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Settings.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Settings.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Settings.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/Settings.tsx?definePage&lang.tsx')>>
     >,
     'settings-profile': RouteTreeNodeInfo<
       'settings-profile',
       '/settings/profile',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx?definePage&lang.tsx')>>
     >,
     'users-id': RouteTreeNodeInfo<
       'users-id',
       '/users/:id',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>fixtures/pages/UserDetail.tsx?definePage&lang.tsx')>>
     >,
   }
 
@@ -123,7 +123,7 @@ declare module 'essor-router' {
 
   /**
    * Route file to route info map by essor-router.
-   * Used by the \\\`typed-router\\\` Volar plugin to automatically type \\\`useRoute()\\\`.
+   * Used by the /\`typed-router/\` Volar plugin to automatically type /\`useRoute()/\`.
    *
    * Each key is a file path relative to the project root with 2 properties:
    * - routes: union of route names of the possible routes when in this page (passed to useRoute<...>())
@@ -167,7 +167,7 @@ declare module 'essor-router' {
 
   /**
    * Get a union of possible route names in a certain route component file.
-   * Used by the \\\`typed-router\\\` Volar plugin to automatically type \\\`useRoute()\\\`.
+   * Used by the /\`typed-router/\` Volar plugin to automatically type /\`useRoute()/\`.
    *
    * @internal
    */
@@ -261,42 +261,42 @@ declare module 'essor-router' {
     '/': RouteTreeNodeInfo<
       '/',
       '/',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/index.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/index.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/index.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/index.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/index.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/index.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/index.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/index.tsx?definePage&lang.tsx')>>
     >,
     '/[...all]': RouteTreeNodeInfo<
       '/[...all]',
       '/[...all]',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/[...all].tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/[...all].tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/[...all].tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/[...all].tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/[...all].tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/[...all].tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/[...all].tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/[...all].tsx?definePage&lang.tsx')>>
     >,
     '/about': RouteTreeNodeInfo<
       '/about',
       '/about',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/about.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/about.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/about.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/about.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/about.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/about.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/about.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/about.tsx?definePage&lang.tsx')>>
     >,
     '/users/[id]': RouteTreeNodeInfo<
       '/users/[id]',
       '/users/[id]',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id].tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id].tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id].tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id].tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id].tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id].tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id].tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id].tsx?definePage&lang.tsx')>>
     >,
     '/users/[id]/posts': RouteTreeNodeInfo<
       '/users/[id]/posts',
       '/users/[id]/posts',
-      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>,
-      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>,
-      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>,
-      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>
+      InferRouteSearch<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>,
+      InferRouteLoaderData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>,
+      InferRouteBeforeLoadData<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>,
+      InferRouteStartOptions<InferRouteDefinitionFromDefinePageModule<typeof import('<TEST_ROOT>src/pages/users/[id]/posts.tsx?definePage&lang.tsx')>>
     >,
   }
 
@@ -304,7 +304,7 @@ declare module 'essor-router' {
 
   /**
    * Route file to route info map by essor-router.
-   * Used by the \\\`typed-router\\\` Volar plugin to automatically type \\\`useRoute()\\\`.
+   * Used by the /\`typed-router/\` Volar plugin to automatically type /\`useRoute()/\`.
    *
    * Each key is a file path relative to the project root with 2 properties:
    * - routes: union of route names of the possible routes when in this page (passed to useRoute<...>())
@@ -348,7 +348,7 @@ declare module 'essor-router' {
 
   /**
    * Get a union of possible route names in a certain route component file.
-   * Used by the \\\`typed-router\\\` Volar plugin to automatically type \\\`useRoute()\\\`.
+   * Used by the /\`typed-router/\` Volar plugin to automatically type /\`useRoute()/\`.
    *
    * @internal
    */

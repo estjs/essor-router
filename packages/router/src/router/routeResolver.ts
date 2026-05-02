@@ -1,4 +1,4 @@
-import { type Signal, computed } from '@estjs/signals';
+import { type Signal } from 'essor';
 import { decode, encodeHash, encodeParam } from '../encoding';
 import { parseURL, stringifyURL } from '../location';
 import {
@@ -37,9 +37,8 @@ export function createReactiveRoute(
 ): RouteLocationNormalizedLoaded {
   const reactiveRoute = {} as RouteLocationNormalizedLoaded;
   for (const key in START_LOCATION_NORMALIZED) {
-    const s = computed(() => currentRoute.value[key as keyof RouteLocationNormalizedLoaded]);
     Object.defineProperty(reactiveRoute, key, {
-      get: () => s.value,
+      get: () => currentRoute.value[key as keyof RouteLocationNormalizedLoaded],
       enumerable: true,
       configurable: true,
     });

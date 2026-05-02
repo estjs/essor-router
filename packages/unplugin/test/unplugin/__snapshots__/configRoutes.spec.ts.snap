@@ -59,36 +59,36 @@ exports[`config-based routes parser > should correctly merge file-based and conf
   {
     path: '/',
     name: 'home',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Home.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/Home.tsx'),
     /* no children */
   },
   {
     path: '/:all(.*)*',
     name: 'catch-all',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/NotFound.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/NotFound.tsx'),
     /* no children */
   },
   {
     path: '/about',
     name: '/about',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/About.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/About.tsx'),
     /* no children */
   },
   {
     path: '/contact',
     name: '/contact',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Contact.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/Contact.tsx'),
     /* no children */
   },
   {
     path: '/settings',
     name: 'settings',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Settings.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/Settings.tsx'),
     children: [
       {
         path: 'profile',
         name: 'settings-profile',
-        component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/SettingsProfile.tsx'),
+        component: () => import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx'),
         /* no children */
       }
     ],
@@ -101,7 +101,7 @@ exports[`config-based routes parser > should correctly merge file-based and conf
       {
         path: ':id',
         name: 'users-id',
-        component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/UserDetail.tsx'),
+        component: () => import('<TEST_ROOT>fixtures/pages/UserDetail.tsx'),
         /* no children */
       }
     ],
@@ -115,14 +115,14 @@ const __route_0 = normalizeRouteRecord({
   name: 'home',
   path: new MatcherPatternPathStatic('/'),
   components: {
-    'default': () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Home.tsx')
+    'default': () => import('<TEST_ROOT>fixtures/pages/Home.tsx')
   },
 })
 
 const __route_1 = normalizeRouteRecord({
   name: 'catch-all',
   path: new MatcherPatternPathDynamic(
-    /^\\/(.*)$/i,
+    /^//(.*)$/i,
     {
       all: [/* no parser */, /* repeatable: */ true, /* optional: */ true],
     },
@@ -130,7 +130,7 @@ const __route_1 = normalizeRouteRecord({
     null,
   ),
   components: {
-    'default': () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/NotFound.tsx')
+    'default': () => import('<TEST_ROOT>fixtures/pages/NotFound.tsx')
   },
 })
 
@@ -138,14 +138,14 @@ const __route_2 = normalizeRouteRecord({
   name: 'settings',
   path: new MatcherPatternPathStatic('/settings'),
   components: {
-    'default': () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Settings.tsx')
+    'default': () => import('<TEST_ROOT>fixtures/pages/Settings.tsx')
   },
 })
 const __route_3 = normalizeRouteRecord({
   name: 'settings-profile',
   path: new MatcherPatternPathStatic('/settings/profile'),
   components: {
-    'default': () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/SettingsProfile.tsx')
+    'default': () => import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx')
   },
   parent: __route_2,
 })
@@ -153,7 +153,7 @@ const __route_3 = normalizeRouteRecord({
 const __route_4 = normalizeRouteRecord({
   name: 'users-id',
   path: new MatcherPatternPathDynamic(
-    /^\\/users\\/([^/]+?)$/i,
+    /^//users//([^/]+?)$/i,
     {
       id: [/* no parser */],
     },
@@ -161,7 +161,7 @@ const __route_4 = normalizeRouteRecord({
     /* trailingSlash */
   ),
   components: {
-    'default': () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/UserDetail.tsx')
+    'default': () => import('<TEST_ROOT>fixtures/pages/UserDetail.tsx')
   },
 })
 
@@ -185,24 +185,24 @@ exports[`config-based routes parser > should generate stable route records for c
   {
     path: '/',
     name: 'home',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Home.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/Home.tsx'),
     /* no children */
   },
   {
     path: '/:all(.*)*',
     name: 'catch-all',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/NotFound.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/NotFound.tsx'),
     /* no children */
   },
   {
     path: '/settings',
     name: 'settings',
-    component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/Settings.tsx'),
+    component: () => import('<TEST_ROOT>fixtures/pages/Settings.tsx'),
     children: [
       {
         path: 'profile',
         name: 'settings-profile',
-        component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/SettingsProfile.tsx'),
+        component: () => import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx'),
         /* no children */
       }
     ],
@@ -215,7 +215,7 @@ exports[`config-based routes parser > should generate stable route records for c
       {
         path: ':id',
         name: 'users-id',
-        component: () => import('/home/ziyang/Documents/www/essor-next-ai/router/packages/unplugin/test/unplugin/fixtures/pages/UserDetail.tsx'),
+        component: () => import('<TEST_ROOT>fixtures/pages/UserDetail.tsx'),
         /* no children */
       }
     ],

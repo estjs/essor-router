@@ -186,7 +186,10 @@ export function createRouterMatcher(
       const matcher = matcherMap.get(matcherRef);
       if (matcher) {
         matcherMap.delete(matcherRef);
-        matchers.splice(matchers.indexOf(matcher), 1);
+        const index = matchers.indexOf(matcher);
+        if (index > -1) {
+          matchers.splice(index, 1);
+        }
         matcher.children.forEach(removeRoute);
         matcher.alias.forEach(removeRoute);
       }

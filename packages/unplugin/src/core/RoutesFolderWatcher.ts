@@ -1,3 +1,4 @@
+import type { Stats } from 'node:fs';
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
 import picomatch from 'picomatch';
 import path, { resolve } from 'pathe';
@@ -37,7 +38,7 @@ export class RoutesFolderWatcher {
       // usePolling: !!process.env.CI,
       // interval: process.env.CI ? 100 : undefined,
       awaitWriteFinish: !!process.env.CI,
-      ignored: (filePath, stats) => {
+      ignored: (filePath: string, stats?: Stats) => {
         // let folders pass, they are ignored by the glob pattern
         if (!stats || stats.isDirectory()) {
           return false;

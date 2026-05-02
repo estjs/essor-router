@@ -1,5 +1,4 @@
-import { createComponent as _h$, template as _template$, insert, mapNodes } from 'essor';
-import { computed } from '@estjs/signals';
+import { createComponent as _h$, template as _template$, insert, mapNodes, computed } from 'essor';
 import { RouterView, createRouter, usePreloadRoute, useRoute } from '../src';
 import { components, mount, sleep } from './utils';
 
@@ -126,5 +125,23 @@ describe('use apis', () => {
     await preloadRoute('/manual-preload?x=1');
     expect(loader).toHaveBeenCalledTimes(1);
     expect(loader).toHaveBeenCalledWith(expect.objectContaining({ search: { x: '1' } }));
+  });
+
+  it('clears route params when navigating to a route without those params', async () => {
+    let paramsText = '';
+    const ParamsProbe = () => {
+      const route = useRoute();
+      paramsText = String(route.params.any ?? 'none');
+    };
+
+    router.addRoute({
+      path: '/probe-params',
+      component: ParamsProbe,
+    });
+
+    await router.push('/xx');
+    await router.push('/probe-params');
+
+    expect(paramsText).toBe('none');
   });
 });

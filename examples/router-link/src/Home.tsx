@@ -7,7 +7,9 @@ const DynamicLinkSection = () => {
     const id = setTimeout(() => {
       toSignal.value = '/'
     }, 100)
-    onDestroy(() => clearTimeout(id))
+    onDestroy(() => {
+      clearTimeout(id)
+    })
   })
   return (
     <div class="section">

@@ -33,7 +33,17 @@ function registerGuard(
     record[name]?.delete(guard);
   };
 
-  onDestroy(removeFromList);
+  try {
+    onDestroy(removeFromList);
+  } catch (error) {
+    if (__DEV__) {
+      warn(
+        `Cannot register "${name}" outside of an active component scope. Make sure this guard is created during component setup.`,
+        error,
+      );
+    }
+    return;
+  }
 
   record[name]?.add(guard);
 }

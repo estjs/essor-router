@@ -7,6 +7,8 @@ export default defineConfig({
   base: './',
   resolve: {
     alias: {
+      'essor': path.resolve(__dirname, 'node_modules/essor'),
+      '@estjs/signals': path.resolve(__dirname, 'node_modules/@estjs/signals'),
       '@/': `${path.resolve(__dirname, '/src')}/`,
     },
   },

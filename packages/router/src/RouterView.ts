@@ -1,17 +1,26 @@
 import {
   type ComponentProps,
+  type Computed,
+  type Signal,
   createComponent,
-  error as logError,
+  computed,
+  effect,
   getActiveScope,
   inject,
-  insert,
+  insertNode,
+  isSignal,
+  normalizeNode,
   onDestroy,
   provide,
+  removeNode,
   runWithScope,
+  signal,
+  toRaw,
+  untrack,
 } from 'essor';
-import { type Computed, type Signal, computed, effect, signal } from '@estjs/signals';
 import {
   matchedRouteKey,
+  routeLocationKey,
   routerKey,
   routerViewLocationKey,
   viewDepthKey,
@@ -21,7 +30,49 @@ import {
   type RouteLocationNormalized,
   START_LOCATION_NORMALIZED,
 } from './types';
-import type { Router } from './router';
+import { getRouteLocationContext, type Router } from './router';
+
+function logRouterError(...args: unknown[]) {
+  if (__DEV__) {
+    console.error(...args);
+  }
+}
+
+function hasValueProperty(value: unknown): value is { value: unknown } {
+  return !!value && typeof value === 'object' && 'value' in value;
+}
+
+function resolveRenderedValue(value: unknown): unknown {
+  let current = value;
+
+  while (typeof current === 'function') {
+    current = (current as () => unknown)();
+  }
+
+  if (isSignal(current) || hasValueProperty(current)) {
+    return resolveRenderedValue(current.value);
+  }
+
+  return current;
+}
+
+function materializeRenderedValue(value: unknown): any[] {
+  const resolved = resolveRenderedValue(value);
+
+  if (resolved == null || resolved === false || resolved === true) {
+    return [];
+  }
+
+  if (Array.isArray(resolved)) {
+    return resolved.flatMap(item => materializeRenderedValue(item));
+  }
+
+  if (typeof resolved === 'string' || typeof resolved === 'number') {
+    return [normalizeNode(resolved)];
+  }
+
+  return [resolved];
+}
 
 // Define specific types for RouterView children
 export type RouterViewChildren =
@@ -121,7 +172,7 @@ function safeRenderComponent(
     const normalized = caught instanceof Error ? caught : new Error(String(caught));
     // Handle rendering errors
     if (__DEV__) {
-      logError('RouterView failed to render component:', normalized);
+      logRouterError('RouterView failed to render component:', normalized);
     }
     if (onError) {
       onError(normalized);
@@ -138,7 +189,7 @@ function safeRenderComponent(
               fallbackError instanceof Error
                 ? fallbackError
                 : new Error(String(fallbackError));
-            logError('RouterView failed to render fallback component:', normalizedFallback);
+            logRouterError('RouterView failed to render fallback component:', normalizedFallback);
           }
           return null;
         }
@@ -150,13 +201,15 @@ function safeRenderComponent(
   }
 }
 
-/**
- * RouterView component that renders the matched route component
- * Supports nested routing and named views
- * @param props - RouterView props
- * @returns Rendered route component or children
- */
-export const RouterView = (props: RouterViewProps) => {
+interface RouteViewContentProps {
+  matchedRouteRef: Signal<RouteLocationNormalized['matched'][number] | undefined>;
+  viewName: Computed<string>;
+  fallback?: RouteComponent;
+  children?: RouterViewChildren;
+  onError?: (error: Error) => void;
+}
+
+const RouteViewContent = (props: RouteViewContentProps) => {
   const ownerScope = getActiveScope();
   const withOwnerScope = <T>(fn: () => T): T => {
     if (ownerScope && !ownerScope.isDestroyed) {
@@ -165,13 +218,163 @@ export const RouterView = (props: RouterViewProps) => {
     return fn();
   };
 
+  const outlet = document.createElement('div');
+  outlet.style.display = 'contents';
+  let mountedNodes: any[] = [];
+  let renderVersion = 0;
+  const clearMountedNodes = () => {
+    mountedNodes.forEach(node => removeNode(node));
+    mountedNodes = [];
+  };
+
+  const renderIntoOutlet = (
+    value: unknown,
+    options?: {
+      onMounted?: (mountedValue: unknown) => void;
+      onError?: (error: unknown) => void;
+    },
+  ) => {
+    const nextNodes = materializeRenderedValue(value);
+    const currentVersion = ++renderVersion;
+    clearMountedNodes();
+    const mountNodes = () => {
+      if (currentVersion !== renderVersion) return;
+      try {
+        withOwnerScope(() => {
+          nextNodes.forEach(node => insertNode(outlet, node));
+          mountedNodes = nextNodes;
+          options?.onMounted?.(nextNodes.length <= 1 ? (nextNodes[0] ?? null) : nextNodes);
+        });
+      } catch (caught) {
+        clearMountedNodes();
+        options?.onError?.(caught);
+      }
+    };
+
+    if (typeof queueMicrotask === 'function') {
+      queueMicrotask(mountNodes);
+      return;
+    }
+
+    Promise.resolve().then(mountNodes);
+  };
+
+  const resolveFallbackView = () => {
+    const fallback = props.fallback || props.children;
+    if (!fallback) return null;
+    if (typeof fallback === 'function') {
+      return createComponent(fallback as RouteComponent, {});
+    }
+    return fallback;
+  };
+
+  const resolveRenderedView = (
+    matchedRoute: RouteLocationNormalized['matched'][number] | undefined,
+    currentViewName: string,
+  ) => {
+    const ViewComponent = matchedRoute?.components?.[currentViewName];
+
+    if (ViewComponent) {
+      return safeRenderComponent(ViewComponent, props.onError, props.fallback || props.children);
+    }
+
+    return props.children;
+  };
+
+  effect(() => {
+    const matchedRoute = props.matchedRouteRef.value;
+    const currentViewName = props.viewName.value;
+    const rawMatchedRoute = matchedRoute ? toRaw(matchedRoute) : null;
+    let rendered = untrack(() =>
+      withOwnerScope(() => resolveRenderedView(matchedRoute, currentViewName)),
+    );
+
+    const finalizeMountedView = (mountedValue: unknown) => {
+      if (!rawMatchedRoute) return;
+
+      rawMatchedRoute.instances[currentViewName] = mountedValue || null;
+      const enterCallbacks = rawMatchedRoute.enterCallbacks[currentViewName] || [];
+      if (mountedValue && enterCallbacks.length > 0) {
+        enterCallbacks.forEach(callback => callback(mountedValue));
+        rawMatchedRoute.enterCallbacks[currentViewName] = [];
+      }
+    };
+
+    const handleMountError = (caught: unknown) => {
+      if (rawMatchedRoute) {
+        rawMatchedRoute.instances[currentViewName] = null;
+      }
+
+      const normalized = caught instanceof Error ? caught : new Error(String(caught));
+      if (__DEV__) {
+        logRouterError('RouterView failed to render component:', normalized);
+      }
+      props.onError?.(normalized);
+
+      const fallback = untrack(() => withOwnerScope(resolveFallbackView));
+      rendered = fallback;
+
+      if (fallback == null) {
+        return;
+      }
+
+      renderIntoOutlet(fallback, {
+        onMounted: finalizeMountedView,
+        onError(fallbackError) {
+          if (rawMatchedRoute) {
+            rawMatchedRoute.instances[currentViewName] = null;
+          }
+          clearMountedNodes();
+          if (__DEV__) {
+            const normalizedFallback =
+              fallbackError instanceof Error
+                ? fallbackError
+                : new Error(String(fallbackError));
+            logRouterError('RouterView failed to render fallback component:', normalizedFallback);
+          }
+        },
+      });
+    };
+
+    try {
+      untrack(() =>
+        renderIntoOutlet(rendered, {
+          onMounted: finalizeMountedView,
+          onError: handleMountError,
+        }),
+      );
+    } catch (caught) {
+      handleMountError(caught);
+    }
+  });
+
+  onDestroy(() => {
+    renderVersion++;
+    clearMountedNodes();
+    const matchedRoute = props.matchedRouteRef.value;
+    if (!matchedRoute) return;
+    toRaw(matchedRoute).instances[props.viewName.value] = null;
+  });
+
+  return outlet;
+};
+
+/**
+ * RouterView component that renders the matched route component
+ * Supports nested routing and named views
+ * @param props - RouterView props
+ * @returns Rendered route component or children
+ */
+export const RouterView = (props: RouterViewProps) => {
   // Get router from props or injection
-  const router = props.router || inject(routerKey);
+  const injectedRouter = inject(routerKey);
+  const router = props.router || injectedRouter;
+  const isIndependentRouterRoot = !!props.router && props.router !== injectedRouter;
 
   // Validate router existence
   if (!router) {
     if (__DEV__) {
-      logError(
+      logRouterError(
         'RouterView requires a router instance. ' +
           'Please provide a router via props or ensure RouterView is used within a router context. ' +
           'Make sure you have created a router instance and passed it to RouterView, or that a parent component provides the router through injection.',
@@ -194,17 +397,17 @@ export const RouterView = (props: RouterViewProps) => {
     Promise.resolve().then(() => router.destroy());
   });
 
+  // Keep useRoute() aligned with vue-router: expose a stable shallow-reactive
+  // route object, while RouterView itself still consumes the route signal.
+  const injectedRouteLocation = isIndependentRouterRoot ? undefined : inject(routeLocationKey);
+  const routeLocation = injectedRouteLocation || getRouteLocationContext(router);
+
   // Get route to display (from props or injection)
-  const injectedRoute = inject(routerViewLocationKey) || router.currentRoute;
+  const injectedRoute = isIndependentRouterRoot ? undefined : inject(routerViewLocationKey);
   const routeToDisplay = computed<RouteLocationNormalized>(() => {
     if (props.route) return props.route;
 
-    if (!injectedRoute) {
-      return START_LOCATION_NORMALIZED;
-    }
-
-    // Handle signal values
-    const currentRoute = injectedRoute.value || injectedRoute;
+    const currentRoute = injectedRoute ? injectedRoute.value : router.currentRoute.value;
     if (!currentRoute || typeof currentRoute !== 'object' || !('path' in currentRoute)) {
       return START_LOCATION_NORMALIZED;
     }
@@ -213,7 +416,9 @@ export const RouterView = (props: RouterViewProps) => {
   });
 
   // Calculate view depth for nested RouterViews
-  const injectedDepth = inject<Signal<number> | Computed<number> | number>(viewDepthKey) || 0;
+  const injectedDepth = isIndependentRouterRoot
+    ? 0
+    : (inject<Signal<number> | Computed<number> | number>(viewDepthKey) || 0);
   const depth = signal<number>(0);
   const matchedRouteRef = signal<RouteLocationNormalized['matched'][number] | undefined>(undefined);
   const matchedRouteComputed = computed<RouteLocationNormalized['matched'][number] | undefined>(
@@ -223,6 +428,8 @@ export const RouterView = (props: RouterViewProps) => {
   const viewName = computed(() => props.name || 'default');
 
   // Provide context for nested RouterViews and navigation hooks
+  provide(routerKey, router);
+  provide(routeLocationKey, routeLocation);
   provide(
     viewDepthKey,
     computed(() => depth.value + 1),
@@ -239,45 +446,11 @@ export const RouterView = (props: RouterViewProps) => {
     matchedRouteRef.value = route?.matched?.[nextDepth];
   });
 
-  const renderedView = signal<any>(undefined);
-  const resolveRenderedView = (
-    matchedRoute: RouteLocationNormalized['matched'][number] | undefined,
-    currentViewName: string,
-  ) => {
-    const ViewComponent = matchedRoute?.components?.[currentViewName];
-
-    if (ViewComponent) {
-      return safeRenderComponent(ViewComponent, props.onError, props.fallback || props.children);
-    }
-
-    return props.children;
-  };
-
-  effect(() => {
-    const matchedRoute = matchedRouteRef.value;
-    const currentViewName = viewName.value;
-    const rendered = withOwnerScope(() => resolveRenderedView(matchedRoute, currentViewName));
-
-    renderedView.value = rendered;
-
-    if (!matchedRoute) return;
-
-    matchedRoute.instances[currentViewName] = rendered || null;
-    const enterCallbacks = matchedRoute.enterCallbacks[currentViewName] || [];
-    if (rendered && enterCallbacks.length > 0) {
-      enterCallbacks.forEach(callback => callback(rendered));
-      matchedRoute.enterCallbacks[currentViewName] = [];
-    }
+  return createComponent(RouteViewContent, {
+    matchedRouteRef,
+    viewName,
+    fallback: props.fallback,
+    children: props.children,
+    onError: props.onError,
   });
-
-  onDestroy(() => {
-    const matchedRoute = matchedRouteRef.value;
-    if (!matchedRoute) return;
-    matchedRoute.instances[viewName.value] = null;
-  });
-
-  const outlet = document.createElement('div');
-  outlet.style.display = 'contents';
-  insert(outlet, () => renderedView.value);
-  return outlet;
 };

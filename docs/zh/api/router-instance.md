@@ -247,6 +247,30 @@ console.log('路由器已就绪');
 
 **返回：** `Promise<void>`
 
+## 预渲染路径
+
+### getPrerenderPaths
+
+返回所有启用了 `start.prerender` 的预渲染入口：
+
+```tsx
+const entries = router.getPrerenderPaths();
+```
+
+静态路由会直接把自身路径放进 `paths`。动态路由需要通过 `start.prerenderPaths` 提供具体路径，否则会被跳过。
+
+```tsx
+{
+  path: '/users/:id',
+  start: {
+    prerender: true,
+    prerenderPaths: ['/users/1', '/users/2'],
+  },
+}
+```
+
+如果 `start.prerenderPaths` 是异步函数，请改用 `router.getPrerenderPathsAsync()`。
+
 ## 导航失败
 
 ### isNavigationFailure

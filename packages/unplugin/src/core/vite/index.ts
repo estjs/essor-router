@@ -9,7 +9,7 @@ export function createViteContext(server: ViteDevServer): ServerContext {
     if (foundModule) {
       return server.reloadModule(foundModule);
     }
-    return !!foundModule;
+    return false;
   }
 
   function invalidatePage(filepath: string): Promise<void> | false {

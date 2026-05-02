@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { scrollToPosition } from '../src/scrollBehavior';
+import { saveScrollPosition, scrollPositions, scrollToPosition } from '../src/scrollBehavior';
 import { mockWarn } from './utils';
 
 describe('scrollBehavior', () => {
@@ -66,5 +66,20 @@ describe('scrollBehavior', () => {
       value: originalStyle,
       configurable: true,
     });
+  });
+
+  it('bounds saved scroll positions to the configured limit', () => {
+    scrollPositions.clear();
+
+    for (let index = 0; index < 60; index++) {
+      saveScrollPosition(`route-${index}`, {
+        left: index,
+        top: index,
+      });
+    }
+
+    expect(scrollPositions.size).toBeLessThanOrEqual(50);
+    expect(scrollPositions.has('route-0')).toBe(false);
+    expect(scrollPositions.has('route-59')).toBe(true);
   });
 });

@@ -26,6 +26,12 @@ const __dirname = (() => {
   return existsSync(rooted) ? rooted : process.cwd();
 })();
 
+const normalizedTestRoot = __dirname.replaceAll('\\', '/');
+
+function normalizeSnapshotPaths(value: string) {
+  return value.replaceAll('\\', '/').replaceAll(normalizedTestRoot, '<TEST_ROOT>');
+}
+
 /**
  * Builds a standard test route tree with common route patterns for file-based routing:
  */
@@ -57,7 +63,7 @@ describe('generateDTS snapshot', () => {
       customParamsType: generateParamParserCustomType(paramParsersMap),
     });
 
-    expect(output).toMatchSnapshot('FileBased-typed-router.d.ts');
+    expect(normalizeSnapshotPaths(output)).toMatchSnapshot('FileBased-typed-router.d.ts');
   });
 
   it('generates completely typed-router.d.ts for config-based routing', () => {
@@ -83,6 +89,6 @@ describe('generateDTS snapshot', () => {
       customParamsType: generateParamParserCustomType(paramParsersMap),
     });
 
-    expect(output).toMatchSnapshot('ConfigBased-typed-router.d.ts');
+    expect(normalizeSnapshotPaths(output)).toMatchSnapshot('ConfigBased-typed-router.d.ts');
   });
 });

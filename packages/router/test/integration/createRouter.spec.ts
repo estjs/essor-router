@@ -14,7 +14,11 @@ describe('createRouter integration', () => {
           name: 'users-id',
           path: '/users/:id',
           component: User,
-          start: { prerender: true, preload: 'intent' },
+          start: {
+            prerender: true,
+            preload: 'intent',
+            prerenderPaths: ['/users/1', '/users/2'],
+          },
           meta: { section: 'users' },
         },
       ],
@@ -25,7 +29,7 @@ describe('createRouter integration', () => {
     expect(prerender[0]).toEqual({
       name: 'users-id',
       pathTemplate: '/users/:id',
-      paths: ['/users/:id'],
+      paths: ['/users/1', '/users/2'],
       meta: { section: 'users' },
     });
 

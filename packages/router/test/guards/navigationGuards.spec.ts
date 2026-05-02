@@ -649,5 +649,24 @@ describe('navigationGuards', () => {
       expect(mockRecord.updateGuards.has(updateGuard)).toBe(true);
       expect(essor.onDestroy).toHaveBeenCalled();
     });
+
+    it('should not throw when route record exists but no component scope is active', async () => {
+      const essor = await import('essor');
+      const mockRecord = {
+        leaveGuards: new Set(),
+        updateGuards: new Set(),
+      };
+      (essor.inject as any).mockReturnValue({ value: mockRecord });
+      (essor.onDestroy as any).mockImplementation(() => {
+        throw new Error('no active scope');
+      });
+
+      const mockGuard = vi.fn();
+
+      expect(() => onBeforeRouteLeave(mockGuard)).not.toThrow();
+      expect(() => onBeforeRouteUpdate(mockGuard)).not.toThrow();
+      expect(mockRecord.leaveGuards.size).toBe(0);
+      expect(mockRecord.updateGuards.size).toBe(0);
+    });
   });
 });

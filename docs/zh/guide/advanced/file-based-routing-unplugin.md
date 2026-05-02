@@ -69,11 +69,18 @@ export const route = defineRoute({
   validateSearch: input => ({ q: String(input.q ?? '') }),
   loader: async () => ({ ok: true }),
   beforeLoad: () => ({ canEnter: true }),
-  start: { ssr: true, prerender: false, preload: 'intent' },
+  start: {
+    ssr: true,
+    prerender: false,
+    prerenderPaths: ['/users/1', '/users/2'],
+    preload: 'intent',
+  },
 })
 ```
 
 `alias` 必须是绝对路径（以 `/` 开头）。相对路径会被忽略并给出警告。
+
+对于动态预渲染路由，`start.prerenderPaths` 需要提供具体输出路径。`router.getPrerenderPaths()` 不再返回 `/users/:id` 这样的模板路径。
 
 ## 生产推荐配置
 

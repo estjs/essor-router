@@ -69,11 +69,18 @@ export const route = defineRoute({
   validateSearch: input => ({ q: String(input.q ?? '') }),
   loader: async () => ({ ok: true }),
   beforeLoad: () => ({ canEnter: true }),
-  start: { ssr: true, prerender: false, preload: 'intent' },
+  start: {
+    ssr: true,
+    prerender: false,
+    prerenderPaths: ['/users/1', '/users/2'],
+    preload: 'intent',
+  },
 })
 ```
 
 Aliases must be absolute (start with `/`). Relative aliases are ignored and will emit a warning.
+
+For dynamic prerendered routes, `start.prerenderPaths` should contain concrete output paths. `router.getPrerenderPaths()` no longer emits template paths like `/users/:id`.
 
 ## Recommended Production Config
 
