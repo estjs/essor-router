@@ -187,15 +187,13 @@ export function createRouterMatcher(
       if (matcher) {
         matcherMap.delete(matcherRef);
         const index = matchers.indexOf(matcher);
-        if (index > -1) {
-          matchers.splice(index, 1);
-        }
+        if (index > -1) matchers.splice(index, 1);
         matcher.children.forEach(removeRoute);
         matcher.alias.forEach(removeRoute);
       }
     } else {
       const index = matchers.indexOf(matcherRef);
-      if (index > -1) {
+      if (index !== -1) {
         matchers.splice(index, 1);
         if (matcherRef.record.name) matcherMap.delete(matcherRef.record.name);
         matcherRef.children.forEach(removeRoute);
@@ -244,7 +242,7 @@ export function createRouterMatcher(
       // warn if the user is passing invalid params so they can debug it better when they get removed
       if (__DEV__) {
         const invalidParams: string[] = Object.keys(location.params || {}).filter(
-          paramName => !matcher!.keys.some(k => k.name === paramName),
+          (paramName) => !matcher!.keys.some((k) => k.name === paramName),
         );
 
         if (invalidParams.length > 0) {
@@ -260,15 +258,15 @@ export function createRouterMatcher(
           // only keep params that exist in the resolved location
           // only keep optional params coming from a parent record
           matcher.keys
-            .filter(k => !k.optional)
-            .concat(matcher.parent ? matcher.parent.keys.filter(k => k.optional) : [])
-            .map(k => k.name),
+            .filter((k) => !k.optional)
+            .concat(matcher.parent ? matcher.parent.keys.filter((k) => k.optional) : [])
+            .map((k) => k.name),
         ),
         // discard any existing params in the current location that do not exist here
         location.params &&
           paramsFromLocation(
             location.params,
-            matcher.keys.map(k => k.name),
+            matcher.keys.map((k) => k.name),
           ),
       );
       // throws if cannot be stringified
@@ -284,7 +282,7 @@ export function createRouterMatcher(
         );
       }
 
-      matcher = matchers.find(m => m.re.test(path));
+      matcher = matchers.find((m) => m.re.test(path));
       // matcher should have a value after the loop
 
       if (matcher) {
@@ -297,7 +295,7 @@ export function createRouterMatcher(
       // match by name or path of current route
       matcher = currentLocation.name
         ? matcherMap.get(currentLocation.name)
-        : matchers.find(m => m.re.test(currentLocation.path));
+        : matchers.find((m) => m.re.test(currentLocation.path));
       if (!matcher)
         throw createRouterError<MatcherError>(ErrorTypes.MATCHER_NOT_FOUND, {
           location,
@@ -329,7 +327,7 @@ export function createRouterMatcher(
   }
 
   // add initial routes
-  routes.forEach(route => addRoute(route));
+  routes.forEach((route) => addRoute(route));
 
   function clearRoutes() {
     matchers.length = 0;
@@ -492,5 +490,5 @@ function checkMissingParamsInAbsolutePath(record: RouteRecordMatcher, parent: Ro
 }
 
 function isRecordChildOf(record: RouteRecordMatcher, parent: RouteRecordMatcher): boolean {
-  return parent.children.some(child => child === record || isRecordChildOf(record, child));
+  return parent.children.some((child) => child === record || isRecordChildOf(record, child));
 }

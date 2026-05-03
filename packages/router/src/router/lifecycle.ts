@@ -97,7 +97,7 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
           if (isNavigationFailure(error, ErrorTypes.NAVIGATION_GUARD_REDIRECT)) {
             options
               .pushWithRedirect((error as NavigationRedirectError).to, toLocation)
-              .then(failure => {
+              .then((failure) => {
                 if (
                   isNavigationFailure(
                     failure,
@@ -174,7 +174,7 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
     markAsReady(error);
     const list = errorListeners.list();
     if (list.length > 0) {
-      list.forEach(handler => handler(error, to, from));
+      list.forEach((handler) => handler(error, to, from));
     } else if (__DEV__) {
       warn('uncaught error during route navigation:');
     }
@@ -191,11 +191,11 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
   function init(routerInstance: any) {
     activeViewCount++;
     const shouldPerformInitialNavigation =
-      isBrowser && !started && toRaw<any>(options.currentRoute) === START_LOCATION_NORMALIZED;
+      isBrowser && !started && toRaw(options.currentRoute.value) === START_LOCATION_NORMALIZED;
 
     if (shouldPerformInitialNavigation) {
       started = true;
-      options.pushWithRedirect(options.routerHistory.location).catch(error => {
+      options.pushWithRedirect(options.routerHistory.location).catch((error) => {
         if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
@@ -216,17 +216,11 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
       removeHistoryListener = null;
     }
 
-    const currentRoute: any = options.currentRoute;
-    if (currentRoute && '_value' in currentRoute) {
-      currentRoute._rawValue = START_LOCATION_NORMALIZED;
-      currentRoute._value = START_LOCATION_NORMALIZED;
-    } else {
-      try {
-        options.currentRoute.value = START_LOCATION_NORMALIZED;
-      } catch (error) {
-        if (__DEV__) {
-          warn('Failed to reset current route during destroy:', error);
-        }
+    try {
+      options.currentRoute.value = START_LOCATION_NORMALIZED;
+    } catch (error) {
+      if (__DEV__) {
+        warn('Failed to reset current route during destroy:', error);
       }
     }
     options.clearCaches();

@@ -218,8 +218,9 @@ const RouteViewContent = (props: RouteViewContentProps) => {
     return fn();
   };
 
-  const outlet = document.createElement('div');
-  outlet.style.display = 'contents';
+  const outlet =
+    typeof document === 'undefined' ? (null as unknown as HTMLElement) : document.createElement('div');
+  if (outlet) outlet.style.display = 'contents';
   let mountedNodes: any[] = [];
   let renderVersion = 0;
   const clearMountedNodes = () => {
