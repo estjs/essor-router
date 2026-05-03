@@ -1,4 +1,4 @@
-import { shallowReactive, type Signal, signal } from 'essor';
+import { type Signal, signal } from 'essor';
 import { isBrowser, isObject, isString } from './utils';
 import {
   type NavigationGuardWithThis,
@@ -27,11 +27,11 @@ import { createReactiveRoute, createRouteResolver } from './router/routeResolver
 import { createGuardPipeline } from './router/guardPipeline';
 import { createNavigationCoordinator } from './router/navigation';
 import { type ErrorListener as _ErrorListener, setupRouterLifecycle } from './router/lifecycle';
+import { warn } from './warning';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouterHistory } from './history/common';
 import type { PathParserOptions } from './matcher/pathParserRanker';
-import { warn } from './warning';
 
 export { _ErrorListener };
 
@@ -130,7 +130,7 @@ export function createRouter(options: RouterOptions): Router {
     : (options.history as RouterHistory);
 
   const currentRoute = signal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
-  const routeLocationContext = shallowReactive(createReactiveRoute(currentRoute));
+  const routeLocationContext = createReactiveRoute(currentRoute);
 
   const resolver = createRouteResolver(
     matcher,
@@ -160,7 +160,7 @@ export function createRouter(options: RouterOptions): Router {
 
     return Promise.resolve()
       .then(() => scrollBehavior(to, from, scrollPosition))
-      .then(position => position && scrollToPosition(position));
+      .then((position) => position && scrollToPosition(position));
   };
 
   let markAsReady: <E extends Error = Error>(err?: E) => E | void = () => {};
@@ -168,27 +168,24 @@ export function createRouter(options: RouterOptions): Router {
     error: Error,
     to: RouteLocationNormalized,
     from: RouteLocationNormalizedLoaded,
-  ) => Promise<unknown> = error => Promise.reject(error);
+  ) => Promise<unknown> = (error) => Promise.reject(error);
 
   const navigation = createNavigationCoordinator({
     resolve: resolver.resolve,
     locationAsObject: resolver.locationAsObject,
     stringifyQuery,
     currentRoute,
-    setPendingLocation: location => {
+    setPendingLocation: (location) => {
       pendingLocation = location;
     },
     getPendingLocation: () => pendingLocation,
     routerHistory,
     triggerAfterEach: pipeline.triggerAfterEach,
     navigate: (to, from) =>
-      pipeline.navigate(
-        to,
-        from,
-        navigation.checkCanceledNavigationAndReject,
-        routeToLoad => navigation.runRouteDataHooks(routeToLoad, true),
+      pipeline.navigate(to, from, navigation.checkCanceledNavigationAndReject, (routeToLoad) =>
+        navigation.runRouteDataHooks(routeToLoad, true),
       ),
-    markAsReady: err => markAsReady(err),
+    markAsReady: (err) => markAsReady(err),
     triggerError: (error, to, from) => triggerError(error, to, from),
     handleScroll,
   });
@@ -236,7 +233,7 @@ export function createRouter(options: RouterOptions): Router {
 
   const go = (delta: number) => routerHistory.go(delta);
 
-  const getAllRouteRecords = () => matcher.getRoutes().map(r => r.record);
+  const getAllRouteRecords = () => matcher.getRoutes().map((r) => r.record);
   const getPrerenderPathInfos = () => collectPrerenderPaths(getAllRouteRecords());
 
   const router = {
@@ -247,7 +244,7 @@ export function createRouter(options: RouterOptions): Router {
     removeRoute,
     clearRoutes,
     hasRoute: (name: RouteRecordName) => !!matcher.getRecordMatcher(name),
-    getRoutes: () => matcher.getRoutes().map(routeMatcher => routeMatcher.record),
+    getRoutes: () => matcher.getRoutes().map((routeMatcher) => routeMatcher.record),
     resolve: resolver.resolve as Router['resolve'],
     push: navigation.push as Router['push'],
     replace: navigation.replace as Router['replace'],
@@ -275,17 +272,14 @@ export function createRouter(options: RouterOptions): Router {
   const lifecycle = setupRouterLifecycle({
     router,
     currentRoute,
-    resolve: to => resolver.resolve(to as any),
-    setPendingLocation: location => {
+    resolve: (to) => resolver.resolve(to as any),
+    setPendingLocation: (location) => {
       pendingLocation = location;
     },
     pushWithRedirect: navigation.push as any,
     navigate: (to, from) =>
-      pipeline.navigate(
-        to,
-        from,
-        navigation.checkCanceledNavigationAndReject,
-        routeToLoad => navigation.runRouteDataHooks(routeToLoad, true),
+      pipeline.navigate(to, from, navigation.checkCanceledNavigationAndReject, (routeToLoad) =>
+        navigation.runRouteDataHooks(routeToLoad, true),
       ),
     finalizeNavigation: navigation.finalizeNavigation,
     triggerAfterEach: pipeline.triggerAfterEach,
@@ -315,8 +309,8 @@ function collectPrerenderPaths(
   records: Array<{ name?: RouteRecordName; path: string; meta: any; start?: any }>,
 ) {
   return records
-    .filter(record => record.start?.prerender)
-    .flatMap(record => {
+    .filter((record) => record.start?.prerender)
+    .flatMap((record) => {
       const paths = resolvePrerenderPathsSync(record);
       return paths.length === 0
         ? []
@@ -387,7 +381,10 @@ function resolvePrerenderPathsSync(record: { path: string; start?: any }): strin
   return [record.path];
 }
 
-async function resolvePrerenderPathsAsync(record: { path: string; start?: any }): Promise<string[]> {
+async function resolvePrerenderPathsAsync(record: {
+  path: string;
+  start?: any;
+}): Promise<string[]> {
   const configuredPaths = record.start?.prerenderPaths;
   if (configuredPaths) {
     if (typeof configuredPaths === 'function') {

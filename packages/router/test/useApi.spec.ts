@@ -1,4 +1,4 @@
-import { createComponent as _h$, template as _template$, insert, mapNodes, computed } from 'essor';
+import { createComponent as _h$, template as _template$, computed, insert, mapNodes } from 'essor';
 import { RouterView, createRouter, usePreloadRoute, useRoute } from '../src';
 import { components, mount, sleep } from './utils';
 
@@ -53,7 +53,7 @@ describe('use apis', () => {
     expect(wrapper.text()).toBe('Query: hi');
   });
 
-  it('it should reactive route matched', async () => {
+  it('should reactive route matched', async () => {
     let compt;
     const Child = () => {
       const _$tmpl = _template$('<div>Child</div>');
@@ -63,6 +63,11 @@ describe('use apis', () => {
     const Parent = () => {
       const route = useRoute();
       compt = computed(() => {
+        // eslint-disable-next-line no-console
+        console.log(
+          '[compt run]',
+          route.matched?.map((r) => r.path),
+        );
         const matched = route.matched?.at(-1);
         return matched;
       });
@@ -93,12 +98,22 @@ describe('use apis', () => {
     await router.push('/parent/child');
     expect(compt.value.path).toBe('/parent/child');
     expect(currentRoute.value.matched.length).toBe(2);
-    expect(currentRoute.value.matched.map(m => m.path)).toEqual(['/parent', '/parent/child']);
+    expect(currentRoute.value.matched.map((m) => m.path)).toEqual(['/parent', '/parent/child']);
 
+    // eslint-disable-next-line no-console
+    console.log(
+      '[flags before]',
+      'compt=',
+      (compt as any).flag,
+      'sig=',
+      (currentRoute as any).flag,
+    );
     await router.push('/parent/other');
+    // eslint-disable-next-line no-console
+    console.log('[flags after]', 'compt=', (compt as any).flag, 'sig=', (currentRoute as any).flag);
     expect(compt.value.path).toBe('/parent/other');
     expect(currentRoute.value.matched.length).toBe(2);
-    expect(currentRoute.value.matched.map(m => m.path)).toEqual(['/parent', '/parent/other']);
+    expect(currentRoute.value.matched.map((m) => m.path)).toEqual(['/parent', '/parent/other']);
   });
 
   it('exposes usePreloadRoute for manual route preloading', async () => {
