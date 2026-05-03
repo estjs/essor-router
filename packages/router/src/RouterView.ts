@@ -5,15 +5,10 @@ import {
   computed,
   createComponent,
   effect,
-  getActiveScope,
   inject,
-  insertNode,
   isSignal,
-  normalizeNode,
   onDestroy,
   provide,
-  removeNode,
-  runWithScope,
   signal,
   toRaw,
   untrack,
@@ -56,23 +51,6 @@ function resolveRenderedValue(value: unknown): unknown {
   return current;
 }
 
-function materializeRenderedValue(value: unknown): any[] {
-  const resolved = resolveRenderedValue(value);
-
-  if (resolved == null || resolved === false || resolved === true) {
-    return [];
-  }
-
-  if (Array.isArray(resolved)) {
-    return resolved.flatMap((item) => materializeRenderedValue(item));
-  }
-
-  if (typeof resolved === 'string' || typeof resolved === 'number') {
-    return [normalizeNode(resolved)];
-  }
-
-  return [resolved];
-}
 
 // Define specific types for RouterView children
 export type RouterViewChildren =
@@ -199,184 +177,6 @@ function safeRenderComponent(
   }
 }
 
-/**
- * Internal helper that drives the RouterView's reactive render.
- * Owns the outlet node and mount/unmount book-keeping. Runs *inside*
- * the RouterView component scope so we can safely use lifecycle hooks
- * and avoid the signal-unwrap semantics that child `createComponent`
- * calls apply to their props.
- */
-function createRouterViewRenderer(
-  matchedRouteRef: Signal<RouteLocationNormalized['matched'][number] | undefined>,
-  viewName: Computed<string>,
-  fallbackProvider: () => RouteComponent | RouterViewChildren | undefined,
-  childrenProvider: () => RouterViewChildren,
-  onError?: (error: Error) => void,
-): HTMLElement | null {
-  const ownerScope = getActiveScope();
-  const withOwnerScope = <T>(fn: () => T): T => {
-    if (ownerScope && !ownerScope.isDestroyed) {
-      return runWithScope(ownerScope, fn);
-    }
-    return fn();
-  };
-
-  const outlet = typeof document === 'undefined' ? null : document.createElement('div');
-  if (outlet) outlet.style.display = 'contents';
-
-  let mountedNodes: any[] = [];
-  let renderVersion = 0;
-  const clearMountedNodes = () => {
-    mountedNodes.forEach((node) => removeNode(node));
-    mountedNodes = [];
-  };
-
-  const renderIntoOutlet = (
-    value: unknown,
-    options?: {
-      onMounted?: (mountedValue: unknown) => void;
-      onError?: (error: unknown) => void;
-    },
-  ) => {
-    if (!outlet) return;
-    const nextNodes = materializeRenderedValue(value);
-    const currentVersion = ++renderVersion;
-    clearMountedNodes();
-    const mountNodes = () => {
-      if (currentVersion !== renderVersion) return;
-      try {
-        withOwnerScope(() => {
-          nextNodes.forEach((node) => insertNode(outlet, node));
-          mountedNodes = nextNodes;
-          options?.onMounted?.(nextNodes.length <= 1 ? (nextNodes[0] ?? null) : nextNodes);
-        });
-      } catch (error) {
-        clearMountedNodes();
-        options?.onError?.(error);
-      }
-    };
-
-    if (typeof queueMicrotask === 'function') {
-      queueMicrotask(mountNodes);
-      return;
-    }
-
-    Promise.resolve().then(mountNodes);
-  };
-
-  const resolveFallbackView = () => {
-    const fallback = fallbackProvider();
-    if (!fallback) return null;
-    if (typeof fallback === 'function') {
-      return createComponent(fallback as RouteComponent, {});
-    }
-    return fallback;
-  };
-
-  const resolveRenderedView = (
-    matchedRoute: RouteLocationNormalized['matched'][number] | undefined,
-    currentViewName: string,
-  ) => {
-    const ViewComponent = matchedRoute?.components?.[currentViewName];
-    if (ViewComponent) {
-      return safeRenderComponent(ViewComponent, onError, fallbackProvider());
-    }
-    return childrenProvider();
-  };
-
-  let prevRawMatchedRoute: unknown;
-  let prevViewName: string | undefined;
-  let prevComponent: unknown;
-
-  effect(() => {
-    const matchedRoute = matchedRouteRef.value;
-    const currentViewName = viewName.value;
-    const rawMatchedRoute = matchedRoute ? toRaw(matchedRoute) : null;
-
-    // Skip re-render when the resolved (record, viewName, component) tuple is
-    // stable. This preserves downstream component scope across navigations that
-    // only change deeper matched records (vue-router does the same via keying).
-    const currentComponent = rawMatchedRoute
-      ? (rawMatchedRoute as any).components?.[currentViewName]
-      : undefined;
-    if (
-      prevRawMatchedRoute === rawMatchedRoute &&
-      prevViewName === currentViewName &&
-      prevComponent === currentComponent &&
-      mountedNodes.length > 0
-    ) {
-      return;
-    }
-    prevRawMatchedRoute = rawMatchedRoute;
-    prevViewName = currentViewName;
-    prevComponent = currentComponent;
-
-    let rendered = untrack(() =>
-      withOwnerScope(() => resolveRenderedView(matchedRoute, currentViewName)),
-    );
-
-    const finalizeMountedView = (mountedValue: unknown) => {
-      if (!rawMatchedRoute) return;
-      rawMatchedRoute.instances[currentViewName] = mountedValue || null;
-      const enterCallbacks = rawMatchedRoute.enterCallbacks[currentViewName] || [];
-      if (mountedValue && enterCallbacks.length > 0) {
-        enterCallbacks.forEach((callback) => callback(mountedValue));
-        rawMatchedRoute.enterCallbacks[currentViewName] = [];
-      }
-    };
-
-    const handleMountError = (err: unknown) => {
-      if (rawMatchedRoute) {
-        rawMatchedRoute.instances[currentViewName] = null;
-      }
-      const normalized = err instanceof Error ? err : new Error(String(err));
-      if (__DEV__) {
-        logRouterError('RouterView failed to render component:', normalized);
-      }
-      onError?.(normalized);
-
-      const fallback = untrack(() => withOwnerScope(resolveFallbackView));
-      rendered = fallback;
-      if (fallback == null) return;
-
-      renderIntoOutlet(fallback, {
-        onMounted: finalizeMountedView,
-        onError(fallbackErr) {
-          if (rawMatchedRoute) {
-            rawMatchedRoute.instances[currentViewName] = null;
-          }
-          clearMountedNodes();
-          if (__DEV__) {
-            const norm =
-              fallbackErr instanceof Error ? fallbackErr : new Error(String(fallbackErr));
-            logRouterError('RouterView failed to render fallback component:', norm);
-          }
-        },
-      });
-    };
-
-    try {
-      untrack(() =>
-        renderIntoOutlet(rendered, {
-          onMounted: finalizeMountedView,
-          onError: handleMountError,
-        }),
-      );
-    } catch (error) {
-      handleMountError(error);
-    }
-  });
-
-  onDestroy(() => {
-    renderVersion++;
-    clearMountedNodes();
-    const matchedRoute = matchedRouteRef.value;
-    if (!matchedRoute) return;
-    toRaw(matchedRoute).instances[viewName.value] = null;
-  });
-
-  return outlet;
-}
 
 /**
  * RouterView component that renders the matched route component
@@ -465,11 +265,20 @@ export const RouterView = (props: RouterViewProps) => {
     matchedRouteRef.value = route?.matched?.[nextDepth];
   });
 
-  return createRouterViewRenderer(
-    matchedRouteRef,
-    viewName,
-    () => props.fallback || props.children,
-    () => props.children,
-    props.onError,
-  );
+  const renderView = computed(() => {
+    const matchedRoute = matchedRouteRef.value;
+    const viewName = props.name || 'default';
+
+    // Get component from matched route
+    const ViewComponent = matchedRoute?.components?.[viewName];
+
+    if (ViewComponent) {
+      return safeRenderComponent(ViewComponent, props.onError, props.fallback || props.children);
+    }
+
+    // No component matched, render children
+    return props.children;
+  });
+
+  return [() => renderView.value];
 };
