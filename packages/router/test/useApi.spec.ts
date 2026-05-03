@@ -1,4 +1,4 @@
-import { createComponent as _h$, template as _template$, computed, insert, mapNodes } from 'essor';
+import { createComponent as _h$, template as _template$, computed, insert, child, next } from 'essor';
 import { RouterView, createRouter, usePreloadRoute, useRoute } from '../src';
 import { components, mount, sleep } from './utils';
 
@@ -10,8 +10,9 @@ export function Home() {
 
   return (() => {
     const _$el = _$tmpl();
-    const _$nodes = mapNodes(_$el, [1]);
-    insert(_$nodes[0], () => route.query.q);
+    const _n$ = child(_$el);
+    const _n$2 = next(_n$, 1);
+    insert(_$el, () => route.query.q, _n$2);
     return _$el;
   })();
 }

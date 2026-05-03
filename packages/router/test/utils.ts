@@ -5,7 +5,8 @@ import {
   createComponent as h,
   insert,
   insertNode,
-  mapNodes,
+  child,
+  next,
   removeNode,
 } from 'essor';
 import { type RouteRecordNormalized, type Router, type RouterOptions, createRouter } from '../src';
@@ -151,8 +152,9 @@ export function User(props) {
   const _$tmpl = _template$('<div>User:</div>');
   return (() => {
     const _$el = _$tmpl();
-    const _$nodes = mapNodes(_$el, [1]);
-    insert(_$nodes[0], () => props.id);
+    const _n$ = child(_$el);
+    const _n$2 = next(_n$, 1);
+    insert(_$el, () => props.id, _n$2);
     return _$el;
   })();
 }
