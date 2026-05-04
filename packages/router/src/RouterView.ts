@@ -10,7 +10,6 @@ import {
   onDestroy,
   provide,
   signal,
-  toRaw,
   untrack,
 } from 'essor';
 import {
@@ -50,7 +49,6 @@ function resolveRenderedValue(value: unknown): unknown {
 
   return current;
 }
-
 
 // Define specific types for RouterView children
 export type RouterViewChildren =
@@ -139,44 +137,71 @@ function normalizeDepth(injectedDepth: Signal<number> | Computed<number> | numbe
  * @param fallback - Fallback component or children
  * @returns Rendered component or fallback
  */
+function invokeComponent(component: RouteComponent, props: Record<string, unknown>): unknown {
+  // Function components can be invoked directly; this lets us catch render-time
+  // errors synchronously inside the caller's try/catch. For non-function
+  // components fall back to essor's createComponent so the instance lifecycle
+  // (mount/unmount) still runs normally.
+  if (typeof component === 'function') {
+    return (component as (p: Record<string, unknown>) => unknown)(props);
+  }
+  return createComponent(component, props);
+}
+
 function safeRenderComponent(
   component: RouteComponent,
   onError?: (error: Error) => void,
   fallback?: RouteComponent | RouterViewChildren,
 ): any {
+  // Wrap the component in a try/catch component so errors thrown during the
+  // component's render (including those raised during essor's mount phase,
+  // which would otherwise surface as unhandled effect errors) are caught here
+  // and surfaced through `onError` / fallback rendering.
+  const SafeWrapper = () => {
+    try {
+      return invokeComponent(component, {});
+    } catch (error) {
+      const normalized = error instanceof Error ? error : new Error(String(error));
+      if (__DEV__) {
+        logRouterError('RouterView failed to render component:', normalized);
+      }
+      if (onError) {
+        onError(normalized);
+      }
+
+      if (fallback) {
+        if (typeof fallback === 'function') {
+          try {
+            return invokeComponent(fallback as RouteComponent, {});
+          } catch (fallbackError) {
+            if (__DEV__) {
+              const normalizedFallback =
+                fallbackError instanceof Error ? fallbackError : new Error(String(fallbackError));
+              logRouterError('RouterView failed to render fallback component:', normalizedFallback);
+            }
+            return null;
+          }
+        }
+        return fallback;
+      }
+
+      return null;
+    }
+  };
+
   try {
-    return createComponent(component, {});
+    return createComponent(SafeWrapper, {});
   } catch (error) {
     const normalized = error instanceof Error ? error : new Error(String(error));
-    // Handle rendering errors
     if (__DEV__) {
       logRouterError('RouterView failed to render component:', normalized);
     }
     if (onError) {
       onError(normalized);
     }
-
-    // Render fallback if available
-    if (fallback) {
-      if (typeof fallback === 'function') {
-        try {
-          return createComponent(fallback as RouteComponent, {});
-        } catch (fallbackError) {
-          if (__DEV__) {
-            const normalizedFallback =
-              fallbackError instanceof Error ? fallbackError : new Error(String(fallbackError));
-            logRouterError('RouterView failed to render fallback component:', normalizedFallback);
-          }
-          return null;
-        }
-      }
-      return fallback;
-    }
-
     return null;
   }
 }
-
 
 /**
  * RouterView component that renders the matched route component
@@ -267,17 +292,40 @@ export const RouterView = (props: RouterViewProps) => {
 
   const renderView = computed(() => {
     const matchedRoute = matchedRouteRef.value;
-    const viewName = props.name || 'default';
+    const currentViewName = props.name || 'default';
 
     // Get component from matched route
-    const ViewComponent = matchedRoute?.components?.[viewName];
+    const ViewComponent = matchedRoute?.components?.[currentViewName];
 
-    if (ViewComponent) {
-      return safeRenderComponent(ViewComponent, props.onError, props.fallback || props.children);
+    const rendered = ViewComponent
+      ? safeRenderComponent(ViewComponent, props.onError, props.fallback || props.children)
+      : props.children;
+
+    if (matchedRoute) {
+      // Track mounted component instance so beforeRouteUpdate/Leave guards can
+      // resolve `this` to the correct view, matching vue-router semantics.
+      matchedRoute.instances[currentViewName] = (rendered as any) || null;
+
+      // Flush any beforeRouteEnter `next(vm => ...)` callbacks registered
+      // during navigation for this named view and clear them so they only run
+      // once per enter.
+      const enterCallbacks = matchedRoute.enterCallbacks[currentViewName];
+      if (rendered && enterCallbacks && enterCallbacks.length > 0) {
+        const callbacks = enterCallbacks.slice();
+        matchedRoute.enterCallbacks[currentViewName] = [];
+        untrack(() => {
+          callbacks.forEach((cb) => cb(rendered as any));
+        });
+      }
     }
 
-    // No component matched, render children
-    return props.children;
+    return rendered;
+  });
+
+  onDestroy(() => {
+    const matchedRoute = matchedRouteRef.value;
+    if (!matchedRoute) return;
+    matchedRoute.instances[props.name || 'default'] = null;
   });
 
   return [() => renderView.value];

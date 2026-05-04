@@ -1,4 +1,3 @@
-import { type Signal } from 'essor';
 import { decode, encodeHash, encodeParam } from '../encoding';
 import { parseURL, stringifyURL } from '../location';
 import {
@@ -19,6 +18,7 @@ import {
 } from '../types';
 import { applyToParams, assign } from '../utils';
 import { warn } from '../warning';
+import type { Signal } from 'essor';
 import type { RouterHistory } from '../history/common';
 import type { RouterMatcher } from '../matcher';
 
@@ -32,18 +32,47 @@ export interface RouteResolver {
   ) => Exclude<RouteLocationRaw, string> | RouteLocationNormalized;
 }
 
+/**
+ * Creates the reactive route object exposed via `useRoute()` / provided as
+ * `routeLocationKey`. Mirrors vue-router 4.x / 5.x semantics: a stable
+ * object whose property reads always forward to `currentRoute.value[key]`,
+ * so that `computed()`/`effect()` consumers transparently track the
+ * underlying signal.
+ *
+ * NOTE: vue-router wraps the getter object with `shallowReactive`. Essor's
+ * `shallowReactive` does not preserve nested-property tracking when the
+ * underlying signal is replaced wholesale (as router navigations do), so we
+ * instead expose a plain `Proxy` that delegates every read to the signal.
+ * This makes any access — `route.path`, `route.matched.at(-1)`, etc. — a
+ * direct signal read that participates in essor's reactivity.
+ */
 export function createReactiveRoute(
   currentRoute: Signal<RouteLocationNormalizedLoaded>,
 ): RouteLocationNormalizedLoaded {
-  const reactiveRoute = {} as RouteLocationNormalizedLoaded;
-  for (const key in START_LOCATION_NORMALIZED) {
-    Object.defineProperty(reactiveRoute, key, {
-      get: () => currentRoute.value[key as keyof RouteLocationNormalizedLoaded],
-      enumerable: true,
-      configurable: true,
-    });
-  }
-  return reactiveRoute;
+  const route = new Proxy({} as RouteLocationNormalizedLoaded, {
+    get(_target, key) {
+      const value = currentRoute.value as any;
+      return value == null ? undefined : value[key as keyof RouteLocationNormalizedLoaded];
+    },
+    has(_target, key) {
+      const value = currentRoute.value as any;
+      return value != null && key in value;
+    },
+    ownKeys() {
+      const value = currentRoute.value as any;
+      return value == null ? [] : Reflect.ownKeys(value);
+    },
+    getOwnPropertyDescriptor(_target, key) {
+      const value = currentRoute.value as any;
+      if (value == null) return undefined;
+      const descriptor = Object.getOwnPropertyDescriptor(value, key);
+      if (descriptor) descriptor.configurable = true;
+      return descriptor;
+    },
+  });
+  // Touch START_LOCATION shape to keep the reference live for type-only consumers.
+  void START_LOCATION_NORMALIZED;
+  return route;
 }
 
 export function createRouteResolver(
@@ -53,7 +82,7 @@ export function createRouteResolver(
   stringifyQuery: typeof defaultStringifyQuery,
   getCurrentRoute: () => RouteLocationNormalizedLoaded,
 ): RouteResolver {
-  const normalizeParams = applyToParams.bind(null, paramValue => `${paramValue}`);
+  const normalizeParams = applyToParams.bind(null, (paramValue) => `${paramValue}`);
   const encodeParams = applyToParams.bind(null, encodeParam);
   const decodeParams: (params: RouteParams | undefined) => RouteParams =
     // @ts-expect-error intentional runtime conversion

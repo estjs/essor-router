@@ -1,4 +1,4 @@
-import { type Signal, signal } from 'essor';
+import { shallowSignal } from 'essor';
 import { isBrowser, isObject, isString } from './utils';
 import {
   type NavigationGuardWithThis,
@@ -26,12 +26,18 @@ import {
 import { createReactiveRoute, createRouteResolver } from './router/routeResolver';
 import { createGuardPipeline } from './router/guardPipeline';
 import { createNavigationCoordinator } from './router/navigation';
-import { type ErrorListener as _ErrorListener, setupRouterLifecycle } from './router/lifecycle';
+import { setupRouterLifecycle } from './router/lifecycle';
 import { warn } from './warning';
+import type { Signal } from 'essor';
+// NOTE: using `shallowSignal` rather than `signal` so essor does not
+// deep-wrap the stored route object in a `reactive()` proxy. This keeps
+// `currentRoute.value` referentially identical to what navigation writes,
+// mirroring vue-router's `shallowRef` semantics.
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouterHistory } from './history/common';
 import type { PathParserOptions } from './matcher/pathParserRanker';
+import type { ErrorListener as _ErrorListener } from './router/lifecycle';
 
 export { _ErrorListener };
 
@@ -129,7 +135,7 @@ export function createRouter(options: RouterOptions): Router {
     ? createHistory(options.history, options.base)
     : (options.history as RouterHistory);
 
-  const currentRoute = signal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
+  const currentRoute = shallowSignal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
   const routeLocationContext = createReactiveRoute(currentRoute);
 
   const resolver = createRouteResolver(
