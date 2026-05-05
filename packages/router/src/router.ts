@@ -101,6 +101,8 @@ type RouterWithRouteLocationContext = Router & {
 
 export type RouteRenderMode = 'csr' | 'ssr' | 'prerender';
 
+let activeRouter: Router | undefined;
+
 export interface PrerenderPathInfo {
   name: string | symbol | undefined;
   pathTemplate: string;
@@ -303,8 +305,13 @@ export function createRouter(options: RouterOptions): Router {
   router.destroy = lifecycle.destroy;
 
   (router as RouterWithRouteLocationContext)[routeLocationContextKey] = routeLocationContext;
+  activeRouter = router;
 
   return router;
+}
+
+export function getActiveRouter(): Router | undefined {
+  return activeRouter;
 }
 
 export function getRouteLocationContext(router: Router): RouteLocationNormalizedLoaded {

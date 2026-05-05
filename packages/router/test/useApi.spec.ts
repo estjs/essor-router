@@ -97,6 +97,7 @@ describe('use apis', () => {
     const currentRoute = router.currentRoute;
 
     await router.push('/parent/child');
+    await sleep(0);
     expect(compt.value.path).toBe('/parent/child');
     expect(currentRoute.value.matched.length).toBe(2);
     expect(currentRoute.value.matched.map((m) => m.path)).toEqual(['/parent', '/parent/child']);
@@ -110,8 +111,7 @@ describe('use apis', () => {
       (currentRoute as any).flag,
     );
     await router.push('/parent/other');
-    // eslint-disable-next-line no-console
-    console.log('[flags after]', 'compt=', (compt as any).flag, 'sig=', (currentRoute as any).flag);
+
     expect(compt.value.path).toBe('/parent/other');
     expect(currentRoute.value.matched.length).toBe(2);
     expect(currentRoute.value.matched.map((m) => m.path)).toEqual(['/parent', '/parent/other']);

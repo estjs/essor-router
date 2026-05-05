@@ -1,4 +1,4 @@
-import { RouterView, createRouter } from 'essor-router';
+import { RouterView, createRouter, useRoute } from 'essor-router';
 import { createApp } from 'essor';
 import Home from './Home';
 import About from './About';
@@ -28,7 +28,13 @@ const router = createRouter({
 });
 
 const App = () => {
-  return <RouterView router={router}></RouterView>;
+  const route = useRoute();
+  return (
+    <div>
+      route path:{route?.path}
+      <RouterView router={router}></RouterView>
+    </div>
+  );
 };
 
 createApp(App, '#app');

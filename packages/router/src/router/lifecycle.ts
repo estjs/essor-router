@@ -1,4 +1,4 @@
-import { nextTick, toRaw } from 'essor';
+import { nextTick, provide, toRaw } from 'essor';
 import {
   ErrorTypes,
   type NavigationFailure,
@@ -17,6 +17,7 @@ import type {
   RouteLocationNormalized,
   RouteLocationNormalizedLoaded,
 } from '../types';
+import { routerKey, routeLocationKey, routerViewLocationKey } from '@/injectionSymbols';
 
 export interface ErrorListener {
   (error: Error, to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded): void;
@@ -199,6 +200,8 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
         if (__DEV__) warn('Unexpected error when starting the router:', error);
       });
     }
+    provide(routerKey, routerInstance);
+    provide(routerViewLocationKey, options.currentRoute);
   }
 
   function destroy() {

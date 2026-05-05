@@ -1,12 +1,10 @@
 import {
   type ComponentProps,
-  type Computed,
   type Signal,
   computed,
   createComponent,
   effect,
   inject,
-  isSignal,
   onDestroy,
   provide,
   signal,
@@ -24,30 +22,12 @@ import {
   type RouteLocationNormalized,
   START_LOCATION_NORMALIZED,
 } from './types';
-import { type Router, getRouteLocationContext } from './router';
+import type { Router } from './router';
 
 function logRouterError(...args: unknown[]) {
   if (__DEV__) {
     console.error(...args);
   }
-}
-
-function hasValueProperty(value: unknown): value is { value: unknown } {
-  return !!value && typeof value === 'object' && 'value' in value;
-}
-
-function resolveRenderedValue(value: unknown): unknown {
-  let current = value;
-
-  while (typeof current === 'function') {
-    current = (current as () => unknown)();
-  }
-
-  if (isSignal(current) || hasValueProperty(current)) {
-    return resolveRenderedValue(current.value);
-  }
-
-  return current;
 }
 
 // Define specific types for RouterView children
@@ -123,7 +103,7 @@ function calculateViewDepth(injectedDepth: number, route: RouteLocationNormalize
   return depth;
 }
 
-function normalizeDepth(injectedDepth: Signal<number> | Computed<number> | number): number {
+function normalizeDepth(injectedDepth: Signal<number> | number): number {
   if (typeof injectedDepth === 'number') {
     return injectedDepth;
   }
@@ -233,6 +213,7 @@ export const RouterView = (props: RouterViewProps) => {
 
   // Initialize router and setup cleanup
   router.init();
+
   onDestroy(() => {
     if (typeof queueMicrotask === 'function') {
       queueMicrotask(() => router.destroy());
@@ -241,47 +222,47 @@ export const RouterView = (props: RouterViewProps) => {
     Promise.resolve().then(() => router.destroy());
   });
 
-  // Keep useRoute() aligned with vue-router: expose a stable shallow-reactive
-  // route object, while RouterView itself still consumes the route signal.
-  const injectedRouteLocation = isIndependentRouterRoot ? undefined : inject(routeLocationKey);
-  const routeLocation = injectedRouteLocation || getRouteLocationContext(router);
 
   // Get route to display (from props or injection)
-  const injectedRoute = isIndependentRouterRoot ? undefined : inject(routerViewLocationKey);
-  const routeToDisplay = computed<RouteLocationNormalized>(() => {
-    if (props.route) return props.route;
+  const injectedRoute = inject(routerViewLocationKey) || router.currentRoute;
 
-    const currentRoute = injectedRoute ? injectedRoute.value : router.currentRoute.value;
-    if (!currentRoute || typeof currentRoute !== 'object' || !('path' in currentRoute)) {
-      return START_LOCATION_NORMALIZED;
-    }
-
-    return currentRoute;
-  });
+  // Use a signal + effect instead of computed for routeToDisplay.
+  // Signal reads inside Proxy traps (e.g. createRouteAccessor) are NOT tracked
+  // by essor's computed, so a computed that returns a Proxy-based route would
+  // never re-evaluate. An effect reliably tracks signal reads in its body, so
+  // we write the resolved route into a signal that downstream consumers read.
+  const routeToDisplay = signal<RouteLocationNormalized>(START_LOCATION_NORMALIZED);
+  const depth = signal<number>(0);
+  const matchedRouteRef = signal<RouteLocationNormalized['matched'][number] | undefined>(undefined);
 
   // Calculate view depth for nested RouterViews
   const injectedDepth = isIndependentRouterRoot
     ? 0
-    : inject<Signal<number> | Computed<number> | number>(viewDepthKey) || 0;
-  const depth = signal<number>(0);
-  const matchedRouteRef = signal<RouteLocationNormalized['matched'][number] | undefined>(undefined);
-  const matchedRouteComputed = computed<RouteLocationNormalized['matched'][number] | undefined>(
-    () => matchedRouteRef.value,
-  );
-
-  const viewName = computed(() => props.name || 'default');
+    : inject<Signal<number> | number>(viewDepthKey) || 0;
 
   // Provide context for nested RouterViews and navigation hooks
   provide(routerKey, router);
-  provide(routeLocationKey, routeLocation);
-  provide(
-    viewDepthKey,
-    computed(() => depth.value + 1),
-  );
-  provide(matchedRouteKey, matchedRouteComputed);
-  provide(routerViewLocationKey, routeToDisplay);
+  provide(routeLocationKey, routeToDisplay as any);
+  provide(viewDepthKey, computed(() => depth.value + 1));
+  provide(matchedRouteKey, computed(() => matchedRouteRef.value));
 
+  // Single effect: resolve route from signal, then compute depth & matched record.
+  // Merging avoids a redundant intermediate signal write + re-read cycle.
   effect(() => {
+    // Resolve the current route
+    if (props.route) {
+      routeToDisplay.value = props.route;
+    } else if (!injectedRoute) {
+      routeToDisplay.value = START_LOCATION_NORMALIZED;
+    } else {
+      const currentRoute = (injectedRoute as any).value || injectedRoute;
+      routeToDisplay.value =
+        currentRoute && typeof currentRoute === 'object' && 'path' in currentRoute
+          ? currentRoute
+          : START_LOCATION_NORMALIZED;
+    }
+
+    // Compute depth and matched record from the resolved route
     const route = routeToDisplay.value;
     const baseDepth = normalizeDepth(injectedDepth);
     const nextDepth = calculateViewDepth(baseDepth, route);
@@ -318,7 +299,6 @@ export const RouterView = (props: RouterViewProps) => {
         });
       }
     }
-
     return rendered;
   });
 

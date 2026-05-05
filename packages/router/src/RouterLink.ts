@@ -183,7 +183,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     );
   }
 
-  const currentRoute = useRoute();
+  const currentRoute = useRoute() as any;
   const trackedTo =
     typeof props.to === 'function' || isSignalLike(props.to) ? signal(peekTo(props.to)) : null;
 
