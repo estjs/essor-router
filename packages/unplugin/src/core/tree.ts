@@ -86,10 +86,10 @@ export class TreeNode {
   insert(path: string, filePath: string): TreeNode {
     const { tail, segment, viewName } = splitFilePath(path);
 
-    // _parent.essor is set on the current node to handle nesting
+    // _parent and +layout conventions: set on the current node to handle nesting
     // similar to nested.essor when we have a folder nested/
-    if (segment === '_parent' && !tail) {
-      // a parent can't be matched, equivalent to name: false unless
+    if ((segment === '_parent' || segment === '+layout') && !tail) {
+      // a parent/layout can't be matched, equivalent to name: false unless
       // overridden by the user
       this.value.setOverride(CONVENTION_OVERRIDE_NAME, { name: false });
       this.value.components.set(viewName, filePath);
@@ -221,8 +221,8 @@ export class TreeNode {
   remove(path: string) {
     const { tail, segment, viewName } = splitFilePath(path);
 
-    // nested/_parent.essor is stored in the nested/ node
-    if (segment === '_parent' && !tail) {
+    // nested/_parent and +layout are stored in the parent node
+    if ((segment === '_parent' || segment === '+layout') && !tail) {
       this.value.components.delete(viewName);
       return;
     }

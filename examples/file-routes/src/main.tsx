@@ -6,7 +6,6 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
 const App = () => {
   return (
     <div>

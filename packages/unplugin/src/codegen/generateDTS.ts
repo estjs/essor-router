@@ -38,22 +38,6 @@ export function generateDTS({
 // It's recommended to commit this file.
 // Make sure to add this file to your tsconfig.json file as an "includes" or "files" entry.
 
-import type {
-  RouteRecordInfo,
-  ParamValue,
-  ParamValueOneOrMore,
-  ParamValueZeroOrMore,
-  ParamValueZeroOrOne,
-} from 'essor-router'
-import type {
-  InferRouteBeforeLoadData,
-  InferRouteDefinitionFromDefinePageModule,
-  InferRouteLoaderData,
-  InferRouteSearch,
-  InferRouteStartOptions,
-  RouteTreeNodeInfo,
-} from 'essor-router/experimental'
-
 ${
   paramsTypesDeclaration
     ? `
@@ -62,7 +46,25 @@ ${paramsTypesDeclaration}
 
 `.trimStart()
     : ''
-}declare module 'essor-router' {
+}
+declare module 'essor-router/auto-routes' {
+  import type {
+    RouteRecordInfo,
+    ParamValue,
+    ParamValueOneOrMore,
+    ParamValueZeroOrMore,
+    ParamValueZeroOrOne,
+    RouteRecordRaw,
+  } from 'essor-router'
+  import type {
+    InferRouteBeforeLoadData,
+    InferRouteDefinitionFromDefinePageModule,
+    InferRouteLoaderData,
+    InferRouteSearch,
+    InferRouteStartOptions,
+    RouteTreeNodeInfo,
+  } from 'essor-router/experimental'
+
   interface TypesConfig {
     ParamParsers: ${customParamsType}
   }
@@ -102,8 +104,12 @@ ${normalizeLines(routeFileInfoMap)}
     _RouteFileInfoMap extends Record<FilePath, infer Info>
       ? Info['routes']
       : keyof RouteNamedMap
+
+  export declare const routes: RouteRecordRaw[]
 }
 
-export {}
+declare module 'essor-router/auto-resolver' {
+  export const resolver: any
+}
 `.trimStart();
 }

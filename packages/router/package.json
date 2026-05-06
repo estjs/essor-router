@@ -24,6 +24,11 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
+    },
+    "./experimental": {
+      "types": "./dist/experimental/index.d.ts",
+      "require": "./dist/experimental/index.cjs",
+      "import": "./dist/experimental/index.mjs"
     }
   },
   "typesVersions": {
