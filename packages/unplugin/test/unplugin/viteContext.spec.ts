@@ -35,7 +35,7 @@ describe('vite context helpers', () => {
     await ctx.invalidatePage('/abs/pages/home.tsx');
     expect(reloadModule).toHaveBeenCalledTimes(3);
 
-    moduleGraph.getModuleById.mockImplementation(id => ({ id }));
+    moduleGraph.getModuleById.mockImplementation((id) => ({ id }));
     await ctx.updateRoutes();
     expect(moduleGraph.getModuleById).toHaveBeenCalledWith(asVirtualId(MODULE_ROUTES_PATH));
     expect(moduleGraph.getModuleById).toHaveBeenCalledWith(asVirtualId(MODULE_RESOLVER_PATH));

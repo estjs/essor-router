@@ -12,7 +12,7 @@ import { postLoader } from '/src/loaders/post'
 import { helper } from '/src/utils/helper'
 `;
 
-    const exports = extractLoadersToExport(code, id => id.includes('/src/loaders/'), '/project');
+    const exports = extractLoadersToExport(code, (id) => id.includes('/src/loaders/'), '/project');
     expect(exports).toEqual(['userLoader', 'postLoader']);
   });
 

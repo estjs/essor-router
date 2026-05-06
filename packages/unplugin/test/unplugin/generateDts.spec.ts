@@ -43,7 +43,10 @@ function buildFileTestTree() {
   tree.insertParsedPath('index', resolve(options.root, 'src/pages/index.tsx'));
   tree.insertParsedPath('about', resolve(options.root, 'src/pages/about.tsx'));
   tree.insertParsedPath('users/[id]', resolve(options.root, 'src/pages/users/[id].tsx'));
-  tree.insertParsedPath('users/[id]/posts', resolve(options.root, 'src/pages/users/[id]/posts.tsx'));
+  tree.insertParsedPath(
+    'users/[id]/posts',
+    resolve(options.root, 'src/pages/users/[id]/posts.tsx'),
+  );
   tree.insertParsedPath('[...all]', resolve(options.root, 'src/pages/[...all].tsx'));
 
   return { tree, options };

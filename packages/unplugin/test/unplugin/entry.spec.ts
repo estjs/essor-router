@@ -25,7 +25,7 @@ describe('unplugin entry', () => {
       logs: false,
     });
     const plugins = Array.isArray(pluginResult) ? pluginResult : [pluginResult];
-    const main = plugins.find(plugin => plugin.name === 'essor-router');
+    const main = plugins.find((plugin) => plugin.name === 'essor-router');
 
     expect(main).toBeDefined();
 

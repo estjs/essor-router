@@ -40,7 +40,9 @@ describe('unplugin options', () => {
       // The path should be resolved relative to root
       expect(options.configRoutes).toMatch(/my-routes\.config\.ts$/);
       // It shouldn't be the exact string we passed in if it resolved successfully (unless root is empty)
-      expect(options.configRoutes?.startsWith('/') || options.configRoutes?.match(/^[A-Z]:\\/i)).toBeTruthy();
+      expect(
+        options.configRoutes?.startsWith('/') || options.configRoutes?.match(/^[A-Z]:\\/i),
+      ).toBeTruthy();
     });
   });
 
@@ -89,13 +91,11 @@ describe('unplugin options', () => {
       extensions: ['.tsx', '.md'],
       routesFolder: [
         { src: 'src/pages', extensions: ['.tsx', '.page.tsx'] },
-        { src: 'src/features', extensions: existing => [...existing, '.feature.tsx'] },
+        { src: 'src/features', extensions: (existing) => [...existing, '.feature.tsx'] },
       ],
     });
 
     const merged = mergeAllExtensions(options);
-    expect(merged).toEqual(
-      expect.arrayContaining(['.tsx', '.md', '.page.tsx', '.feature.tsx']),
-    );
+    expect(merged).toEqual(expect.arrayContaining(['.tsx', '.md', '.page.tsx', '.feature.tsx']));
   });
 });
