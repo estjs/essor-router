@@ -85,7 +85,7 @@ export function generateRouteResolver(
   paramParsersMap: ParamParsersMap,
 ): string {
   const state: GenerateRouteResolverState = { id: 0, matchableRecords: [] };
-  const records = tree.getChildrenSorted().map(node =>
+  const records = tree.getChildrenSorted().map((node) =>
     generateRouteRecord({
       node,
       parentVar: null,
@@ -107,17 +107,17 @@ ${records.join('\n\n')}
 
 export const resolver = createFixedResolver([
 ${state.matchableRecords
-      .sort(
-        (a, b) =>
-          compareRouteScore(a.score, b.score) ||
-          // fallback to sorting by path depth to ensure consistent order between routes with the same score
-          b.path.split('/').filter(Boolean).length - a.path.split('/').filter(Boolean).length,
-      )
-      .map(
-        ({ varName, path }) =>
-          `  ${varName},  ${' '.repeat(String(state.id).length - varName.length + ROUTE_RECORD_VAR_PREFIX.length)}// ${path}`,
-      )
-      .join('\n')}
+  .sort(
+    (a, b) =>
+      compareRouteScore(a.score, b.score) ||
+      // fallback to sorting by path depth to ensure consistent order between routes with the same score
+      b.path.split('/').filter(Boolean).length - a.path.split('/').filter(Boolean).length,
+  )
+  .map(
+    ({ varName, path }) =>
+      `  ${varName},  ${' '.repeat(String(state.id).length - varName.length + ROUTE_RECORD_VAR_PREFIX.length)}// ${path}`,
+  )
+  .join('\n')}
 ])
 `;
 }
@@ -186,8 +186,9 @@ export function generateRouteRecord({
     });
     const routeRecordObject = `{
   ${recordName}
-  ${generateRouteRecordPath({ node, importsMap, paramParsersMap, parentVar, parentNode })}${queryProperty ? `\n  ${queryProperty}` : ''
-      }${formatMeta(node, '  ')}
+  ${generateRouteRecordPath({ node, importsMap, paramParsersMap, parentVar, parentNode })}${
+    queryProperty ? `\n  ${queryProperty}` : ''
+  }${formatMeta(node, '  ')}
   ${recordComponents}${parentVar ? `\n  parent: ${parentVar},` : ''}
 }`;
 
@@ -201,11 +202,11 @@ const ${varName} = normalizeRouteRecord(
         : `
 const ${varName} = normalizeRouteRecord(${routeRecordObject})
 `
-          .trim()
-          .split('\n')
-          // remove empty lines
-          .filter(l => l.trimStart().length > 0)
-          .join('\n');
+            .trim()
+            .split('\n')
+            // remove empty lines
+            .filter((l) => l.trimStart().length > 0)
+            .join('\n');
   }
 
   // Generate alias records for each alias path
@@ -242,7 +243,7 @@ const ${varName} = normalizeRouteRecord(${routeRecordObject})
     }
   }
 
-  const children = node.getChildrenSorted().map(child =>
+  const children = node.getChildrenSorted().map((child) =>
     generateRouteRecord({
       node: child,
       // If we skipped this node, pass the parent var from above, otherwise use our var
@@ -279,11 +280,11 @@ function generateRouteRecordComponent(
   const files = Array.from(node.value.components);
   return `components: {
 ${files
-      .map(
-        ([key, path]) =>
-          `${`${indentStr}  `}${toStringLiteral(key)}: ${generatePageImport(path, importMode, importsMap)}`,
-      )
-      .join(',\n')}
+  .map(
+    ([key, path]) =>
+      `${`${indentStr}  `}${toStringLiteral(key)}: ${generatePageImport(path, importMode, importsMap)}`,
+  )
+  .join(',\n')}
 ${indentStr}},`;
 }
 
@@ -361,31 +362,31 @@ export function generateRouteRecordQuery({
 
   return `query: [
 ${queryParams
-      .map(param => {
-        const parserOptions = generateParamParserOptions(param, importsMap, paramParsersMap);
+  .map((param) => {
+    const parserOptions = generateParamParserOptions(param, importsMap, paramParsersMap);
 
-        const args = [
-          `'${param.paramName}'`,
-          `'${param.queryKey || param.paramName}'`,
-          `'${param.format}'`,
-        ];
+    const args = [
+      `'${param.paramName}'`,
+      `'${param.queryKey || param.paramName}'`,
+      `'${param.format}'`,
+    ];
 
-        if (parserOptions || param.defaultValue !== undefined || param.required) {
-          args.push(parserOptions || '{}');
-        }
+    if (parserOptions || param.defaultValue !== undefined || param.required) {
+      args.push(parserOptions || '{}');
+    }
 
-        if (param.defaultValue !== undefined || param.required) {
-          args.push(param.defaultValue || 'undefined');
-        }
+    if (param.defaultValue !== undefined || param.required) {
+      args.push(param.defaultValue || 'undefined');
+    }
 
-        // we can strip any non true value to save bytes
-        if (param.required) {
-          args.push(String(param.required));
-        }
+    // we can strip any non true value to save bytes
+    if (param.required) {
+      args.push(String(param.required));
+    }
 
-        return `    new MatcherPatternQueryParam(${args.join(', ')})`;
-      })
-      .join(',\n')}
+    return `    new MatcherPatternQueryParam(${args.join(', ')})`;
+  })
+  .join(',\n')}
   ],`;
 }
 
@@ -406,13 +407,13 @@ function generateRouteRecordMerge(
   // Re-indent the route object to be 4 spaces (2 levels from normalizeRouteRecord)
   const indentedRouteObject = routeRecordObject
     .split('\n')
-    .map(line => {
+    .map((line) => {
       return line && `    ${line}`;
     })
     .join('\n');
 
   return `_mergeRouteRecord(
 ${indentedRouteObject},
-${definePageDataList.map(name => `    ${name}`).join(',\n')}
+${definePageDataList.map((name) => `    ${name}`).join(',\n')}
   )`;
 }

@@ -22,9 +22,9 @@ export function generateRouteRecords(
   if (node.isRoot()) {
     return `[
 ${node
-        .getChildrenSorted()
-        .map(child => generateRouteRecords(child, options, importsMap, indent + 1))
-        .join(',\n')}
+  .getChildrenSorted()
+  .map((child) => generateRouteRecords(child, options, importsMap, indent + 1))
+  .join(',\n')}
 ]`;
   }
 
@@ -50,33 +50,37 @@ ${node
   // path
   const routeRecord = `${startIndent}{
 ${indentStr}path: ${toStringLiteral(node.path)},
-${indentStr}${node.value.components.size
+${indentStr}${
+    node.value.components.size
       ? node.isNamed()
         ? `name: ${toStringLiteral(node.name)},`
         : `/* no name */`
       : // node.name can still be false and we don't want that to result in string literal 'false'
-      `/* internal name: ${typeof node.name === 'string' ? toStringLiteral(node.name) : node.name} */`
-    }
+        `/* internal name: ${typeof node.name === 'string' ? toStringLiteral(node.name) : node.name} */`
+  }
 ${
-    // component
-    indentStr
-    }${node.value.components.size
+  // component
+  indentStr
+}${
+    node.value.components.size
       ? generateRouteRecordComponent(node, indentStr, options.importMode, importsMap)
       : '/* no component */'
-    }
-${overrides.props != null ? `${indentStr}props: ${overrides.props},\n` : ''}${overrides.alias != null ? `${indentStr}alias: ${JSON.stringify(overrides.alias)},\n` : ''
-    }${
+  }
+${overrides.props != null ? `${indentStr}props: ${overrides.props},\n` : ''}${
+    overrides.alias != null ? `${indentStr}alias: ${JSON.stringify(overrides.alias)},\n` : ''
+  }${
     // children
     indentStr
-    }${node.children.size > 0
+  }${
+    node.children.size > 0
       ? `children: [
 ${node
-        .getChildrenSorted()
-        .map(child => generateRouteRecords(child, options, importsMap, indent + 2))
-        .join(',\n')}
+  .getChildrenSorted()
+  .map((child) => generateRouteRecords(child, options, importsMap, indent + 2))
+  .join(',\n')}
 ${indentStr}],`
       : '/* no children */'
-    }${formatMeta(node, indentStr)}
+  }${formatMeta(node, indentStr)}
 ${startIndent}}`;
 
   if (definePageDataList.length > 0) {
@@ -85,7 +89,7 @@ ${startIndent}}`;
     importsMap.add('essor-router/experimental', '_mergeRouteRecord');
     return `${mergeCallIndent}_mergeRouteRecord(
 ${routeRecord},
-${definePageDataList.map(s => startIndent + s).join(',\n')}
+${definePageDataList.map((s) => startIndent + s).join(',\n')}
 ${mergeCallIndent})`;
   }
 
@@ -103,13 +107,13 @@ function generateRouteRecordComponent(
   return isDefaultExport
     ? `component: ${generatePageImport(files[0]![1], importMode, importsMap)},`
     : // files has at least one entry
-    `components: {
+      `components: {
 ${files
-      .map(
-        ([key, path]) =>
-          `${`${indentStr}  `}${toStringLiteral(key)}: ${generatePageImport(path, importMode, importsMap)}`,
-      )
-      .join(',\n')}
+  .map(
+    ([key, path]) =>
+      `${`${indentStr}  `}${toStringLiteral(key)}: ${generatePageImport(path, importMode, importsMap)}`,
+  )
+  .join(',\n')}
 ${indentStr}},`;
 }
 
@@ -132,7 +136,9 @@ export function generatePageImport(
   }
   // mode === 'sync'
   // return the name of the import e.g. `_page_0` for `import _page_0 from '...'`
-  const existingEntry = importsMap.getImportList(filepath).find(entry => entry.name === 'default');
+  const existingEntry = importsMap
+    .getImportList(filepath)
+    .find((entry) => entry.name === 'default');
   if (existingEntry) {
     return existingEntry.as;
   }
@@ -147,7 +153,7 @@ export function formatMeta(node: TreeNode, indent: string): string {
     meta &&
     `${meta
       .split('\n')
-      .map(line => indent + line)
+      .map((line) => indent + line)
       .join('\n')},`;
 
   return formatted ? `\n${indent}meta: ${formatted.trimStart()}` : '';

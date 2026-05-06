@@ -402,7 +402,7 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
 
   // Calculate score for each subsegment to handle mixed static/param parts
   get score(): number[] {
-    return this.subSegments.map(segment => {
+    return this.subSegments.map((segment) => {
       if (typeof segment === 'string') {
         // Static subsegment gets highest score
         return 300;
@@ -463,7 +463,7 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
       this.params.length > 0
         ? ` 𝑥(${this.params
             .map(
-              p =>
+              (p) =>
                 `${'format' in p ? '?' : ''}${p.paramName}${'modifier' in p ? p.modifier : ''}${
                   p.parser ? `=${p.parser}` : ''
                 }`,
@@ -616,7 +616,7 @@ function parseFileSegment(
       // Encode static segments for URL safety, but preserve slashes from dotNesting
       const encodedBuffer = buffer
         .split('/')
-        .map(part => encodePath(part))
+        .map((part) => encodePath(part))
         .join('/');
       pathSegment += encodedBuffer;
       subSegments.push(encodedBuffer);

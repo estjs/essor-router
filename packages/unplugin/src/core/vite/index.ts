@@ -16,7 +16,7 @@ export function createViteContext(server: ViteDevServer): ServerContext {
     const pageModules = server.moduleGraph.getModulesByFile(filepath);
     // console.log(`🟣 Invalidating page: ${filepath}, found: ${!!pageModule}`)
     if (pageModules) {
-      return Promise.all([...pageModules].map(mod => server.reloadModule(mod))).then(() => {});
+      return Promise.all([...pageModules].map((mod) => server.reloadModule(mod))).then(() => {});
     }
     return false;
   }

@@ -1,8 +1,8 @@
-import type { Stats } from 'node:fs';
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
 import picomatch from 'picomatch';
 import path, { resolve } from 'pathe';
 import { appendExtensionListToPattern, asRoutePath } from './utils';
+import type { Stats } from 'node:fs';
 import type { ResolvedOptions, RoutesFolderOption, RoutesFolderOptionResolved } from '../options';
 
 // TODO: export an implementable interface to create a watcher and let users provide a different watcher than chokidar to improve performance on windows
@@ -102,7 +102,7 @@ export function resolveFolderOptions(
     path: folderOptions.path || '',
     extensions,
     filePatterns,
-    exclude: overrideOption(globalOptions.exclude, folderOptions.exclude).map(p =>
+    exclude: overrideOption(globalOptions.exclude, folderOptions.exclude).map((p) =>
       p.startsWith('**') ? p : resolve(p),
     ),
   };

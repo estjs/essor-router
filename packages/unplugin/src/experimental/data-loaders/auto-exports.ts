@@ -11,7 +11,7 @@ export function extractLoadersToExport(
   root: string,
 ): string[] {
   const imports = findStaticImports(code);
-  const importNames = imports.flatMap(i => {
+  const importNames = imports.flatMap((i) => {
     const parsed = parseStaticImport(i);
 
     // since we run post-post, vite will add a leading slash to the specifier

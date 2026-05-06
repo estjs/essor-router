@@ -9,8 +9,8 @@ function normalizeLines(code: string) {
       .split('\n')
       // FIXME: the code should be cleaned up by the codegen functions. Removing empty lines here
       // reduces readability of the route file info map.
-      .filter(line => line.length !== 0)
-      .map(line => pad(2, line))
+      .filter((line) => line.length !== 0)
+      .map((line) => pad(2, line))
       .join('\n')
   );
 }
@@ -54,14 +54,15 @@ import type {
   RouteTreeNodeInfo,
 } from 'essor-router/experimental'
 
-${paramsTypesDeclaration
-      ? `
+${
+  paramsTypesDeclaration
+    ? `
 // Custom route params parsers
 ${paramsTypesDeclaration}
 
 `.trimStart()
-      : ''
-    }declare module 'essor-router' {
+    : ''
+}declare module 'essor-router' {
   interface TypesConfig {
     ParamParsers: ${customParamsType}
   }

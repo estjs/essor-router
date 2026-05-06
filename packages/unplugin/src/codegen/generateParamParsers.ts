@@ -76,7 +76,7 @@ export function generateParamsTypes(
   params: (TreePathParam | TreeQueryParam)[],
   parparsersMap: ParamParsersMap,
 ): Array<string | null> {
-  return params.map(param => {
+  return params.map((param) => {
     if (param.parser) {
       if (parparsersMap.has(param.parser)) {
         return parparsersMap.get(param.parser)!.typeName;
@@ -120,7 +120,7 @@ export function generateParamParserCustomType(paramParsers: ParamParsersMap): st
     return `'${parserNames[0]}'`;
   }
 
-  return parserNames.map(name => `  | '${name}'`).join('\n');
+  return parserNames.map((name) => `  | '${name}'`).join('\n');
 }
 
 export function generatePathParamsOptions(
@@ -128,7 +128,7 @@ export function generatePathParamsOptions(
   importsMap: ImportsMap,
   paramParsers: ParamParsersMap,
 ) {
-  const paramOptions = params.map(param => {
+  const paramOptions = params.map((param) => {
     // build a lean option list without any optional value
     const optionList: string[] = [];
     const parser = generateParamParserOptions(param, importsMap, paramParsers);

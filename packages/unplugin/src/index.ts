@@ -58,8 +58,8 @@ export default createUnplugin<Options | undefined>((opt = {}, _meta) => {
     mergeAllExtensions(options),
   );
 
-  const IDS_TO_INCLUDE = options.routesFolder.flatMap(routeOption =>
-    pageFilePattern.map(pattern => join(routeOption.src, pattern)),
+  const IDS_TO_INCLUDE = options.routesFolder.flatMap((routeOption) =>
+    pageFilePattern.map((pattern) => join(routeOption.src, pattern)),
   );
 
   const plugins: UnpluginOptions[] = [

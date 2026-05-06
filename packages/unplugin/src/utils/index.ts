@@ -38,7 +38,7 @@ export function pad(spaces: number, str = ''): string {
  * @returns The formatted multiline union type.
  */
 export function formatMultilineUnion(items: string[], spaces: number): string {
-  return (items.length ? items : ['never']).map(s => `| ${s}`).join(`\n${pad(spaces)}`);
+  return (items.length ? items : ['never']).map((s) => `| ${s}`).join(`\n${pad(spaces)}`);
 }
 
 /**

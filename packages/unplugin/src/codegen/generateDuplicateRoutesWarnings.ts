@@ -13,7 +13,7 @@ export function generateDuplicatedRoutesWarnings(tree: PrefixTree): string {
 
   return conflicts
     .flatMap(
-      conflicts =>
+      (conflicts) =>
         `console.warn('[essor-router] Conflicting files found for route "${conflicts.at(0)!.node.fullPath}":\\n${conflicts.map(({ filePath }) => `- ${filePath}`).join('\\n')}')`,
     )
     .join('\n');

@@ -15,7 +15,7 @@ export function generateRouteNamedMap(
     return `export interface RouteNamedMap {
 ${node
   .getChildrenSorted()
-  .map(n => generateRouteNamedMap(n, options, paramParsersMap))
+  .map((n) => generateRouteNamedMap(n, options, paramParsersMap))
   .join('')}}`;
   }
 
@@ -31,7 +31,7 @@ ${node
     (node.children.size > 0
       ? node
           .getChildrenSorted()
-          .map(n => generateRouteNamedMap(n, options, paramParsersMap))
+          .map((n) => generateRouteNamedMap(n, options, paramParsersMap))
           .join('\n')
       : '')
   );
@@ -75,6 +75,6 @@ export function generateRouteRecordInfo(
   typeParams.push(formatMultilineUnion(childRouteNames.map(toStringLiteral), 4));
 
   return `RouteRecordInfo<
-${typeParams.map(line => pad(4, line)).join(',\n')}
+${typeParams.map((line) => pad(4, line)).join(',\n')}
   >`;
 }

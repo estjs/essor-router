@@ -7,7 +7,7 @@ export function generateRouteParams(node: TreeNode, isRaw: boolean): string {
   const nodeParams = node.pathParams;
   return nodeParams.length > 0
     ? `{ ${nodeParams
-        .filter(param => {
+        .filter((param) => {
           if (!param.paramName) {
             console.warn(
               `Warning: A parameter without a name was found in the route "${node.fullPath}" in segment "${node.path}".\n` +
@@ -17,7 +17,7 @@ export function generateRouteParams(node: TreeNode, isRaw: boolean): string {
           }
           return true;
         })
-        .map(param => {
+        .map((param) => {
           const isOptional = param.optional;
           const isRepeatable = param.repeatable;
 
