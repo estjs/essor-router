@@ -1,5 +1,5 @@
 import { createApp } from 'essor';
-import { RouterView, createRouter, createWebHistory } from 'essor-router';
+import { RouterLink, RouterView, createRouter, createWebHistory } from 'essor-router';
 import { routes } from 'essor-router/auto-routes';
 
 const router = createRouter({
@@ -12,12 +12,12 @@ const App = () => {
     <div>
       <header>
         <nav style="display: flex; gap: 10px; padding: 10px; background: #eef;">
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/users/456">User 456</a>
-          <a href="/post/typed">Typed Post</a>
-          <a href="/nested/child">Nested</a>
-          <a href="/missing">Catch All</a>
+          <RouterLink to="/">Home</RouterLink>
+          <RouterLink to="/about">About</RouterLink>
+          <RouterLink to="/users/456">User 456</RouterLink>
+          <RouterLink to="/post/typed">Typed Post</RouterLink>
+          <RouterLink to="/nested/child">Nested</RouterLink>
+          <RouterLink to="/missing">Catch All</RouterLink>
         </nav>
       </header>
       <main style="padding: 20px;">

@@ -52,24 +52,24 @@ function Nav() {
   return (
     <header>
       <nav style="display: flex; gap: 10px; padding: 10px; background: #eee;">
-        <a href="#" data-testid="link-home" onClick={handleClick('/')}>
+        <span data-testid="link-home" onClick={handleClick('/')}>
           Home
-        </a>
-        <a href="#" data-testid="link-about" onClick={handleClick('/about')}>
+        </span>
+        <span data-testid="link-about" onClick={handleClick('/about')}>
           About
-        </a>
-        <a href="#" data-testid="link-protected" onClick={handleClick('/protected')}>
+        </span>
+        <span data-testid="link-protected" onClick={handleClick('/protected')}>
           Protected
-        </a>
-        <a href="#" data-testid="link-detail-1" onClick={handleClick('/detail/1')}>
+        </span>
+        <span data-testid="link-detail-1" onClick={handleClick('/detail/1')}>
           Detail 1
-        </a>
-        <a href="#" data-testid="link-detail-2" onClick={handleClick('/detail/2')}>
+        </span>
+        <span data-testid="link-detail-2" onClick={handleClick('/detail/2')}>
           Detail 2
-        </a>
-        <a href="#" data-testid="link-missing" onClick={handleClick('/missing')}>
+        </span>
+        <span data-testid="link-missing" onClick={handleClick('/missing')}>
           Missing
-        </a>
+        </span>
       </nav>
     </header>
   );
