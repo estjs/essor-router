@@ -154,8 +154,9 @@ function resolveRoute(
   if (!injectedRoute) return START_LOCATION_NORMALIZED;
 
   const current = injectedRoute.value ?? injectedRoute;
-    return current && isObject(current) && 'path' in current
-    ? (current as unknown as RouteLocationNormalized) : START_LOCATION_NORMALIZED;
+  return current && isObject(current) && 'path' in current
+    ? (current as unknown as RouteLocationNormalized)
+    : START_LOCATION_NORMALIZED;
 }
 
 // ---------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-import { capitalize, camelCase, isArray, isObject, isString } from '@estjs/shared';
+import { camelCase, capitalize, isArray, isObject, isString } from '@estjs/shared';
 import { toStringLiteral } from '../utils';
 import type { ResolvedOptions, RoutesFolderOptionResolved } from '../options';
 import type { TreeNode } from './tree';
@@ -100,14 +100,15 @@ export function joinPath(...paths: string[]): string {
 }
 
 function paramToName({ paramName, modifier, isSplat }: TreePathParam) {
-  return `${isSplat ? '$' : ''}${paramName.charAt(0).toUpperCase() + paramName.slice(1)}${modifier
+  return `${isSplat ? '$' : ''}${paramName.charAt(0).toUpperCase() + paramName.slice(1)}${
+    modifier
     // ? modifier === '+'
     //   ? 'OneOrMore'
     //   : modifier === '?'
     //   ? 'ZeroOrOne'
     //   : 'ZeroOrMore'
     // : ''
-    }`;
+  }`;
 }
 
 /**
@@ -149,8 +150,9 @@ export function getPascalCaseRouteName(node: TreeNode): string {
  */
 export function getFileBasedRouteName(node: TreeNode): string {
   if (!node.parent) return '';
-  return `${getFileBasedRouteName(node.parent)}/${node.value.rawSegment === 'index' ? '' : node.value.rawSegment
-    }`;
+  return `${getFileBasedRouteName(node.parent)}/${
+    node.value.rawSegment === 'index' ? '' : node.value.rawSegment
+  }`;
 }
 
 export function mergeRouteRecordOverride(
@@ -232,9 +234,9 @@ export function asRoutePath(
   return trimExtension(
     isString(path)
       ? // add the path prefix if any
-      path +
-      // remove the absolute path to the pages folder
-      filePath.slice(src.length + 1)
+        path +
+          // remove the absolute path to the pages folder
+          filePath.slice(src.length + 1)
       : path(filePath),
     extensions,
   );
@@ -278,7 +280,7 @@ export class ImportsMap {
   // e.g map['essor-router']['myUseRouter'] = 'useRouter' -> import { useRouter as myUseRouter } from 'essor-router'
   private map = new Map<string, Map<string, string>>();
 
-  constructor() { }
+  constructor() {}
 
   add(path: string, importEntry: ImportEntry): this;
   add(path: string, importEntry: string): this;

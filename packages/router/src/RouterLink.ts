@@ -147,14 +147,14 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     if (__DEV__) {
       logRouterError(
         'useLink() must be used within a RouterView component. ' +
-        'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
-        'Check that your router instance is properly created and provided to RouterView.',
+          'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
+          'Check that your router instance is properly created and provided to RouterView.',
       );
     }
     throw new Error(
       'useLink() must be used within a RouterView component. ' +
-      'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
-      'Check that your router instance is properly created and provided to RouterView.',
+        'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
+        'Check that your router instance is properly created and provided to RouterView.',
     );
   }
 
@@ -163,14 +163,14 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     if (__DEV__) {
       logRouterError(
         'useLink() requires route context. ' +
-        'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
-        'This error typically occurs when RouterLink is used outside of a router context.',
+          'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
+          'This error typically occurs when RouterLink is used outside of a router context.',
       );
     }
     throw new Error(
       'useLink() requires route context. ' +
-      'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
-      'This error typically occurs when RouterLink is used outside of a router context.',
+        'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
+        'This error typically occurs when RouterLink is used outside of a router context.',
     );
   }
 
@@ -231,8 +231,8 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
       getOriginalPath(routeMatched) === parentRecordPath &&
       currentMatched[currentMatched.length - 1].path !== parentRecordPath
       ? currentMatched.findIndex((record: RouteRecord) =>
-        isSameRouteRecord(matched[length - 2] as RouteRecord, record),
-      )
+          isSameRouteRecord(matched[length - 2] as RouteRecord, record),
+        )
       : index;
   });
 
@@ -501,15 +501,15 @@ export const RouterLink = (props: RouterLinkProps): any => {
       ? props.children()
       : props.children
     : createComponent(LinkComponent, {
-      'ariaCurrent': ariaCurrent,
-      'href': link.href,
-      'onClick': handleClick,
-      'onMouseenter': prefetch.onIntent,
-      'onFocus': prefetch.onIntent,
-      'onTouchstart': prefetch.onIntent,
-      'onElement': prefetch.setTarget,
-      'data-router-prefetch-id': prefetchId,
-      'class': elClass,
-      'children': props.children,
-    });
+        'ariaCurrent': ariaCurrent,
+        'href': link.href,
+        'onClick': handleClick,
+        'onMouseenter': prefetch.onIntent,
+        'onFocus': prefetch.onIntent,
+        'onTouchstart': prefetch.onIntent,
+        'onElement': prefetch.setTarget,
+        'data-router-prefetch-id': prefetchId,
+        'class': elClass,
+        'children': props.children,
+      });
 };

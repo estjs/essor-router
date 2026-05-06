@@ -5,7 +5,8 @@ export * from './env';
 
 export function isESModule(obj: unknown): obj is { default: RouteComponent } {
   return (
-    obj !== null &&     isObject(obj) &&
+    obj !== null &&
+    isObject(obj) &&
     ('__esModule' in obj || (obj as any)[Symbol.toStringTag] === 'Module')
   );
 }
