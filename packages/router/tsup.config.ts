@@ -28,7 +28,7 @@ export default defineConfig({
   cjsInterop: true,
   minify: env === 'production' ? true : false,
   tsconfig: './tsconfig.build.json',
-  external: ['essor', 'picomatch', 'scule'],
+  external: ['essor'],
   define: {
     __DEV__: env !== 'production' ? 'true' : 'false',
     __TEST__: 'false',
