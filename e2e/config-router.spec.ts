@@ -23,11 +23,15 @@ test.describe('config-router example', () => {
     await expect(page.getByTestId('post-id')).toHaveText(/Post ID:\s*typed/);
 
     await page.goto('/nested/child');
-    await expect(page.getByRole('heading', { level: 2, name: 'Typed Nested Layout' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 2, name: 'Typed Nested Layout' }),
+    ).toBeVisible();
     await expect(page.getByRole('heading', { level: 3, name: 'Typed Nested Child' })).toBeVisible();
 
     await page.goto('/config/not-found/path?from=config#hash');
-    await expect(page.getByRole('heading', { level: 1, name: '404 Not Found (Typed)' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: '404 Not Found (Typed)' }),
+    ).toBeVisible();
     await expect(page.getByTestId('catch-all-path')).toHaveText(
       /Unknown path:\s*config\/not-found\/path/,
     );

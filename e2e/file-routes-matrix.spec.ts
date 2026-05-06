@@ -26,7 +26,9 @@ test.describe('file-routes feature matrix', () => {
   test('keeps query/hash and resolves catch-all payload', async ({ page }) => {
     await page.goto('/missing/segment/path?from=e2e#anchor');
     await expect(page.getByRole('heading', { level: 1, name: '404 Not Found' })).toBeVisible();
-    await expect(page.getByTestId('catch-all-path')).toHaveText(/Unknown path:\s*missing\/segment\/path/);
+    await expect(page.getByTestId('catch-all-path')).toHaveText(
+      /Unknown path:\s*missing\/segment\/path/,
+    );
     await expect(page).toHaveURL(/from=e2e/);
     await expect(page).toHaveURL(/#anchor$/);
   });
@@ -34,7 +36,9 @@ test.describe('file-routes feature matrix', () => {
   test('renders nested layout and child together', async ({ page }) => {
     await page.goto('/nested/child');
     await expect(page.getByRole('heading', { level: 2, name: 'Nested Layout' })).toBeVisible();
-    await expect(page.getByRole('heading', { level: 3, name: 'Nested Child Component' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 3, name: 'Nested Child Component' }),
+    ).toBeVisible();
     await expect(page.getByText('Rendered inside the nested layout.')).toBeVisible();
   });
 });

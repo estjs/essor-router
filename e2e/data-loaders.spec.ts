@@ -10,7 +10,9 @@ test.describe('data-loaders example', () => {
     await page.getByTestId('navigate-btn').click();
 
     await expect(page).toHaveURL(/\/users\/789$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'User Profile (Typed)' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'User Profile (Typed)' }),
+    ).toBeVisible();
     await expect(page.getByTestId('user-id')).toHaveText(/User ID:\s*789/);
   });
 });

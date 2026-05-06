@@ -9,7 +9,9 @@ test('typed-router navigation works', async ({ page }) => {
 
   // Verify dynamic params route renders as expected.
   await page.goto('/users/789');
-  await expect(page.getByRole('heading', { level: 1, name: /User Profile \(Typed\)/ })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { level: 1, name: /User Profile \(Typed\)/ }),
+  ).toBeVisible();
   await expect(page.getByTestId('user-id')).toHaveText(/User ID:\s*789/);
 
   // Test optional param missing

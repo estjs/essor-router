@@ -6,7 +6,9 @@ test.describe('param-parsers example', () => {
   test('parses id param as number and renders runtime type check', async ({ page }) => {
     await page.goto('/');
 
-    await expect(page.getByRole('heading', { level: 2, name: 'Param Parsers Example' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 2, name: 'Param Parsers Example' }),
+    ).toBeVisible();
     await page.getByRole('button', { name: 'Go to Typed User 789' }).click();
 
     await expect(page.getByText('Raw Path Param:')).toBeVisible();

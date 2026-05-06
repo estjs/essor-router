@@ -23,7 +23,9 @@ test.describe('file-routes detailed navigation', () => {
     await page.goto('/nested/child');
     await expect(page).toHaveURL(/\/nested\/child$/);
     await expect(page.getByRole('heading', { level: 2, name: 'Nested Layout' })).toBeVisible();
-    await expect(page.getByRole('heading', { level: 3, name: 'Nested Child Component' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 3, name: 'Nested Child Component' }),
+    ).toBeVisible();
 
     await page.getByRole('link', { name: 'Home' }).click();
     await expect(page).toHaveURL(/\/$/);
@@ -31,7 +33,9 @@ test.describe('file-routes detailed navigation', () => {
 
     await page.getByRole('link', { name: 'Nested Child' }).click();
     await expect(page).toHaveURL(/\/nested\/child$/);
-    await expect(page.getByRole('heading', { level: 3, name: 'Nested Child Component' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 3, name: 'Nested Child Component' }),
+    ).toBeVisible();
   });
 
   test('handles direct optional and catch-all routes', async ({ page }) => {
@@ -41,7 +45,9 @@ test.describe('file-routes detailed navigation', () => {
 
     await page.goto('/unknown/deep/path?tab=1#section');
     await expect(page.getByRole('heading', { level: 1, name: '404 Not Found' })).toBeVisible();
-    await expect(page.getByTestId('catch-all-path')).toHaveText(/Unknown path:\s*unknown\/deep\/path/);
+    await expect(page.getByTestId('catch-all-path')).toHaveText(
+      /Unknown path:\s*unknown\/deep\/path/,
+    );
     await expect(page).toHaveURL(/tab=1/);
     await expect(page).toHaveURL(/#section$/);
   });
