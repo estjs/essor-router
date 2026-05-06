@@ -1,56 +1,55 @@
 # essor-router-ts-plugin
 
-A built-in TypeScript Language Service Plugin for `essor-router` that provides strict, inferred typings directly in your IDE for static and dynamic routes.
+TypeScript Language Service Plugin for `essor-router` — provides strict, inferred typings directly in your IDE for file-based routes.
 
-By using this plugin, your IDE will automatically understand the shape of your file-based and layout-based route paths, queries, and parameters. Enjoy type safety and native autocomplete features without explicitly setting up or maintaining massive route maps manually.
+[![npm](https://img.shields.io/npm/v/essor-router-ts-plugin)](https://www.npmjs.com/package/essor-router-ts-plugin)
+[![license](https://img.shields.io/npm/l/essor-router-ts-plugin)](https://github.com/estjs/essor-router/blob/main/LICENSE)
 
 ## Features
 
-- **Automatic Type Inference:** Automatically watches your route definitions and injects proxy types directly into the TypeScript Language Service backend.
-- **IDE Autocomplete:** Intelligent prompt suggestions for paths, queries, and param properties everywhere a routing function is used (`useRoute`, `<RouterLink>`, etc.).
-- **Zero Build-Time Overhead:** It integrates dynamically inside your code editor's Language Service process (e.g., in VS Code). This guarantees speedy build times with Vite/Webpack while maintaining strict, contextual type checking when editing.
+- **Automatic Type Inference** — Injects proxy types into the TS Language Service from your route definitions
+- **IDE Autocompletion** — IntelliSense for route paths, params, and queries in `useRoute()`, `RouterLink`, etc.
+- **Zero Build Overhead** — Integrates in the Language Service process (e.g., VS Code); no impact on Vite/Webpack build times
+- **Named Views Support** — Correctly narrows types for named view components
 
 ## Installation
 
 ```bash
 npm install -D essor-router-ts-plugin
-# or
-yarn add -D essor-router-ts-plugin
-# or
 pnpm add -D essor-router-ts-plugin
+yarn add -D essor-router-ts-plugin
 ```
 
 ## Configuration
 
-Add the plugin configuration array to your `tsconfig.json` compiler options:
+Add to `tsconfig.json`:
 
 ```json
 {
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "essor-router-ts-plugin",
-        // The module name to intercept and proxy for type safety
-        "moduleName": "essor-router", 
-        // Provide the path to your routes directory
-        "routesFolder": "./src/pages",
-        // The destination of the generated declaration file
-        "typedRouterDts": "./typed-router.d.ts"
-      }
-    ]
+    "plugins": [{
+      "name": "essor-router-ts-plugin",
+      "routesFolder": "./src/pages",
+      "typedRouterDts": "./typed-router.d.ts"
+    }]
   }
 }
 ```
 
-### Editor Setup (VS Code)
+| Option | Default | Description |
+|--------|---------|-------------|
+| `routesFolder` | `"src/pages"` | Directory with route files |
+| `typedRouterDts` | `"typed-router.d.ts"` | Path to the generated type file |
+| `moduleName` | `"essor-router"` | Module to intercept for type proxying |
 
-For VS Code to acknowledge this workspace typescript plugin, you will need to tell the editor to rely on your project's `typescript` library instead of its embedded one.
+## VS Code Setup
 
-1. Open any TypeScript file in VS Code.
-2. Press `Cmd + Shift + P` (or `Ctrl + Shift + P` on Windows/Linux) and run the command: `TypeScript: Select TypeScript Version...`.
-3. Choose **Use Workspace Version**.
+The plugin requires VS Code to use the workspace TypeScript version:
 
-Alternatively (and highly recommended for teams), you can add the setting to your `.vscode/settings.json` so every team developer inherits the config:
+1. Open a `.ts`/`.tsx` file
+2. `Cmd+Shift+P` → `TypeScript: Select TypeScript Version...` → **Use Workspace Version**
+
+Or set in `.vscode/settings.json`:
 
 ```json
 {
@@ -58,11 +57,26 @@ Alternatively (and highly recommended for teams), you can add the setting to you
 }
 ```
 
-## How It Works Under the Hood
+## How It Works
 
-This TS plugin overrides conventional TypeScript language server resolution methods (like `resolveModuleNames`). When an import to `essor-router` is analyzed, the plugin intercepts the request and points the IDE to an auto-generated internal declaration dynamically cached at `.essor-router` inside your project root. 
-It recursively maps matching nested files in your specified `routesFolder` and interprets filesystem routing mechanics automatically.
+The plugin intercepts `essor-router` module resolution via `resolveModuleNames`. When `useRoute()` or `RouterLink` is used in a page component, it maps the file path to the generated `_RouteFileInfoMap` in `typed-router.d.ts` and provides per-file type narrowing:
+
+- `route.name` → narrowed to the union of possible route names for this file
+- `route.params` → inferred from the route's dynamic segments
+- `route.query` → inferred from `defineRoute()` params
+- `<RouterLink to={...}>` → autocomplete for route names and paths
+
+## Prerequisites
+
+- `essor-router-unplugin` must be configured to generate `typed-router.d.ts`
+- The `typed-router.d.ts` file must be included in `tsconfig.json`:
+
+```json
+{
+  "include": ["typed-router.d.ts", "src/**/*"]
+}
+```
 
 ## License
 
-MIT
+[MIT](../../LICENSE) © [estjs](https://github.com/estjs)
