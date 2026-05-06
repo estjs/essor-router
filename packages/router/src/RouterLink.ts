@@ -194,8 +194,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
   }
 
   if (!routeContext) {
-    const msg =
-      'useLink() requires route context. Ensure RouterLink is inside a RouterView.';
+    const msg = 'useLink() requires route context. Ensure RouterLink is inside a RouterView.';
     if (__DEV__) logRouterError(msg);
     throw new Error(msg);
   }
@@ -207,7 +206,9 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
   const trackedTo = isDynamic ? signal(resolveTo(props.to, false)) : null;
 
   if (trackedTo) {
-    const runner = effect(() => { trackedTo.value = resolveTo(props.to); });
+    const runner = effect(() => {
+      trackedTo.value = resolveTo(props.to);
+    });
     onDestroy(() => stop(runner));
   }
 
@@ -271,8 +272,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     if (!guardEvent(e)) return Promise.resolve();
 
     const to = resolveTo(props.to, false);
-    const doNavigate = () =>
-      router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
+    const doNavigate = () => router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
 
     const navigation = new Promise<void | NavigationFailure>((resolve) => {
       // Defer to next microtask so the event handler can complete first
@@ -345,7 +345,11 @@ export const RouterLink = (props: RouterLinkProps): any => {
     }
     if (link.isExactActive.value) {
       classes.push(
-        getLinkClass(props.exactActiveClass, options?.linkExactActiveClass, 'router-link-exact-active'),
+        getLinkClass(
+          props.exactActiveClass,
+          options?.linkExactActiveClass,
+          'router-link-exact-active',
+        ),
       );
     }
     return classes.join(' ');

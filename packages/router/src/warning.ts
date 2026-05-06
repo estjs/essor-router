@@ -14,6 +14,4 @@ export function logRouterError(...args: unknown[]): void {
  * `Promise.resolve().then()` for older runtimes.
  */
 export const enqueueMicrotask: (fn: () => void) => void =
-  typeof queueMicrotask === 'function'
-    ? queueMicrotask
-    : (fn) => Promise.resolve().then(fn);
+  typeof queueMicrotask === 'function' ? queueMicrotask : (fn) => Promise.resolve().then(fn);

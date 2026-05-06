@@ -14,7 +14,6 @@ import {
   type RouteLocationNormalizedLoaded,
   type RouteLocationRaw,
   type RouteParams,
-  START_LOCATION_NORMALIZED,
   isRouteLocation,
 } from '../types';
 import { applyToParams, assign } from '../utils';

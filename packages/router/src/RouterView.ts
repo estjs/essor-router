@@ -81,9 +81,7 @@ function calculateViewDepth(baseDepth: number, route: RouteLocationNormalized): 
 }
 
 function normalizeDepth(injectedDepth: Signal<number> | number): number {
-  return typeof injectedDepth === 'number'
-    ? injectedDepth
-    : injectedDepth.value || 0;
+  return typeof injectedDepth === 'number' ? injectedDepth : injectedDepth.value || 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -125,7 +123,8 @@ function safeRenderComponent(
         try {
           return invokeComponent(fallback as RouteComponent, {});
         } catch (fallbackError) {
-          if (__DEV__) logRouterError('RouterView failed to render fallback:', normalizeError(fallbackError));
+          if (__DEV__)
+            logRouterError('RouterView failed to render fallback:', normalizeError(fallbackError));
           return null;
         }
       }
@@ -192,15 +191,19 @@ export const RouterView = (props: RouterViewProps) => {
   const matchedRouteRef = signal<RouteLocationNormalized['matched'][number] | undefined>(undefined);
 
   // Calculate base depth for nested RouterViews
-  const injectedDepth = isIndependentRoot
-    ? 0
-    : inject<Signal<number> | number>(viewDepthKey) || 0;
+  const injectedDepth = isIndependentRoot ? 0 : inject<Signal<number> | number>(viewDepthKey) || 0;
 
   // --- Context provision for children ---
   provide(routerKey, router);
   provide(routeLocationKey, routeToDisplay as any);
-  provide(viewDepthKey, computed(() => depth.value + 1));
-  provide(matchedRouteKey, computed(() => matchedRouteRef.value));
+  provide(
+    viewDepthKey,
+    computed(() => depth.value + 1),
+  );
+  provide(
+    matchedRouteKey,
+    computed(() => matchedRouteRef.value),
+  );
 
   // --- Route & depth tracking ---
   // Single effect: resolve route, compute depth, and update matched record.

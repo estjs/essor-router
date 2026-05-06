@@ -20,7 +20,9 @@ function ensureMatchedTick(router: Router): TickSignal {
   let tick = matchedTicks.get(router);
   if (!tick) {
     tick = signal(0);
-    router.afterEach(() => { tick!.value++; });
+    router.afterEach(() => {
+      tick!.value++;
+    });
     matchedTicks.set(router, tick);
   }
   return tick;

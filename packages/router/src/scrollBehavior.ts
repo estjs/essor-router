@@ -68,7 +68,9 @@ export function getSavedScrollPosition(key: string): _ScrollPositionNormalized |
 // ---------------------------------------------------------------------------
 
 export function getScrollKey(path: string, delta: number): string {
-  const position: number = history.state ? (history.state as { position: number }).position - delta : -1;
+  const position: number = history.state
+    ? (history.state as { position: number }).position - delta
+    : -1;
   return position + path;
 }
 
@@ -135,13 +137,18 @@ export function scrollToPosition(position: ScrollPosition): void {
     const positionEl = position.el;
     const isIdSelector = typeof positionEl === 'string' && positionEl.startsWith('#');
 
-    if (__DEV__ && typeof positionEl === 'string' && !validateElementSelector(positionEl, isIdSelector)) {
+    if (
+      __DEV__ &&
+      typeof positionEl === 'string' &&
+      !validateElementSelector(positionEl, isIdSelector)
+    ) {
       return;
     }
 
     const el = resolveScrollElement(positionEl);
     if (!el) {
-      __DEV__ && warn(`Couldn't find element using selector "${position.el}" returned by scrollBehavior.`);
+      __DEV__ &&
+        warn(`Couldn't find element using selector "${position.el}" returned by scrollBehavior.`);
       return;
     }
 
@@ -153,9 +160,6 @@ export function scrollToPosition(position: ScrollPosition): void {
   if ('scrollBehavior' in document.documentElement.style) {
     window.scrollTo(scrollToOptions);
   } else {
-    window.scrollTo(
-      scrollToOptions.left ?? window.scrollX,
-      scrollToOptions.top ?? window.scrollY,
-    );
+    window.scrollTo(scrollToOptions.left ?? window.scrollX, scrollToOptions.top ?? window.scrollY);
   }
 }

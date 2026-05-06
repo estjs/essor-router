@@ -199,7 +199,9 @@ export function createRouter(options: RouterOptions): Router {
   ) => Promise<unknown> = (error) => Promise.reject(error);
 
   // --- Shared helpers ---
-  const setPendingLocation = (location: RouteLocation) => { pendingLocation = location; };
+  const setPendingLocation = (location: RouteLocation) => {
+    pendingLocation = location;
+  };
   const getPendingLocation = () => pendingLocation;
   const runGuardPipeline = (to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded) =>
     pipeline.navigate(to, from, navigation.checkCanceledNavigationAndReject, (routeToLoad) =>
@@ -228,15 +230,13 @@ export function createRouter(options: RouterOptions): Router {
     if (route) {
       parentMatcher = matcher.getRecordMatcher(parentOrRoute as RouteRecordName);
       if (!parentMatcher) {
-        if (__DEV__) warn(`Parent route "${String(parentOrRoute)}" not found when adding child route`);
+        if (__DEV__)
+          warn(`Parent route "${String(parentOrRoute)}" not found when adding child route`);
         return () => {};
       }
     }
 
-    const remove = matcher.addRoute(
-      (route || parentOrRoute) as RouteRecordRaw,
-      parentMatcher,
-    );
+    const remove = matcher.addRoute((route || parentOrRoute) as RouteRecordRaw, parentMatcher);
     navigation.clearCaches();
 
     return () => {
@@ -365,7 +365,9 @@ function collectPrerenderPaths(records: PrerenderRecord[]): PrerenderPathInfo[] 
     });
 }
 
-async function collectPrerenderPathsAsync(records: PrerenderRecord[]): Promise<PrerenderPathInfo[]> {
+async function collectPrerenderPathsAsync(
+  records: PrerenderRecord[],
+): Promise<PrerenderPathInfo[]> {
   const collected: PrerenderPathInfo[] = [];
   for (const record of records) {
     if (!record.start?.prerender) continue;
@@ -390,10 +392,7 @@ function resolvePrerenderPaths(
   record: { path: string; start?: any },
   allowAsync: true,
 ): Promise<string[]> | string[];
-function resolvePrerenderPaths(
-  record: { path: string; start?: any },
-  allowAsync: false,
-): string[];
+function resolvePrerenderPaths(record: { path: string; start?: any }, allowAsync: false): string[];
 function resolvePrerenderPaths(
   record: { path: string; start?: any },
   allowAsync: boolean,
