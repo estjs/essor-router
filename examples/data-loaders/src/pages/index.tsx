@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Home Page (Typed)</h1>
+      <h1 data-testid="home-title">Home Page (Typed)</h1>
       <p>Demonstrating strict param requirements for router.push().</p>
       <button data-testid="navigate-btn" onClick={handleTypedNavigation}>
         Go to User 789

@@ -141,7 +141,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
   let router: any;
   try {
     router = useRouter();
-  } catch (err: any) {
+  } catch {
     if (__DEV__) {
       logRouterError(
         'useLink() requires an active router instance. ' +

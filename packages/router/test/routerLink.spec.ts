@@ -84,7 +84,7 @@ describe('routerLink', () => {
       // App structure: RouterLink is placed outside RouterView
       const App = () => [
         h(RouterLink, { to: '/about', children: 'Go to About' }),
-        h(RouterView, { router: testRouter })
+        h(RouterView, { router: testRouter }),
       ];
 
       const testWrapper = mount(App);
@@ -97,9 +97,9 @@ describe('routerLink', () => {
       const pushSpy = vi.spyOn(testRouter, 'push');
       anchor.click();
       await sleep(50);
-      
+
       expect(pushSpy).toHaveBeenCalled();
-      
+
       testWrapper.unmount();
     });
   });
@@ -385,7 +385,6 @@ describe('routerLink', () => {
   });
 
   describe('error Handling', () => {
-
     it('should handle invalid "to" prop gracefully', async () => {
       // Mock console to suppress expected warnings and errors
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});

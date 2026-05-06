@@ -5,7 +5,7 @@ export default function Home() {
 
   return (
     <div>
-      <h2>Param Parsers Example</h2>
+      <h1 data-testid="home-title">Param Parsers Example</h1>
       <p>
         Navigate to `id: 789` and see how the param gets converted into a real `number` strictly
         defined by `src/params/id.ts`!

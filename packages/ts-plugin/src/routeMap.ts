@@ -80,7 +80,7 @@ export function mapFileToRoute(
     .filter((segment, index) => !(segment === 'index' && index === normalized.length - 1))
     .map((segment) => segment.replace(/^\[\.\.\.(.+)\]$/, '$1-all').replace(/^\[(.+)\]$/, '$1'));
 
-  return (names.join('-') || 'index').replaceAll(/[^\w-]/g, '-');
+  return (names.join('-') || 'index').replace(/[^\w-]/g, '-');
 }
 
 function inferParams(pathPattern: string): Record<string, 'string' | 'string[]'> {

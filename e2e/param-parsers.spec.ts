@@ -7,7 +7,7 @@ test.describe('param-parsers example', () => {
     await page.goto('/');
 
     await expect(
-      page.getByRole('heading', { level: 2, name: 'Param Parsers Example' }),
+      page.getByRole('heading', { level: 1, name: 'Param Parsers Example' }),
     ).toBeVisible();
     await page.getByRole('button', { name: 'Go to Typed User 789' }).click();
 

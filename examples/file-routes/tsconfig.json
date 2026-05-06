@@ -10,11 +10,8 @@
         "name": "essor-router-ts-plugin"
       }
     ],
-    "paths": {
-      "essor-router": ["./node_modules/essor-router"]
-    },
     "types": ["vite/client"],
     "strict": true
   },
-  "include": ["src"]
+  "include": ["src", "typed-router.d.ts"]
 }

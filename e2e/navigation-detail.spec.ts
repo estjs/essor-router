@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('file-routes detailed navigation', () => {
+  test.use({ baseURL: 'http://localhost:3002' });
   test('navigates via header links and renders expected pages', async ({ page }) => {
     await page.goto('/');
 

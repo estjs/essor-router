@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('file-routes feature matrix', () => {
+  test.use({ baseURL: 'http://localhost:3002' });
   test('supports deep-link, reload, and route-param transitions', async ({ page }) => {
     await page.goto('/users/42');
     await expect(page.getByRole('heading', { level: 1, name: 'User Profile' })).toBeVisible();

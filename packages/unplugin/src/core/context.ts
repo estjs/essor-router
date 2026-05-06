@@ -34,7 +34,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     get(target, prop) {
       const res = Reflect.get(target, prop);
       if (isFunction(res)) {
-        return options.logs ? res : () => { };
+        return options.logs ? res : () => {};
       }
       return res;
     },
@@ -345,14 +345,15 @@ export function createRoutesContext(options: ResolvedOptions) {
     import.meta.hot.data.router_hotUpdateCallback?.(mod.${reloadModuleName === 'routes' ? 'routes' : 'resolver'})
     const route = router.currentRoute.value
     router.replace({
-      ${reloadModuleName === 'routes'
-        ? `...route,
+      ${
+        reloadModuleName === 'routes'
+          ? `...route,
       // NOTE: we should be able to just do ...route but the router
       // currently skips resolving and can give errors with renamed routes
       // so we explicitly set remove matched and name
       name: undefined,
       matched: undefined,`
-        : `path: route.path,
+          : `path: route.path,
       query: route.query,
       hash: route.hash,`
       }
