@@ -2,18 +2,25 @@
   "compilerOptions": {
     "target": "ESNext",
     "jsx": "preserve",
+    "jsxImportSource": "essor",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "plugins": [
       {
         "name": "essor-router-ts-plugin"
       }
     ],
     "paths": {
-      "essor-router": ["./node_modules/essor-router"]
+      "essor-router": [
+        "./node_modules/essor-router"
+      ]
     },
-    "types": ["vite/client"],
+    "types": [
+      "vite/client"
+    ],
     "strict": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }
