@@ -19,11 +19,12 @@ export default function Home() {
       <hr style={{ margin: '20px 0' }} />
 
       <h2>Data Loaders Example</h2>
-      <p>Click the button below to navigate to a specialized route containing `beforeLoad` interceptors and parallel data `loader`s!</p>
+      <p>
+        Click the button below to navigate to a specialized route containing `beforeLoad`
+        interceptors and parallel data `loader`s!
+      </p>
 
-      <button onClick={() => router.push({ name: '/profile' })}>
-        Go to Profile
-      </button>
+      <button onClick={() => router.push({ name: '/profile' })}>Go to Profile</button>
     </div>
   );
 }

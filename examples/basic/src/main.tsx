@@ -41,7 +41,10 @@ const App = () => {
   return (
     <div style={{ padding: '20px' }}>
       <p style={{ color: '#666', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
-        <em>Note: This is a basic configuration passing a runtime array of route objects. For typed or file-based usage, see the other examples.</em>
+        <em>
+          Note: This is a basic configuration passing a runtime array of route objects. For typed or
+          file-based usage, see the other examples.
+        </em>
       </p>
       <RouterView router={router}></RouterView>
     </div>

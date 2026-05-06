@@ -1,24 +1,24 @@
-import { onDestroy, onMount, signal } from 'essor'
-import { RouterLink } from 'essor-router'
+import { onDestroy, onMount, signal } from 'essor';
+import { RouterLink } from 'essor-router';
 
 const DynamicLinkSection = () => {
-  const toSignal = signal('/about')
+  const toSignal = signal('/about');
   onMount(() => {
     const id = setTimeout(() => {
-      toSignal.value = '/'
-    }, 100)
+      toSignal.value = '/';
+    }, 100);
     onDestroy(() => {
-      clearTimeout(id)
-    })
-  })
+      clearTimeout(id);
+    });
+  });
   return (
     <div class="section">
       <RouterLink to={() => toSignal.value} class="link dynamic">
         Dynamic Link
       </RouterLink>
     </div>
-  )
-}
+  );
+};
 
 export default function Home() {
   return (
@@ -33,5 +33,5 @@ export default function Home() {
       </nav>
       <DynamicLinkSection />
     </div>
-  )
+  );
 }

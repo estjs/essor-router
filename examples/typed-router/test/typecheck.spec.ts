@@ -1,7 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import { useRoute } from 'essor-router';
 
-// In an actual component like src/pages/post/[[id]].tsx, 
+// In an actual component like src/pages/post/[[id]].tsx,
 // the ts-plugin intercepts the 'essor-router' import and narrows the 'useRoute' type.
 // We can simulate and assert this narrowing behavior directly on the types generated.
 import type { RouteLocationNormalizedTyped, RouteNamedMap } from 'essor-router';

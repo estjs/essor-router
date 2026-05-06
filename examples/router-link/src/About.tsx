@@ -1,4 +1,4 @@
-import { RouterLink } from 'essor-router'
+import { RouterLink } from 'essor-router';
 
 export default function About() {
   return (
@@ -8,5 +8,5 @@ export default function About() {
         Home
       </RouterLink>
     </div>
-  )
+  );
 }

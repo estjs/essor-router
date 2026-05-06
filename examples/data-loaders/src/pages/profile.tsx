@@ -2,9 +2,10 @@ import { defineRoute } from 'essor-router/experimental';
 import { useRoute } from 'essor-router';
 
 // Fake authentication and fetch API
-const fakeAuthCheck = () => new Promise<boolean>(resolve => setTimeout(() => resolve(false), 300));
+const fakeAuthCheck = () =>
+  new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 300));
 const fetchUserProfile = (id: string) =>
-  new Promise<{ id: string; name: string; role: string }>(resolve =>
+  new Promise<{ id: string; name: string; role: string }>((resolve) =>
     setTimeout(() => resolve({ id, name: 'Alice Admin', role: 'SuperUser' }), 500),
   );
 

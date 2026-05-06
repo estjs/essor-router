@@ -1,7 +1,7 @@
 import { RouterView, createRouter, useRoute, useRouter } from 'essor-router';
 import {
-  insert as _insert$,
   child as _child$,
+  insert as _insert$,
   next as _next$,
   template as _template$,
   createApp,

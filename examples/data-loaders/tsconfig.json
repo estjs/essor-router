@@ -6,9 +6,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
-      "essor-router": [
-        "./node_modules/essor-router"
-      ]
+      "essor-router": ["./node_modules/essor-router"]
     },
     "plugins": [
       {
@@ -16,16 +14,8 @@
         "typedRouterDts": "./typed-router.d.ts"
       }
     ],
-    "types": [
-      "vite/client",
-      "@estjs/signals",
-      "@estjs/template"
-    ],
+    "types": ["vite/client", "@estjs/signals", "@estjs/template"],
     "strict": true
   },
-  "include": [
-    "src",
-    "typed-router.d.ts",
-    ".essor/types"
-  ]
+  "include": ["src", "typed-router.d.ts", ".essor/types"]
 }
