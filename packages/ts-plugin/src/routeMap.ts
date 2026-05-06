@@ -52,7 +52,7 @@ export function loadRouteMapFromDts(
 
     // Map filePath -> FileRouteInfo[]
     const routesInfo = matchedRouteNames
-      .map(name => routeRecordMap.get(name))
+      .map((name) => routeRecordMap.get(name))
       .filter(Boolean) as FileRouteInfo[];
 
     if (routesInfo.length > 0) {
@@ -78,9 +78,9 @@ export function mapFileToRoute(
 
   const names = normalized
     .filter((segment, index) => !(segment === 'index' && index === normalized.length - 1))
-    .map(segment => segment.replace(/^\[\.\.\.(.+)\]$/, '$1-all').replace(/^\[(.+)\]$/, '$1'));
+    .map((segment) => segment.replace(/^\[\.\.\.(.+)\]$/, '$1-all').replace(/^\[(.+)\]$/, '$1'));
 
-  return (names.join('-') || 'index').replace(/[^\w-]/g, '-');
+  return (names.join('-') || 'index').replaceAll(/[^\w-]/g, '-');
 }
 
 function inferParams(pathPattern: string): Record<string, 'string' | 'string[]'> {

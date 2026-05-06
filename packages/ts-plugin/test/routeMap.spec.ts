@@ -141,12 +141,7 @@ describe('routeMap', () => {
     writeFileSync(typedRouterPath, 'declare module "essor-router" {}', 'utf8');
 
     const filePath = join(root, 'src', 'components', 'Widget.tsx');
-    const guessed = guessProjectRoot(
-      filePath,
-      'nonexistent/routes',
-      'typed-router.d.ts',
-      root,
-    );
+    const guessed = guessProjectRoot(filePath, 'nonexistent/routes', 'typed-router.d.ts', root);
     expect(guessed).toBe(root);
   });
 

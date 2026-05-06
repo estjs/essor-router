@@ -1,6 +1,6 @@
-import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { describe, it, afterEach, beforeEach } from 'vitest';
+import { afterEach, beforeEach, describe, it } from 'vitest';
 import ts from 'typescript';
 import { generateProxyModule } from '../src/proxyGenerator';
 
@@ -46,9 +46,7 @@ export default _default
     rmSync(tempDir, { recursive: true, force: true });
   });
 
-  it(
-    'generates a useRoute proxy that includes full RouteLocationNormalizedLoaded attributes',
-    () => {
+  it('generates a useRoute proxy that includes full RouteLocationNormalizedLoaded attributes', () => {
     const proxyCode = generateProxyModule('essor-router', {
       routeName: '/post/[[id]]',
       pathPattern: '/post/:id?',
@@ -60,7 +58,9 @@ export default _default
 
     writeFileSync(proxyFile, proxyCode, 'utf8');
 
-    writeFileSync(consumerFile, `
+    writeFileSync(
+      consumerFile,
+      `
       import { useRoute } from './proxy';
       const route = useRoute();
       
@@ -71,34 +71,34 @@ export default _default
       const meta = route.meta;
       const matched = route.matched;
       const redirectedFrom = route.redirectedFrom;
-    `, 'utf8');
+    `,
+      'utf8',
+    );
 
-      const program = ts.createProgram([consumerFile], {
-        noEmit: true,
-        strict: true,
-        esModuleInterop: true,
-        skipLibCheck: true,
-        moduleResolution: ts.ModuleResolutionKind.Node10,
-        module: ts.ModuleKind.ESNext,
-        target: ts.ScriptTarget.ES2020,
-        lib: ['lib.es2020.d.ts'],
-        types: [],
-        baseUrl: tempDir,
-      });
+    const program = ts.createProgram([consumerFile], {
+      noEmit: true,
+      strict: true,
+      esModuleInterop: true,
+      skipLibCheck: true,
+      moduleResolution: ts.ModuleResolutionKind.Node10,
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2020,
+      lib: ['lib.es2020.d.ts'],
+      types: [],
+      baseUrl: tempDir,
+    });
 
-      const diagnostics = ts.getPreEmitDiagnostics(program);
+    const diagnostics = ts.getPreEmitDiagnostics(program);
 
-      const formatHost: ts.FormatDiagnosticsHost = {
-        getCanonicalFileName: path => path,
-        getCurrentDirectory: ts.sys.getCurrentDirectory,
-        getNewLine: () => ts.sys.newLine,
-      };
+    const formatHost: ts.FormatDiagnosticsHost = {
+      getCanonicalFileName: (path) => path,
+      getCurrentDirectory: ts.sys.getCurrentDirectory,
+      getNewLine: () => ts.sys.newLine,
+    };
 
-      if (diagnostics.length > 0) {
-        const messages = ts.formatDiagnostics(diagnostics, formatHost);
-        throw new Error('TypeScript compilation failed:\\n' + messages);
-      }
-    },
-    20000,
-  );
+    if (diagnostics.length > 0) {
+      const messages = ts.formatDiagnostics(diagnostics, formatHost);
+      throw new Error(`TypeScript compilation failed:\\n${messages}`);
+    }
+  }, 20000);
 });

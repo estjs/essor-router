@@ -30,7 +30,7 @@ describe('ts-plugin index', () => {
 
     const languageServiceHost: any = {
       resolveModuleNames(moduleNames: string[]) {
-        return moduleNames.map(name => ({ resolvedFileName: `/resolved/${name}.d.ts` }));
+        return moduleNames.map((name) => ({ resolvedFileName: `/resolved/${name}.d.ts` }));
       },
     };
 

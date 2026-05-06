@@ -5,9 +5,9 @@ export function generateProxyModule(
   info: FileRouteInfo | FileRouteInfo[],
 ): string {
   const infos = Array.isArray(info) ? info : [info];
-  const names = unionValues(infos.map(route => `'${route.routeName}'`));
-  const paths = unionValues(infos.map(route => `'${route.pathPattern}'`));
-  const params = unionValues(infos.map(route => renderParams(route.params)));
+  const names = unionValues(infos.map((route) => `'${route.routeName}'`));
+  const paths = unionValues(infos.map((route) => `'${route.pathPattern}'`));
+  const params = unionValues(infos.map((route) => renderParams(route.params)));
 
   return [
     `import type { RouteLocationNormalizedLoaded } from '${moduleName}'`,
@@ -30,7 +30,7 @@ function renderParams(params: FileRouteInfo['params']): string {
   if (keys.length === 0) {
     return 'Record<never, never>';
   }
-  return `{ ${keys.map(key => `${key}: ${params[key] === 'string[]' ? 'string[]' : 'string'}`).join('; ')} }`;
+  return `{ ${keys.map((key) => `${key}: ${params[key] === 'string[]' ? 'string[]' : 'string'}`).join('; ')} }`;
 }
 
 function unionValues(values: string[]): string {
