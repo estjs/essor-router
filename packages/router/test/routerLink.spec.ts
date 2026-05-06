@@ -17,7 +17,6 @@ import { RouterLink, RouterView, createMemoryHistory, createRouter } from '../sr
 import { LinkComponent } from '../src/linkComponent';
 import { mount, sleep } from './utils';
 import { generateRouteLocation, randomBoolean, testWithMultipleInputs } from './helpers/test-utils';
-import type { RouteLocationRawTyped } from '../src';
 import type { Router } from '../src/router';
 
 describe('routerLink', () => {
@@ -139,7 +138,7 @@ describe('routerLink', () => {
     });
 
     it('prefetches latest "to" when "to" is a getter', async () => {
-      let currentTo: RouteLocationRawTyped = '/about';
+      let currentTo = '/about';
       const TestComponent = () =>
         h(RouterLink, {
           to: () => currentTo,

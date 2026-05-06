@@ -204,14 +204,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
 
   // Track dynamic `to` props (signals / functions)
   const isDynamic = isFunction(props.to) || isSignalLike(props.to);
-  const trackedTo = isDynamic ? signal(resolveTo(props.to, false)) : null;
-
-  if (trackedTo) {
-    const runner = effect(() => {
-      trackedTo.value = resolveTo(props.to);
-    });
-    onDestroy(() => stop(runner));
-  }
+  const trackedTo = isDynamic ? computed(() => resolveTo(props.to)) : null;
 
   // --- Resolved route ---
   const route = computed<RouteLocationNormalized>(() => {
