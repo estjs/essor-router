@@ -84,7 +84,7 @@ const router = createRouter({ history: 'history', routes });
 ### Composition API
 
 ```tsx
-import { useRoute, useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from 'essor-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRoute, useRouter } from 'essor-router';
 
 function MyComponent() {
   const router = useRouter();

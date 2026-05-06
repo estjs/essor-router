@@ -194,6 +194,9 @@ Creates a router instance.
 
 ```tsx
 // Global guards
+// In-component guards
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'essor-router';
+
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
     next('/login');
@@ -216,9 +219,6 @@ const routes = [{
     else next();
   },
 }];
-
-// In-component guards
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'essor-router';
 
 function Editor() {
   onBeforeRouteLeave((to, from, next) => {
