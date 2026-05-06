@@ -1,25 +1,9 @@
-import { promises as fs, type Stats } from 'node:fs';
+import { type Stats, promises as fs } from 'node:fs';
 import { glob } from 'tinyglobby';
 import { dirname, parse as parsePathe, relative, resolve } from 'pathe';
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
 import picomatch from 'picomatch';
 import { camelCase } from 'scule';
-import { generateRouteNamedMap } from '../codegen/generateRouteMap';
-import { generateRouteTreeMap } from '../codegen/generateRouteTree';
-import { generateRouteFileInfoMap } from '../codegen/generateRouteFileInfoMap';
-import { generateRouteRecords } from '../codegen/generateRouteRecords';
-import { generateDTS as _generateDTS } from '../codegen/generateDTS';
-import { ts } from '../utils';
-import { generateRouteResolver } from '../codegen/generateRouteResolver';
-import { generateDuplicatedRoutesWarnings } from '../codegen/generateDuplicateRoutesWarnings';
-import { generateAliasWarnings } from '../codegen/generateAliasWarnings';
-import {
-  type ParamParsersMap,
-  collectMissingParamParsers,
-  generateParamParserCustomType,
-  generateParamParsersTypesDeclarations,
-  warnMissingParamParsers,
-} from '../codegen/generateParamParsers';
 import { EditableTreeNode } from './extendRoutes';
 import { definePageTransform, extractDefinePageInfo } from './definePage';
 import {
@@ -30,6 +14,7 @@ import {
 import { ImportsMap, asRoutePath, logTree, throttle } from './utils';
 import { PrefixTree, type TreeNode } from './tree';
 import { loadConfigRoutes } from './configSource';
+import type { ParamParsersMap } from '../codegen/generateParamParsers';
 import type { ResolvedOptions, ServerContext } from '../options';
 
 export function createRoutesContext(options: ResolvedOptions) {
@@ -49,7 +34,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     get(target, prop) {
       const res = Reflect.get(target, prop);
       if (typeof res === 'function') {
-        return options.logs ? res : () => { };
+        return options.logs ? res : () => {};
       }
       return res;
     },
@@ -93,14 +78,14 @@ export function createRoutesContext(options: ResolvedOptions) {
     // get the initial list of pages
     await Promise.all([
       ...routesFolder
-        .map(folder => resolveFolderOptions(options, folder))
-        .map(folder => {
+        .map((folder) => resolveFolderOptions(options, folder))
+        .map((folder) => {
           if (startWatchers) {
             watchers.push(setupWatcher(new RoutesFolderWatcher(folder)));
           }
 
           // the ignore option must be relative to cwd or absolute
-          const ignorePattern = folder.exclude.map(f =>
+          const ignorePattern = folder.exclude.map((f) =>
             // if it starts with ** then it will work as expected
             f.startsWith('**') ? f : relative(folder.src, f),
           );
@@ -111,12 +96,12 @@ export function createRoutesContext(options: ResolvedOptions) {
             // followSymbolicLinks: false,
             ignore: ignorePattern,
             expandDirectories: false,
-          }).then(files =>
+          }).then((files) =>
             Promise.all(
               files
                 // ensure consistent files in Windows/Unix and absolute paths
-                .map(file => resolve(folder.src, file))
-                .map(file =>
+                .map((file) => resolve(folder.src, file))
+                .map((file) =>
                   addPage({
                     routePath: asRoutePath(folder, file),
                     filePath: file,
@@ -125,7 +110,7 @@ export function createRoutesContext(options: ResolvedOptions) {
             ),
           );
         }),
-      ...(options.experimental.paramParsers?.dir.map(folder => {
+      ...(options.experimental.paramParsers?.dir.map((folder) => {
         if (startWatchers) {
           watchers.push(
             setupParamParserWatcher(
@@ -151,7 +136,7 @@ export function createRoutesContext(options: ResolvedOptions) {
           cwd: folder,
           onlyFiles: true,
           expandDirectories: false,
-        }).then(paramParserFiles => {
+        }).then((paramParserFiles) => {
           for (const file of paramParserFiles) {
             const fileName = parsePathe(file).name;
             const name = camelCase(fileName);
@@ -166,7 +151,7 @@ export function createRoutesContext(options: ResolvedOptions) {
           }
           logger.log(
             'Parsed param parsers',
-            [...paramParsersMap].map(p => p[0]),
+            [...paramParsersMap].map((p) => p[0]),
           );
         });
       }) || []),
@@ -207,7 +192,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     node.setCustomRouteBlock(filePath, {
       ...definedPageInfo,
     });
-    node.hasDefinePage = Array.from(node.value.components.values()).some(componentPath =>
+    node.hasDefinePage = Array.from(node.value.components.values()).some((componentPath) =>
       definePageFileFlags.get(componentPath),
     );
 
@@ -249,7 +234,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     routeTree.removeChild(filePath);
     if (affectedNode) {
       affectedNode.hasDefinePage = Array.from(affectedNode.value.components.values()).some(
-        componentPath => definePageFileFlags.get(componentPath),
+        (componentPath) => definePageFileFlags.get(componentPath),
       );
     }
     server?.updateRoutes();
@@ -268,7 +253,7 @@ export function createRoutesContext(options: ResolvedOptions) {
         routeTree.removeChild(filePath);
         if (affectedNode) {
           affectedNode.hasDefinePage = Array.from(affectedNode.value.components.values()).some(
-            componentPath => definePageFileFlags.get(componentPath),
+            (componentPath) => definePageFileFlags.get(componentPath),
           );
         }
         changed = true;
@@ -284,7 +269,7 @@ export function createRoutesContext(options: ResolvedOptions) {
   function setupParamParserWatcher(watcher: FSWatcher, cwd: string) {
     logger.log(`🤖 Scanning param parsers in ${cwd}`);
     return watcher
-      .on('add', file => {
+      .on('add', (file) => {
         const fileName = parsePathe(file).name;
         const name = camelCase(fileName);
         const absolutePath = resolve(cwd, file);
@@ -297,7 +282,7 @@ export function createRoutesContext(options: ResolvedOptions) {
         writeConfigFiles();
         server?.updateRoutes();
       })
-      .on('unlink', file => {
+      .on('unlink', (file) => {
         paramParsersMap.delete(parsePathe(file).name);
         writeConfigFiles();
         server?.updateRoutes();
@@ -308,19 +293,19 @@ export function createRoutesContext(options: ResolvedOptions) {
     logger.log(`🤖 Scanning files in ${watcher.src}`);
 
     return watcher
-      .on('change', async ctx => {
+      .on('change', async (ctx) => {
         await updatePage(ctx);
         writeConfigFiles();
       })
-      .on('add', async ctx => {
+      .on('add', async (ctx) => {
         await addPage(ctx, true);
         writeConfigFiles();
       })
-      .on('unlink', ctx => {
+      .on('unlink', (ctx) => {
         removePage(ctx);
         writeConfigFiles();
       })
-      .on('unlinkDir', ctx => {
+      .on('unlinkDir', (ctx) => {
         removePagesUnderDir(ctx.filePath);
         writeConfigFiles();
       });
@@ -329,19 +314,73 @@ export function createRoutesContext(options: ResolvedOptions) {
     // unlinkDir event
   }
 
-  function generateResolver() {
-    const importsMap = new ImportsMap();
+  /**
+   * Generates the shared handleHotUpdate function snippet used for HMR.
+   */
+  function hmrHandleHotUpdate(): string {
+    return `export function handleHotUpdate(_router, _hotUpdateCallback) {
+  if (import.meta.hot) {
+    import.meta.hot.data.router = _router
+    import.meta.hot.data.router_hotUpdateCallback = _hotUpdateCallback
+  }
+}`;
+  }
 
+  /**
+   * Generates the shared HMR accept snippet with the given module-specific reload logic.
+   * @param reloadModuleName - the name to use in the error message ('routes' or 'resolver')
+   * @param reloadBody - the module-specific reload logic to run inside the accept callback
+   */
+  function hmrAccept(reloadModuleName: string, reloadBody: string): string {
+    return `if (import.meta.hot) {
+  import.meta.hot.accept((mod) => {
+    const router = import.meta.hot.data.router
+    if (!router) {
+      import.meta.hot.invalidate('[essor-router:HMR] Cannot replace the ${reloadModuleName} because there is no active router. Reloading.')
+      return
+    }
+    ${reloadBody}
+    // call the hotUpdateCallback for custom updates
+    import.meta.hot.data.router_hotUpdateCallback?.(mod.${reloadModuleName === 'routes' ? 'routes' : 'resolver'})
+    const route = router.currentRoute.value
+    router.replace({
+      ${
+        reloadModuleName === 'routes'
+          ? `...route,
+      // NOTE: we should be able to just do ...route but the router
+      // currently skips resolving and can give errors with renamed routes
+      // so we explicitly set remove matched and name
+      name: undefined,
+      matched: undefined,`
+          : `path: route.path,
+      query: route.query,
+      hash: route.hash,`
+      }
+      force: true
+    })
+  })
+}`;
+  }
+
+  async function generateResolver() {
+    const [
+      { generateRouteResolver },
+      { generateDuplicatedRoutesWarnings },
+      { generateAliasWarnings },
+      { collectMissingParamParsers },
+    ] = await Promise.all([
+      import('../codegen/generateRouteResolver'),
+      import('../codegen/generateDuplicateRoutesWarnings'),
+      import('../codegen/generateAliasWarnings'),
+      import('../codegen/generateParamParsers'),
+    ]);
+
+    const importsMap = new ImportsMap();
     const resolverCode = generateRouteResolver(routeTree, options, importsMap, paramParsersMap);
 
-    // generate the list of imports
     let imports = importsMap.toString();
-    // add an empty line for readability
-    if (imports) {
-      imports += '\n';
-    }
+    if (imports) imports += '\n';
 
-    // collect missing param parsers and generate runtime errors
     const missingParsers = collectMissingParamParsers(routeTree, paramParsersMap);
     let missingParserErrors = '';
     if (missingParsers.length > 0) {
@@ -356,118 +395,69 @@ export function createRoutesContext(options: ResolvedOptions) {
     const routeDupsWarns = generateDuplicatedRoutesWarnings(routeTree);
     const aliasWarns = generateAliasWarnings(routeTree);
 
-    const hmr = ts`
-export function handleHotUpdate(_router, _hotUpdateCallback) {
-  if (import.meta.hot) {
-    import.meta.hot.data.router = _router
-    import.meta.hot.data.router_hotUpdateCallback = _hotUpdateCallback
-  }
-}
-
-if (import.meta.hot) {
-  import.meta.hot.accept((mod) => {
-    const router = import.meta.hot.data.router
-    if (!router) {
-      import.meta.hot.invalidate('[essor-router:HMR] Cannot replace the resolver because there is no active router. Reloading.')
-      return
-    }
-    router._hmrReplaceResolver(mod.resolver)
-    // call the hotUpdateCallback for custom updates
-    import.meta.hot.data.router_hotUpdateCallback?.(mod.resolver)
-    const route = router.currentRoute.value
-    router.replace({
-      path: route.path,
-      query: route.query,
-      hash: route.hash,
-      force: true
-    })
-  })
-}`;
-
-    const newAutoResolver = `${imports}${routeDupsWarns}\n${aliasWarns}\n${missingParserErrors}${resolverCode}\n${hmr}`;
-
-    // prepend it to the code
-    return newAutoResolver;
+    return `${imports}${routeDupsWarns}\n${aliasWarns}\n${missingParserErrors}${resolverCode}\n${hmrHandleHotUpdate()}\n${hmrAccept(
+      'resolver',
+      'router._hmrReplaceResolver(mod.resolver)',
+    )}`;
   }
 
-  function generateRoutes() {
+  async function generateRoutes() {
+    const [{ generateRouteRecords }, { generateDuplicatedRoutesWarnings }] = await Promise.all([
+      import('../codegen/generateRouteRecords'),
+      import('../codegen/generateDuplicateRoutesWarnings'),
+    ]);
+
     const importsMap = new ImportsMap();
-
     const routeList = `export const routes = ${generateRouteRecords(
       routeTree,
       options,
       importsMap,
     )}\n`;
 
-    const hmr = ts`
-export function handleHotUpdate(_router, _hotUpdateCallback) {
-  if (import.meta.hot) {
-    import.meta.hot.data.router = _router
-    import.meta.hot.data.router_hotUpdateCallback = _hotUpdateCallback
-  }
-}
-
-if (import.meta.hot) {
-  import.meta.hot.accept((mod) => {
-    const router = import.meta.hot.data.router
-    if (!router) {
-      import.meta.hot.invalidate('[essor-router:HMR] Cannot replace the routes because there is no active router. Reloading.')
-      return
-    }
-    router.clearRoutes()
-    for (const route of mod.routes) {
-      router.addRoute(route)
-    }
-    // call the hotUpdateCallback for custom updates
-    import.meta.hot.data.router_hotUpdateCallback?.(mod.routes)
-    const route = router.currentRoute.value
-    router.replace({
-      ...route,
-      // NOTE: we should be able to just do ...route but the router
-      // currently skips resolving and can give errors with renamed routes
-      // so we explicitly set remove matched and name
-      name: undefined,
-      matched: undefined,
-      force: true
-    })
-  })
-}
-`;
-
-    // generate the list of imports
     let imports = importsMap.toString();
-    // add an empty line for readability
-    if (imports) {
-      imports += '\n';
-    }
+    if (imports) imports += '\n';
 
     const routeDupsWarns = generateDuplicatedRoutesWarnings(routeTree);
 
-    const newAutoRoutes = `${imports}${routeDupsWarns}\n${routeList}${hmr}\n`;
-
-    // prepend it to the code
-    return newAutoRoutes;
+    return `${imports}${routeDupsWarns}\n${routeList}${hmrHandleHotUpdate()}\n${hmrAccept(
+      'routes',
+      `router.clearRoutes()
+    for (const route of mod.routes) {
+      router.addRoute(route)
+    }`,
+    )}\n`;
   }
 
-  function generateDTS() {
+  async function generateDTS() {
+    const [
+      { generateRouteNamedMap },
+      { generateRouteTreeMap },
+      { generateRouteFileInfoMap },
+      { generateDTS: _generateDTS },
+      {
+        generateParamParsersTypesDeclarations,
+        generateParamParserCustomType,
+        warnMissingParamParsers,
+      },
+    ] = await Promise.all([
+      import('../codegen/generateRouteMap'),
+      import('../codegen/generateRouteTree'),
+      import('../codegen/generateRouteFileInfoMap'),
+      import('../codegen/generateDTS'),
+      import('../codegen/generateParamParsers'),
+    ]);
+
     if (options.experimental.paramParsers?.dir.length) {
       warnMissingParamParsers(routeTree, paramParsersMap);
     }
 
-    const autoRoutes = _generateDTS({
+    return _generateDTS({
       routeNamedMap: generateRouteNamedMap(routeTree, options, paramParsersMap),
       routeTreeMap: generateRouteTreeMap(routeTree),
-      routeFileInfoMap: generateRouteFileInfoMap(routeTree, {
-        root,
-      }),
+      routeFileInfoMap: generateRouteFileInfoMap(routeTree, { root }),
       paramsTypesDeclaration: generateParamParsersTypesDeclarations(paramParsersMap),
       customParamsType: generateParamParserCustomType(paramParsersMap),
     });
-
-    // TODO: parser auto copmlete for definePage
-    // const paramParserListType = generateParamParserListTypes([...paramParsers])
-
-    return autoRoutes;
   }
 
   let lastDTS: string | undefined;
@@ -481,7 +471,7 @@ if (import.meta.hot) {
 
     logTree(routeTree, logger.log);
     if (dts) {
-      const content = generateDTS();
+      const content = await generateDTS();
       if (lastDTS !== content) {
         await fs.mkdir(dirname(dts), { recursive: true });
         await fs.writeFile(dts, content, 'utf-8');
@@ -504,7 +494,7 @@ if (import.meta.hot) {
   function stopWatcher() {
     if (watchers.length) {
       logger.log('🛑 stopping watcher');
-      watchers.forEach(watcher => watcher.close());
+      watchers.forEach((watcher) => watcher.close());
     }
   }
 

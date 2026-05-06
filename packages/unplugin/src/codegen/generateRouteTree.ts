@@ -3,15 +3,18 @@ import { pad, toStringLiteral } from '../utils';
 import type { TreeNode, TreeNodeNamed } from '../core/tree';
 
 function getTypedRouteSource(node: TreeNodeNamed): string {
-  const defaultFilePath = node.value.components.get('default');
-  const firstFilePath = defaultFilePath || Array.from(node.value.components.values())[0];
+  const components = node.value.components;
+  const defaultFilePath = components.get('default');
 
-  if (!firstFilePath) {
+  // Prefer the default view, fall back to any named view component
+  const filePath = defaultFilePath || components.values().next().value;
+
+  if (!filePath) {
     return 'never';
   }
 
-  const lang = getLang(firstFilePath);
-  const definePageModulePath = `${firstFilePath}?definePage&${
+  const lang = getLang(filePath);
+  const definePageModulePath = `${filePath}?definePage&${
     lang === 'essor' ? 'essor&lang.tsx' : `lang.${lang}`
   }`;
 
@@ -23,7 +26,7 @@ export function generateRouteTreeMap(node: TreeNode): string {
     return `export interface RouteTreeMap {
 ${node
   .getChildrenSorted()
-  .map(n => generateRouteTreeMap(n))
+  .map((n) => generateRouteTreeMap(n))
   .join('')}}`;
   }
 
@@ -46,7 +49,7 @@ ${node
     node.children.size > 0
       ? node
           .getChildrenSorted()
-          .map(n => generateRouteTreeMap(n))
+          .map((n) => generateRouteTreeMap(n))
           .join('\n')
       : '';
 

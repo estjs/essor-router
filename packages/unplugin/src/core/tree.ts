@@ -382,7 +382,7 @@ export class TreeNode {
           re += `(?:\\/${
             // we remove the ? at the end because we add it later
             nodeRe.slice(0, -1)
-            })?`;
+          })?`;
         } else {
           re += (re ? '\\/' : '') + nodeRe;
         }
@@ -397,7 +397,7 @@ export class TreeNode {
       // is an optional segment that already includes it
       re.startsWith('(?:\\/') ? '' : '\\/'
       // TODO: trailingSlash
-      }${re.replace(ESCAPED_TRAILING_SLASH_RE, '')}$/i`;
+    }${re.replace(ESCAPED_TRAILING_SLASH_RE, '')}$/i`;
   }
 
   /**
@@ -419,7 +419,7 @@ export class TreeNode {
    * Is this node a splat (catch-all) param
    */
   get isSplat(): boolean {
-    return this.value.isParam() && this.value.pathParams.some(p => p.isSplat);
+    return this.value.isParam() && this.value.pathParams.some((p) => p.isSplat);
   }
 
   /**
@@ -437,11 +437,11 @@ export class TreeNode {
         continue;
       }
 
-      const subSegments = node.value.subSegments.map(segment =>
+      const subSegments = node.value.subSegments.map((segment) =>
         typeof segment === 'string'
           ? segment
           : // param
-          segment.isSplat
+            segment.isSplat
             ? 0
             : 1,
       );
@@ -488,11 +488,11 @@ export class TreeNode {
     return `${this.isRoot() ? '·' : this.value}${
       // either we have multiple names
       this.value.components.size > 1 ||
-        // or we have one name and it's not default
-        (this.value.components.size === 1 && !this.value.components.get('default'))
+      // or we have one name and it's not default
+      (this.value.components.size === 1 && !this.value.components.get('default'))
         ? ` ⎈(${Array.from(this.value.components.keys()).join(', ')})`
         : ''
-      }${this.hasDefinePage ? ' ⚑ definePage()' : ''}`;
+    }${this.hasDefinePage ? ' ⚑ definePage()' : ''}`;
   }
 
   /**
@@ -613,17 +613,12 @@ export function collectDuplicatedRouteNodes(tree: PrefixTree): DuplicatedRouteCo
   const dups = Array.from(
     seen
       .values()
-      .filter(nodes => Object.keys(nodes).length > 1)
-      .map(nodes =>
+      .filter((nodes) => nodes.length > 1)
+      .map((nodes) =>
         nodes.toSorted(({ node: a }, { node: b }) => {
-          // put the one that takes precedence at the end of the list
-          if (treeNodes.has(a) && !treeNodes.has(b)) {
-            return -1;
-          } else if (!treeNodes.has(a) && treeNodes.has(b)) {
-            return 1;
-          } else {
-            return 0;
-          }
+          if (treeNodes.has(a) && !treeNodes.has(b)) return -1;
+          if (!treeNodes.has(a) && treeNodes.has(b)) return 1;
+          return 0;
         }),
       ),
   );

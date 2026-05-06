@@ -222,7 +222,6 @@ export const RouterView = (props: RouterViewProps) => {
     Promise.resolve().then(() => router.destroy());
   });
 
-
   // Get route to display (from props or injection)
   const injectedRoute = inject(routerViewLocationKey) || router.currentRoute;
 
@@ -243,8 +242,14 @@ export const RouterView = (props: RouterViewProps) => {
   // Provide context for nested RouterViews and navigation hooks
   provide(routerKey, router);
   provide(routeLocationKey, routeToDisplay as any);
-  provide(viewDepthKey, computed(() => depth.value + 1));
-  provide(matchedRouteKey, computed(() => matchedRouteRef.value));
+  provide(
+    viewDepthKey,
+    computed(() => depth.value + 1),
+  );
+  provide(
+    matchedRouteKey,
+    computed(() => matchedRouteRef.value),
+  );
 
   // Single effect: resolve route from signal, then compute depth & matched record.
   // Merging avoids a redundant intermediate signal write + re-read cycle.
@@ -284,7 +289,7 @@ export const RouterView = (props: RouterViewProps) => {
 
     if (matchedRoute) {
       // Track mounted component instance so beforeRouteUpdate/Leave guards can
-      // resolve `this` to the correct view, matching vue-router semantics.
+      // resolve `this` to the correct view.
       matchedRoute.instances[currentViewName] = (rendered as any) || null;
 
       // Flush any beforeRouteEnter `next(vm => ...)` callbacks registered

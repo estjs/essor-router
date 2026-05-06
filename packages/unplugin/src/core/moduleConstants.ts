@@ -4,9 +4,6 @@ export const MODULE_RESOLVER_PATH = `essor-router/auto-resolver`;
 
 // NOTE: not sure if needed. Used for HMR the virtual routes
 let time = Date.now();
-/**
- * Last time the routes were loaded from MODULE_ROUTES_PATH
- */
 export const ROUTES_LAST_LOAD_TIME = {
   get value() {
     return time;

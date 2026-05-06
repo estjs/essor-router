@@ -66,26 +66,25 @@ export function trimExtension(path: string, extensions: ResolvedOptions['extensi
 }
 
 export function throttle(fn: () => void, wait: number, initialWait: number) {
-  let pendingExecutionTimeout: ReturnType<typeof setTimeout> | null = null;
-  let pendingExecution = false;
-  let executionTimeout: ReturnType<typeof setTimeout> | null = null;
+  let pendingTimeout: ReturnType<typeof setTimeout> | null = null;
+  let pending = false;
+  let firstTimeout: ReturnType<typeof setTimeout> | null = null;
 
   return () => {
-    if (pendingExecutionTimeout == null) {
-      pendingExecutionTimeout = setTimeout(() => {
-        pendingExecutionTimeout = null;
-        if (pendingExecution) {
-          pendingExecution = false;
+    if (pendingTimeout == null) {
+      pendingTimeout = setTimeout(() => {
+        pendingTimeout = null;
+        if (pending) {
+          pending = false;
           fn();
         }
       }, wait);
-      executionTimeout = setTimeout(() => {
-        executionTimeout = null;
+      firstTimeout = setTimeout(() => {
+        firstTimeout = null;
         fn();
       }, initialWait);
-    } else if (executionTimeout == null) {
-      // we run the function recently, so we can skip it and add a pending execution
-      pendingExecution = true;
+    } else if (firstTimeout == null) {
+      pending = true;
     }
   };
 }
@@ -127,7 +126,7 @@ export function getPascalCaseRouteName(node: TreeNode): string {
   if (node.parent?.isRoot() && node.value.pathSegment === '') return 'Root';
 
   let name = node.value.subSegments
-    .map(segment => {
+    .map((segment) => {
       if (typeof segment === 'string') {
         return pascalCase(segment);
       }
@@ -202,27 +201,28 @@ export function mergeRouteRecordOverride(
   return merged;
 }
 
-function isObject(obj: any): obj is Record<any, any> {
-  return obj && typeof obj === 'object';
+function isObject(obj: unknown): obj is Record<string, unknown> {
+  return obj !== null && typeof obj === 'object' && !Array.isArray(obj);
 }
 
-function mergeDeep(...objects: Array<Record<any, any>>): Record<any, any> {
-  return objects.reduce((prev, obj) => {
-    Object.keys(obj).forEach(key => {
-      const pVal = prev[key];
-      const oVal = obj[key];
-
-      if (Array.isArray(pVal) && Array.isArray(oVal)) {
-        prev[key] = pVal.concat(...oVal);
-      } else if (isObject(pVal) && isObject(oVal)) {
-        prev[key] = mergeDeep(pVal, oVal);
-      } else {
-        prev[key] = oVal;
+function mergeDeep(...objects: Array<Record<string, unknown>>): Record<string, unknown> {
+  return objects.reduce(
+    (prev, obj) => {
+      for (const key of Object.keys(obj)) {
+        const pVal = prev[key];
+        const oVal = obj[key];
+        if (Array.isArray(pVal) && Array.isArray(oVal)) {
+          prev[key] = [...pVal, ...oVal];
+        } else if (isObject(pVal) && isObject(oVal)) {
+          prev[key] = mergeDeep(pVal, oVal);
+        } else if (oVal !== undefined) {
+          prev[key] = oVal;
+        }
       }
-    });
-
-    return prev;
-  }, {});
+      return prev;
+    },
+    {} as Record<string, unknown>,
+  );
 }
 
 /**
@@ -267,10 +267,10 @@ export function appendExtensionListToPattern(
   const extensionPattern =
     extensions.length === 1
       ? extensions[0]
-      : `.{${extensions.map(extension => extension.replace('.', '')).join(',')}}`;
+      : `.{${extensions.map((extension) => extension.replace('.', '')).join(',')}}`;
 
   return Array.isArray(filePatterns)
-    ? filePatterns.map(filePattern => `${filePattern}${extensionPattern}`)
+    ? filePatterns.map((filePattern) => `${filePattern}${extensionPattern}`)
     : `${filePatterns}${extensionPattern}`;
 }
 

@@ -14,7 +14,7 @@ async function waitUntil(assertion: () => void | Promise<void>, timeout = 3000, 
       return;
     } catch (error) {
       lastError = error;
-      await new Promise(resolve => setTimeout(resolve, interval));
+      await new Promise((resolve) => setTimeout(resolve, interval));
     }
   }
   throw lastError;
@@ -55,8 +55,8 @@ describe('e2e: defineRoute generation', () => {
       const ctx = createRoutesContext(options);
       await ctx.scanPages(false);
 
-      const routesCode = String(ctx.generateRoutes());
-      const resolverCode = String(ctx.generateResolver());
+      const routesCode = await ctx.generateRoutes();
+      const resolverCode = await ctx.generateResolver();
       const dtsPath = join(root, 'typed-router.d.ts');
       const dtsCode = await readFile(dtsPath, 'utf8');
 
@@ -78,16 +78,20 @@ describe('e2e: defineRoute generation', () => {
   it('removes route records after file unlink in watch mode', async () => {
     const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
 
-    const waitFor = async (assertion: () => void, timeout = 3000, interval = 50) => {
+    const waitFor = async (
+      assertion: () => void | Promise<void>,
+      timeout = 3000,
+      interval = 50,
+    ) => {
       const end = Date.now() + timeout;
       let lastError: unknown;
       while (Date.now() < end) {
         try {
-          assertion();
+          await assertion();
           return;
         } catch (error) {
           lastError = error;
-          await new Promise(resolve => setTimeout(resolve, interval));
+          await new Promise((resolve) => setTimeout(resolve, interval));
         }
       }
       throw lastError;
@@ -115,12 +119,12 @@ export default function About() { return null }
       const ctx = createRoutesContext(options);
       await ctx.scanPages(true);
 
-      expect(String(ctx.generateRoutes())).toContain(`name: 'about'`);
+      expect(await ctx.generateRoutes()).toContain(`name: 'about'`);
 
       await unlink(aboutPage);
 
-      await waitFor(() => {
-        expect(String(ctx.generateRoutes())).not.toContain(`name: 'about'`);
+      await waitFor(async () => {
+        expect(await ctx.generateRoutes()).not.toContain(`name: 'about'`);
       });
 
       ctx.stopWatcher();
@@ -167,14 +171,16 @@ export default function AnyPage(){ return null }
       const ctx = createRoutesContext(options);
       await ctx.scanPages(false);
 
-      const resolverCode = String(ctx.generateResolver());
+      const resolverCode = await ctx.generateResolver();
       const resolverLines = resolverCode
         .split('\n')
-        .map(line => line.trim())
-        .filter(line => line.startsWith('__route_') && line.includes('// /users/:id'));
+        .map((line) => line.trim())
+        .filter((line) => line.startsWith('__route_') && line.includes('// /users/:id'));
 
-      const regexRouteIndex = resolverLines.findIndex(line => line.endsWith('// /users/:id(\\d+)'));
-      const dynamicRouteIndex = resolverLines.findIndex(line => line.endsWith('// /users/:id'));
+      const regexRouteIndex = resolverLines.findIndex((line) =>
+        line.endsWith('// /users/:id(\\d+)'),
+      );
+      const dynamicRouteIndex = resolverLines.findIndex((line) => line.endsWith('// /users/:id'));
 
       expect(regexRouteIndex).toBeGreaterThanOrEqual(0);
       expect(dynamicRouteIndex).toBeGreaterThanOrEqual(0);
@@ -243,12 +249,12 @@ export default function Page(){ return null }
       const ctx = createRoutesContext(options);
       await ctx.scanPages(false);
 
-      const resolverCode = String(ctx.generateResolver());
+      const resolverCode = await ctx.generateResolver();
       const orderedUserPaths = resolverCode
         .split('\n')
-        .map(line => line.trim())
-        .filter(line => line.startsWith('__route_') && line.includes('// /users/'))
-        .map(line => line.slice(line.indexOf('// ') + 3));
+        .map((line) => line.trim())
+        .filter((line) => line.startsWith('__route_') && line.includes('// /users/'))
+        .map((line) => line.slice(line.indexOf('// ') + 3));
 
       const expectedOrder = [
         '/users/new',
@@ -315,8 +321,8 @@ export default function UserDetails(){ return null }
       const ctx = createRoutesContext(options);
       await ctx.scanPages(false);
 
-      const routesCode = String(ctx.generateRoutes());
-      const resolverCode = String(ctx.generateResolver());
+      const routesCode = await ctx.generateRoutes();
+      const resolverCode = await ctx.generateResolver();
 
       expect(routesCode).toContain(`name: 'users-home'`);
       expect(routesCode).toContain(`name: 'users-by-id'`);
@@ -366,7 +372,7 @@ export default function Dashboard(){ return null }
       const ctx = createRoutesContext(options);
       await ctx.scanPages(true);
 
-      let routesCode = String(ctx.generateRoutes());
+      let routesCode = await ctx.generateRoutes();
       expect(routesCode).toContain('_mergeRouteRecord(');
 
       await writeFile(
@@ -375,7 +381,11 @@ export default function Dashboard(){ return null }
 `,
       );
 
-      const waitFor = async (assertion: () => void, timeout = 3000, interval = 50) => {
+      const waitFor = async (
+        assertion: () => void | Promise<void>,
+        timeout = 3000,
+        interval = 50,
+      ) => {
         const end = Date.now() + timeout;
         let lastError: unknown;
         while (Date.now() < end) {
@@ -384,14 +394,14 @@ export default function Dashboard(){ return null }
             return;
           } catch (error) {
             lastError = error;
-            await new Promise(resolve => setTimeout(resolve, interval));
+            await new Promise((resolve) => setTimeout(resolve, interval));
           }
         }
         throw lastError;
       };
 
-      await waitFor(() => {
-        routesCode = String(ctx.generateRoutes());
+      await waitFor(async () => {
+        routesCode = await ctx.generateRoutes();
         expect(routesCode).toContain('_mergeRouteRecord(');
       });
 
@@ -404,16 +414,20 @@ export default function Dashboard(){ return null }
   it('drops defineRoute merge metadata after unlinking the defining named-view file', async () => {
     const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
 
-    const waitFor = async (assertion: () => void, timeout = 3000, interval = 50) => {
+    const waitFor = async (
+      assertion: () => void | Promise<void>,
+      timeout = 3000,
+      interval = 50,
+    ) => {
       const end = Date.now() + timeout;
       let lastError: unknown;
       while (Date.now() < end) {
         try {
-          assertion();
+          await assertion();
           return;
         } catch (error) {
           lastError = error;
-          await new Promise(resolve => setTimeout(resolve, interval));
+          await new Promise((resolve) => setTimeout(resolve, interval));
         }
       }
       throw lastError;
@@ -452,12 +466,12 @@ export default function Dashboard(){ return null }
       const ctx = createRoutesContext(options);
       await ctx.scanPages(true);
 
-      expect(String(ctx.generateRoutes())).toContain('_mergeRouteRecord(');
+      expect(await ctx.generateRoutes()).toContain('_mergeRouteRecord(');
 
       await unlink(defaultView);
 
-      await waitFor(() => {
-        expect(String(ctx.generateRoutes())).not.toContain('_mergeRouteRecord(');
+      await waitFor(async () => {
+        expect(await ctx.generateRoutes()).not.toContain('_mergeRouteRecord(');
       });
 
       ctx.stopWatcher();
@@ -493,7 +507,7 @@ export default function Dashboard(){ return null }
 
       const dtsPath = join(root, 'typed-router.d.ts');
 
-      expect(String(ctx.generateResolver())).toContain('Parameter parser "uuid" not found');
+      expect(await ctx.generateResolver()).toContain('Parameter parser "uuid" not found');
       expect(await readFile(dtsPath, 'utf8')).not.toContain(`'uuid'`);
 
       const uuidParserPath = join(paramsDir, 'uuid.ts');
@@ -506,7 +520,7 @@ export default function Dashboard(){ return null }
       );
 
       await waitUntil(async () => {
-        const resolverCode = String(ctx.generateResolver());
+        const resolverCode = await ctx.generateResolver();
         const dtsCode = await readFile(dtsPath, 'utf8');
         expect(resolverCode).toContain('PARAM_PARSER__uuid');
         expect(resolverCode).not.toContain('Parameter parser "uuid" not found');
@@ -517,7 +531,7 @@ export default function Dashboard(){ return null }
       await unlink(uuidParserPath);
 
       await waitUntil(async () => {
-        const resolverCode = String(ctx.generateResolver());
+        const resolverCode = await ctx.generateResolver();
         const dtsCode = await readFile(dtsPath, 'utf8');
         expect(resolverCode).toContain('Parameter parser "uuid" not found');
         expect(dtsCode).not.toContain(`'uuid'`);
@@ -564,7 +578,7 @@ export default function Dashboard(){ return null }
         async updateRoutes() {
           routeUpdateCount++;
         },
-        reload() { },
+        reload() {},
       });
 
       await ctx.scanPages(true);
@@ -595,6 +609,4 @@ export default function Dashboard(){ return null }
       await rm(root, { recursive: true, force: true });
     }
   });
-
-
 });

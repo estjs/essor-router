@@ -36,9 +36,9 @@ interface RouteMacroCall {
 function getRouteMacroCallFromStatement(statement: Statement): RouteMacroCall | null {
   if (
     statement.type === 'ExpressionStatement' &&
-    ROUTE_MACROS.some(macro => isCallOf(statement.expression, macro))
+    ROUTE_MACROS.some((macro) => isCallOf(statement.expression, macro))
   ) {
-    const macro = ROUTE_MACROS.find(macro => isCallOf(statement.expression, macro))!;
+    const macro = ROUTE_MACROS.find((macro) => isCallOf(statement.expression, macro))!;
     return {
       call: statement.expression as CallExpression,
       statement,
@@ -62,7 +62,7 @@ function getRouteMacroCallFromStatement(statement: Statement): RouteMacroCall | 
     const init = declaration.init;
     if (!init) continue;
 
-    const macro = ROUTE_MACROS.find(m => isCallOf(init, m));
+    const macro = ROUTE_MACROS.find((m) => isCallOf(init, m));
     if (macro) {
       return {
         call: init as CallExpression,
@@ -87,7 +87,7 @@ function getCodeAst(code: string, id: string) {
   }
 
   const routeMacroCalls: RouteMacroCall[] = (ast?.body || [])
-    .map(statement => getRouteMacroCallFromStatement(statement as Statement))
+    .map((statement) => getRouteMacroCallFromStatement(statement as Statement))
     .filter((value): value is RouteMacroCall => !!value);
 
   return { ast, offset, routeMacroCalls };
@@ -103,9 +103,9 @@ export function definePageTransform({
   // are we extracting only the definePage object
   const isExtractingDefinePage = MACRO_DEFINE_PAGE_QUERY.test(id);
 
-  if (!ROUTE_MACROS.some(macro => code.includes(macro))) {
+  if (!ROUTE_MACROS.some((macro) => code.includes(macro))) {
     // avoid having an invalid module that is just empty
-    // https://github.com/posva/unplugin-essor-router/issues/338
+    // https://github.com/estjs/essor-router/issues
     return isExtractingDefinePage ? 'export default {}' : undefined;
   }
 
@@ -266,7 +266,7 @@ export function extractDefinePageInfo(
   sfcCode: string,
   id: string,
 ): DefinePageInfo | null | undefined {
-  if (!ROUTE_MACROS.some(macro => sfcCode.includes(macro))) return;
+  if (!ROUTE_MACROS.some((macro) => sfcCode.includes(macro))) return;
 
   let ast: Program | undefined;
   let routeMacroCalls: RouteMacroCall[];
@@ -510,7 +510,7 @@ export function extractRouteAlias(
             );
             return false;
           })
-          .map(el => el.value);
+          .map((el) => el.value);
   }
   return undefined;
 }

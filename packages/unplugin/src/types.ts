@@ -1,9 +1,6 @@
 /**
- * This file only contain types and is used for the generated d.ts to avoid polluting the global namespace.
- * https://github.com/posva/unplugin-essor-router/issues/136
+ * This file only contains types and is used for the generated d.ts to avoid polluting the global namespace.
  */
-
-// TODO: remove these file, it's no longer needed after the merge of unplugin-essor-router into essor-router
 
 export type { Options } from './options';
 export type { TreeNode } from './core/tree';

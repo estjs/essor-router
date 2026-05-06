@@ -334,32 +334,24 @@ export interface ServerContext {
 }
 
 function normalizeRoutesFolderOption(routesFolder: RoutesFolder) {
-  return (isArray(routesFolder) ? routesFolder : [routesFolder]).map(routeOption =>
-    // normalizing here allows to have a better type for the resolved options
+  return (isArray(routesFolder) ? routesFolder : [routesFolder]).map((routeOption) =>
     normalizeRouteOption(typeof routeOption === 'string' ? { src: routeOption } : routeOption),
   );
+}
+
+function normalizeOverridableArray(
+  value: undefined | string | string[] | ((existing: string[]) => string[]),
+): undefined | string[] | ((existing: string[]) => string[]) {
+  if (!value) return undefined;
+  if (typeof value === 'function') return value;
+  return isArray(value) ? value : [value];
 }
 
 function normalizeRouteOption(routeOption: RoutesFolderOption) {
   return {
     ...routeOption,
-    // ensure filePatterns is always an array or a function
-    filePatterns: routeOption.filePatterns
-      ? typeof routeOption.filePatterns === 'function'
-        ? routeOption.filePatterns
-        : isArray(routeOption.filePatterns)
-          ? routeOption.filePatterns
-          : [routeOption.filePatterns]
-      : undefined,
-
-    // same for exclude
-    exclude: routeOption.exclude
-      ? typeof routeOption.exclude === 'function'
-        ? routeOption.exclude
-        : isArray(routeOption.exclude)
-          ? routeOption.exclude
-          : [routeOption.exclude]
-      : undefined,
+    filePatterns: normalizeOverridableArray(routeOption.filePatterns),
+    exclude: normalizeOverridableArray(routeOption.exclude),
   };
 }
 
@@ -372,10 +364,9 @@ function normalizeRouteOption(routeOption: RoutesFolderOption) {
 export function resolveOptions(options: Options) {
   const root = options.root || DEFAULT_OPTIONS.root;
 
-  // normalize the paths with the root
   const routesFolder = normalizeRoutesFolderOption(
     options.routesFolder || DEFAULT_OPTIONS.routesFolder,
-  ).map(routeOption => ({
+  ).map((routeOption) => ({
     ...routeOption,
     src: resolve(root, routeOption.src),
   }));
@@ -383,70 +374,55 @@ export function resolveOptions(options: Options) {
   const paramParsers = options.experimental?.paramParsers
     ? options.experimental.paramParsers === true
       ? DEFAULT_PARAM_PARSERS_OPTIONS
-      : {
-        ...DEFAULT_PARAM_PARSERS_OPTIONS,
-        ...options.experimental.paramParsers,
-      }
-    : // this way we can do paramParsers?.dir
-    undefined;
+      : { ...DEFAULT_PARAM_PARSERS_OPTIONS, ...options.experimental.paramParsers }
+    : undefined;
 
   const paramParsersDir = (
     paramParsers?.dir ? (isArray(paramParsers.dir) ? paramParsers.dir : [paramParsers.dir]) : []
-  ).map(dir => resolve(root, dir));
+  ).map((dir) => resolve(root, dir));
 
   const autoExportsDataLoaders = options.experimental?.autoExportsDataLoaders
     ? (isArray(options.experimental.autoExportsDataLoaders)
-      ? options.experimental.autoExportsDataLoaders
-      : [options.experimental.autoExportsDataLoaders]
-    ).map(path => resolve(root, path))
+        ? options.experimental.autoExportsDataLoaders
+        : [options.experimental.autoExportsDataLoaders]
+      ).map((path) => resolve(root, path))
     : undefined;
 
   const experimental = {
     ...options.experimental,
     autoExportsDataLoaders,
-    // keep undefined if paramParsers is not set
-    paramParsers: paramParsers && {
-      ...paramParsers,
-      dir: paramParsersDir,
-    },
+    paramParsers: paramParsers && { ...paramParsers, dir: paramParsersDir },
   };
 
   if (options.extensions) {
     options.extensions = options.extensions
-      // ensure that extensions start with a dot or warn the user
-      // this is needed when filtering the files with the pattern .{essor,js,ts}
-      // in src/index.ts
-      .map(ext => {
+      .map((ext) => {
         if (!ext.startsWith('.')) {
           warn(`Invalid extension "${ext}". Extensions must start with a dot.`);
           return `.${ext}`;
         }
         return ext;
       })
-      // sort extensions by length to ensure that the longest one is used first
-      // e.g. ['.essor', '.page.tsx'] -> ['.page.tsx', '.essor'] as both would match and order matters
       .sort((a, b) => b.length - a.length);
   }
 
-  const filePatterns = options.filePatterns
-    ? isArray(options.filePatterns)
-      ? options.filePatterns
-      : [options.filePatterns]
-    : DEFAULT_OPTIONS.filePatterns;
-  const exclude = options.exclude
-    ? isArray(options.exclude)
-      ? options.exclude
-      : [options.exclude]
-    : DEFAULT_OPTIONS.exclude;
+  const filePatterns = isArray(options.filePatterns)
+    ? options.filePatterns
+    : options.filePatterns
+      ? [options.filePatterns]
+      : DEFAULT_OPTIONS.filePatterns;
+  const exclude = isArray(options.exclude)
+    ? options.exclude
+    : options.exclude
+      ? [options.exclude]
+      : DEFAULT_OPTIONS.exclude;
 
   const mode = options.mode ?? DEFAULT_OPTIONS.mode;
   const configRoutes =
     options.configRoutes != null ? resolve(root, options.configRoutes) : undefined;
 
   if (mode === 'config' && !configRoutes) {
-    throw new Error(
-      '[essor-router] `configRoutes` is required when `mode` is set to "config".',
-    );
+    throw new Error('[essor-router] `configRoutes` is required when `mode` is set to "config".');
   }
 
   return {
@@ -473,15 +449,12 @@ export type ResolvedOptions = ReturnType<typeof resolveOptions>;
  */
 export function mergeAllExtensions(options: ResolvedOptions): string[] {
   const allExtensions = new Set(options.extensions);
-
   for (const routeOption of options.routesFolder) {
     if (routeOption.extensions) {
-      const extensions = resolveOverridableOption(options.extensions, routeOption.extensions);
-      for (const ext of extensions) {
+      for (const ext of resolveOverridableOption(options.extensions, routeOption.extensions)) {
         allExtensions.add(ext);
       }
     }
   }
-
-  return Array.from(allExtensions.values());
+  return [...allExtensions];
 }
