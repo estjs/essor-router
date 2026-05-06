@@ -1,10 +1,10 @@
-import { useRoute, onBeforeRouteUpdate } from 'essor-router';
+import { onBeforeRouteUpdate, useRoute } from 'essor-router';
 
 export default function Detail() {
   const route = useRoute();
 
   onBeforeRouteUpdate((to, from, next) => {
-    const el = document.getElementById('guard-beforeRouteUpdate');
+    const el = document.querySelector('#guard-beforeRouteUpdate');
     if (el) el.textContent = `beforeRouteUpdate: ${from.fullPath} → ${to.fullPath}`;
     next();
   });

@@ -1,5 +1,3 @@
-import { onBeforeRouteLeave } from 'essor-router';
-
 export default function Home() {
   return (
     <div>

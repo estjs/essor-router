@@ -2,7 +2,7 @@ import { onBeforeRouteLeave } from 'essor-router';
 
 export default function Protected() {
   onBeforeRouteLeave((to, from, next) => {
-    const el = document.getElementById('guard-beforeRouteLeave');
+    const el = document.querySelector('#guard-beforeRouteLeave');
     if (el) el.textContent = `beforeRouteLeave: ${from.fullPath} → ${to.fullPath}`;
     // Simulate a guard that always allows navigation
     next();

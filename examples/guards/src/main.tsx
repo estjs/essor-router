@@ -16,7 +16,7 @@ const router = createRouter({
       component: Protected,
       name: 'protected',
       beforeEnter(to, from, next) {
-        const el = document.getElementById('guard-beforeEnter');
+        const el = document.querySelector('#guard-beforeEnter');
         if (el) el.textContent = 'beforeEnter: reached';
         next();
       },
@@ -27,19 +27,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const el = document.getElementById('guard-beforeEach');
+  const el = document.querySelector('#guard-beforeEach');
   if (el) el.textContent = `beforeEach: ${from?.fullPath ?? 'init'} → ${to.fullPath}`;
   next();
 });
 
 router.beforeResolve((to, from, next) => {
-  const el = document.getElementById('guard-beforeResolve');
+  const el = document.querySelector('#guard-beforeResolve');
   if (el) el.textContent = `beforeResolve: ${from?.fullPath ?? 'init'} → ${to.fullPath}`;
   next();
 });
 
 router.afterEach((to, from) => {
-  const el = document.getElementById('guard-afterEach');
+  const el = document.querySelector('#guard-afterEach');
   if (el) el.textContent = `afterEach: ${from?.fullPath ?? 'init'} → ${to.fullPath}`;
 });
 
@@ -52,12 +52,24 @@ function Nav() {
   return (
     <header>
       <nav style="display: flex; gap: 10px; padding: 10px; background: #eee;">
-        <a href="#" data-testid="link-home" onClick={handleClick('/')}>Home</a>
-        <a href="#" data-testid="link-about" onClick={handleClick('/about')}>About</a>
-        <a href="#" data-testid="link-protected" onClick={handleClick('/protected')}>Protected</a>
-        <a href="#" data-testid="link-detail-1" onClick={handleClick('/detail/1')}>Detail 1</a>
-        <a href="#" data-testid="link-detail-2" onClick={handleClick('/detail/2')}>Detail 2</a>
-        <a href="#" data-testid="link-missing" onClick={handleClick('/missing')}>Missing</a>
+        <a href="#" data-testid="link-home" onClick={handleClick('/')}>
+          Home
+        </a>
+        <a href="#" data-testid="link-about" onClick={handleClick('/about')}>
+          About
+        </a>
+        <a href="#" data-testid="link-protected" onClick={handleClick('/protected')}>
+          Protected
+        </a>
+        <a href="#" data-testid="link-detail-1" onClick={handleClick('/detail/1')}>
+          Detail 1
+        </a>
+        <a href="#" data-testid="link-detail-2" onClick={handleClick('/detail/2')}>
+          Detail 2
+        </a>
+        <a href="#" data-testid="link-missing" onClick={handleClick('/missing')}>
+          Missing
+        </a>
       </nav>
     </header>
   );
