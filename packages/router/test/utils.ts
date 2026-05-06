@@ -9,6 +9,7 @@ import {
   next,
   removeNode,
 } from 'essor';
+import { isFunction, isString } from '@estjs/shared';
 import { type RouteRecordNormalized, type Router, type RouterOptions, createRouter } from '../src';
 import type {
   MatcherLocation,
@@ -186,7 +187,7 @@ export function mount(code, props = {}) {
   const container = document.createElement('div');
   const instance = h(code, props);
   let nodes: any;
-  if (instance && typeof (instance as any).mount === 'function') {
+  if (instance && isFunction((instance as any).mount)) {
     nodes = (instance as any).mount(container);
   } else {
     insertNode(container, instance as any);
@@ -199,7 +200,7 @@ export function mount(code, props = {}) {
     text: () => container.textContent,
     get: (name) => container.querySelector(name),
     unmount: () => {
-      if (instance && typeof (instance as any).destroy === 'function') {
+      if (instance && isFunction((instance as any).destroy)) {
         (instance as any).destroy();
         return;
       }
@@ -216,7 +217,7 @@ export function mockWarn() {
     toHaveBeenWarned(received) {
       const calls = mockFn.mock.calls;
       const passed = calls.some((args) =>
-        typeof received === 'string' ? args[0].includes(received) : received.test(args[0]),
+        isString(received) ? args[0].includes(received) : received.test(args[0]),
       );
 
       if (passed) {

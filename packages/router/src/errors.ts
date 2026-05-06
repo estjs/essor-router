@@ -1,3 +1,4 @@
+import { isString } from '@estjs/shared';
 import { assign } from './utils';
 import { isBrowser } from './utils/env';
 import type {
@@ -187,7 +188,7 @@ export function isNavigationFailure(error: unknown, type?: number): error is Nav
 const propertiesToLog = ['params', 'query', 'hash'] as const;
 
 function stringifyRoute(to: RouteLocationRaw): string {
-  if (typeof to === 'string') return to;
+  if (isString(to)) return to;
   if (to.path != null) return to.path;
   const location = {} as Record<string, unknown>;
   for (const key of propertiesToLog) {

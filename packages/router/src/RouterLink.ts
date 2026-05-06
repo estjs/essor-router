@@ -1,6 +1,7 @@
 import { computed, createComponent, effect, inject, onDestroy, signal, stop } from 'essor';
+import { isArray, isFunction, isObject, isString } from '@estjs/shared';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
-import { isArray, noop } from './utils';
+import { noop } from './utils';
 import { logRouterError, warn } from './warning';
 import { useRoute, useRouter } from './useApi';
 import { LinkComponent } from './linkComponent';
@@ -80,16 +81,16 @@ export interface UseLinkReturn {
 // ---------------------------------------------------------------------------
 
 const isSignalLike = (value: unknown): value is SignalLike<unknown> =>
-  !!value && typeof value === 'object' && 'value' in value;
+  !!value && isObject(value) && 'value' in value;
 
 /**
  * Reads the `to` prop, supporting raw values, signals, and functions.
  * When `tracked` is false, uses `peek()` on signals to avoid subscriptions.
  */
 function resolveTo(to: RouterLinkProps['to'], tracked = true): RouteLocationRawTyped {
-  if (typeof to === 'function') return (to as () => RouteLocationRawTyped)();
+  if (isFunction(to)) return (to as () => RouteLocationRawTyped)();
   if (!isSignalLike(to)) return to;
-  if (!tracked && typeof to.peek === 'function') return to.peek();
+  if (!tracked && isFunction(to.peek)) return to.peek();
   return to.value;
 }
 
@@ -146,7 +147,7 @@ function includesParams(
     const innerValue = inner[key];
     const outerValue = outer[key];
 
-    if (typeof innerValue === 'string') {
+    if (isString(innerValue)) {
       if (innerValue !== outerValue) return false;
     } else if (
       !isArray(outerValue) ||
@@ -202,7 +203,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
   const currentRoute = useRoute() as any;
 
   // Track dynamic `to` props (signals / functions)
-  const isDynamic = typeof props.to === 'function' || isSignalLike(props.to);
+  const isDynamic = isFunction(props.to) || isSignalLike(props.to);
   const trackedTo = isDynamic ? signal(resolveTo(props.to, false)) : null;
 
   if (trackedTo) {
@@ -369,7 +370,7 @@ export const RouterLink = (props: RouterLinkProps): any => {
 
   // --- Render ---
   if (props.custom) {
-    return typeof props.children === 'function' ? props.children() : props.children;
+    return isFunction(props.children) ? props.children() : props.children;
   }
 
   return createComponent(LinkComponent, {

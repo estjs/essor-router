@@ -1,3 +1,4 @@
+import { isString } from '@estjs/shared';
 import { tokenizePath } from '../../src/matcher/pathTokenizer';
 import { comparePathParserScore, tokensToParser } from '../../src/matcher/pathParserRanker';
 
@@ -56,7 +57,7 @@ describe('path ranking', () => {
     const normalizedPaths = paths.map((pathOrArray) => {
       let path: string;
       let options: PathParserOptions;
-      if (typeof pathOrArray === 'string') {
+      if (isString(pathOrArray)) {
         path = pathOrArray;
       } else {
         path = pathOrArray[0];

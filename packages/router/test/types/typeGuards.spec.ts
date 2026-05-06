@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+  isFunction as _isFunction,
+  isObject as _isObject,
+  isString as _isString,
+  isSymbol as _isSymbol,
+} from '@estjs/shared';
+import {
   isFunction,
   isObject,
   isRouteLocation,
@@ -95,7 +101,7 @@ describe('typeGuards', () => {
         (input) => {
           const result = isRouteLocation(input);
           // Verify the result matches expected behavior
-          if (typeof input === 'string' || (input !== null && typeof input === 'object')) {
+          if (_isString(input) || _isObject(input)) {
             expect(result).toBe(true);
           } else {
             expect(result).toBe(false);
@@ -170,7 +176,7 @@ describe('typeGuards', () => {
         (input) => {
           const result = isRouteName(input);
           // Verify the result matches expected behavior
-          if (typeof input === 'string' || typeof input === 'symbol') {
+          if (_isString(input) || _isSymbol(input)) {
             expect(result).toBe(true);
           } else {
             expect(result).toBe(false);
@@ -243,7 +249,7 @@ describe('typeGuards', () => {
         },
         (input) => {
           const result = isString(input);
-          expect(result).toBe(typeof input === 'string');
+          expect(result).toBe(_isString(input));
         },
         100,
       );
@@ -322,7 +328,7 @@ describe('typeGuards', () => {
         },
         (input) => {
           const result = isObject(input);
-          expect(result).toBe(input !== null && typeof input === 'object');
+          expect(result).toBe(_isObject(input));
         },
         100,
       );
@@ -410,7 +416,7 @@ describe('typeGuards', () => {
         },
         (input) => {
           const result = isFunction(input);
-          expect(result).toBe(typeof input === 'function');
+          expect(result).toBe(_isFunction(input));
         },
         100,
       );

@@ -1,4 +1,5 @@
 import { nextTick, toRaw } from 'essor';
+import { isFunction, isObject, isString } from '@estjs/shared';
 import {
   ErrorTypes,
   type NavigationFailure,
@@ -153,9 +154,9 @@ export function createNavigationCoordinator(
     if (!lastMatched || !lastMatched.redirect) return;
 
     const { redirect } = lastMatched;
-    let newTargetLocation = typeof redirect === 'function' ? redirect(to) : redirect;
+    let newTargetLocation = isFunction(redirect) ? redirect(to) : redirect;
 
-    if (typeof newTargetLocation === 'string') {
+    if (isString(newTargetLocation)) {
       const hasQueryOrHash = newTargetLocation.includes('?') || newTargetLocation.includes('#');
       newTargetLocation = hasQueryOrHash
         ? options.locationAsObject(newTargetLocation)
@@ -166,7 +167,7 @@ export function createNavigationCoordinator(
 
     if (
       __DEV__ &&
-      typeof newTargetLocation === 'object' &&
+      isObject(newTargetLocation) &&
       newTargetLocation.path == null &&
       !('name' in newTargetLocation)
     ) {
@@ -184,8 +185,7 @@ export function createNavigationCoordinator(
       {
         query: to.query,
         hash: to.hash,
-        params:
-          typeof newTargetLocation === 'object' && newTargetLocation.path != null ? {} : to.params,
+        params: isObject(newTargetLocation) && newTargetLocation.path != null ? {} : to.params,
       },
       newTargetLocation,
     );
@@ -206,7 +206,7 @@ export function createNavigationCoordinator(
     if (shouldRedirect) {
       return pushWithRedirect(
         assign(options.locationAsObject(shouldRedirect), {
-          state: typeof shouldRedirect === 'object' ? assign({}, data, shouldRedirect.state) : data,
+          state: isObject(shouldRedirect) ? assign({}, data, shouldRedirect.state) : data,
           force,
           replace,
         }),
@@ -260,7 +260,7 @@ export function createNavigationCoordinator(
                 },
                 options.locationAsObject(failure.to),
                 {
-                  state: typeof failure.to === 'object' ? assign({}, data, failure.to.state) : data,
+                  state: isObject(failure.to) ? assign({}, data, failure.to.state) : data,
                   force,
                 },
               ),

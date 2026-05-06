@@ -1,3 +1,4 @@
+import { isFunction } from '@estjs/shared';
 import { createRouter as newRouter } from '../src/router';
 import * as encoding from '../src/encoding';
 import { createMemoryHistory } from '../src';
@@ -26,7 +27,7 @@ describe('uRL Encoding', () => {
     // mock all encoding functions
     for (const key in encoding) {
       const value = encoding[key];
-      if (typeof value === 'function') encoding[key] = vitest.fn((v: string) => v);
+      if (isFunction(value)) encoding[key] = vitest.fn((v: string) => v);
       // @ts-expect-error
       else if (key === 'PLUS_RE') encoding[key] = /\+/g;
     }

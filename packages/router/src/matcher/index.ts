@@ -1,3 +1,4 @@
+import { isObject, isString } from '@estjs/shared';
 import {
   type MatcherLocation,
   type MatcherLocationRaw,
@@ -84,7 +85,7 @@ export function createRouterMatcher(
     // generate an array of records to correctly handle aliases
     const normalizedRecords: (typeof mainNormalizedRecord)[] = [mainNormalizedRecord];
     if ('alias' in record) {
-      const aliases = typeof record.alias === 'string' ? [record.alias] : record.alias!;
+      const aliases = isString(record.alias) ? [record.alias] : record.alias!;
       for (const alias of aliases) {
         normalizedRecords.push(
           assign({}, mainNormalizedRecord, {
@@ -396,8 +397,7 @@ function normalizeRecordProps(record: RouteRecordRaw): Record<string, _RouteReco
   } else {
     // NOTE: we could also allow a function to be applied to every component.
     // Would need user feedback for use cases
-    for (const name in record.components)
-      propsObject[name] = typeof props === 'object' ? props[name] : props;
+    for (const name in record.components) propsObject[name] = isObject(props) ? props[name] : props;
   }
 
   return propsObject;

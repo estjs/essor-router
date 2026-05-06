@@ -1,3 +1,4 @@
+import { isString } from '@estjs/shared';
 import { createRouteAccessor } from '../useApi';
 import { decode, encodeHash, encodeParam } from '../encoding';
 import { parseURL, stringifyURL } from '../location';
@@ -71,7 +72,7 @@ export function createRouteResolver(
   ): RouteLocation & { href: string } {
     currentLocation = assign({}, currentLocation || getCurrentRoute());
 
-    if (typeof rawLocation === 'string') {
+    if (isString(rawLocation)) {
       const locationNormalized = parseURL(parseQuery, rawLocation, currentLocation.path);
       const matchedRoute = matcher.resolve({ path: locationNormalized.path }, currentLocation);
       const href = routerHistory.createHref(locationNormalized.fullPath);
@@ -183,9 +184,7 @@ export function createRouteResolver(
   function locationAsObject(
     to: RouteLocationRaw | RouteLocationNormalized,
   ): Exclude<RouteLocationRaw, string> | RouteLocationNormalized {
-    return typeof to === 'string'
-      ? parseURL(parseQuery, to, getCurrentRoute().path)
-      : assign({}, to);
+    return isString(to) ? parseURL(parseQuery, to, getCurrentRoute().path) : assign({}, to);
   }
 
   return {

@@ -1,3 +1,4 @@
+import { isString } from '@estjs/shared';
 import { warn } from './warning';
 import type { RouteLocationNormalized, RouteLocationNormalizedLoaded } from './types';
 
@@ -122,7 +123,7 @@ function validateElementSelector(selector: string, isIdSelector: boolean): boole
 }
 
 function resolveScrollElement(positionEl: string | Element): Element | null {
-  if (typeof positionEl !== 'string') return positionEl;
+  if (!isString(positionEl)) return positionEl;
 
   const isIdSelector = positionEl.startsWith('#');
   return isIdSelector
@@ -135,13 +136,9 @@ export function scrollToPosition(position: ScrollPosition): void {
 
   if ('el' in position) {
     const positionEl = position.el;
-    const isIdSelector = typeof positionEl === 'string' && positionEl.startsWith('#');
+    const isIdSelector = isString(positionEl) && positionEl.startsWith('#');
 
-    if (
-      __DEV__ &&
-      typeof positionEl === 'string' &&
-      !validateElementSelector(positionEl, isIdSelector)
-    ) {
+    if (__DEV__ && isString(positionEl) && !validateElementSelector(positionEl, isIdSelector)) {
       return;
     }
 

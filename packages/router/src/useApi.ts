@@ -1,4 +1,5 @@
 import { type Signal, inject, signal } from 'essor';
+import { isObject } from '@estjs/shared';
 import { routeLocationKey, routerKey } from './injectionSymbols';
 import { type Router, getActiveRouter } from './router';
 import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from './types';
@@ -97,8 +98,8 @@ export function useRoute(): RouteLocationNormalizedLoaded {
   // Prefer the narrower route-location provided by the nearest RouterView
   const injected = inject(routeLocationKey as any) as unknown;
   const container =
-    injected && typeof injected === 'object' && 'value' in (injected as Record<string, unknown>)
-      ? (injected as RouteContainer)
+    injected && isObject(injected) && 'value' in (injected as Record<string, unknown>)
+      ? (injected as unknown as RouteContainer)
       : null;
 
   if (container) return createRouteAccessor(container, matchedTick);

@@ -1,5 +1,6 @@
 import { shallowSignal } from 'essor';
-import { isBrowser, isObject, isString } from './utils';
+import { isFunction, isObject, isString } from '@estjs/shared';
+import { isBrowser } from './utils';
 import {
   type NavigationGuardWithThis,
   type NavigationHookAfter,
@@ -400,7 +401,7 @@ function resolvePrerenderPaths(
   const configured = record.start?.prerenderPaths;
 
   if (configured) {
-    if (typeof configured === 'function') {
+    if (isFunction(configured)) {
       const result = configured();
       if (result instanceof Promise) {
         if (allowAsync) return result;

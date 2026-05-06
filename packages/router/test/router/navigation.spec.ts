@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { isString } from '@estjs/shared';
 import { createNavigationCoordinator } from '../../src/router/navigation';
 
 const currentRoute = {
@@ -25,7 +26,7 @@ describe('createNavigationCoordinator', () => {
       },
       coordinator: createNavigationCoordinator({
         resolve: (to: any) =>
-          typeof to === 'string'
+          isString(to)
             ? {
                 ...currentRoute.value,
                 path: to,
@@ -39,7 +40,7 @@ describe('createNavigationCoordinator', () => {
                 href: to.fullPath || to.path || '/',
                 matched: to.matched || [],
               },
-        locationAsObject: (to: any) => (typeof to === 'string' ? { path: to } : { ...to }),
+        locationAsObject: (to: any) => (isString(to) ? { path: to } : { ...to }),
         stringifyQuery: (query: Record<string, any>) =>
           new URLSearchParams(query as Record<string, string>).toString(),
         currentRoute,

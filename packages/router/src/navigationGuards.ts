@@ -1,4 +1,5 @@
 import { inject, onDestroy } from 'essor';
+import { isFunction, isObject, isPromise } from '@estjs/shared';
 import {
   type NavigationGuard,
   type NavigationGuardNext,
@@ -19,7 +20,7 @@ import {
   createRouterError,
 } from './errors';
 
-import { isAsyncFunction, isESModule, isFunction, isPromise } from './utils';
+import { isAsyncFunction, isESModule } from './utils';
 import { warn } from './warning';
 import { matchedRouteKey } from './injectionSymbols';
 import type { RouteRecordNormalized } from './matcher/types';
@@ -139,7 +140,7 @@ export function guardToPromiseFn(
             enterCallbackArray &&
             // since enterCallbackArray is truthy, both record and name also are
             record!.enterCallbacks[name!] === enterCallbackArray &&
-            typeof valid === 'function'
+            isFunction(valid)
           ) {
             enterCallbackArray.push(valid);
           }
@@ -221,10 +222,7 @@ export function extractComponentsGuards(
     }
     for (const name in record.components) {
       const rawComponent = record.components[name];
-      if (
-        __DEV__ &&
-        (!rawComponent || (typeof rawComponent !== 'object' && typeof rawComponent !== 'function'))
-      ) {
+      if (__DEV__ && (!rawComponent || (!isObject(rawComponent) && !isFunction(rawComponent)))) {
         warn(
           `Component "${name}" in record with path "${record.path}" is not` +
             ` a valid component. Received "${String(rawComponent)}".`,

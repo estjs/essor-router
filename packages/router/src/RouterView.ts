@@ -10,6 +10,7 @@ import {
   signal,
   untrack,
 } from 'essor';
+import { isFunction, isNumber, isObject } from '@estjs/shared';
 import {
   matchedRouteKey,
   routeLocationKey,
@@ -81,7 +82,7 @@ function calculateViewDepth(baseDepth: number, route: RouteLocationNormalized): 
 }
 
 function normalizeDepth(injectedDepth: Signal<number> | number): number {
-  return typeof injectedDepth === 'number' ? injectedDepth : injectedDepth.value || 0;
+  return isNumber(injectedDepth) ? injectedDepth : injectedDepth.value || 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -93,7 +94,7 @@ function invokeComponent(component: RouteComponent, props: Record<string, unknow
   // errors synchronously inside the caller's try/catch. For non-function
   // components fall back to essor's createComponent so the instance lifecycle
   // (mount/unmount) still runs normally.
-  return typeof component === 'function'
+  return isFunction(component)
     ? (component as (p: Record<string, unknown>) => unknown)(props)
     : createComponent(component, props);
 }
@@ -119,7 +120,7 @@ function safeRenderComponent(
       if (__DEV__) logRouterError('RouterView failed to render component:', normalized);
       onError?.(normalized);
 
-      if (typeof fallback === 'function') {
+      if (isFunction(fallback)) {
         try {
           return invokeComponent(fallback as RouteComponent, {});
         } catch (fallbackError) {
@@ -153,9 +154,8 @@ function resolveRoute(
   if (!injectedRoute) return START_LOCATION_NORMALIZED;
 
   const current = injectedRoute.value ?? injectedRoute;
-  return current && typeof current === 'object' && 'path' in current
-    ? current
-    : START_LOCATION_NORMALIZED;
+    return current && isObject(current) && 'path' in current
+    ? (current as unknown as RouteLocationNormalized) : START_LOCATION_NORMALIZED;
 }
 
 // ---------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 import { insert, isSignal, memoEffect, omitProps, patchAttr } from 'essor';
+import { isFunction, isObject } from '@estjs/shared';
 
 export function LinkComponent(props) {
   if (typeof document === 'undefined') {
@@ -31,8 +32,8 @@ export function LinkComponent(props) {
   el.addEventListener('touchstart', (event) => props.onTouchstart?.(event));
 
   insert(el, () => {
-    let child = typeof props.children === 'function' ? props.children() : props.children;
-    if (isSignal(child) || (child && typeof child === 'object' && 'value' in child)) {
+    let child = isFunction(props.children) ? props.children() : props.children;
+    if (isSignal(child) || (child && isObject(child) && 'value' in child)) {
       child = child.value;
     }
     return child;
@@ -53,9 +54,7 @@ export function LinkComponent(props) {
       for (const key in source) {
         const value = source[key];
         next[key] =
-          isSignal(value) || (value && typeof value === 'object' && 'value' in value)
-            ? value.value
-            : value;
+          isSignal(value) || (value && isObject(value) && 'value' in value) ? value.value : value;
       }
 
       if ('ariaCurrent' in next) {
