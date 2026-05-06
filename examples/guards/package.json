@@ -1,0 +1,17 @@
+{
+  "name": "example-guards",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 3020 --strictPort",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "essor": "^0.0.16-beta.1",
+    "essor-router": "workspace:*"
+  },
+  "devDependencies": {
+    "unplugin-essor": "^0.0.16-beta.1",
+    "vite": "^8.0.0"
+  }
+}

@@ -9,7 +9,9 @@ test.describe('typed-router feature matrix', () => {
 
     await page.getByTestId('navigate-btn').click();
     await expect(page).toHaveURL(/\/users\/789$/);
-    await expect(page.getByRole('heading', { level: 1, name: 'User Profile (Typed)' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'User Profile (Typed)' }),
+    ).toBeVisible();
     await expect(page.getByTestId('user-id')).toHaveText(/User ID:\s*789/);
   });
 
@@ -30,7 +32,9 @@ test.describe('typed-router feature matrix', () => {
 
   test('resolves catch-all route with query/hash in typed app', async ({ page }) => {
     await page.goto('/unmatched/path/in/typed?mode=qa#typed-hash');
-    await expect(page.getByRole('heading', { level: 1, name: '404 Not Found (Typed)' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: '404 Not Found (Typed)' }),
+    ).toBeVisible();
     await expect(page.getByTestId('catch-all-path')).toHaveText(
       /Unknown path:\s*unmatched\/path\/in\/typed/,
     );
@@ -39,7 +43,7 @@ test.describe('typed-router feature matrix', () => {
   });
 
   test('renders sidebar fallback and group route', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/users/456');
     await expect(page.getByText('No Sidebar Content')).toBeVisible();
 
     await page.goto('/dashboard');
