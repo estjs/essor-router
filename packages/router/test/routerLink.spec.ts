@@ -189,13 +189,11 @@ describe('routerLink', () => {
 
       const testWrapper = mount(() => h(RouterView, { router: testRouter }));
       await testRouter.push('/');
-      await sleep(50);
 
       const anchor = testWrapper.get('a');
       expect(anchor.getAttribute('href')).toBe('/about');
 
       toSignal.value = '/';
-      await sleep(50);
 
       expect(anchor.getAttribute('href')).toBe('/');
 
@@ -206,7 +204,7 @@ describe('routerLink', () => {
       const disconnect = vi.fn();
 
       class FakeIntersectionObserver {
-        observe() {}
+        observe() { }
 
         disconnect() {
           disconnect();
@@ -361,7 +359,7 @@ describe('routerLink', () => {
       wrapper?.unmount();
       wrapper = null;
 
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
       let threw = false;
 
       try {
@@ -376,8 +374,8 @@ describe('routerLink', () => {
 
     it('should handle invalid "to" prop gracefully', async () => {
       // Mock console to suppress expected warnings and errors
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
       const TestComponent = () => h(RouterView, { router });
       const testWrapper = mount(TestComponent);
@@ -415,8 +413,8 @@ describe('routerLink', () => {
     });
 
     it('should handle route resolution errors', async () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
       const TestComponent = () =>
         h(RouterLink, {
@@ -443,8 +441,8 @@ describe('routerLink', () => {
     });
 
     it('should handle navigation errors gracefully', async () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => { });
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
 
       const TestComponent = () =>
         h(RouterLink, {
@@ -465,7 +463,7 @@ describe('routerLink', () => {
       testRouter.push = vi.fn().mockRejectedValue(new Error('Navigation error'));
 
       const testWrapper = mount(() => h(RouterView, { router: testRouter }));
-      await testRouter.push('/').catch(() => {});
+      await testRouter.push('/').catch(() => { });
       await sleep(50);
 
       const anchor = testWrapper.get('a');
