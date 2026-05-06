@@ -195,6 +195,24 @@ async function setupFeatureRoutes() {
 }
 ```
 
+### 多租户路由
+
+```tsx
+async function setupTenantRoutes(tenantId: string) {
+  const tenantConfig = await fetchTenantConfig(tenantId);
+  
+  // 添加租户特定路由
+  tenantConfig.modules.forEach(module => {
+    router.addRoute({
+      path: `/${module.path}`,
+      name: module.name,
+      component: () => import(`./modules/${module.component}`),
+      meta: { tenant: tenantId },
+    });
+  });
+}
+```
+
 ### 动态菜单生成
 
 ```tsx

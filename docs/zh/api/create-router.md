@@ -131,6 +131,36 @@ createRouter({
 });
 ```
 
+### strict
+
+- **类型：** `boolean`
+- **默认值：** `false`
+
+启用严格路径匹配（尾部斜杠敏感）：
+
+```tsx
+createRouter({
+  history: 'history',
+  strict: true,
+  routes: [],
+});
+```
+
+### sensitive
+
+- **类型：** `boolean`
+- **默认值：** `false`
+
+启用大小写敏感的路径匹配：
+
+```tsx
+createRouter({
+  history: 'history',
+  sensitive: true,
+  routes: [],
+});
+```
+
 ## 历史工厂函数
 
 ### createWebHistory

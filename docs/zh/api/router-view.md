@@ -150,6 +150,17 @@ function User() {
 }
 ```
 
+## 上下文注入
+
+RouterView 为子组件提供上下文：
+
+- `routerKey` - Router 实例
+- `routeLocationKey` - 当前路由
+- `viewDepthKey` - 当前视图深度
+- `matchedRouteKey` - 当前匹配的路由
+
+这使得 `useRouter()` 和 `useRoute()` 能在子组件中正常工作。
+
 ## 示例
 
 ```tsx
@@ -189,6 +200,32 @@ function App() {
           <div>加载中...</div>
         </RouterView>
       </main>
+    </div>
+  );
+}
+```
+
+## 多个 RouterView
+
+```tsx
+function DashboardLayout() {
+  return (
+    <div class="dashboard">
+      <header>
+        <RouterView name="header" />
+      </header>
+      
+      <aside>
+        <RouterView name="sidebar" />
+      </aside>
+      
+      <main>
+        <RouterView />
+      </main>
+      
+      <footer>
+        <RouterView name="footer" />
+      </footer>
     </div>
   );
 }

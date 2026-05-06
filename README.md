@@ -114,6 +114,10 @@ createApp(App, '#app');
 - [Lazy Loading](./docs/guide/advanced/lazy-loading.md)
 - [Dynamic Routing](./docs/guide/advanced/dynamic-routing.md)
 - [Route Meta](./docs/guide/advanced/meta.md)
+- [Scroll Behavior](./docs/guide/advanced/scroll-behavior.md)
+- [Query Handling](./docs/guide/advanced/query-handling.md)
+- [Custom Param Parsers](./docs/guide/advanced/param-parsers.md)
+- [Config-Based Routing](./docs/guide/advanced/config-based-routing.md)
 - [File-Based Routing](./docs/guide/advanced/file-based-routing-unplugin.md)
 
 ### API
@@ -123,6 +127,7 @@ createApp(App, '#app');
 - [RouterLink](./docs/api/router-link.md)
 - [RouterView](./docs/api/router-view.md)
 - [Composition API](./docs/api/composition-api.md)
+- [Config Alignment](./docs/api/config-alignment.md)
 - [TypeScript Plugin](./docs/api/ts-plugin.md)
 - [Unplugin](./docs/api/unplugin.md)
 - [Types](./docs/api/types.md)

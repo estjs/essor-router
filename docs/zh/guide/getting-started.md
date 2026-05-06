@@ -219,8 +219,41 @@ const router = createRouter({
 
 不改变 URL。适用于 SSR 和测试。
 
+## 文件系统路由（推荐）
+
+对于大型项目，推荐使用 `essor-router-unplugin` 从 `src/pages/` 目录自动生成路由：
+
+```bash
+pnpm add -D essor-router-unplugin
+```
+
+```ts
+// vite.config.ts
+import routerPlugin from 'essor-router-unplugin/vite'
+
+export default defineConfig({
+  plugins: [routerPlugin()],
+})
+```
+
+```tsx
+// src/main.tsx
+import { createRouter, createWebHistory } from 'essor-router'
+import { routes } from 'essor-router/auto-routes'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes, // 从 src/pages/ 自动生成
+})
+```
+
+将文件放置在 `src/pages/index.tsx`、`src/pages/users/[id].tsx` 和 `src/pages/[...catchAll].tsx` 等位置 —— 插件会自动生成路由、类型和 `typed-router.d.ts` 文件。
+
+查看[文件系统路由指南](/zh/guide/advanced/file-based-routing-unplugin)了解完整的约定和配置。
+
 ## 下一步
 
 - 了解[路由配置](/zh/guide/essentials/route-configuration)
 - 探索[动态路由匹配](/zh/guide/essentials/dynamic-matching)
 - 设置[导航守卫](/zh/guide/advanced/navigation-guards)
+- 使用[文件系统路由](/zh/guide/advanced/file-based-routing-unplugin)自动生成路由

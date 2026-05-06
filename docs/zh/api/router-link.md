@@ -263,6 +263,24 @@ function Navigation() {
 </RouterLink>
 ```
 
+### 编程式激活检查
+
+```tsx
+function NavLink({ to, children }) {
+  const route = useRoute();
+  const isActive = route.path.startsWith(to);
+  
+  return (
+    <RouterLink 
+      to={to} 
+      class={`nav-link ${isActive ? 'active' : ''}`}
+    >
+      {children}
+    </RouterLink>
+  );
+}
+```
+
 ## 无障碍
 
 RouterLink 自动处理无障碍：

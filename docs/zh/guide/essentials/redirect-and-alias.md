@@ -52,6 +52,20 @@ const routes = [
 ];
 ```
 
+### 相对重定向
+
+```tsx
+const routes = [
+  {
+    path: '/users/:id',
+    children: [
+      { path: '', redirect: 'profile' }, // 重定向到 /users/:id/profile
+      { path: 'profile', component: UserProfile },
+    ],
+  },
+];
+```
+
 ### 嵌套路由中的重定向
 
 ```tsx
@@ -222,6 +236,18 @@ const routes = [
   },
   { path: '/en', component: EnglishHome },
   { path: '/zh', component: ChineseHome },
+];
+```
+
+### 版本别名
+
+```tsx
+const routes = [
+  {
+    path: '/api/v2/users',
+    component: UsersAPI,
+    alias: ['/api/users', '/api/v1/users'], // 支持旧版本
+  },
 ];
 ```
 

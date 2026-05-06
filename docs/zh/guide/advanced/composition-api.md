@@ -335,3 +335,42 @@ function Navigation() {
   );
 }
 ```
+
+### 上一个路由
+
+```tsx
+function usePreviousRoute() {
+  const route = useRoute();
+  let previousRoute = null;
+  
+  onBeforeRouteUpdate((to, from, next) => {
+    previousRoute = { ...from };
+    next();
+  });
+  
+  return () => previousRoute;
+}
+```
+
+### 滚动位置
+
+```tsx
+function useScrollPosition() {
+  const route = useRoute();
+  const router = useRouter();
+  
+  router.afterEach((to, from) => {
+    if (to.hash) {
+      const el = document.querySelector(to.hash);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
+    
+    if (to.path !== from.path) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+}
+```

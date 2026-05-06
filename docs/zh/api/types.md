@@ -112,6 +112,16 @@ interface RouteRecordBase {
   sensitive?: boolean;
   strict?: boolean;
 }
+
+interface RouteRecordSingleView extends RouteRecordBase {
+  component: RouteComponent;
+  components?: never;
+}
+
+interface RouteRecordMultipleViews extends RouteRecordBase {
+  components: Record<string, RouteComponent>;
+  component?: never;
+}
 ```
 
 ### RouteLocation
@@ -213,6 +223,62 @@ enum NavigationFailureType {
   cancelled = 8,
   duplicated = 16,
 }
+```
+
+### RouterHistory
+
+```tsx
+interface RouterHistory {
+  readonly base: string;
+  readonly location: string;
+  readonly state: HistoryState;
+  
+  push(to: string, data?: HistoryState): void;
+  replace(to: string, data?: HistoryState): void;
+  go(delta: number, triggerListeners?: boolean): void;
+  listen(callback: NavigationCallback): () => void;
+  createHref(location: string): string;
+  destroy(): void;
+}
+```
+
+### Query 类型
+
+```tsx
+type LocationQueryValue = string | null;
+type LocationQueryValueRaw = LocationQueryValue | number | undefined;
+type LocationQuery = Record<string, LocationQueryValue | LocationQueryValue[]>;
+type LocationQueryRaw = Record<string, LocationQueryValueRaw | LocationQueryValueRaw[]>;
+```
+
+### Params 类型
+
+```tsx
+type RouteParamValue = string;
+type RouteParamValueRaw = RouteParamValue | number | null | undefined;
+type RouteParams = Record<string, RouteParamValue | RouteParamValue[]>;
+type RouteParamsRaw = Record<string, RouteParamValueRaw | RouteParamValueRaw[]>;
+```
+
+## 类型工具
+
+### RouteRecordName
+
+```tsx
+type RouteRecordName = string | symbol;
+```
+
+### RouteMeta
+
+```tsx
+interface RouteMeta extends Record<string | number | symbol, any> {}
+```
+
+### RouteComponent
+
+```tsx
+type RouteComponent = any; // Essor 组件
+type RawRouteComponent = RouteComponent | (() => Promise<RouteComponent>);
 ```
 
 ## 使用示例

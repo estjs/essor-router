@@ -6,6 +6,7 @@ This section contains the complete API reference for essor-router.
 
 - [createRouter](/api/create-router) - Create a router instance
 - [Router Instance](/api/router-instance) - Router methods and properties
+- [Config Alignment](/api/config-alignment) - File-based vs config-based routing modes
 
 ## Components
 
@@ -18,6 +19,14 @@ This section contains the complete API reference for essor-router.
 - [useRoute](/api/composition-api#useroute) - Access current route
 - [onBeforeRouteLeave](/api/composition-api#onbeforerouteleave) - Leave guard
 - [onBeforeRouteUpdate](/api/composition-api#onbeforerouteupdate) - Update guard
+
+## Advanced
+
+- [Scroll Behavior](/guide/advanced/scroll-behavior) - Custom scroll position logic
+- [Query Handling](/guide/advanced/query-handling) - Parse and stringify query strings
+- [Custom Param Parsers](/guide/advanced/param-parsers) - Typed route param transformation
+- [Config-Based Routing](/guide/advanced/config-based-routing) - Define routes via config file
+- [File-Based Routing](/guide/advanced/file-based-routing-unplugin) - File-based routes and codegen
 
 ## History
 

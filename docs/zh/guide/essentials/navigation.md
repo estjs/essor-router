@@ -89,6 +89,27 @@ router.back();
 router.forward();
 ```
 
+## 带状态导航
+
+传递不会出现在 URL 中的状态数据：
+
+```tsx
+router.push({
+  path: '/checkout',
+  state: {
+    fromCart: true,
+    items: ['item1', 'item2'],
+  },
+});
+```
+
+在目标组件中访问状态：
+
+```tsx
+// 状态可以通过 history.state 访问
+console.log(history.state);
+```
+
 ## 处理导航结果
 
 `router.push()` 和 `router.replace()` 返回 Promise：
@@ -125,6 +146,14 @@ if (isNavigationFailure(result, NavigationFailureType.duplicated)) {
   // 已经在目标位置
   console.log('已在当前位置');
 }
+```
+
+## 强制导航
+
+即使目标地址与当前地址相同也强制执行导航：
+
+```tsx
+router.push({ path: '/users', force: true });
 ```
 
 ## 实际示例
@@ -208,4 +237,17 @@ function BackButton() {
   
   return <button onClick={goBack}>返回</button>;
 }
+```
+
+### 守卫中的编程式导航
+
+```tsx
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    // 重定向到登录
+    next({ path: '/login', query: { redirect: to.fullPath } });
+  } else {
+    next();
+  }
+});
 ```

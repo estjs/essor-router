@@ -160,6 +160,26 @@ const routes = [
 ];
 ```
 
+## 带嵌套子路由的命名路由
+
+```tsx
+const routes = [
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard,
+    children: [
+      { path: '', name: 'dashboard-home', component: DashboardHome },
+      { path: 'analytics', name: 'dashboard-analytics', component: Analytics },
+      { path: 'settings', name: 'dashboard-settings', component: Settings },
+    ],
+  },
+];
+
+// 导航到嵌套路由
+router.push({ name: 'dashboard-analytics' });
+```
+
 ## 解析命名路由
 
 使用 `router.resolve()` 获取命名路由的 URL：
