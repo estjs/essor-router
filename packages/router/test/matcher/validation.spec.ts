@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { createRouterMatcher } from '../../src/matcher';
-import { checkMissingParamsInAbsolutePath, checkSameParams, isRecordChildOf } from '../../src/matcher/validation';
-import type { RouteRecordRaw } from '../../src/types';
+import {
+  checkMissingParamsInAbsolutePath,
+  checkSameParams,
+  isRecordChildOf,
+} from '../../src/matcher/validation';
 import { mockWarn } from '../utils';
+import type { RouteRecordRaw } from '../../src/types';
 
 const Dummy = () => null;
 
@@ -15,7 +19,7 @@ describe('matcher validation helpers', () => {
     ];
     const matcher = createRouterMatcher(routes, {});
     const original = matcher.getRecordMatcher('user')!;
-    const alias = matcher.getRoutes().find(route => route.record.aliasOf === original.record)!;
+    const alias = matcher.getRoutes().find((route) => route.record.aliasOf === original.record)!;
 
     checkSameParams(original, alias);
 

@@ -2,10 +2,10 @@ import process from 'node:process';
 import { type ConstructorOptions, JSDOM } from 'jsdom';
 import {
   template as _template$,
+  child,
   createComponent as h,
   insert,
   insertNode,
-  child,
   next,
   removeNode,
 } from 'essor';
@@ -21,7 +21,7 @@ import type {
 } from '../src/types';
 
 export const tick = (time?: number) =>
-  new Promise(resolve => {
+  new Promise((resolve) => {
     if (time) setTimeout(resolve, time);
     else process.nextTick(resolve);
   });
@@ -32,7 +32,7 @@ export async function ticks(n: number) {
   }
 }
 
-export const delay = (t: number) => new Promise(r => setTimeout(r, t));
+export const delay = (t: number) => new Promise((r) => setTimeout(r, t));
 
 export function nextNavigation(router: Router) {
   return new Promise((resolve, reject) => {
@@ -41,7 +41,7 @@ export function nextNavigation(router: Router) {
       removeError();
       resolve(failure);
     });
-    let removeError = router.onError(err => {
+    let removeError = router.onError((err) => {
       removeAfter();
       removeError();
       reject(err);
@@ -197,7 +197,7 @@ export function mount(code, props = {}) {
     nodes,
     innerHTML: () => container.innerHTML,
     text: () => container.textContent,
-    get: name => container.querySelector(name),
+    get: (name) => container.querySelector(name),
     unmount: () => {
       if (instance && typeof (instance as any).destroy === 'function') {
         (instance as any).destroy();
@@ -215,7 +215,7 @@ export function mockWarn() {
   expect.extend({
     toHaveBeenWarned(received) {
       const calls = mockFn.mock.calls;
-      const passed = calls.some(args =>
+      const passed = calls.some((args) =>
         typeof received === 'string' ? args[0].includes(received) : received.test(args[0]),
       );
 
@@ -225,7 +225,7 @@ export function mockWarn() {
           message: () => `expected not to have been warned with "${received}"`,
         };
       } else {
-        const msgs = calls.map(args => args[0]).join('\n - ');
+        const msgs = calls.map((args) => args[0]).join('\n - ');
         return {
           pass: false,
           message: () => `expected to have been warned with "${received}", but got:\n - ${msgs}`,
@@ -235,7 +235,7 @@ export function mockWarn() {
     toHaveBeenWarnedTimes(received, times) {
       const calls = mockFn.mock.calls;
 
-      const receivedCalls = calls.filter(args => args[0] === received);
+      const receivedCalls = calls.filter((args) => args[0] === received);
 
       const pass = receivedCalls.flat().length === times;
 
@@ -255,4 +255,4 @@ export function mockWarn() {
   });
 }
 
-export const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+export const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));

@@ -57,8 +57,8 @@ describe('usePrefetch', () => {
   it('observes target and preloads on intersection in viewport mode', async () => {
     const preload = vi.fn(async () => {});
     const target = document.createElement('a');
-    target.setAttribute('data-router-prefetch-id', 'link-4');
-    document.body.appendChild(target);
+    target.dataset.routerPrefetchId = 'link-4';
+    document.body.append(target);
 
     const disconnect = vi.fn();
     const observe = vi.fn((el: Element) => {
@@ -66,7 +66,9 @@ describe('usePrefetch', () => {
     });
 
     class FakeIntersectionObserver {
-      constructor(private readonly callback: (entries: Array<{ isIntersecting: boolean }>) => void) {}
+      constructor(
+        private readonly callback: (entries: Array<{ isIntersecting: boolean }>) => void,
+      ) {}
 
       observe(el: Element) {
         observe(el);
@@ -149,8 +151,8 @@ describe('usePrefetch', () => {
   it('disconnects a pending viewport observer when disposed', async () => {
     const preload = vi.fn(async () => {});
     const target = document.createElement('a');
-    target.setAttribute('data-router-prefetch-id', 'link-dispose');
-    document.body.appendChild(target);
+    target.dataset.routerPrefetchId = 'link-dispose';
+    document.body.append(target);
 
     const disconnect = vi.fn();
 

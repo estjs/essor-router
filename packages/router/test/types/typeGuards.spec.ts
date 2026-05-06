@@ -92,7 +92,7 @@ describe('typeGuards', () => {
           if (rand < 0.9) return randomInt(0, 1000);
           return randomBoolean();
         },
-        input => {
+        (input) => {
           const result = isRouteLocation(input);
           // Verify the result matches expected behavior
           if (typeof input === 'string' || (input !== null && typeof input === 'object')) {
@@ -167,7 +167,7 @@ describe('typeGuards', () => {
           if (rand < 0.9) return randomBoolean();
           return {};
         },
-        input => {
+        (input) => {
           const result = isRouteName(input);
           // Verify the result matches expected behavior
           if (typeof input === 'string' || typeof input === 'symbol') {
@@ -241,7 +241,7 @@ describe('typeGuards', () => {
           if (rand < 0.9) return undefined;
           return {};
         },
-        input => {
+        (input) => {
           const result = isString(input);
           expect(result).toBe(typeof input === 'string');
         },
@@ -320,7 +320,7 @@ describe('typeGuards', () => {
           if (rand < 0.9) return randomBoolean();
           return () => {};
         },
-        input => {
+        (input) => {
           const result = isObject(input);
           expect(result).toBe(input !== null && typeof input === 'object');
         },
@@ -408,7 +408,7 @@ describe('typeGuards', () => {
           if (rand < 0.9) return randomBoolean();
           return {};
         },
-        input => {
+        (input) => {
           const result = isFunction(input);
           expect(result).toBe(typeof input === 'function');
         },

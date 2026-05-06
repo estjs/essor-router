@@ -1,4 +1,11 @@
-import { createComponent as _h$, template as _template$, computed, insert, child, next } from 'essor';
+import {
+  createComponent as _h$,
+  template as _template$,
+  child,
+  computed,
+  insert,
+  next,
+} from 'essor';
 import { RouterView, createRouter, usePreloadRoute, useRoute } from '../src';
 import { components, mount, sleep } from './utils';
 

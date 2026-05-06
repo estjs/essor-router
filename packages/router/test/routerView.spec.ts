@@ -53,8 +53,8 @@ describe('routerView - Comprehensive Tests', () => {
       // Check that error was logged - look in the second call which contains the actual error
       expect(consoleSpy).toHaveBeenCalled();
       const calls = consoleSpy.mock.calls;
-      const hasRouterError = calls.some(call =>
-        call.some(arg => String(arg).includes('RouterView requires a router instance')),
+      const hasRouterError = calls.some((call) =>
+        call.some((arg) => String(arg).includes('RouterView requires a router instance')),
       );
       expect(hasRouterError).toBe(true);
 
@@ -621,7 +621,7 @@ describe('routerView - Comprehensive Tests', () => {
     });
   });
 
-  describe('edge Cases ', () => {
+  describe('edge Cases', () => {
     it('should handle route prop with custom route object', async () => {
       router = createRouter({
         history: createMemoryHistory(),

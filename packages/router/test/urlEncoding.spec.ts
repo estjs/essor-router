@@ -9,7 +9,7 @@ vitest.mock('../src/encoding');
 const routes: RouteRecordRaw[] = [
   { path: '/', name: 'home', component: components.Home },
   { path: '/%25', name: 'percent', component: components.Home },
-  { path: '/to-p/:p', redirect: to => `/p/${to.params.p}` },
+  { path: '/to-p/:p', redirect: (to) => `/p/${to.params.p}` },
   { path: '/p/:p', component: components.Bar, name: 'params' },
   { path: '/p/:p+', component: components.Bar, name: 'repeat' },
   { path: '/optional/:a/:b?', component: components.Bar, name: 'optional' },

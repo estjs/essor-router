@@ -128,7 +128,7 @@ export function createAsyncMockGuard(
   redirectTo?: RouteLocationRaw,
 ): NavigationGuard {
   return vitest.fn(async (to, from, next) => {
-    await new Promise(resolve => setTimeout(resolve, delay));
+    await new Promise((resolve) => setTimeout(resolve, delay));
     switch (behavior) {
       case 'pass':
         next();
@@ -152,7 +152,7 @@ export function createAsyncMockGuard(
 export async function waitForRouter(router: Router, timeout: number = 1000): Promise<void> {
   const start = Date.now();
   while (!router.currentRoute.value.matched.length && Date.now() - start < timeout) {
-    await new Promise(resolve => setTimeout(resolve, 10));
+    await new Promise((resolve) => setTimeout(resolve, 10));
   }
 }
 

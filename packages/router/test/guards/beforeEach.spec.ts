@@ -109,7 +109,7 @@ describe('router.beforeEach', () => {
   it('can add state when redirecting', async () => {
     const router = createRouter({ routes });
     await router.push('/foo');
-    router.beforeEach(to => {
+    router.beforeEach((to) => {
       // only allow going to /other
       if (to.fullPath !== '/other') {
         return {
@@ -168,15 +168,15 @@ describe('router.beforeEach', () => {
   }
 
   it('can redirect multiple times with string redirect', async () => {
-    await assertRedirect(i => `/n/${i}`);
+    await assertRedirect((i) => `/n/${i}`);
   });
 
   it('can redirect multiple times with path object', async () => {
-    await assertRedirect(i => ({ path: `/n/${i}` }));
+    await assertRedirect((i) => ({ path: `/n/${i}` }));
   });
 
   it('can redirect multiple times with named route', async () => {
-    await assertRedirect(i => ({ name: 'n', params: { i } }));
+    await assertRedirect((i) => ({ name: 'n', params: { i } }));
   });
 
   it('is called when changing params', async () => {

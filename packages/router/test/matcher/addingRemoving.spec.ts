@@ -126,7 +126,7 @@ describe('matcher: adding and removing records', () => {
         '/home/o/two',
         '/home/one/t2',
         '/o2/t',
-      ].forEach(path => {
+      ].forEach((path) => {
         expect(matcher.resolve({ path }, currentLocation)).toMatchObject({
           path,
           name: undefined,
@@ -358,7 +358,7 @@ describe('matcher: adding and removing records', () => {
       '/home/xxx/yyy',
       '/home/xxx/z2',
       '/home/x2/z2',
-    ].forEach(path => {
+    ].forEach((path) => {
       expect(matcher.resolve({ path }, currentLocation)).toMatchObject({
         path,
         name: undefined,

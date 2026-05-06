@@ -36,7 +36,7 @@ describe('isReady', () => {
 
   it('resolves a redirected navigation', async () => {
     const router = newRouter();
-    router.beforeEach(to => (to.path === '/bar' ? true : '/bar'));
+    router.beforeEach((to) => (to.path === '/bar' ? true : '/bar'));
     router.push('/foo');
     await expect(router.isReady()).resolves.toBe(undefined);
     expect(router.currentRoute.value).toMatchObject({

@@ -11,16 +11,16 @@ describe('path ranking', () => {
           score: a,
           re: /a/,
           // @ts-expect-error
-          stringify: v => v,
+          stringify: (v) => v,
           // @ts-expect-error
-          parse: v => v,
+          parse: (v) => v,
           keys: [],
         },
         {
           score: b,
           re: /a/,
-          stringify: v => v,
-          parse: v => v,
+          stringify: (v) => v,
+          parse: (v) => v,
           keys: [],
         },
       );
@@ -49,11 +49,11 @@ describe('path ranking', () => {
   ];
 
   function joinScore(score: number[][]): string {
-    return score.map(s => `[${s.join(', ')}]`).join(' ');
+    return score.map((s) => `[${s.join(', ')}]`).join(' ');
   }
 
   function checkPathOrder(paths: Array<string | [string, PathParserOptions]>) {
-    const normalizedPaths = paths.map(pathOrArray => {
+    const normalizedPaths = paths.map((pathOrArray) => {
       let path: string;
       let options: PathParserOptions;
       if (typeof pathOrArray === 'string') {
@@ -98,9 +98,11 @@ describe('path ranking', () => {
     }
 
     try {
-      expect(parsers.map(parser => parser.id)).toEqual(normalizedPaths.map(path => path.id));
+      expect(parsers.map((parser) => parser.id)).toEqual(normalizedPaths.map((path) => path.id));
     } catch (error) {
-      console.warn(parsers.map(parser => `${parser.id} -> ${joinScore(parser.score)}`).join('\n'));
+      console.warn(
+        parsers.map((parser) => `${parser.id} -> ${joinScore(parser.score)}`).join('\n'),
+      );
       throw error;
     }
   }
@@ -126,7 +128,7 @@ describe('path ranking', () => {
   });
 
   it('puts the slash before optional parameters', () => {
-    possibleOptions.forEach(options => {
+    possibleOptions.forEach((options) => {
       checkPathOrder(['/', ['/:a?', options]]);
       checkPathOrder(['/', ['/:a*', options]]);
       checkPathOrder(['/', ['/:a(\\d+)?', options]]);
@@ -135,7 +137,7 @@ describe('path ranking', () => {
   });
 
   it('puts catchall param after same prefix', () => {
-    possibleOptions.forEach(options => {
+    possibleOptions.forEach((options) => {
       checkPathOrder([
         ['/a', options],
         ['/a/:a(.*)*', options],
@@ -162,7 +164,7 @@ describe('path ranking', () => {
   });
 
   it('orders repeatable and optional', () => {
-    possibleOptions.forEach(options => {
+    possibleOptions.forEach((options) => {
       checkPathOrder(['/:w', ['/:w?', options]]);
       checkPathOrder(['/:w?', ['/:w+', options]]);
       checkPathOrder(['/:w+', ['/:w*', options]]);
@@ -171,13 +173,13 @@ describe('path ranking', () => {
   });
 
   it('orders static before params', () => {
-    possibleOptions.forEach(options => {
+    possibleOptions.forEach((options) => {
       checkPathOrder(['/a', ['/:id', options]]);
     });
   });
 
   it('empty path before slash', () => {
-    possibleOptions.forEach(options => {
+    possibleOptions.forEach((options) => {
       checkPathOrder(['', ['/', options]]);
     });
   });
@@ -208,7 +210,7 @@ describe('path ranking', () => {
   });
 
   it('puts the wildcard at the end', () => {
-    possibleOptions.forEach(options => {
+    possibleOptions.forEach((options) => {
       checkPathOrder([['', options], '/:rest(.*)']);
       checkPathOrder([['/', options], '/:rest(.*)']);
       checkPathOrder([['/ab', options], '/:rest(.*)']);

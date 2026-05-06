@@ -29,7 +29,7 @@ describe('encoding', () => {
     const toEncode = ' "<>#?{}/^`';
     const encodedToEncode = toEncode
       .split('')
-      .map(c => {
+      .map((c) => {
         const hex = c.charCodeAt(0).toString(16).toUpperCase();
         return `%${hex.length > 1 ? hex : `0${hex}`}`;
       })
@@ -62,14 +62,14 @@ describe('encoding', () => {
     const toEncodeForValue = '"<>#&';
     const encodedToEncodeForKey = toEncodeForKey
       .split('')
-      .map(c => {
+      .map((c) => {
         const hex = c.charCodeAt(0).toString(16).toUpperCase();
         return `%${hex.length > 1 ? hex : `0${hex}`}`;
       })
       .join('');
     const encodedToEncodeForValue = toEncodeForValue
       .split('')
-      .map(c => {
+      .map((c) => {
         const hex = c.charCodeAt(0).toString(16).toUpperCase();
         return `%${hex.length > 1 ? hex : `0${hex}`}`;
       })
@@ -116,7 +116,7 @@ describe('encoding', () => {
     const toEncode = ' "<>`';
     const encodedToEncode = toEncode
       .split('')
-      .map(c => {
+      .map((c) => {
         const hex = c.charCodeAt(0).toString(16).toUpperCase();
         return `%${hex.length > 1 ? hex : `0${hex}`}`;
       })

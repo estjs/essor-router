@@ -29,7 +29,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/p/:p', name: 'Param', component: components.Bar },
   { path: '/optional/:p?', name: 'optional', component: components.Bar },
   { path: '/repeat/:r+', name: 'repeat', component: components.Bar },
-  { path: '/to-p/:p', redirect: to => `/p/${to.params.p}` },
+  { path: '/to-p/:p', redirect: (to) => `/p/${to.params.p}` },
   { path: '/redirect-with-param/:p', redirect: () => `/` },
   { path: '/before-leave', component: components.BeforeLeave },
   {
@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/inc-query-hash',
-    redirect: to => ({
+    redirect: (to) => ({
       name: 'Foo',
       query: { n: `${to.query.n}-2` },
       hash: `${to.hash}-2`,
@@ -204,18 +204,18 @@ describe('router', () => {
     expect(paths).toHaveLength(2);
     expect(paths).toEqual(
       expect.arrayContaining([
-      {
-        name: 'prerender',
-        pathTemplate: '/prerender',
-        paths: ['/prerender'],
-        meta: { from: 'meta' },
-      },
-      {
-        name: 'users-id',
-        pathTemplate: '/users/:id',
-        paths: ['/users/1', '/users/2'],
-        meta: { section: 'users' },
-      },
+        {
+          name: 'prerender',
+          pathTemplate: '/prerender',
+          paths: ['/prerender'],
+          meta: { from: 'meta' },
+        },
+        {
+          name: 'users-id',
+          pathTemplate: '/users/:id',
+          paths: ['/users/1', '/users/2'],
+          meta: { section: 'users' },
+        },
       ]),
     );
     expect('requires "start.prerenderPaths"').toHaveBeenWarned();
@@ -256,7 +256,7 @@ describe('router', () => {
     const history = createMemoryHistory();
     const { router } = await newRouter({ history });
     // move somewhere else
-    router.beforeEach(to => {
+    router.beforeEach((to) => {
       if (to.name !== 'Foo') {
         return { name: 'Foo', replace: true };
       }
@@ -273,7 +273,7 @@ describe('router', () => {
 
   it('allows to customize parseQuery', async () => {
     // eslint-disable-next-line unused-imports/no-unused-vars
-    const parseQuery = vitest.fn(_ => ({}));
+    const parseQuery = vitest.fn((_) => ({}));
     const { router } = await newRouter({ parseQuery });
     const to = router.resolve('/foo?bar=baz');
     expect(parseQuery).toHaveBeenCalledWith('bar=baz');
@@ -282,7 +282,7 @@ describe('router', () => {
 
   it('allows to customize stringifyQuery', async () => {
     // eslint-disable-next-line unused-imports/no-unused-vars
-    const stringifyQuery = vitest.fn(_ => '');
+    const stringifyQuery = vitest.fn((_) => '');
     const { router } = await newRouter({ stringifyQuery });
     const to = router.resolve({ query: { foo: 'bar' } });
     expect(stringifyQuery).toHaveBeenCalledWith({ foo: 'bar' });
@@ -292,7 +292,7 @@ describe('router', () => {
 
   it('creates an empty query with no query', async () => {
     // eslint-disable-next-line unused-imports/no-unused-vars
-    const stringifyQuery = vitest.fn(_ => '');
+    const stringifyQuery = vitest.fn((_) => '');
     const { router } = await newRouter({ stringifyQuery });
     const to = router.resolve({ hash: '#a' });
     expect(stringifyQuery).not.toHaveBeenCalled();
@@ -559,7 +559,7 @@ describe('router', () => {
           path: path
             .split('/')
             // we need to provide the value unencoded
-            .map(segment => segment.replace('%2F', '/')),
+            .map((segment) => segment.replace('%2F', '/')),
         },
       }),
     ).toMatchObject({
@@ -1156,7 +1156,7 @@ describe('router', () => {
 
     it('stops resolving removed routes', async () => {
       const { router } = await newRouter({
-        routes: [routes.find(route => route.name === 'Foo')!],
+        routes: [routes.find((route) => route.name === 'Foo')!],
       });
       // regular route
       router.removeRoute('Foo');

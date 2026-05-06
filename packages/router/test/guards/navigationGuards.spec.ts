@@ -21,7 +21,7 @@ import type {
 import type { RouteRecordNormalized } from '../../src/matcher/types';
 
 // Mock essor functions
-vi.mock('essor', async importOriginal => {
+vi.mock('essor', async (importOriginal) => {
   const actual = await importOriginal<typeof import('essor')>();
   return {
     ...actual,
@@ -126,7 +126,7 @@ describe('navigationGuards', () => {
 
     it('should handle async guards that return promises', async () => {
       const guard: NavigationGuard = async () => {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
         return true;
       };
 
@@ -213,7 +213,7 @@ describe('navigationGuards', () => {
           if (rand < 0.8) return createMockGuard('error');
           return createAsyncMockGuard('pass', 5);
         },
-        async guard => {
+        async (guard) => {
           const guardFn = guardToPromiseFn(guard, mockTo, mockFrom);
           try {
             await guardFn();

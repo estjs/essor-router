@@ -45,7 +45,7 @@ describe('routerMatcher.resolve', () => {
       if (!resolved.matched) resolved.matched = record.map(normalizeRouteRecord);
       // allow passing an expect.any(Array)
       else if (Array.isArray(resolved.matched))
-        resolved.matched = resolved.matched.map(m => ({
+        resolved.matched = resolved.matched.map((m) => ({
           ...normalizeRouteRecord(m as any),
           aliasOf: m.aliasOf,
         }));
@@ -56,7 +56,7 @@ describe('routerMatcher.resolve', () => {
 
     const startCopy: MatcherLocation = {
       ...start,
-      matched: start.matched.map(m => ({
+      matched: start.matched.map((m) => ({
         ...normalizeRouteRecord(m),
         aliasOf: m.aliasOf,
       })) as MatcherLocation['matched'],

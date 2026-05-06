@@ -14,10 +14,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed, createComponent as h, signal } from 'essor';
 import { RouterLink, RouterView, createMemoryHistory, createRouter } from '../src';
-import type { RouteLocationRawTyped } from '../src';
 import { LinkComponent } from '../src/linkComponent';
 import { mount, sleep } from './utils';
 import { generateRouteLocation, randomBoolean, testWithMultipleInputs } from './helpers/test-utils';
+import type { RouteLocationRawTyped } from '../src';
 import type { Router } from '../src/router';
 
 describe('routerLink', () => {
@@ -1169,7 +1169,7 @@ describe('routerLink', () => {
     it('should handle various route locations correctly', async () => {
       await testWithMultipleInputs(
         () => generateRouteLocation(randomBoolean()),
-        location => {
+        (location) => {
           const testRouter = createRouter({
             history: createMemoryHistory(),
             routes: [

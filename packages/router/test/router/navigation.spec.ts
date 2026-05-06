@@ -24,38 +24,38 @@ describe('createNavigationCoordinator', () => {
         pending = location;
       },
       coordinator: createNavigationCoordinator({
-      resolve: (to: any) =>
-        typeof to === 'string'
-          ? {
-              ...currentRoute.value,
-              path: to,
-              fullPath: to,
-              href: to,
-              matched: [],
-            }
-          : {
-              ...currentRoute.value,
-              ...to,
-              href: to.fullPath || to.path || '/',
-              matched: to.matched || [],
-            },
-      locationAsObject: (to: any) => (typeof to === 'string' ? { path: to } : { ...to }),
-      stringifyQuery: (query: Record<string, any>) =>
-        new URLSearchParams(query as Record<string, string>).toString(),
-      currentRoute,
-      setPendingLocation: location => {
-        pending = location;
-      },
-      getPendingLocation: () => pending,
-      routerHistory: {
-        push: vi.fn(),
-        replace: vi.fn(),
-      },
-      triggerAfterEach: vi.fn(),
-      navigate: async () => undefined,
-      markAsReady: () => undefined,
-      triggerError: async error => Promise.reject(error),
-      handleScroll: async () => undefined,
+        resolve: (to: any) =>
+          typeof to === 'string'
+            ? {
+                ...currentRoute.value,
+                path: to,
+                fullPath: to,
+                href: to,
+                matched: [],
+              }
+            : {
+                ...currentRoute.value,
+                ...to,
+                href: to.fullPath || to.path || '/',
+                matched: to.matched || [],
+              },
+        locationAsObject: (to: any) => (typeof to === 'string' ? { path: to } : { ...to }),
+        stringifyQuery: (query: Record<string, any>) =>
+          new URLSearchParams(query as Record<string, string>).toString(),
+        currentRoute,
+        setPendingLocation: (location) => {
+          pending = location;
+        },
+        getPendingLocation: () => pending,
+        routerHistory: {
+          push: vi.fn(),
+          replace: vi.fn(),
+        },
+        triggerAfterEach: vi.fn(),
+        navigate: async () => undefined,
+        markAsReady: () => undefined,
+        triggerError: async (error) => Promise.reject(error),
+        handleScroll: async () => undefined,
       }),
     };
   }
@@ -120,7 +120,7 @@ describe('createNavigationCoordinator', () => {
     let firstSignal: AbortSignal | undefined;
     const firstLoader = vi.fn(
       ({ signal }: { signal?: AbortSignal }) =>
-        new Promise<void>(resolve => {
+        new Promise<void>((resolve) => {
           firstSignal = signal;
           resolveFirstLoader = resolve;
         }),

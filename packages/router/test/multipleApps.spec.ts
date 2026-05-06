@@ -1,7 +1,7 @@
 import { type RouterHistory, createMemoryHistory, createRouter } from '../src';
 import { components, createDom } from './utils';
 
-const delay = (t: number) => new Promise(resolve => setTimeout(resolve, t));
+const delay = (t: number) => new Promise((resolve) => setTimeout(resolve, t));
 
 function newRouter(options: Partial<Parameters<typeof createRouter>[0]> = {}) {
   const history = (options.history || createMemoryHistory('/')) as RouterHistory;

@@ -31,7 +31,7 @@ const routes: RouteRecordRaw[] = [
 
 function resetMocks() {
   beforeEnter.mockReset();
-  beforeEnters.forEach(spy => {
+  beforeEnters.forEach((spy) => {
     spy.mockReset();
     spy.mockImplementationOnce(noGuard);
   });

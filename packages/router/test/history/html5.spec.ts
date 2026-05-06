@@ -20,7 +20,7 @@ describe('history HTMl5', () => {
     return history;
   }
 
-  const waitForNavigation = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
+  const waitForNavigation = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
 
   beforeAll(() => {
     dom = createDom();
@@ -284,7 +284,6 @@ describe('history HTMl5', () => {
           direction: expect.any(String),
         }),
       );
-
     });
 
     it('handles navigation triggered by browser back/forward', async () => {
@@ -312,7 +311,6 @@ describe('history HTMl5', () => {
         type: 'pop',
         direction: 'back',
       });
-
     });
 
     it('suppresses consecutive go(_, false) popstate callbacks', async () => {

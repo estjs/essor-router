@@ -1,5 +1,5 @@
 import { createComponent as h } from 'essor';
-import { RouterView, type RouterHistory, createRouter, createWebHistory } from '../src';
+import { type RouterHistory, RouterView, createRouter, createWebHistory } from '../src';
 import { components, createDom, mount, nextNavigation, sleep } from './utils';
 import type { RouteRecordRaw } from '../src/types';
 import type { JSDOM } from 'jsdom';
