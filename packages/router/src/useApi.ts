@@ -1,10 +1,7 @@
-import { inject, signal, type Signal } from 'essor';
+import { type Signal, inject, signal } from 'essor';
 import { routeLocationKey, routerKey } from './injectionSymbols';
-import type {
-  RouteLocationNormalizedLoaded,
-  RouteLocationRawTyped,
-} from './types';
-import { getActiveRouter, type Router } from './router';
+import { type Router, getActiveRouter } from './router';
+import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from './types';
 
 type RouteContainer = Signal<RouteLocationNormalizedLoaded>;
 type TickSignal = Signal<number>;

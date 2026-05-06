@@ -47,8 +47,8 @@ export function usePrefetch(options: UsePrefetchOptions) {
 
     if (!target) return;
 
-    const createdObserver = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) {
+    const createdObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
         runPreload();
         createdObserver.disconnect();
         if (observer === createdObserver) {

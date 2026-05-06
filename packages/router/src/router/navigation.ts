@@ -321,7 +321,7 @@ export function createNavigationCoordinator(
         }
       }
     })()
-      .catch(error => {
+      .catch((error) => {
         routeDataCache.delete(key);
         throw error;
       })
@@ -344,11 +344,11 @@ export function createNavigationCoordinator(
     }
 
     const task = loadRouteLocation(resolved)
-      .then(async loaded => {
+      .then(async (loaded) => {
         await runRouteDataHooks(loaded);
         return loaded;
       })
-      .catch(error => {
+      .catch((error) => {
         preloadRouteCache.delete(key);
         throw error;
       });

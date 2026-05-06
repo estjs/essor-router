@@ -1,4 +1,5 @@
 import { nextTick, provide, toRaw } from 'essor';
+import { routerKey, routerViewLocationKey } from '@/injectionSymbols';
 import {
   ErrorTypes,
   type NavigationFailure,
@@ -17,7 +18,6 @@ import type {
   RouteLocationNormalized,
   RouteLocationNormalizedLoaded,
 } from '../types';
-import { routerKey, routeLocationKey, routerViewLocationKey } from '@/injectionSymbols';
 
 export interface ErrorListener {
   (error: Error, to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded): void;

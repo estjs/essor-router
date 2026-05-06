@@ -1,13 +1,5 @@
 // Enhanced router options interface for better type safety
-import {
-  createComponent,
-  computed,
-  effect,
-  inject,
-  onDestroy,
-  signal,
-  stop,
-} from 'essor';
+import { computed, createComponent, effect, inject, onDestroy, signal, stop } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
@@ -179,7 +171,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     throw new Error(
       'useLink() requires route context. ' +
         'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
-      'This error typically occurs when RouterLink is used outside of a router context.',
+        'This error typically occurs when RouterLink is used outside of a router context.',
     );
   }
 
@@ -290,8 +282,9 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     }
 
     try {
-      const startNavigation = () => router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
-      const navigation = new Promise<void | NavigationFailure>(resolve => {
+      const startNavigation = () =>
+        router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
+      const navigation = new Promise<void | NavigationFailure>((resolve) => {
         setTimeout(() => {
           startNavigation().then(resolve);
         }, 0);
@@ -504,7 +497,9 @@ export const RouterLink = (props: RouterLinkProps): any => {
 
   // Custom rendering or default anchor element
   return props.custom
-    ? (typeof props.children === 'function' ? props.children() : props.children)
+    ? typeof props.children === 'function'
+      ? props.children()
+      : props.children
     : createComponent(LinkComponent, {
         'ariaCurrent': ariaCurrent,
         'href': link.href,

@@ -52,10 +52,10 @@ export function createGuardPipeline(): GuardPipeline {
 
     guards = extractComponentsGuards(leavingRecords.reverse(), 'beforeLeave', to, from);
     for (const record of leavingRecords) {
-      record.leaveGuards.forEach(guard => {
+      record.leaveGuards.forEach((guard) => {
         guards.push(guardToPromiseFn(guard, to, from));
       });
-      if (record.beforeLeave && Object.values(record.instances).some(instance => !!instance)) {
+      if (record.beforeLeave && Object.values(record.instances).some((instance) => !!instance)) {
         if (Array.isArray(record.beforeLeave)) {
           for (const guard of record.beforeLeave) {
             guards.push(guardToPromiseFn(guard, to, from));
@@ -81,7 +81,7 @@ export function createGuardPipeline(): GuardPipeline {
       .then(() => {
         guards = extractComponentsGuards(updatingRecords, 'beforeRouteUpdate', to, from);
         for (const record of updatingRecords) {
-          record.updateGuards.forEach(guard => {
+          record.updateGuards.forEach((guard) => {
             guards.push(guardToPromiseFn(guard, to, from));
           });
         }
@@ -105,7 +105,7 @@ export function createGuardPipeline(): GuardPipeline {
         return runGuardQueue(guards);
       })
       .then(() => {
-        to.matched.forEach(record => (record.enterCallbacks = {}));
+        to.matched.forEach((record) => (record.enterCallbacks = {}));
         guards = extractComponentsGuards(enteringRecords, 'beforeRouteEnter', to, from);
         guards.push(canceledNavigationCheck);
         return runGuardQueue(guards);
@@ -119,7 +119,7 @@ export function createGuardPipeline(): GuardPipeline {
         return runGuardQueue(guards);
       })
       .then(() => runRouteDataHooks(to))
-      .catch(error =>
+      .catch((error) =>
         isNavigationFailure(error, ErrorTypes.NAVIGATION_CANCELLED) ? error : Promise.reject(error),
       );
   }
@@ -129,7 +129,7 @@ export function createGuardPipeline(): GuardPipeline {
     from: RouteLocationNormalizedLoaded,
     failure?: NavigationFailure | void,
   ) {
-    afterGuards.list().forEach(guard => guard(to, from, failure));
+    afterGuards.list().forEach((guard) => guard(to, from, failure));
   }
 
   return {
@@ -154,7 +154,7 @@ function extractChangingRecords(to: RouteLocationNormalized, from: RouteLocation
   for (let i = 0; i < len; i++) {
     const recordFrom = from.matched[i];
     if (recordFrom) {
-      if (to.matched.some(record => isSameRouteRecord(toRaw(record), toRaw(recordFrom)))) {
+      if (to.matched.some((record) => isSameRouteRecord(toRaw(record), toRaw(recordFrom)))) {
         updatingRecords.push(recordFrom);
       } else {
         leavingRecords.push(recordFrom);
@@ -163,7 +163,7 @@ function extractChangingRecords(to: RouteLocationNormalized, from: RouteLocation
     const recordTo = to.matched[i];
     if (
       recordTo &&
-      !from.matched.some(record => isSameRouteRecord(toRaw(record), toRaw(recordTo)))
+      !from.matched.some((record) => isSameRouteRecord(toRaw(record), toRaw(recordTo)))
     ) {
       enteringRecords.push(recordTo);
     }

@@ -1,10 +1,4 @@
-import {
-  isSignal,
-  insert,
-  memoEffect,
-  omitProps,
-  patchAttr,
-} from 'essor';
+import { insert, isSignal, memoEffect, omitProps, patchAttr } from 'essor';
 
 export function LinkComponent(props) {
   if (typeof document === 'undefined') {
@@ -14,7 +8,7 @@ export function LinkComponent(props) {
   const el = document.createElement('a');
   props.onElement?.(el);
 
-  el.addEventListener('click', event => {
+  el.addEventListener('click', (event) => {
     props.onClick?.(event);
 
     const currentTarget = event.currentTarget as Element | null;
@@ -32,9 +26,9 @@ export function LinkComponent(props) {
       event.preventDefault();
     }
   });
-  el.addEventListener('mouseenter', event => props.onMouseenter?.(event));
-  el.addEventListener('focus', event => props.onFocus?.(event));
-  el.addEventListener('touchstart', event => props.onTouchstart?.(event));
+  el.addEventListener('mouseenter', (event) => props.onMouseenter?.(event));
+  el.addEventListener('focus', (event) => props.onFocus?.(event));
+  el.addEventListener('touchstart', (event) => props.onTouchstart?.(event));
 
   insert(el, () => {
     let child = typeof props.children === 'function' ? props.children() : props.children;

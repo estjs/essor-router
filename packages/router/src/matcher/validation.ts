@@ -56,5 +56,5 @@ export function checkMissingParamsInAbsolutePath(
 }
 
 export function isRecordChildOf(record: RouteRecordMatcher, parent: RouteRecordMatcher): boolean {
-  return parent.children.some(child => child === record || isRecordChildOf(record, child));
+  return parent.children.some((child) => child === record || isRecordChildOf(record, child));
 }

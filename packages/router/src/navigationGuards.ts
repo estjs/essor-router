@@ -252,7 +252,7 @@ export function extractComponentsGuards(
         }
 
         guards.push(() =>
-          componentPromise.then(resolved => {
+          componentPromise.then((resolved) => {
             if (!resolved)
               return Promise.reject(
                 new Error(`Couldn't resolve component "${name}" at "${record.path}"`),
@@ -289,11 +289,11 @@ export function isRouteComponent(component: RawRouteComponent): component is Rou
 export function loadRouteLocation(
   route: RouteLocationNormalized,
 ): Promise<RouteLocationNormalizedLoaded> {
-  return route.matched.every(record => record.redirect)
+  return route.matched.every((record) => record.redirect)
     ? Promise.reject(new Error('Cannot load a route that redirects.'))
     : Promise.all(
         route.matched.map(
-          record =>
+          (record) =>
             record.components &&
             Promise.all(
               Object.keys(record.components).reduce(
@@ -310,7 +310,7 @@ export function loadRouteLocation(
                     }
 
                     promises.push(
-                      componentPromise.then(resolved => {
+                      componentPromise.then((resolved) => {
                         if (!resolved)
                           return Promise.reject(
                             new Error(
