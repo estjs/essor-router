@@ -260,6 +260,22 @@ importers:
         specifier: ^11.3.3
         version: 11.3.3(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
 
+  examples/guards:
+    dependencies:
+      essor:
+        specifier: ^0.0.16-beta.1
+        version: 0.0.16-beta.1
+      essor-router:
+        specifier: workspace:*
+        version: link:../../packages/router
+    devDependencies:
+      unplugin-essor:
+        specifier: ^0.0.16-beta.1
+        version: 0.0.16-beta.1(esbuild@0.27.4)(rollup@4.60.2)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))(webpack@5.105.4(esbuild@0.27.4))
+      vite:
+        specifier: ^8.0.0
+        version: 8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)
+
   examples/option-router:
     dependencies:
       essor:

@@ -24,7 +24,7 @@ pnpm add essor-router
 ## 基础用法
 
 ```typescript
-import { createRouter, createWebHistory, RouterView, RouterLink } from 'essor-router';
+import { RouterLink, RouterView, createRouter, createWebHistory } from 'essor-router';
 
 // 定义路由列表
 const routes = [
@@ -46,7 +46,7 @@ const router = createRouter({
 为了获得最佳的开发体验，我们强烈建议搭配使用 [TypeScript 插件](../ts-plugin/README.zh-CN.md)。该插件只需一次简单的配置即可为您项目里的自定义路由、查询参数及各 API 提供自动化类型推断，避免冗杂的类型声明维护成本。
 
 ```typescript
-import { RouteRecordRaw } from 'essor-router';
+import type { RouteRecordRaw } from 'essor-router';
 
 const route: RouteRecordRaw = {
   path: '/user/:id',
