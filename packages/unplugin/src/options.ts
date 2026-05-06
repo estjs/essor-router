@@ -1,5 +1,6 @@
 import { isPackageExists as isPackageInstalled } from 'local-pkg';
 import { resolve } from 'pathe';
+import { isFunction, isString } from '@estjs/shared';
 import { getFileBasedRouteName, isArray, warn } from './core/utils';
 import type { EditableTreeNode } from './core/extendRoutes';
 import type { TreeNode } from './core/tree';
@@ -102,9 +103,7 @@ export type _OverridableOption<T, AllowedTypes = T> = AllowedTypes | ((existing:
  * @internal
  */
 export function resolveOverridableOption<T>(defaultValue: T, value?: _OverridableOption<T, T>): T {
-  return typeof value === 'function'
-    ? (value as (existing: T) => T)(defaultValue)
-    : (value ?? defaultValue);
+  return isFunction(value) ? (value as (existing: T) => T)(defaultValue) : (value ?? defaultValue);
 }
 
 /**
@@ -335,7 +334,7 @@ export interface ServerContext {
 
 function normalizeRoutesFolderOption(routesFolder: RoutesFolder) {
   return (isArray(routesFolder) ? routesFolder : [routesFolder]).map((routeOption) =>
-    normalizeRouteOption(typeof routeOption === 'string' ? { src: routeOption } : routeOption),
+    normalizeRouteOption(isString(routeOption) ? { src: routeOption } : routeOption),
   );
 }
 
@@ -343,7 +342,7 @@ function normalizeOverridableArray(
   value: undefined | string | string[] | ((existing: string[]) => string[]),
 ): undefined | string[] | ((existing: string[]) => string[]) {
   if (!value) return undefined;
-  if (typeof value === 'function') return value;
+  if (isFunction(value)) return value;
   return isArray(value) ? value : [value];
 }
 

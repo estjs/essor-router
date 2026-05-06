@@ -1,3 +1,4 @@
+import { isString } from '@estjs/shared';
 import { encodePath } from '../utils/encoding';
 import { joinPath, mergeRouteRecordOverride, warn } from './utils';
 import type {
@@ -142,7 +143,7 @@ class _TreeNodeValueBase {
       const config = paramsQuery[paramName];
       // shouldn't happen
       if (!config) continue;
-      if (typeof config === 'string') {
+      if (isString(config)) {
         queryParams.push({
           paramName,
           parser: config,
@@ -403,7 +404,7 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
   // Calculate score for each subsegment to handle mixed static/param parts
   get score(): number[] {
     return this.subSegments.map((segment) => {
-      if (typeof segment === 'string') {
+      if (isString(segment)) {
         // Static subsegment gets highest score
         return 300;
       } else {
@@ -427,7 +428,7 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
       // skip empty sub segments
       if (!segment) continue;
 
-      if (typeof segment === 'string') {
+      if (isString(segment)) {
         regexp += escapeRegex(segment);
       } else if (segment.isSplat) {
         regexp += '(.*)';
@@ -440,7 +441,7 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
           const prevSegment = this.subSegments[i - 1];
           // is there a slash right before us
           if (
-            (!prevSegment || (typeof prevSegment === 'string' && prevSegment.endsWith('/'))) &&
+            (!prevSegment || (isString(prevSegment) && prevSegment.endsWith('/'))) &&
             // avoid the transformation when the optional param is the whole path
             this.subSegments.length > 1
           ) {

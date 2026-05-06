@@ -1,3 +1,4 @@
+import { isString } from '@estjs/shared';
 import {
   CONVENTION_OVERRIDE_NAME,
   type TreeNodeValue,
@@ -438,7 +439,7 @@ export class TreeNode {
       }
 
       const subSegments = node.value.subSegments.map((segment) =>
-        typeof segment === 'string'
+        isString(segment)
           ? segment
           : // param
             segment.isSplat

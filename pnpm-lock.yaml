@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.2.4
-        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5)
+        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.59.1
@@ -163,7 +163,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.2.4
-        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5)
+        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))
       '@types/node':
         specifier: ^25.5.0
         version: 25.6.0
@@ -200,7 +200,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.2.4
-        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5)
+        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))
       '@types/node':
         specifier: ^25.5.0
         version: 25.6.0
@@ -237,7 +237,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.2.4
-        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5)
+        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))
       '@types/node':
         specifier: ^25.5.0
         version: 25.6.0
@@ -324,7 +324,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.2.4
-        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5)
+        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))
       '@types/node':
         specifier: ^25.5.0
         version: 25.6.0
@@ -398,7 +398,7 @@ importers:
     devDependencies:
       '@estjs/eslint-config':
         specifier: ^2.2.4
-        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5)
+        version: 2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))
       '@types/node':
         specifier: ^25.5.0
         version: 25.6.0
@@ -495,6 +495,9 @@ importers:
       '@babel/parser':
         specifier: ^7.29.0
         version: 7.29.2
+      '@estjs/shared':
+        specifier: ^0.0.16-beta.1
+        version: 0.0.16-beta.1
       ast-walker-scope:
         specifier: ^0.8.3
         version: 0.8.3
@@ -5769,51 +5772,6 @@ snapshots:
       - typescript
       - vitest
 
-  '@estjs/eslint-config@2.3.0(@types/eslint@9.6.1)(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)(typescript@5.9.3)(vitest@4.1.5)':
-    dependencies:
-      '@eslint-community/eslint-plugin-eslint-comments': 4.7.1(eslint@10.2.1(jiti@2.6.1))
-      '@eslint-react/eslint-plugin': 4.2.3(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-      '@eslint/compat': 2.0.5(eslint@10.2.1(jiti@2.6.1))
-      '@eslint/markdown': 8.0.1
-      '@prettier/plugin-oxc': 0.1.4
-      '@typescript-eslint/eslint-plugin': 8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-      '@typescript-eslint/parser': 8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-      '@unocss/eslint-plugin': 66.6.8(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-      '@vitest/eslint-plugin': 1.6.16(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.1.5)
-      deepmerge-ts: 7.1.5
-      eslint: 10.2.1(jiti@2.6.1)
-      eslint-config-prettier: 10.1.8(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-command: 3.5.2(@typescript-eslint/rule-tester@8.57.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.59.1(typescript@5.9.3))(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-import-x: 4.16.2(@typescript-eslint/utils@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-jsdoc: 62.9.0(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-jsonc: 3.1.2(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-n: 17.24.0(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-      eslint-plugin-pnpm: 1.6.0(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-prettier: 5.5.5(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@10.2.1(jiti@2.6.1)))(eslint@10.2.1(jiti@2.6.1))(prettier@3.8.3)
-      eslint-plugin-regexp: 3.1.0(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-sort-keys: 2.3.5
-      eslint-plugin-unicorn: 64.0.0(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-unused-imports: 4.4.1(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))
-      eslint-plugin-vue: 10.9.0(@typescript-eslint/parser@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(vue-eslint-parser@10.4.0(eslint@10.2.1(jiti@2.6.1)))
-      eslint-plugin-yml: 3.3.2(eslint@10.2.1(jiti@2.6.1))
-      globals: 17.5.0
-      jsonc-eslint-parser: 3.1.0
-      local-pkg: 1.1.2
-      prettier: 3.8.3
-      vue-eslint-parser: 10.4.0(eslint@10.2.1(jiti@2.6.1))
-      yaml-eslint-parser: 2.0.0
-    transitivePeerDependencies:
-      - '@eslint/json'
-      - '@stylistic/eslint-plugin'
-      - '@types/eslint'
-      - '@typescript-eslint/rule-tester'
-      - '@typescript-eslint/typescript-estree'
-      - '@typescript-eslint/utils'
-      - eslint-import-resolver-node
-      - supports-color
-      - typescript
-      - vitest
-
   '@estjs/server@0.0.16-beta.1':
     dependencies:
       '@estjs/shared': 0.0.16-beta.1
@@ -6963,18 +6921,6 @@ snapshots:
       - supports-color
 
   '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3)))':
-    dependencies:
-      '@typescript-eslint/scope-manager': 8.59.1
-      '@typescript-eslint/utils': 8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-      eslint: 10.2.1(jiti@2.6.1)
-    optionalDependencies:
-      '@typescript-eslint/eslint-plugin': 8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)
-      typescript: 5.9.3
-      vitest: 4.1.5(@types/node@25.6.0)(@vitest/coverage-v8@4.0.16(vitest@4.1.5))(happy-dom@20.9.0)(jsdom@29.1.1)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.4)(jiti@2.6.1)(sass-embedded@1.99.0)(sass@1.99.0)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.3))
-    transitivePeerDependencies:
-      - supports-color
-
-  '@vitest/eslint-plugin@1.6.16(@typescript-eslint/eslint-plugin@8.59.1(@typescript-eslint/parser@8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3))(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)(vitest@4.1.5)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.59.1
       '@typescript-eslint/utils': 8.59.1(eslint@10.2.1(jiti@2.6.1))(typescript@5.9.3)

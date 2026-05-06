@@ -1,6 +1,7 @@
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
 import picomatch from 'picomatch';
 import path, { resolve } from 'pathe';
+import { isFunction, isString, isUndefined } from '@estjs/shared';
 import { appendExtensionListToPattern, asRoutePath } from './utils';
 import type { Stats } from 'node:fs';
 import type { ResolvedOptions, RoutesFolderOption, RoutesFolderOptionResolved } from '../options';
@@ -112,14 +113,14 @@ function overrideOption(
   existing: string[] | string,
   newValue: undefined | string[] | string | ((existing: string[]) => string[]),
 ): string[] {
-  const asArray = typeof existing === 'string' ? [existing] : existing;
+  const asArray = isString(existing) ? [existing] : existing;
   // allow extending when a function is passed
-  if (typeof newValue === 'function') {
+  if (isFunction(newValue)) {
     return newValue(asArray);
   }
   // override if passed
-  if (typeof newValue !== 'undefined') {
-    return typeof newValue === 'string' ? [newValue] : newValue;
+  if (!isUndefined(newValue)) {
+    return isString(newValue) ? [newValue] : newValue;
   }
   // fallback to existing
   return asArray;

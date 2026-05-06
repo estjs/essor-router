@@ -1,3 +1,4 @@
+import { isFunction, isString } from '@estjs/shared';
 import { pad, toStringLiteral } from '../utils';
 import { generateDefinePageImports } from './generateCommon';
 import type { ImportsMap } from '../core/utils';
@@ -56,7 +57,7 @@ ${indentStr}${
         ? `name: ${toStringLiteral(node.name)},`
         : `/* no name */`
       : // node.name can still be false and we don't want that to result in string literal 'false'
-        `/* internal name: ${typeof node.name === 'string' ? toStringLiteral(node.name) : node.name} */`
+        `/* internal name: ${isString(node.name) ? toStringLiteral(node.name) : node.name} */`
   }
 ${
   // component
@@ -130,7 +131,7 @@ export function generatePageImport(
   importMode: ResolvedOptions['importMode'],
   importsMap: ImportsMap,
 ) {
-  const mode = typeof importMode === 'function' ? importMode(filepath) : importMode;
+  const mode = isFunction(importMode) ? importMode(filepath) : importMode;
   if (mode === 'async') {
     return `() => import(${toStringLiteral(filepath)})`;
   }

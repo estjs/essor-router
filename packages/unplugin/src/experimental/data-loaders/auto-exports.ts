@@ -2,6 +2,7 @@ import { createFilter } from 'unplugin-utils';
 import MagicString from 'magic-string';
 import { findStaticImports, parseStaticImport } from 'mlly';
 import { resolve } from 'pathe';
+import { isObject } from '@estjs/shared';
 import type { StringFilter, UnpluginOptions } from 'unplugin';
 import type { Plugin } from 'vite';
 
@@ -60,7 +61,7 @@ function isObjectFilter(filter: StringFilter): filter is {
 } {
   return (
     !!filter &&
-    typeof filter === 'object' &&
+    isObject(filter) &&
     !Array.isArray(filter) &&
     ('include' in filter || 'exclude' in filter)
   );

@@ -1,6 +1,7 @@
 import { generate } from '@babel/generator';
 import { walkAST } from 'ast-walker-scope';
 import { type ParsedStaticImport, findStaticImports, parseStaticImport } from 'mlly';
+import { isString } from '@estjs/shared';
 import {
   MagicString,
   babelParse,
@@ -433,7 +434,7 @@ function extractQueryParams(
             ) {
               paramInfo.required = paramProp.value.value;
             } else if (paramProp.key.name === 'default') {
-              if (typeof paramProp.value.extra?.raw === 'string') {
+              if (isString(paramProp.value.extra?.raw)) {
                 paramInfo.default = paramProp.value.extra.raw;
               } else if (paramProp.value.type === 'NumericLiteral') {
                 paramInfo.default = String(paramProp.value.value);

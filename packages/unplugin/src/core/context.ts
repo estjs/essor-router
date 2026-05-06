@@ -4,6 +4,7 @@ import { dirname, parse as parsePathe, relative, resolve } from 'pathe';
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
 import picomatch from 'picomatch';
 import { camelCase } from 'scule';
+import { isFunction } from '@estjs/shared';
 import { EditableTreeNode } from './extendRoutes';
 import { definePageTransform, extractDefinePageInfo } from './definePage';
 import {
@@ -33,7 +34,7 @@ export function createRoutesContext(options: ResolvedOptions) {
   const logger = new Proxy(console, {
     get(target, prop) {
       const res = Reflect.get(target, prop);
-      if (typeof res === 'function') {
+      if (isFunction(res)) {
         return options.logs ? res : () => {};
       }
       return res;

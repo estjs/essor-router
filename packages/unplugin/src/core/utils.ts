@@ -1,4 +1,5 @@
 import { pascalCase } from 'scule';
+import { isArray, isObject, isString } from '@estjs/shared';
 import { toStringLiteral } from '../utils';
 import type { ResolvedOptions, RoutesFolderOptionResolved } from '../options';
 import type { TreeNode } from './tree';
@@ -46,11 +47,7 @@ function printTree(
   return treeStr;
 }
 
-/**
- * Type safe alternative to Array.isArray
- * https://github.com/microsoft/TypeScript/pull/48228
- */
-export const isArray: (arg: ArrayLike<any> | any) => arg is ReadonlyArray<any> = Array.isArray;
+export { isArray };
 
 export function trimExtension(path: string, extensions: ResolvedOptions['extensions']) {
   for (const extension of extensions) {
@@ -127,7 +124,7 @@ export function getPascalCaseRouteName(node: TreeNode): string {
 
   let name = node.value.subSegments
     .map((segment) => {
-      if (typeof segment === 'string') {
+      if (isString(segment)) {
         return pascalCase(segment);
       }
       // else it's a param
@@ -201,9 +198,7 @@ export function mergeRouteRecordOverride(
   return merged;
 }
 
-function isObject(obj: unknown): obj is Record<string, unknown> {
-  return obj !== null && typeof obj === 'object' && !Array.isArray(obj);
-}
+export { isObject };
 
 function mergeDeep(...objects: Array<Record<string, unknown>>): Record<string, unknown> {
   return objects.reduce(
@@ -238,7 +233,7 @@ export function asRoutePath(
   filePath: string,
 ) {
   return trimExtension(
-    typeof path === 'string'
+    isString(path)
       ? // add the path prefix if any
         path +
           // remove the absolute path to the pages folder
@@ -295,7 +290,7 @@ export class ImportsMap {
       this.map.set(path, new Map());
     }
     const imports = this.map.get(path)!;
-    if (typeof importEntry === 'string') {
+    if (isString(importEntry)) {
       imports.set(importEntry, importEntry);
     } else {
       imports.set(importEntry.as || importEntry.name, importEntry.name);

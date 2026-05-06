@@ -63,6 +63,7 @@
   "dependencies": {
     "@babel/generator": "^7.29.1",
     "@babel/parser": "^7.29.0",
+    "@estjs/shared": "^0.0.16-beta.1",
     "ast-walker-scope": "^0.8.3",
     "chokidar": "^5.0.0",
     "json5": "^2.2.3",
