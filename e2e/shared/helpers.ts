@@ -10,7 +10,12 @@ export async function assertVisible(page: Page, selector: string, timeout = 5000
   await expect(page.locator(selector).first()).toBeVisible();
 }
 
-export async function assertText(page: Page, selector: string, text: string | RegExp, timeout = 5000) {
+export async function assertText(
+  page: Page,
+  selector: string,
+  text: string | RegExp,
+  timeout = 5000,
+) {
   await page.waitForSelector(selector, { state: 'visible', timeout });
   await expect(page.locator(selector).first()).toContainText(text);
 }
@@ -20,7 +25,12 @@ export async function assertTextExact(page: Page, selector: string, text: string
   await expect(page.locator(selector).first()).toHaveText(text);
 }
 
-export async function clickAndWait(page: Page, selector: string, waitForUrl?: string, timeout = 5000) {
+export async function clickAndWait(
+  page: Page,
+  selector: string,
+  waitForUrl?: string,
+  timeout = 5000,
+) {
   await page.click(selector);
   if (waitForUrl) {
     await page.waitForURL((url) => url.toString().includes(waitForUrl), { timeout });
@@ -78,7 +88,12 @@ export async function verifyQueryAndHash(
   expect(url.hash).toBe(expectedHash);
 }
 
-export async function goBack(page: Page, expectedSelector: string, expectedText?: string, timeout = 10000) {
+export async function goBack(
+  page: Page,
+  expectedSelector: string,
+  expectedText?: string,
+  timeout = 10000,
+) {
   await page.goBack({ waitUntil: 'domcontentloaded' });
   await page.waitForSelector(expectedSelector, { state: 'visible', timeout });
   if (expectedText) {
@@ -86,7 +101,12 @@ export async function goBack(page: Page, expectedSelector: string, expectedText?
   }
 }
 
-export async function goForward(page: Page, expectedSelector: string, expectedText?: string, timeout = 10000) {
+export async function goForward(
+  page: Page,
+  expectedSelector: string,
+  expectedText?: string,
+  timeout = 10000,
+) {
   await page.goForward({ waitUntil: 'domcontentloaded' });
   await page.waitForSelector(expectedSelector, { state: 'visible', timeout });
   if (expectedText) {

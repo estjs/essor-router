@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { assertVisible, assertText, assertUrlContains } from './shared/helpers';
+import { test } from '@playwright/test';
+import { assertText, assertUrlContains, assertVisible } from './shared/helpers';
 import { Sel } from './shared/selectors';
 
 test.describe('Programmatic Navigation', () => {

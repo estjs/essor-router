@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { assertVisible, assertText, assertUrlContains, goBack, goForward } from './shared/helpers';
+import { expect, test } from '@playwright/test';
+import { assertText, assertUrlContains, assertVisible, goBack, goForward } from './shared/helpers';
 import { Sel } from './shared/selectors';
 
 test.describe('History Modes - HTML5', () => {

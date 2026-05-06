@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { assertVisible } from './shared/helpers';
 import { Sel } from './shared/selectors';
 

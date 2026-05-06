@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { assertVisible, assertText, assertUrlContains } from './shared/helpers';
+import { expect, test } from '@playwright/test';
+import { assertText, assertVisible } from './shared/helpers';
 import { Sel } from './shared/selectors';
 
 test.describe('Navigation Guards', () => {
