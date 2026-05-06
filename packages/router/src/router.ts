@@ -29,10 +29,6 @@ import { createNavigationCoordinator } from './router/navigation';
 import { setupRouterLifecycle } from './router/lifecycle';
 import { warn } from './warning';
 import type { Signal } from 'essor';
-// NOTE: using `shallowSignal` rather than `signal` so essor does not
-// deep-wrap the stored route object in a `reactive()` proxy. This keeps
-// `currentRoute.value` referentially identical to what navigation writes,
-// mirroring vue-router's `shallowRef` semantics.
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouterHistory } from './history/common';
@@ -40,6 +36,10 @@ import type { PathParserOptions } from './matcher/pathParserRanker';
 import type { ErrorListener as _ErrorListener } from './router/lifecycle';
 
 export { _ErrorListener };
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 type History = 'history' | 'hash' | 'memory';
 
@@ -93,15 +93,7 @@ export interface Router {
   getRouteRenderMode(name: RouteRecordName): RouteRenderMode;
 }
 
-const routeLocationContextKey = Symbol(__DEV__ ? 'router route location' : '');
-
-type RouterWithRouteLocationContext = Router & {
-  [routeLocationContextKey]: RouteLocationNormalizedLoaded;
-};
-
 export type RouteRenderMode = 'csr' | 'ssr' | 'prerender';
-
-let activeRouter: Router | undefined;
 
 export interface PrerenderPathInfo {
   name: string | symbol | undefined;
@@ -109,6 +101,22 @@ export interface PrerenderPathInfo {
   paths: string[];
   meta: Record<string | number | symbol, any>;
 }
+
+// ---------------------------------------------------------------------------
+// Route location context (associates reactive route with a Router instance)
+// ---------------------------------------------------------------------------
+
+const routeLocationContextKey = Symbol(__DEV__ ? 'router route location' : '');
+
+type RouterWithRouteLocationContext = Router & {
+  [routeLocationContextKey]: RouteLocationNormalizedLoaded;
+};
+
+let activeRouter: Router | undefined;
+
+// ---------------------------------------------------------------------------
+// History factory
+// ---------------------------------------------------------------------------
 
 export function createHistory(mode: History | RouterHistory, base?: string): RouterHistory {
   if (isObject(mode)) return mode as RouterHistory;
@@ -124,11 +132,16 @@ export function createHistory(mode: History | RouterHistory, base?: string): Rou
   }
 }
 
+// ---------------------------------------------------------------------------
+// Router factory
+// ---------------------------------------------------------------------------
+
 export function createRouter(options: RouterOptions): Router {
   if (!options.history) {
     throw new Error('Provide the "history" option when calling createRouter()');
   }
 
+  // --- Core infrastructure ---
   const matcher = createRouterMatcher(options.routes, options);
   const parseQuery = options.parseQuery || defaultParseQuery;
   const stringifyQuery = options.stringifyQuery || defaultStringifyQuery;
@@ -137,6 +150,10 @@ export function createRouter(options: RouterOptions): Router {
     ? createHistory(options.history, options.base)
     : (options.history as RouterHistory);
 
+  // NOTE: using `shallowSignal` rather than `signal` so essor does not
+  // deep-wrap the stored route object in a `reactive()` proxy. This keeps
+  // `currentRoute.value` referentially identical to what navigation writes,
+  // mirroring vue-router's `shallowRef` semantics.
   const currentRoute = shallowSignal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
   const routeLocationContext = createReactiveRoute(currentRoute);
 
@@ -151,6 +168,7 @@ export function createRouter(options: RouterOptions): Router {
   const pipeline = createGuardPipeline();
   let pendingLocation: RouteLocation = START_LOCATION_NORMALIZED;
 
+  // --- Scroll handling ---
   const handleScroll = (
     to: RouteLocationNormalizedLoaded,
     from: RouteLocationNormalizedLoaded,
@@ -171,6 +189,8 @@ export function createRouter(options: RouterOptions): Router {
       .then((position) => position && scrollToPosition(position));
   };
 
+  // --- Lifecycle (must be set up before navigation to break circular deps) ---
+  // Temporary forward-references filled once lifecycle is created.
   let markAsReady: <E extends Error = Error>(err?: E) => E | void = () => {};
   let triggerError: (
     error: Error,
@@ -178,46 +198,47 @@ export function createRouter(options: RouterOptions): Router {
     from: RouteLocationNormalizedLoaded,
   ) => Promise<unknown> = (error) => Promise.reject(error);
 
+  // --- Shared helpers ---
+  const setPendingLocation = (location: RouteLocation) => { pendingLocation = location; };
+  const getPendingLocation = () => pendingLocation;
+  const runGuardPipeline = (to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded) =>
+    pipeline.navigate(to, from, navigation.checkCanceledNavigationAndReject, (routeToLoad) =>
+      navigation.runRouteDataHooks(routeToLoad, true),
+    );
+
+  // --- Navigation coordinator ---
   const navigation = createNavigationCoordinator({
     resolve: resolver.resolve,
     locationAsObject: resolver.locationAsObject,
     stringifyQuery,
     currentRoute,
-    setPendingLocation: (location) => {
-      pendingLocation = location;
-    },
-    getPendingLocation: () => pendingLocation,
+    setPendingLocation,
+    getPendingLocation,
     routerHistory,
     triggerAfterEach: pipeline.triggerAfterEach,
-    navigate: (to, from) =>
-      pipeline.navigate(to, from, navigation.checkCanceledNavigationAndReject, (routeToLoad) =>
-        navigation.runRouteDataHooks(routeToLoad, true),
-      ),
+    navigate: runGuardPipeline,
     markAsReady: (err) => markAsReady(err),
     triggerError: (error, to, from) => triggerError(error, to, from),
     handleScroll,
   });
 
+  // --- Route management ---
   function addRoute(parentOrRoute: RouteRecordName | RouteRecordRaw, route?: RouteRecordRaw) {
+    let parentMatcher;
     if (route) {
-      const parentMatcher = matcher.getRecordMatcher(parentOrRoute as RouteRecordName);
+      parentMatcher = matcher.getRecordMatcher(parentOrRoute as RouteRecordName);
       if (!parentMatcher) {
-        if (__DEV__) {
-          warn(`Parent route "${String(parentOrRoute)}" not found when adding child route`);
-        }
+        if (__DEV__) warn(`Parent route "${String(parentOrRoute)}" not found when adding child route`);
         return () => {};
       }
-
-      const remove = matcher.addRoute(route, parentMatcher);
-      navigation.clearCaches();
-      return () => {
-        remove();
-        navigation.clearCaches();
-      };
     }
 
-    const remove = matcher.addRoute(parentOrRoute as RouteRecordRaw);
+    const remove = matcher.addRoute(
+      (route || parentOrRoute) as RouteRecordRaw,
+      parentMatcher,
+    );
     navigation.clearCaches();
+
     return () => {
       remove();
       navigation.clearCaches();
@@ -241,18 +262,20 @@ export function createRouter(options: RouterOptions): Router {
 
   const go = (delta: number) => routerHistory.go(delta);
 
-  const getAllRouteRecords = () => matcher.getRoutes().map((r) => r.record);
-  const getPrerenderPathInfos = () => collectPrerenderPaths(getAllRouteRecords());
-
+  // --- Build the router object ---
   const router = {
     currentRoute,
     listening: true,
     options,
+
+    // Route management
     addRoute: addRoute as Router['addRoute'],
     removeRoute,
     clearRoutes,
     hasRoute: (name: RouteRecordName) => !!matcher.getRecordMatcher(name),
-    getRoutes: () => matcher.getRoutes().map((routeMatcher) => routeMatcher.record),
+    getRoutes: () => matcher.getRoutes().map((m) => m.record),
+
+    // Resolution & navigation
     resolve: resolver.resolve as Router['resolve'],
     push: navigation.push as Router['push'],
     replace: navigation.replace as Router['replace'],
@@ -260,15 +283,22 @@ export function createRouter(options: RouterOptions): Router {
     go,
     back: () => go(-1),
     forward: () => go(1),
+
+    // Guards
     beforeEach: pipeline.beforeGuards.add,
     beforeResolve: pipeline.beforeResolveGuards.add,
     afterEach: pipeline.afterGuards.add,
+
+    // Lifecycle (patched below once `lifecycle` is available)
     onError: (() => () => {}) as Router['onError'],
-    isReady: async () => {},
-    init: () => {},
-    destroy: () => {},
-    getPrerenderPaths: getPrerenderPathInfos,
-    getPrerenderPathsAsync: async () => collectPrerenderPathsAsync(getAllRouteRecords()),
+    isReady: (async () => {}) as Router['isReady'],
+    init: (() => {}) as Router['init'],
+    destroy: (() => {}) as Router['destroy'],
+
+    // Prerender
+    getPrerenderPaths: () => collectPrerenderPaths(matcher.getRoutes().map((r) => r.record)),
+    getPrerenderPathsAsync: async () =>
+      collectPrerenderPathsAsync(matcher.getRoutes().map((r) => r.record)),
     getRouteRenderMode: (name: RouteRecordName): RouteRenderMode => {
       const record = matcher.getRecordMatcher(name)?.record;
       if (record?.start?.prerender) return 'prerender';
@@ -277,18 +307,14 @@ export function createRouter(options: RouterOptions): Router {
     },
   } satisfies Router;
 
+  // --- Wire up lifecycle (resolves forward-references) ---
   const lifecycle = setupRouterLifecycle({
     router,
     currentRoute,
     resolve: (to) => resolver.resolve(to as any),
-    setPendingLocation: (location) => {
-      pendingLocation = location;
-    },
+    setPendingLocation,
     pushWithRedirect: navigation.push as any,
-    navigate: (to, from) =>
-      pipeline.navigate(to, from, navigation.checkCanceledNavigationAndReject, (routeToLoad) =>
-        navigation.runRouteDataHooks(routeToLoad, true),
-      ),
+    navigate: runGuardPipeline,
     finalizeNavigation: navigation.finalizeNavigation,
     triggerAfterEach: pipeline.triggerAfterEach,
     handleRedirectRecord: navigation.handleRedirectRecord,
@@ -298,17 +324,21 @@ export function createRouter(options: RouterOptions): Router {
 
   markAsReady = lifecycle.markAsReady;
   triggerError = lifecycle.triggerError;
-
   router.onError = lifecycle.onError;
   router.isReady = lifecycle.isReady;
   router.init = () => lifecycle.init(router);
   router.destroy = lifecycle.destroy;
 
+  // --- Context & activation ---
   (router as RouterWithRouteLocationContext)[routeLocationContextKey] = routeLocationContext;
   activeRouter = router;
 
   return router;
 }
+
+// ---------------------------------------------------------------------------
+// Module-level accessors
+// ---------------------------------------------------------------------------
 
 export function getActiveRouter(): Router | undefined {
   return activeRouter;
@@ -318,62 +348,63 @@ export function getRouteLocationContext(router: Router): RouteLocationNormalized
   return (router as RouterWithRouteLocationContext)[routeLocationContextKey];
 }
 
-function collectPrerenderPaths(
-  records: Array<{ name?: RouteRecordName; path: string; meta: any; start?: any }>,
-) {
+// ---------------------------------------------------------------------------
+// Prerender path collection
+// ---------------------------------------------------------------------------
+
+type PrerenderRecord = { name?: RouteRecordName; path: string; meta: any; start?: any };
+
+function collectPrerenderPaths(records: PrerenderRecord[]): PrerenderPathInfo[] {
   return records
-    .filter((record) => record.start?.prerender)
+    .filter((r) => r.start?.prerender)
     .flatMap((record) => {
-      const paths = resolvePrerenderPathsSync(record);
-      return paths.length === 0
-        ? []
-        : [
-            {
-              name: record.name,
-              pathTemplate: record.path,
-              paths,
-              meta: record.meta || {},
-            },
-          ];
+      const paths = resolvePrerenderPaths(record, false) as string[];
+      return paths.length > 0
+        ? [{ name: record.name, pathTemplate: record.path, paths, meta: record.meta || {} }]
+        : [];
     });
 }
 
-async function collectPrerenderPathsAsync(
-  records: Array<{ name?: RouteRecordName; path: string; meta: any; start?: any }>,
-) {
+async function collectPrerenderPathsAsync(records: PrerenderRecord[]): Promise<PrerenderPathInfo[]> {
   const collected: PrerenderPathInfo[] = [];
   for (const record of records) {
     if (!record.start?.prerender) continue;
-    const paths = await resolvePrerenderPathsAsync(record);
-    if (paths.length === 0) continue;
-    collected.push({
-      name: record.name,
-      pathTemplate: record.path,
-      paths,
-      meta: record.meta || {},
-    });
+    const paths = await resolvePrerenderPaths(record, true);
+    if (paths.length > 0) {
+      collected.push({
+        name: record.name,
+        pathTemplate: record.path,
+        paths,
+        meta: record.meta || {},
+      });
+    }
   }
   return collected;
 }
 
-function isDynamicRoutePath(path: string) {
-  return path.includes(':');
-}
+/**
+ * Unified prerender path resolver. When `allowAsync` is false, async
+ * `prerenderPaths` functions emit a dev warning and return `[]`.
+ */
+function resolvePrerenderPaths(
+  record: { path: string; start?: any },
+  allowAsync: true,
+): Promise<string[]> | string[];
+function resolvePrerenderPaths(
+  record: { path: string; start?: any },
+  allowAsync: false,
+): string[];
+function resolvePrerenderPaths(
+  record: { path: string; start?: any },
+  allowAsync: boolean,
+): Promise<string[]> | string[] {
+  const configured = record.start?.prerenderPaths;
 
-function warnMissingPrerenderPaths(path: string) {
-  if (__DEV__) {
-    warn(
-      `Dynamic prerender route "${path}" requires "start.prerenderPaths" to provide concrete output paths.`,
-    );
-  }
-}
-
-function resolvePrerenderPathsSync(record: { path: string; start?: any }): string[] {
-  const configuredPaths = record.start?.prerenderPaths;
-  if (configuredPaths) {
-    if (typeof configuredPaths === 'function') {
-      const resolved = configuredPaths();
-      if (resolved instanceof Promise) {
+  if (configured) {
+    if (typeof configured === 'function') {
+      const result = configured();
+      if (result instanceof Promise) {
+        if (allowAsync) return result;
         if (__DEV__) {
           warn(
             `Dynamic prerender route "${record.path}" returned an async "start.prerenderPaths". Use "getPrerenderPathsAsync()" to resolve it.`,
@@ -381,33 +412,18 @@ function resolvePrerenderPathsSync(record: { path: string; start?: any }): strin
         }
         return [];
       }
-      return resolved;
+      return result;
     }
-    return configuredPaths;
+    return configured;
   }
 
-  if (isDynamicRoutePath(record.path)) {
-    warnMissingPrerenderPaths(record.path);
-    return [];
-  }
-
-  return [record.path];
-}
-
-async function resolvePrerenderPathsAsync(record: {
-  path: string;
-  start?: any;
-}): Promise<string[]> {
-  const configuredPaths = record.start?.prerenderPaths;
-  if (configuredPaths) {
-    if (typeof configuredPaths === 'function') {
-      return await configuredPaths();
+  // Static routes produce their own path; dynamic routes need explicit config
+  if (record.path.includes(':')) {
+    if (__DEV__) {
+      warn(
+        `Dynamic prerender route "${record.path}" requires "start.prerenderPaths" to provide concrete output paths.`,
+      );
     }
-    return configuredPaths;
-  }
-
-  if (isDynamicRoutePath(record.path)) {
-    warnMissingPrerenderPaths(record.path);
     return [];
   }
 

@@ -1,3 +1,4 @@
+import { createRouteAccessor } from '../useApi';
 import { decode, encodeHash, encodeParam } from '../encoding';
 import { parseURL, stringifyURL } from '../location';
 import {
@@ -49,30 +50,7 @@ export interface RouteResolver {
 export function createReactiveRoute(
   currentRoute: Signal<RouteLocationNormalizedLoaded>,
 ): RouteLocationNormalizedLoaded {
-  const route = new Proxy({} as RouteLocationNormalizedLoaded, {
-    get(_target, key) {
-      const value = currentRoute.value as any;
-      return value == null ? undefined : value[key as keyof RouteLocationNormalizedLoaded];
-    },
-    has(_target, key) {
-      const value = currentRoute.value as any;
-      return value != null && key in value;
-    },
-    ownKeys() {
-      const value = currentRoute.value as any;
-      return value == null ? [] : Reflect.ownKeys(value);
-    },
-    getOwnPropertyDescriptor(_target, key) {
-      const value = currentRoute.value as any;
-      if (value == null) return undefined;
-      const descriptor = Object.getOwnPropertyDescriptor(value, key);
-      if (descriptor) descriptor.configurable = true;
-      return descriptor;
-    },
-  });
-  // Touch START_LOCATION shape to keep the reference live for type-only consumers.
-  void START_LOCATION_NORMALIZED;
-  return route;
+  return createRouteAccessor(currentRoute);
 }
 
 export function createRouteResolver(

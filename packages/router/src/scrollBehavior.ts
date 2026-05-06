@@ -1,6 +1,10 @@
 import { warn } from './warning';
 import type { RouteLocationNormalized, RouteLocationNormalizedLoaded } from './types';
 
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 export type ScrollPositionCoordinates = {
   behavior?: ScrollOptions['behavior'];
   left?: number;
@@ -13,6 +17,14 @@ export type _ScrollPositionNormalized = {
   top: number;
 };
 
+export interface ScrollPositionElement extends ScrollToOptions {
+  el: string | Element;
+}
+
+export type ScrollPosition = ScrollPositionCoordinates | ScrollPositionElement;
+
+type Awaitable<T> = T | PromiseLike<T>;
+
 export interface RouterScrollBehavior {
   (
     to: RouteLocationNormalized,
@@ -21,12 +33,53 @@ export interface RouterScrollBehavior {
   ): Awaitable<ScrollPosition | false | void>;
 }
 
-export interface ScrollPositionElement extends ScrollToOptions {
-  el: string | Element;
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const MAX_SCROLL_POSITIONS = 50;
+
+// ---------------------------------------------------------------------------
+// Scroll position storage (LRU-capped Map)
+// ---------------------------------------------------------------------------
+
+export const scrollPositions = new Map<string, _ScrollPositionNormalized>();
+
+export function saveScrollPosition(key: string, scrollPosition: _ScrollPositionNormalized): void {
+  // Move-to-end: delete first so re-insert becomes the newest entry
+  scrollPositions.delete(key);
+  scrollPositions.set(key, scrollPosition);
+
+  // Evict oldest entries beyond the cap
+  if (scrollPositions.size > MAX_SCROLL_POSITIONS) {
+    const oldest = scrollPositions.keys().next().value;
+    if (oldest != null) scrollPositions.delete(oldest);
+  }
 }
 
-export type ScrollPosition = ScrollPositionCoordinates | ScrollPositionElement;
-type Awaitable<T> = T | PromiseLike<T>;
+export function getSavedScrollPosition(key: string): _ScrollPositionNormalized | undefined {
+  const scroll = scrollPositions.get(key);
+  scrollPositions.delete(key);
+  return scroll;
+}
+
+// ---------------------------------------------------------------------------
+// Scroll key derivation
+// ---------------------------------------------------------------------------
+
+export function getScrollKey(path: string, delta: number): string {
+  const position: number = history.state ? (history.state as { position: number }).position - delta : -1;
+  return position + path;
+}
+
+// ---------------------------------------------------------------------------
+// Scroll computation & execution
+// ---------------------------------------------------------------------------
+
+export const computeScrollPosition = (): _ScrollPositionNormalized => ({
+  left: window.scrollX,
+  top: window.scrollY,
+});
 
 function getElementPosition(
   el: Element,
@@ -34,7 +87,6 @@ function getElementPosition(
 ): _ScrollPositionNormalized {
   const docRect = document.documentElement.getBoundingClientRect();
   const elRect = el.getBoundingClientRect();
-
   return {
     behavior: offset.behavior,
     left: elRect.left - docRect.left - (offset.left || 0),
@@ -42,10 +94,39 @@ function getElementPosition(
   };
 }
 
-export const computeScrollPosition = (): _ScrollPositionNormalized => ({
-  left: window.scrollX,
-  top: window.scrollY,
-});
+/**
+ * DEV-only: validate an element selector and warn about common mistakes.
+ * Returns `true` if validation passed (or was skipped), `false` if the
+ * caller should abort early.
+ */
+function validateElementSelector(selector: string, isIdSelector: boolean): boolean {
+  if (!isIdSelector || !document.getElementById(selector.slice(1))) {
+    try {
+      const foundEl = document.querySelector(selector);
+      if (isIdSelector && foundEl) {
+        warn(
+          `The selector "${selector}" should be passed as "el: document.querySelector('${selector}')" because it starts with "#".`,
+        );
+        return false;
+      }
+    } catch {
+      warn(
+        `The selector "${selector}" is invalid. If you are using an id selector, make sure to escape it. You can find more information at https://mathiasbynens.be/notes/css-escapes.`,
+      );
+      return false;
+    }
+  }
+  return true;
+}
+
+function resolveScrollElement(positionEl: string | Element): Element | null {
+  if (typeof positionEl !== 'string') return positionEl;
+
+  const isIdSelector = positionEl.startsWith('#');
+  return isIdSelector
+    ? document.getElementById(positionEl.slice(1))
+    : document.querySelector(positionEl);
+}
 
 export function scrollToPosition(position: ScrollPosition): void {
   let scrollToOptions: ScrollPositionCoordinates;
@@ -54,37 +135,13 @@ export function scrollToPosition(position: ScrollPosition): void {
     const positionEl = position.el;
     const isIdSelector = typeof positionEl === 'string' && positionEl.startsWith('#');
 
-    if (
-      __DEV__ &&
-      typeof position.el === 'string' &&
-      (!isIdSelector || !document.getElementById(position.el.slice(1)))
-    ) {
-      try {
-        const foundEl = document.querySelector(position.el);
-        if (isIdSelector && foundEl) {
-          warn(
-            `The selector "${position.el}" should be passed as "el: document.querySelector('${position.el}')" because it starts with "#".`,
-          );
-          return;
-        }
-      } catch {
-        warn(
-          `The selector "${position.el}" is invalid. If you are using an id selector, make sure to escape it. You can find more information at https://mathiasbynens.be/notes/css-escapes.`,
-        );
-        return;
-      }
+    if (__DEV__ && typeof positionEl === 'string' && !validateElementSelector(positionEl, isIdSelector)) {
+      return;
     }
 
-    const el =
-      typeof positionEl === 'string'
-        ? isIdSelector
-          ? document.getElementById(positionEl.slice(1))
-          : document.querySelector(positionEl)
-        : positionEl;
-
+    const el = resolveScrollElement(positionEl);
     if (!el) {
-      __DEV__ &&
-        warn(`Couldn't find element using selector "${position.el}" returned by scrollBehavior.`);
+      __DEV__ && warn(`Couldn't find element using selector "${position.el}" returned by scrollBehavior.`);
       return;
     }
 
@@ -97,34 +154,8 @@ export function scrollToPosition(position: ScrollPosition): void {
     window.scrollTo(scrollToOptions);
   } else {
     window.scrollTo(
-      scrollToOptions.left != null ? scrollToOptions.left : window.scrollX,
-      scrollToOptions.top != null ? scrollToOptions.top : window.scrollY,
+      scrollToOptions.left ?? window.scrollX,
+      scrollToOptions.top ?? window.scrollY,
     );
   }
-}
-
-export function getScrollKey(path: string, delta: number): string {
-  const position: number = history.state ? (history.state.position as number) - delta : -1;
-  return position + path;
-}
-
-export const scrollPositions = new Map<string, _ScrollPositionNormalized>();
-const MAX_SCROLL_POSITIONS = 50;
-
-export function saveScrollPosition(key: string, scrollPosition: _ScrollPositionNormalized) {
-  if (scrollPositions.has(key)) {
-    scrollPositions.delete(key);
-  }
-  scrollPositions.set(key, scrollPosition);
-  while (scrollPositions.size > MAX_SCROLL_POSITIONS) {
-    const oldestKey = scrollPositions.keys().next().value;
-    if (oldestKey == null) break;
-    scrollPositions.delete(oldestKey);
-  }
-}
-
-export function getSavedScrollPosition(key: string) {
-  const scroll = scrollPositions.get(key);
-  scrollPositions.delete(key);
-  return scroll;
 }
