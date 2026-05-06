@@ -1,10 +1,9 @@
-import { computed, createComponent, effect, inject, onDestroy, signal, stop } from 'essor';
+import { computed, createComponent, effect, onDestroy, signal, stop } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
 import { useRoute, useRouter } from './useApi';
 import { LinkComponent } from './linkComponent';
-import { routeLocationKey, routerKey } from './injectionSymbols';
 import { usePrefetch } from './router/usePrefetch';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
@@ -139,38 +138,19 @@ const routerPrefetchCounters = new WeakMap<object, number>();
  * @returns Link state and navigation handler
  */
 export function useLink(props: RouterLinkProps): UseLinkReturn {
-  const router = inject(routerKey);
-  const routeContext = inject(routeLocationKey);
-
-  // Validate router injection
-  if (!router) {
+  let router: any;
+  try {
+    router = useRouter();
+  } catch (err: any) {
     if (__DEV__) {
       logRouterError(
-        'useLink() must be used within a RouterView component. ' +
-          'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
-          'Check that your router instance is properly created and provided to RouterView.',
+        'useLink() requires an active router instance. ' +
+          'Make sure you have created a router with createRouter() and it is active.',
       );
     }
     throw new Error(
-      'useLink() must be used within a RouterView component. ' +
-        'Make sure RouterLink is rendered inside a RouterView that provides the router context. ' +
-        'Check that your router instance is properly created and provided to RouterView.',
-    );
-  }
-
-  // Validate route injection
-  if (!routeContext) {
-    if (__DEV__) {
-      logRouterError(
-        'useLink() requires route context. ' +
-          'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
-          'This error typically occurs when RouterLink is used outside of a router context.',
-      );
-    }
-    throw new Error(
-      'useLink() requires route context. ' +
-        'Make sure RouterLink is rendered inside a RouterView that provides the route context. ' +
-        'This error typically occurs when RouterLink is used outside of a router context.',
+      'useLink() requires an active router instance. ' +
+        'Make sure you have created a router with createRouter() and it is active.',
     );
   }
 

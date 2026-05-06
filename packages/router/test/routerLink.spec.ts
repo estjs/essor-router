@@ -71,6 +71,37 @@ describe('routerLink', () => {
       expect(anchor).toBeTruthy();
       expect(anchor.textContent).toBe('Home');
     });
+
+    it('can be used outside of RouterView', async () => {
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: SimpleComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      // App structure: RouterLink is placed outside RouterView
+      const App = () => [
+        h(RouterLink, { to: '/about', children: 'Go to About' }),
+        h(RouterView, { router: testRouter })
+      ];
+
+      const testWrapper = mount(App);
+      await sleep(100);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor).toBeTruthy();
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      const pushSpy = vi.spyOn(testRouter, 'push');
+      anchor.click();
+      await sleep(50);
+      
+      expect(pushSpy).toHaveBeenCalled();
+      
+      testWrapper.unmount();
+    });
   });
 
   describe('navigation Behavior', () => {
@@ -354,22 +385,6 @@ describe('routerLink', () => {
   });
 
   describe('error Handling', () => {
-    it('should throw error when router is not provided', () => {
-      wrapper?.unmount();
-      wrapper = null;
-
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      let threw = false;
-
-      try {
-        mount(() => h(RouterLink, { to: '/', children: 'Test' }));
-      } catch {
-        threw = true;
-      }
-
-      expect(threw || consoleErrorSpy.mock.calls.length > 0).toBe(true);
-      consoleErrorSpy.mockRestore();
-    });
 
     it('should handle invalid "to" prop gracefully', async () => {
       // Mock console to suppress expected warnings and errors
