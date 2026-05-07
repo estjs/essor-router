@@ -141,27 +141,6 @@ router.afterEach((to, from, failure) => {
 });
 ```
 
-## TypeScript Integration
-
-For IDE autocompletion with file-based routes, install:
-
-```bash
-pnpm add -D essor-router-ts-plugin
-```
-
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "plugins": [{
-      "name": "essor-router-ts-plugin",
-      "routesFolder": "src/pages",
-      "typedRouterDts": "typed-router.d.ts"
-    }]
-  }
-}
-```
-
 ## Package Exports
 
 | Export | Path |

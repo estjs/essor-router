@@ -1,6 +1,4 @@
-# Configuration Alignment Guide
-
-> Covers `unplugin-essor-router` (build plugin) and `essor-router-ts-plugin` (TypeScript language service plugin).
+# Configuration Guide
 
 ---
 
@@ -86,59 +84,6 @@ When both sources are active, routes from both are combined into a single tree. 
 
 ---
 
-## Shared Option Alignment
-
-All shared defaults are pre-aligned. A typical project needs **zero extra configuration**:
-
-```ts
-// vite.config.ts — uses defaults
-routerPlugin()
-```
-
-```json
-// tsconfig.json — uses defaults
-{ "compilerOptions": { "plugins": [{ "name": "essor-router-ts-plugin" }] } }
-```
-
-| What | unplugin option | ts-plugin option | Default |
-|------|----------------|-----------------|---------|
-| Routes directory | `routesFolder` | `routesFolder` | `'src/pages'` |
-| Typed routes file | `dts` | `typedRouterDts` | `'typed-router.d.ts'` |
-| Router package name | *(not applicable)* | `moduleName` | `'essor-router'` |
-
----
-
-## When You Deviate from Defaults
-
-### Custom `routesFolder`
-
-```ts
-// vite.config.ts
-routerPlugin({ routesFolder: 'src/app/routes' })
-```
-
-```json
-// tsconfig.json — must match
-{ "plugins": [{ "name": "essor-router-ts-plugin", "routesFolder": "src/app/routes" }] }
-```
-
-### Custom `dts` output path
-
-```ts
-// vite.config.ts
-routerPlugin({ dts: 'src/types/typed-router.d.ts' })
-```
-
-```json
-// tsconfig.json — must match
-{ "plugins": [{ "name": "essor-router-ts-plugin", "typedRouterDts": "src/types/typed-router.d.ts" }] }
-```
-
-> [!WARNING]
-> Mismatching `dts` and `typedRouterDts` is the most common cause of route name type completions disappearing in the editor.
-
----
-
 ## Feature Comparison
 
 | Feature | File-based | Config-based |
@@ -146,7 +91,6 @@ routerPlugin({ dts: 'src/types/typed-router.d.ts' })
 | `RouteNamedMap` auto-generation | ✅ | ✅ |
 | `router.push({ name })` type checking | ✅ | ✅ |
 | Path params type inference | ✅ | ✅ |
-| `useRoute()` per-file narrowing (ts-plugin) | ✅ | ⚠️ (requires component paths) |
 | `RouteTreeMap` (search/loader type inference) | ✅ | ⚠️ (requires `defineRoute`) |
 
 ---

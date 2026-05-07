@@ -248,7 +248,7 @@ export default function UserPage() { /* ... */ }
 文件内容：
 - `RouteNamedMap` — 路由名 → 路径/params 类型映射
 - `RouteTreeMap` — search/loader/beforeLoad 类型推断
-- `_RouteFileInfoMap` — 文件路径 → 路由名（供 `essor-router-ts-plugin` 使用）
+- `_RouteFileInfoMap` — 文件路径 → 路由名 映射
 
 ---
 

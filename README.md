@@ -47,7 +47,6 @@ The official router for [Essor](https://github.com/estjs/essor) — a lightweigh
 |---------|-------------|
 | [`essor-router`](./packages/router) | Runtime router (history, matcher, router APIs) |
 | [`unplugin-essor-router`](./packages/unplugin) | File-based routes, codegen, and typed routes |
-| [`essor-router-ts-plugin`](./packages/ts-plugin) | TypeScript language service plugin for route-aware types |
 
 ## Quick Start
 
@@ -128,7 +127,6 @@ createApp(App, '#app');
 - [RouterView](./docs/api/router-view.md)
 - [Composition API](./docs/api/composition-api.md)
 - [Config Alignment](./docs/api/config-alignment.md)
-- [TypeScript Plugin](./docs/api/ts-plugin.md)
 - [Unplugin](./docs/api/unplugin.md)
 - [Types](./docs/api/types.md)
 
@@ -286,22 +284,7 @@ declare module 'essor-router' {
 
 For file-based routing, install the TypeScript plugin for IDE autocompletion:
 
-```bash
-pnpm add -D essor-router-ts-plugin
-```
 
-```json
-// tsconfig.json
-{
-  "compilerOptions": {
-    "plugins": [{
-      "name": "essor-router-ts-plugin",
-      "routesFolder": "src/pages",
-      "typedRouterDts": "typed-router.d.ts"
-    }]
-  }
-}
-```
 
 ## Browser Support
 

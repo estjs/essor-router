@@ -23,8 +23,7 @@ pnpm run dev
 essor-router/
 ├── packages/
 │   ├── router/          # Runtime router package
-│   ├── unplugin/        # File-based routing and codegen
-│   └── ts-plugin/       # TypeScript language service plugin
+│   └── unplugin/        # File-based routing and codegen
 ├── docs/                # Documentation (English)
 │   └── zh/              # Documentation (Chinese)
 ├── examples/            # Example applications
@@ -51,7 +50,6 @@ essor-router/
 ```bash
 pnpm --filter essor-router test
 pnpm --filter unplugin-essor-router test
-pnpm --filter essor-router-ts-plugin test
 ```
 
 ## Coding Style

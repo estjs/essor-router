@@ -248,7 +248,7 @@ The plugin writes this file automatically. Include it in `tsconfig.json`:
 What it provides:
 - `RouteNamedMap` — route name → path/params type mapping
 - `RouteTreeMap` — search/loader/beforeLoad type inference
-- `_RouteFileInfoMap` — file path → route name (used by `essor-router-ts-plugin`)
+- `_RouteFileInfoMap` — file path → route name mapping
 
 ---
 

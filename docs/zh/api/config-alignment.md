@@ -1,6 +1,4 @@
-# 配置对齐指南
-
-> 本文涉及 `unplugin-essor-router`（构建插件）和 `essor-router-ts-plugin`（TypeScript 语言服务插件）之间的配置对齐关系。
+# 配置指南
 
 ---
 
@@ -58,49 +56,6 @@ routerPlugin({
 
 ---
 
-## 共享配置对齐
-
-两个配置项在 unplugin 和 ts-plugin 之间**默认值已对齐**，零配置下开箱即用。
-
-| 配置含义 | unplugin 选项 | ts-plugin 选项 | 默认值 |
-|---------|--------------|---------------|--------|
-| 路由文件目录 | `routesFolder` | `routesFolder` | `'src/pages'` |
-| 类型声明文件 | `dts` | `typedRouterDts` | `'typed-router.d.ts'` |
-| 路由包名称 | *（不适用）* | `moduleName` | `'essor-router'` |
-
----
-
-## 修改默认值时的配置方式
-
-### 自定义路由目录
-
-```ts
-// vite.config.ts
-routerPlugin({ routesFolder: 'src/app/routes' })
-```
-
-```json
-// tsconfig.json — 必须一致
-{ "plugins": [{ "name": "essor-router-ts-plugin", "routesFolder": "src/app/routes" }] }
-```
-
-### 自定义类型声明文件路径
-
-```ts
-// vite.config.ts
-routerPlugin({ dts: 'src/types/typed-router.d.ts' })
-```
-
-```json
-// tsconfig.json — 必须一致
-{ "plugins": [{ "name": "essor-router-ts-plugin", "typedRouterDts": "src/types/typed-router.d.ts" }] }
-```
-
-> [!WARNING]
-> `dts` 和 `typedRouterDts` 路径不一致时，TS 语言服务会读取旧或不存在的 `.d.ts`，导致路由名称自动补全失效。
-
----
-
 ## 功能对比
 
 | 功能 | 文件路由 | 配置式路由 |
@@ -108,7 +63,6 @@ routerPlugin({ dts: 'src/types/typed-router.d.ts' })
 | `RouteNamedMap` 自动生成 | ✅ | ✅ |
 | `router.push({ name })` 类型校验 | ✅ | ✅ |
 | params 类型推导 | ✅ | ✅ |
-| `useRoute()` 逐文件类型收窄（ts-plugin） | ✅ | ⚠️（需提供 component 路径） |
 | `RouteTreeMap`（search/loader 类型推断） | ✅ | ⚠️（需配合 `defineRoute`） |
 
 ---
@@ -117,7 +71,6 @@ routerPlugin({ dts: 'src/types/typed-router.d.ts' })
 
 | 现象 | 可能原因 | 解决方式 |
 |------|---------|---------|
-| 路由名称无自动补全 | `dts` ≠ `typedRouterDts`，或 `.d.ts` 未生成 | 对齐两处路径；确认 unplugin 写入步骤已执行 |
-| 编辑器显示过时的路由名 | `routesFolder` 不一致 | 对齐两处 `routesFolder` |
+| 路由名称无自动补全 | `.d.ts` 未生成 | 确认 unplugin 写入步骤已执行 |
+| 编辑器显示过时的路由名 | 缓存未刷新 | 重启 dev server |
 | 配置式路由类型不更新 | `configRoutes` 文件修改后未触发 HMR | 重启 dev server 或确认 watch 模式开启 |
-| `useRoute<'name'>()` 找不到路由 | `moduleName` 与实际 import 包名不符 | 将 `moduleName` 改为实际的包别名 |
