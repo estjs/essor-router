@@ -72,7 +72,7 @@ export function useRouter(): Router {
 /**
  * Returns the current route location. Equivalent to using `$route` inside templates.
  */
-export function useRoute(): RouteLocationNormalizedLoaded | undefined {
+export function useRoute(): RouteLocationNormalizedLoaded {
   const route = inject(routeLocationKey);
   if (!route) {
     warn('useRoute() requires an active router instance. Make sure RouterView is mounted.');
