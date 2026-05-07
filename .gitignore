@@ -13,12 +13,11 @@ temp
 .eslintcache
 auto-imports.d.ts
 components.d.ts
-/test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 doc_build
 typed-router.d.ts
-
+test-results
 
 

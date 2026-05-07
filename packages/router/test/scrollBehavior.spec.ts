@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { saveScrollPosition, scrollPositions, scrollToPosition } from '../src/scrollBehavior';
+import { createScrollPositionStore, scrollToPosition } from '../src/scrollBehavior';
 import { mockWarn } from './utils';
 
 describe('scrollBehavior', () => {
@@ -69,17 +69,42 @@ describe('scrollBehavior', () => {
   });
 
   it('bounds saved scroll positions to the configured limit', () => {
-    scrollPositions.clear();
+    const store = createScrollPositionStore(50);
 
     for (let index = 0; index < 60; index++) {
-      saveScrollPosition(`route-${index}`, {
+      store.save(`route-${index}`, {
         left: index,
         top: index,
       });
     }
 
-    expect(scrollPositions.size).toBeLessThanOrEqual(50);
-    expect(scrollPositions.has('route-0')).toBe(false);
-    expect(scrollPositions.has('route-59')).toBe(true);
+    expect(store.size).toBeLessThanOrEqual(50);
+    expect(store.has('route-0')).toBe(false);
+    expect(store.has('route-59')).toBe(true);
+  });
+
+  it('keeps scroll positions isolated per store instance', () => {
+    const first = createScrollPositionStore();
+    const second = createScrollPositionStore();
+
+    first.save('shared-key', { left: 1, top: 2 });
+    second.save('shared-key', { left: 3, top: 4 });
+
+    expect(first.get('shared-key')).toEqual({ left: 1, top: 2 });
+    expect(second.get('shared-key')).toEqual({ left: 3, top: 4 });
+    expect(first.get('shared-key')).toBeUndefined();
+    expect(second.get('shared-key')).toBeUndefined();
+  });
+
+  it('clearing one store does not affect another', () => {
+    const first = createScrollPositionStore();
+    const second = createScrollPositionStore();
+
+    first.save('only-first', { left: 5, top: 6 });
+    second.save('only-second', { left: 7, top: 8 });
+    first.clear();
+
+    expect(first.get('only-first')).toBeUndefined();
+    expect(second.get('only-second')).toEqual({ left: 7, top: 8 });
   });
 });

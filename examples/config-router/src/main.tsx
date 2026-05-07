@@ -1,6 +1,6 @@
 import { createApp } from 'essor';
 import { RouterLink, RouterView, createRouter, createWebHistory } from 'essor-router';
-import routes from './routes.config';
+import routes from './routes.config.ts';
 
 const router = createRouter({
   history: createWebHistory(),

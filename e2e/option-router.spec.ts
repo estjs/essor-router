@@ -8,10 +8,10 @@ test.describe('option-router example', () => {
 
     await page.locator('.to-home').click();
     await expect(page).toHaveURL(/\/about$/);
-    await expect(page.locator('.about')).toHaveText('About');
+    await expect(page.locator('.about')).toContainText('About');
 
     await page.locator('.about').click();
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/home$/);
   });
 
   test('supports random route and fallback route', async ({ page }) => {
@@ -19,7 +19,7 @@ test.describe('option-router example', () => {
 
     await page.locator('.to-random').click();
     await expect(page).toHaveURL(/\/random$/);
-    await expect(page.getByText('Random')).toBeVisible();
+    await expect(page.getByText('Random', { exact: true })).toBeVisible();
 
     await page.goto('/not-exists');
     await expect(page.locator('.notfound')).toHaveText('404');

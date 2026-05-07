@@ -83,3 +83,5 @@ Focused package runs:
 - If changing matcher or path parsing, add/update tests and relevant docs.
 - If changing unplugin codegen, validate against `docs/guide/advanced/file-based-routing-unplugin.md` and update docs when behavior changes.
 - Keep `typed-router.d.ts` generation behavior consistent with `routesFolder` rules.
+
+

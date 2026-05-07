@@ -1,7 +1,24 @@
 import { type Signal, inject } from 'essor';
 import { routeLocationKey, routerKey } from './injectionSymbols';
+import { warn } from './warning';
 import type { Router } from './router';
 import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from './types';
+
+// ---------------------------------------------------------------------------
+// Global router fallback — makes useRouter() work for components rendered
+// outside RouterView's subtree (e.g. header nav links that are siblings
+// of RouterView).
+// ---------------------------------------------------------------------------
+
+let activeRouter: Router | undefined;
+
+export function registerActiveRouter(router: Router): void {
+  activeRouter = router;
+}
+
+export function unregisterActiveRouter(): void {
+  activeRouter = undefined;
+}
 
 // ---------------------------------------------------------------------------
 // Reactive route accessor (Proxy)
@@ -13,9 +30,7 @@ type RouteContainer = Signal<RouteLocationNormalizedLoaded>;
  * Creates a thin Proxy that delegates every property read to
  * `container.value[key]`, keeping all accesses reactive.
  */
-export function createRouteAccessor(
-  container: RouteContainer,
-): RouteLocationNormalizedLoaded {
+export function createRouteAccessor(container: RouteContainer): RouteLocationNormalizedLoaded {
   return new Proxy({} as RouteLocationNormalizedLoaded, {
     get(_target, key) {
       const current = container.value as any;
@@ -47,11 +62,9 @@ export function createRouteAccessor(
  * Returns the router instance. Equivalent to using `$router` inside templates.
  */
 export function useRouter(): Router {
-  const router = inject(routerKey);
+  const router = inject(routerKey) || activeRouter;
   if (!router) {
-    throw new Error(
-      'useRouter() requires an active router instance. Make sure RouterView is mounted.',
-    );
+    warn('useRouter() requires an active router instance. Make sure a router is active.');
   }
   return router;
 }
@@ -59,12 +72,10 @@ export function useRouter(): Router {
 /**
  * Returns the current route location. Equivalent to using `$route` inside templates.
  */
-export function useRoute(): RouteLocationNormalizedLoaded {
+export function useRoute(): RouteLocationNormalizedLoaded | undefined {
   const route = inject(routeLocationKey);
   if (!route) {
-    throw new Error(
-      'useRoute() requires an active router instance. Make sure RouterView is mounted.',
-    );
+    warn('useRoute() requires an active router instance. Make sure RouterView is mounted.');
   }
   return route;
 }

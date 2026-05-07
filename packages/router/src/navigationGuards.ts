@@ -236,12 +236,16 @@ export function extractComponentsGuards(
       if (guardType !== 'beforeRouteEnter' && !record.instances[name]) continue;
 
       if (isRouteComponent(rawComponent)) {
-        const option = rawComponent.options || rawComponent;
+        const option =
+          (rawComponent as RouteComponent & { options?: Record<string, unknown> }).options ||
+          rawComponent;
         const guard = option[guardType];
         guard && guards.push(guardToPromiseFn(guard, to, from, record, name));
       } else {
         // start requesting the chunk already
-        let componentPromise: Promise<RouteComponent | null | undefined | void> = rawComponent;
+        let componentPromise = rawComponent as unknown as Promise<
+          RouteComponent | null | undefined | void
+        >;
         if (__DEV__ && !('catch' in componentPromise)) {
           warn(
             `Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`,
@@ -298,8 +302,9 @@ export function loadRouteLocation(
                 (promises, name) => {
                   const rawComponent = record.components![name];
                   if ('then' in rawComponent && !('displayName' in rawComponent)) {
-                    let componentPromise: Promise<RouteComponent | null | undefined | void> =
-                      rawComponent;
+                    let componentPromise = rawComponent as unknown as Promise<
+                      RouteComponent | null | undefined | void
+                    >;
                     if (__DEV__ && !('catch' in componentPromise)) {
                       warn(
                         `Component "${name}" in record with path "${record.path}" is a function that does not return a Promise. If you were passing a functional component, make sure to add a "displayName" to the component. This will break in production if not fixed.`,

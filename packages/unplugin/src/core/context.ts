@@ -42,6 +42,7 @@ export function createRoutesContext(options: ResolvedOptions) {
 
   // populated by the initial scan pages
   const watchers: Array<FSWatcher | RoutesFolderWatcher> = [];
+  let hasScanned = false;
   const paramParsersMap: ParamParsersMap = new Map();
   const definePageFileFlags = new Map<string, boolean>();
 
@@ -51,7 +52,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     }
 
     // initial scan was already done
-    if (watchers.length > 0) {
+    if (hasScanned) {
       return;
     }
 
@@ -68,6 +69,7 @@ export function createRoutesContext(options: ResolvedOptions) {
       }
 
       await _writeConfigFiles();
+      hasScanned = true;
       return;
     }
 
@@ -163,6 +165,7 @@ export function createRoutesContext(options: ResolvedOptions) {
 
     // immediately write the files without the throttle
     await _writeConfigFiles();
+    hasScanned = true;
   }
 
   /**
@@ -493,9 +496,10 @@ export function createRoutesContext(options: ResolvedOptions) {
   const writeConfigFiles = throttle(_writeConfigFiles, 500, 100);
 
   function stopWatcher() {
-    if (watchers.length) {
+    const activeWatchers = watchers.splice(0);
+    if (activeWatchers.length) {
       logger.log('🛑 stopping watcher');
-      watchers.forEach((watcher) => watcher.close());
+      activeWatchers.forEach((watcher) => watcher.close());
     }
   }
 

@@ -1,4 +1,4 @@
-import type { Signal } from 'essor';
+import type { ComponentFn, Signal } from 'essor';
 import type { PathParserOptions } from '../matcher/pathParserRanker';
 import type { LocationQuery, LocationQueryRaw } from '../query';
 import type { RouteRecord, RouteRecordNormalized } from '../matcher/types';
@@ -278,7 +278,11 @@ export interface RouteLocationNormalized extends _RouteLocationBase {
 /**
  * Allowed Component in {@link RouteLocationMatched}
  */
-export type RouteComponent = any; // Essor component type
+export type RouteComponent = ComponentFn<Record<string, unknown>> & {
+  options?: Record<string, unknown>;
+  __vccOpts?: Record<string, unknown>;
+  displayName?: string;
+}; // Essor component type
 /**
  * Allowed Component definitions in route records provided by the user
  */

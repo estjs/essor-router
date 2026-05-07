@@ -1,3 +1,5 @@
+import { expect, vi } from 'vitest';
+
 export function mockWarn() {
   const mockFn = vi.spyOn(console, 'warn');
 

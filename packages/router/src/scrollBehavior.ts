@@ -1,5 +1,6 @@
 import { isString } from '@estjs/shared';
 import { warn } from './warning';
+import { LRUCache } from './utils/lru';
 import type { RouteLocationNormalized, RouteLocationNormalizedLoaded } from './types';
 
 // ---------------------------------------------------------------------------
@@ -44,24 +45,34 @@ const MAX_SCROLL_POSITIONS = 50;
 // Scroll position storage (LRU-capped Map)
 // ---------------------------------------------------------------------------
 
-export const scrollPositions = new Map<string, _ScrollPositionNormalized>();
-
-export function saveScrollPosition(key: string, scrollPosition: _ScrollPositionNormalized): void {
-  // Move-to-end: delete first so re-insert becomes the newest entry
-  scrollPositions.delete(key);
-  scrollPositions.set(key, scrollPosition);
-
-  // Evict oldest entries beyond the cap
-  if (scrollPositions.size > MAX_SCROLL_POSITIONS) {
-    const oldest = scrollPositions.keys().next().value;
-    if (oldest != null) scrollPositions.delete(oldest);
-  }
+export interface ScrollPositionStore {
+  readonly size: number;
+  has(key: string): boolean;
+  save(key: string, scrollPosition: _ScrollPositionNormalized): void;
+  get(key: string): _ScrollPositionNormalized | undefined;
+  clear(): void;
 }
 
-export function getSavedScrollPosition(key: string): _ScrollPositionNormalized | undefined {
-  const scroll = scrollPositions.get(key);
-  scrollPositions.delete(key);
-  return scroll;
+export function createScrollPositionStore(limit = MAX_SCROLL_POSITIONS): ScrollPositionStore {
+  const positions = new LRUCache<string, _ScrollPositionNormalized>(limit);
+
+  return {
+    get size() {
+      return positions.size;
+    },
+    has(key: string) {
+      return positions.has(key);
+    },
+    save(key: string, scrollPosition: _ScrollPositionNormalized) {
+      positions.set(key, scrollPosition);
+    },
+    get(key: string) {
+      return positions.getAndRemove(key);
+    },
+    clear() {
+      positions.clear();
+    },
+  };
 }
 
 // ---------------------------------------------------------------------------

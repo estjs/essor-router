@@ -1,9 +1,10 @@
 import { mkdir, mkdtemp, readFile, rm, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { resolveOptions } from '../../src/options';
 import { createRoutesContext } from '../../src/core/context';
+import { RoutesFolderWatcher } from '../../src/core/RoutesFolderWatcher';
 
 async function waitUntil(assertion: () => void | Promise<void>, timeout = 3000, interval = 50) {
   const end = Date.now() + timeout;
@@ -128,6 +129,38 @@ export default function About() { return null }
       });
 
       ctx.stopWatcher();
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it('stops route watchers only once when stopWatcher is called repeatedly', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+
+    try {
+      const pagesDir = join(root, 'src/pages');
+      await mkdir(pagesDir, { recursive: true });
+      await writeFile(
+        join(pagesDir, 'index.tsx'),
+        `export default function Home() { return null }
+`,
+      );
+
+      const closeSpy = vi.spyOn(RoutesFolderWatcher.prototype, 'close');
+      const options = resolveOptions({
+        root,
+        routesFolder: 'src/pages',
+        watch: true,
+      });
+
+      const ctx = createRoutesContext(options);
+      await ctx.scanPages(true);
+
+      ctx.stopWatcher();
+      ctx.stopWatcher();
+
+      expect(closeSpy).toHaveBeenCalledTimes(1);
+      closeSpy.mockRestore();
     } finally {
       await rm(root, { recursive: true, force: true });
     }

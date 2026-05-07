@@ -88,7 +88,7 @@ function normalizeDepth(injectedDepth: Signal<number> | number): number {
 // Safe component rendering
 // ---------------------------------------------------------------------------
 
-function invokeComponent(component: RouteComponent, props: Record<string, unknown>): unknown {
+function invokeComponent(component: RouteComponent, props: Record<string, unknown>): any {
   // Function components can be invoked directly; this lets us catch render-time
   // errors synchronously inside the caller's try/catch. For non-function
   // components fall back to essor's createComponent so the instance lifecycle
@@ -224,7 +224,11 @@ export const RouterView = (props: RouterViewProps) => {
     const ViewComponent = matchedRoute?.components?.[viewName];
 
     const rendered = ViewComponent
-      ? safeRenderComponent(ViewComponent, props.onError, props.fallback || props.children)
+      ? safeRenderComponent(
+          ViewComponent as RouteComponent,
+          props.onError,
+          props.fallback || props.children,
+        )
       : props.children;
 
     if (matchedRoute) {

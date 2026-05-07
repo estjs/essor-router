@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { definePageTransform, extractDefinePageInfo } from '../../src/core/definePage';
 
 describe('defineRoute macro support', () => {

@@ -4,6 +4,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { guessProjectRoot, loadRouteMapFromDts, mapFileToRoute } from '../src/routeMap';
 
+const normalizeSlashes = (value: string) => value.replace(/\\/g, '/');
+
 describe('routeMap', () => {
   it('loads route map entries via _RouteFileInfoMap', () => {
     const root = mkdtempSync(join(tmpdir(), 'ts-plugin-map-'));
@@ -122,15 +124,15 @@ describe('routeMap', () => {
   it('handles Windows-style backslash paths in mapFileToRoute', () => {
     // Simulate Windows path with backslashes (e.g. from process.cwd() on Windows)
     const routeName = mapFileToRoute(
-      'C:\\repo\\src\\pages\\users\\[id].tsx'.replaceAll('\\', '/'),
-      'C:\\repo'.replaceAll('\\', '/'),
+      normalizeSlashes('C:\\repo\\src\\pages\\users\\[id].tsx'),
+      normalizeSlashes('C:\\repo'),
     );
     expect(routeName).toBe('users-id');
   });
 
   it('handles Windows-style backslash paths in guessProjectRoot', () => {
     // Simulate guessProjectRoot with Windows-style path pre-normalized
-    const winFile = 'C:\\repo\\src\\pages\\dashboard\\index.tsx'.replaceAll('\\', '/');
+    const winFile = normalizeSlashes('C:\\repo\\src\\pages\\dashboard\\index.tsx');
     const root = guessProjectRoot(winFile, 'src/pages', 'typed-router.d.ts', 'C:/repo');
     expect(root).toBe('C:/repo');
   });
@@ -147,8 +149,8 @@ describe('routeMap', () => {
 
   it('maps nested route with custom folder and Windows-style path', () => {
     const routeName = mapFileToRoute(
-      'C:\\repo\\app\\routes\\blog\\[slug].tsx'.replaceAll('\\', '/'),
-      'C:\\repo'.replaceAll('\\', '/'),
+      normalizeSlashes('C:\\repo\\app\\routes\\blog\\[slug].tsx'),
+      normalizeSlashes('C:\\repo'),
       'app/routes',
     );
     expect(routeName).toBe('blog-slug');

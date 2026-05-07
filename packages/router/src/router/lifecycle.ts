@@ -9,30 +9,33 @@ import {
 import { NavigationType, type RouterHistory } from '../history/common';
 import { START_LOCATION_NORMALIZED } from '../types';
 import { noop } from '../utils';
-import { useCallbacks } from '../utils/callbacks';
 import { isBrowser } from '../utils/env';
 import { warn } from '../warning';
-import { computeScrollPosition, getScrollKey, saveScrollPosition, scrollPositions } from '../scrollBehavior';
+import { unregisterActiveRouter } from '../useApi';
+import {
+  computeScrollPosition,
+  getScrollKey,
+  type ScrollPositionStore,
+} from '../scrollBehavior';
+import type { ReadinessController } from './readiness';
 import type {
   RouteLocation,
   RouteLocationNormalized,
   RouteLocationNormalizedLoaded,
+  RouteLocationRaw,
 } from '../types';
 
-export interface ErrorListener {
-  (error: Error, to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded): void;
-}
-
-type OnReadyCallback = [() => void, (reason?: Error) => void];
+export type { ErrorListener } from './readiness';
 
 interface LifecycleOptions {
   router: { listening: boolean };
   currentRoute: { value: RouteLocationNormalizedLoaded };
   routeLocationContext: RouteLocationNormalizedLoaded;
+  readiness: ReadinessController;
   resolve: (to: string) => RouteLocation;
   setPendingLocation: (location: RouteLocation) => void;
   pushWithRedirect: (
-    to: any,
+    to: RouteLocationRaw | RouteLocation,
     redirectedFrom?: RouteLocation,
   ) => Promise<NavigationFailure | void | undefined>;
   navigate: (to: RouteLocationNormalized, from: RouteLocationNormalizedLoaded) => Promise<any>;
@@ -52,18 +55,15 @@ interface LifecycleOptions {
   handleRedirectRecord: (to: RouteLocation) => any;
   clearCaches: () => void;
   routerHistory: RouterHistory;
+  scrollPositionStore: ScrollPositionStore;
 }
 
 export function setupRouterLifecycle(options: LifecycleOptions) {
-  const readyHandlers = useCallbacks<OnReadyCallback>();
-  const errorListeners = useCallbacks<ErrorListener>();
-
-  let ready = false;
   let started: boolean | undefined;
   let activeViewCount = 0;
   let removeHistoryListener: undefined | null | (() => void);
 
-  function setupListeners() {
+  function setupHistoryListener() {
     if (removeHistoryListener) return;
 
     removeHistoryListener = options.routerHistory.listen((to, _from, info) => {
@@ -81,7 +81,10 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
       options.setPendingLocation(toLocation);
       const from = options.currentRoute.value;
       if (isBrowser) {
-        saveScrollPosition(getScrollKey(from.fullPath, info.delta), computeScrollPosition());
+        options.scrollPositionStore.save(
+          getScrollKey(from.fullPath, info.delta),
+          computeScrollPosition(),
+        );
       }
 
       options
@@ -118,7 +121,7 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
           if (info.delta) {
             options.routerHistory.go(-info.delta, false);
           }
-          return triggerError(error, toLocation, from);
+          return options.readiness.triggerError(error, toLocation, from);
         })
         .then(async (failure: NavigationFailure | void) => {
           failure =
@@ -153,40 +156,6 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
           options.triggerAfterEach(toLocation as RouteLocationNormalizedLoaded, from, failure);
         })
         .catch(noop);
-    });
-  }
-
-  function markAsReady<E extends Error = Error>(err: E): E;
-  function markAsReady<E extends Error = Error>(): void;
-  function markAsReady<E extends Error = Error>(err?: E): E | void {
-    if (!ready) {
-      ready = !err;
-      setupListeners();
-      readyHandlers.list().forEach(([resolve, reject]) => (err ? reject(err) : resolve()));
-      readyHandlers.reset();
-    }
-    return err;
-  }
-
-  function triggerError(
-    error: Error,
-    to: RouteLocationNormalized,
-    from: RouteLocationNormalizedLoaded,
-  ): Promise<unknown> {
-    markAsReady(error);
-    const list = errorListeners.list();
-    if (list.length > 0) {
-      list.forEach((handler) => handler(error, to, from));
-    } else if (__DEV__) {
-      warn('uncaught error during route navigation:');
-    }
-    return Promise.reject(error);
-  }
-
-  function isReady(): Promise<void> {
-    if (ready && options.currentRoute.value !== START_LOCATION_NORMALIZED) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      readyHandlers.add([resolve, reject]);
     });
   }
 
@@ -231,17 +200,16 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
       }
     }
     options.clearCaches();
-    scrollPositions.clear();
+    options.scrollPositionStore.clear();
     started = false;
-    ready = false;
+    options.readiness.setReady(false);
+    unregisterActiveRouter();
   }
+
+  options.readiness.onFirstReady(setupHistoryListener);
 
   return {
     init,
     destroy,
-    isReady,
-    markAsReady,
-    triggerError,
-    onError: errorListeners.add,
   };
 }

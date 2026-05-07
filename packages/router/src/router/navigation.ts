@@ -12,6 +12,7 @@ import { loadRouteLocation } from '../navigationGuards';
 import { START_LOCATION_NORMALIZED } from '../types';
 import { assign } from '../utils';
 import { isBrowser } from '../utils/env';
+import { LRUCache } from '../utils/lru';
 import { warn } from '../warning';
 import type {
   RouteLoaderContext,
@@ -26,6 +27,10 @@ import type { HistoryState } from '../history/common';
 
 export interface NavigationCoordinator {
   push: (to: RouteLocationRaw) => Promise<NavigationFailure | void | undefined>;
+  pushWithRedirect: (
+    to: RouteLocationRaw | RouteLocation,
+    redirectedFrom?: RouteLocation,
+  ) => Promise<NavigationFailure | void | undefined>;
   replace: (to: RouteLocationRaw) => Promise<NavigationFailure | void | undefined>;
   preloadRoute: (to: RouteLocationRaw) => Promise<RouteLocationNormalizedLoaded>;
   clearCaches: () => void;
@@ -87,31 +92,9 @@ interface CreateNavigationCoordinatorOptions {
 export function createNavigationCoordinator(
   options: CreateNavigationCoordinatorOptions,
 ): NavigationCoordinator {
-  const preloadRouteCache = new Map<string, Promise<RouteLocationNormalizedLoaded>>();
-  const routeDataCache = new Map<string, Promise<void>>();
+  const preloadRouteCache = new LRUCache<string, Promise<RouteLocationNormalizedLoaded>>(32);
+  const routeDataCache = new LRUCache<string, Promise<void>>(32);
   const routeDataControllers = new Map<string, AbortController>();
-  const PRELOAD_CACHE_LIMIT = 32;
-  const ROUTE_DATA_CACHE_LIMIT = 32;
-
-  function touchCacheEntry<T>(cache: Map<string, T>, key: string) {
-    const value = cache.get(key);
-    if (value === undefined) return undefined;
-    cache.delete(key);
-    cache.set(key, value);
-    return value;
-  }
-
-  function setCacheEntry<T>(cache: Map<string, T>, key: string, value: T, limit: number) {
-    if (cache.has(key)) {
-      cache.delete(key);
-    }
-    cache.set(key, value);
-    while (cache.size > limit) {
-      const oldestKey = cache.keys().next().value;
-      if (oldestKey == null) break;
-      cache.delete(oldestKey);
-    }
-  }
 
   function abortActiveRouteDataHooks(exceptKey?: string) {
     routeDataControllers.forEach((controller, key) => {
@@ -280,7 +263,7 @@ export function createNavigationCoordinator(
           }
         }
 
-        options.triggerAfterEach(toLocation as RouteLocationNormalizedLoaded, from, failure as any);
+        options.triggerAfterEach(toLocation as RouteLocationNormalizedLoaded, from, failure);
         return failure;
       });
   }
@@ -294,7 +277,7 @@ export function createNavigationCoordinator(
     abortActive = false,
   ): Promise<void> {
     const key = createPreloadRouteKey(to);
-    const cached = touchCacheEntry(routeDataCache, key);
+    const cached = routeDataCache.get(key);
     if (cached) {
       return cached;
     }
@@ -331,14 +314,13 @@ export function createNavigationCoordinator(
         }
       });
 
-    setCacheEntry(routeDataCache, key, task, ROUTE_DATA_CACHE_LIMIT);
-    return task;
+    routeDataCache.set(key, task);    return task;
   }
 
   async function preloadRoute(to: RouteLocationRaw): Promise<RouteLocationNormalizedLoaded> {
     const resolved = options.resolve(to) as RouteLocationNormalized;
     const key = createPreloadRouteKey(resolved);
-    const existing = touchCacheEntry(preloadRouteCache, key);
+    const existing = preloadRouteCache.get(key);
     if (existing) {
       return existing;
     }
@@ -353,7 +335,7 @@ export function createNavigationCoordinator(
         throw error;
       });
 
-    setCacheEntry(preloadRouteCache, key, task, PRELOAD_CACHE_LIMIT);
+    preloadRouteCache.set(key, task);
     return task;
   }
 
@@ -397,6 +379,7 @@ export function createNavigationCoordinator(
 
   return {
     push,
+    pushWithRedirect,
     replace,
     preloadRoute,
     clearCaches,

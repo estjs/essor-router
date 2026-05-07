@@ -2,9 +2,11 @@ import { computed, createComponent, effect, onDestroy, signal, stop } from 'esso
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
 import { warn } from './warning';
-import { useRoute, useRouter } from './useApi';
+import { createRouteAccessor, useRoute, useRouter } from './useApi';
 import { LinkComponent } from './linkComponent';
 import { usePrefetch } from './router/usePrefetch';
+import { guardLinkEvent } from './router/guardEvent';
+import type { Router } from './router';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouteLocationNormalized, RouteLocationRawTyped } from './types';
@@ -107,7 +109,7 @@ const readTo = (to: RouterLinkProps['to']) => {
   return to;
 };
 
-const peekTo = (to: RouterLinkProps['to']) => {
+const peekTo = (to: RouterLinkProps['to']): RouteLocationRawTyped => {
   if (!isSignalLike(to)) {
     return typeof to === 'function' ? (to as () => RouteLocationRawTyped)() : to;
   }
@@ -138,23 +140,32 @@ const routerPrefetchCounters = new WeakMap<object, number>();
  * @returns Link state and navigation handler
  */
 export function useLink(props: RouterLinkProps): UseLinkReturn {
-  let router: any;
+  let router: Router;
   try {
     router = useRouter();
   } catch {
     if (__DEV__) {
       logRouterError(
         'useLink() requires an active router instance. ' +
-          'Make sure you have created a router with createRouter() and it is active.',
+        'Make sure you have created a router with createRouter() and it is active.',
       );
     }
     throw new Error(
       'useLink() requires an active router instance. ' +
-        'Make sure you have created a router with createRouter() and it is active.',
+      'Make sure you have created a router with createRouter() and it is active.',
     );
   }
 
-  const currentRoute = useRoute() as any;
+  // RouterLink can be mounted in tests or custom trees where the router is
+  // injected but routeLocationKey is not. Fall back to the router signal so
+  // active state and href computation stay reactive instead of throwing.
+  const currentRoute: RouteLocationNormalized = (() => {
+    try {
+      return useRoute();
+    } catch {
+      return createRouteAccessor(router.currentRoute);
+    }
+  })() as unknown as RouteLocationNormalized;
   const trackedTo =
     typeof props.to === 'function' || isSignalLike(props.to) ? signal(peekTo(props.to)) : null;
 
@@ -211,8 +222,8 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
       getOriginalPath(routeMatched) === parentRecordPath &&
       currentMatched[currentMatched.length - 1].path !== parentRecordPath
       ? currentMatched.findIndex((record: RouteRecord) =>
-          isSameRouteRecord(matched[length - 2] as RouteRecord, record),
-        )
+        isSameRouteRecord(matched[length - 2] as RouteRecord, record),
+      )
       : index;
   });
 
@@ -246,7 +257,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
    * @returns Promise that resolves when navigation completes
    */
   function navigate(e: MouseEvent = {} as MouseEvent): Promise<void | NavigationFailure> {
-    if (!guardEvent(e)) {
+    if (!guardLinkEvent(e)) {
       return Promise.resolve();
     }
 
@@ -257,7 +268,7 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
       return Promise.resolve();
     }
 
-    const doNav = () => router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
+    const doNav = () => (props.replace ? router.replace(to) : router.push(to)).catch(noop);
 
     if (
       props.viewTransition &&
@@ -292,31 +303,6 @@ function getNextPrefetchId(router: object) {
   routerPrefetchCounters.set(router, nextId);
   routerLinkPrefetchId++;
   return `essor-router-prefetch-${nextId}-${routerLinkPrefetchId}`;
-}
-
-/**
- * Guards navigation events based on modifier keys and other conditions
- * @param e - Mouse event
- * @returns true if navigation should proceed
- */
-function guardEvent(e: MouseEvent): boolean {
-  // Don't redirect with control keys
-  if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) return false;
-
-  // Don't redirect when preventDefault called
-  if (e.defaultPrevented) return false;
-
-  // Don't redirect on right click
-  if (e.button !== undefined && e.button !== 0) return false;
-
-  // Don't redirect if `target="_blank"`
-  if (e.currentTarget) {
-    const target = (e.currentTarget as Element).getAttribute('target');
-    if (target && /\b_blank\b/i.test(target)) return false;
-  }
-
-  e.preventDefault();
-  return true;
 }
 
 /**
@@ -403,7 +389,7 @@ export const RouterLink = (props: RouterLinkProps): any => {
   const prefetch = usePrefetch({
     mode: resolvePrefetchMode(),
     id: prefetchId,
-    preload: () => router.preloadRoute(peekTo(props.to) as any),
+    preload: () => router.preloadRoute(peekTo(props.to)),
   });
 
   prefetch.onRender();
@@ -466,15 +452,15 @@ export const RouterLink = (props: RouterLinkProps): any => {
       ? props.children()
       : props.children
     : createComponent(LinkComponent, {
-        'ariaCurrent': ariaCurrent,
-        'href': link.href,
-        'onClick': handleClick,
-        'onMouseenter': prefetch.onIntent,
-        'onFocus': prefetch.onIntent,
-        'onTouchstart': prefetch.onIntent,
-        'onElement': prefetch.setTarget,
-        'data-router-prefetch-id': prefetchId,
-        'class': elClass,
-        'children': props.children,
-      });
+      'ariaCurrent': ariaCurrent,
+      'href': link.href,
+      'onClick': handleClick,
+      'onMouseenter': prefetch.onIntent,
+      'onFocus': prefetch.onIntent,
+      'onTouchstart': prefetch.onIntent,
+      'onElement': prefetch.setTarget,
+      'data-router-prefetch-id': prefetchId,
+      'class': elClass,
+      'children': props.children,
+    });
 };

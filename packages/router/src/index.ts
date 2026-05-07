@@ -14,7 +14,7 @@ export { RouteRecordNormalized } from './matcher/types';
 export type { RouterHistory, HistoryState } from './history/common';
 
 export { createRouter, RouterOptions } from './router';
-export type { Router } from './router';
+export type { ErrorListener, _ErrorListener, Router } from './router';
 
 export { NavigationFailureType, isNavigationFailure } from './errors';
 export type { NavigationFailure, ErrorTypes, NavigationRedirectError } from './errors';
@@ -22,6 +22,7 @@ export type { NavigationFailure, ErrorTypes, NavigationRedirectError } from './e
 export { onBeforeRouteLeave, onBeforeRouteUpdate, loadRouteLocation } from './navigationGuards';
 export { RouterLink, useLink } from './RouterLink';
 export type { RouterLinkProps, RouterLinkOptions, UseLinkReturn } from './RouterLink';
+export { guardLinkEvent } from './router/guardEvent';
 export { RouterView, RouterViewProps } from './RouterView';
 export type { RouterScrollBehavior } from './scrollBehavior';
 

@@ -20,23 +20,25 @@ import { parseQuery as defaultParseQuery, stringifyQuery as defaultStringifyQuer
 import {
   type RouterScrollBehavior,
   type _ScrollPositionNormalized,
-  getSavedScrollPosition,
+  createScrollPositionStore,
   getScrollKey,
   scrollToPosition,
 } from './scrollBehavior';
+import { registerActiveRouter } from './useApi';
 import { createReactiveRoute, createRouteResolver } from './router/routeResolver';
 import { createGuardPipeline } from './router/guardPipeline';
 import { createNavigationCoordinator } from './router/navigation';
 import { setupRouterLifecycle } from './router/lifecycle';
+import { type ErrorListener, createReadinessController } from './router/readiness';
 import { warn } from './warning';
 import type { Signal } from 'essor';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouterHistory } from './history/common';
 import type { PathParserOptions } from './matcher/pathParserRanker';
-import type { ErrorListener as _ErrorListener } from './router/lifecycle';
 
-export { _ErrorListener };
+export type { ErrorListener };
+export type { ErrorListener as _ErrorListener };
 
 // ---------------------------------------------------------------------------
 // Types
@@ -84,7 +86,7 @@ export interface Router {
   beforeResolve(guard: NavigationGuardWithThis<undefined>): () => void;
   afterEach(guard: NavigationHookAfter): () => void;
 
-  onError(handler: _ErrorListener): () => void;
+  onError(handler: ErrorListener): () => void;
   isReady(): Promise<void>;
   init(): void;
   destroy(): void;
@@ -152,6 +154,7 @@ export function createRouter(options: RouterOptions): Router {
 
   const pipeline = createGuardPipeline();
   let pendingLocation: RouteLocation = START_LOCATION_NORMALIZED;
+  const scrollPositionStore = createScrollPositionStore();
 
   // --- Scroll handling ---
   const handleScroll = (
@@ -165,7 +168,7 @@ export function createRouter(options: RouterOptions): Router {
     if (!isBrowser || !scrollBehavior) return Promise.resolve();
 
     const scrollPosition: _ScrollPositionNormalized | null =
-      (!isPush && getSavedScrollPosition(getScrollKey(from.fullPath, delta))) ||
+      (!isPush && scrollPositionStore.get(getScrollKey(from.fullPath, delta))) ||
       ((isFirstNavigation || !isPush) && history.state && (history.state as any).scroll) ||
       null;
 
@@ -174,14 +177,8 @@ export function createRouter(options: RouterOptions): Router {
       .then((position) => position && scrollToPosition(position));
   };
 
-  // --- Lifecycle (must be set up before navigation to break circular deps) ---
-  // Temporary forward-references filled once lifecycle is created.
-  let markAsReady: <E extends Error = Error>(err?: E) => E | void = () => {};
-  let triggerError: (
-    error: Error,
-    to: RouteLocationNormalized,
-    from: RouteLocationNormalizedLoaded,
-  ) => Promise<unknown> = (error) => Promise.reject(error);
+  // --- Readiness controller (created first, shared by navigation & lifecycle) ---
+  const readiness = createReadinessController(currentRoute);
 
   // --- Shared helpers ---
   const setPendingLocation = (location: RouteLocation) => {
@@ -204,8 +201,8 @@ export function createRouter(options: RouterOptions): Router {
     routerHistory,
     triggerAfterEach: pipeline.triggerAfterEach,
     navigate: runGuardPipeline,
-    markAsReady: (err) => markAsReady(err),
-    triggerError: (error, to, from) => triggerError(error, to, from),
+    markAsReady: readiness.markAsReady,
+    triggerError: readiness.triggerError,
     handleScroll,
   });
 
@@ -217,7 +214,7 @@ export function createRouter(options: RouterOptions): Router {
       if (!parentMatcher) {
         if (__DEV__)
           warn(`Parent route "${String(parentOrRoute)}" not found when adding child route`);
-        return () => {};
+        return () => { };
       }
     }
 
@@ -274,15 +271,15 @@ export function createRouter(options: RouterOptions): Router {
     beforeResolve: pipeline.beforeResolveGuards.add,
     afterEach: pipeline.afterGuards.add,
 
-    // Lifecycle (patched below once `lifecycle` is available)
-    onError: (() => () => {}) as Router['onError'],
-    isReady: (async () => {}) as Router['isReady'],
-    init: (() => {}) as Router['init'],
-    destroy: (() => {}) as Router['destroy'],
+    // Lifecycle
+    onError: readiness.onError,
+    isReady: readiness.isReady,
+    init: (() => { }) as Router['init'],
+    destroy: (() => { }) as Router['destroy'],
 
     // Prerender
     getPrerenderPaths: () => collectPrerenderPaths(matcher.getRoutes().map((r) => r.record)),
-    getPrerenderPathsAsync: async () =>
+    getPrerenderPathsAsync: () =>
       collectPrerenderPathsAsync(matcher.getRoutes().map((r) => r.record)),
     getRouteRenderMode: (name: RouteRecordName): RouteRenderMode => {
       const record = matcher.getRecordMatcher(name)?.record;
@@ -292,28 +289,28 @@ export function createRouter(options: RouterOptions): Router {
     },
   } satisfies Router;
 
-  // --- Wire up lifecycle (resolves forward-references) ---
+  // --- Wire up lifecycle ---
   const lifecycle = setupRouterLifecycle({
     router,
     currentRoute,
     routeLocationContext,
-    resolve: (to) => resolver.resolve(to as any),
+    readiness,
+    resolve: (to: string) => resolver.resolve(to),
     setPendingLocation,
-    pushWithRedirect: navigation.push as any,
+    pushWithRedirect: navigation.pushWithRedirect,
     navigate: runGuardPipeline,
     finalizeNavigation: navigation.finalizeNavigation,
     triggerAfterEach: pipeline.triggerAfterEach,
     handleRedirectRecord: navigation.handleRedirectRecord,
     clearCaches: navigation.clearCaches,
     routerHistory,
+    scrollPositionStore,
   });
 
-  markAsReady = lifecycle.markAsReady;
-  triggerError = lifecycle.triggerError;
-  router.onError = lifecycle.onError;
-  router.isReady = lifecycle.isReady;
   router.init = () => lifecycle.init(router);
   router.destroy = lifecycle.destroy;
+
+  registerActiveRouter(router);
 
   return router;
 }

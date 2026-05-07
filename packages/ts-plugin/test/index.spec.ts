@@ -4,6 +4,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import init from '../src/index';
 
+const normalizeSlashes = (value: string) => value.replace(/\\/g, '/');
+
 describe('ts-plugin index', () => {
   it('intercepts essor-router resolution and writes proxy module', () => {
     const root = mkdtempSync(join(tmpdir(), 'ts-plugin-index-'));
@@ -48,9 +50,7 @@ describe('ts-plugin index', () => {
 
     const result = info.languageServiceHost.resolveModuleNames(['essor-router'], containingFile);
     expect(
-      result[0].resolvedFileName
-        .replaceAll('\\\\', '/')
-        .endsWith('node_modules/.essor-router/users-id.ts'),
+      normalizeSlashes(result[0].resolvedFileName).endsWith('node_modules/.essor-router/users-id.ts'),
     ).toBe(true);
 
     const generated = readFileSync(result[0].resolvedFileName, 'utf8');
