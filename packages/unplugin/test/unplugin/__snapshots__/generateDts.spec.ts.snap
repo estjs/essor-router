@@ -11,8 +11,8 @@ exports[`generateDTS > matches snapshot for a minimal configuration 1`] = `
 // Make sure to add this file to your tsconfig.json file as an "includes" or "files" entry.
 
 
-declare module 'essor-router/auto-routes' {
-  import type {
+
+      import type {
     RouteRecordInfo,
     ParamValue,
     ParamValueOneOrMore,
@@ -20,6 +20,15 @@ declare module 'essor-router/auto-routes' {
     ParamValueZeroOrOne,
     RouteRecordRaw,
   } from 'essor-router'
+declare module 'essor-router' {
+ 
+  export interface RouteNamedMap {
+    '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>, never>,
+  }
+}
+
+declare module 'essor-router/auto-routes' {
+
   import type {
     InferRouteBeforeLoadData,
     InferRouteDefinitionFromDefinePageModule,
@@ -101,8 +110,8 @@ exports[`generateDTS > matches snapshot when custom param parsers are present 1`
 type Param_uuid = ReturnType<NonNullable<typeof import('./parsers/uuid').parser['get']>>
 
 
-declare module 'essor-router/auto-routes' {
-  import type {
+
+      import type {
     RouteRecordInfo,
     ParamValue,
     ParamValueOneOrMore,
@@ -110,6 +119,15 @@ declare module 'essor-router/auto-routes' {
     ParamValueZeroOrOne,
     RouteRecordRaw,
   } from 'essor-router'
+declare module 'essor-router' {
+ 
+  export interface RouteNamedMap {
+    '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>, never>,
+  }
+}
+
+declare module 'essor-router/auto-routes' {
+
   import type {
     InferRouteBeforeLoadData,
     InferRouteDefinitionFromDefinePageModule,
