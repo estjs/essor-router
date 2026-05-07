@@ -47,12 +47,11 @@ export function createGuardPipeline(): GuardPipeline {
     ) => Promise<void>,
     runRouteDataHooks: (to: RouteLocationNormalized) => Promise<void>,
   ) {
-    let guards: Lazy<any>[];
     const [leavingRecords, updatingRecords, enteringRecords] = extractChangingRecords(to, from);
     const canceledNavigationCheck = checkCanceledNavigationAndReject.bind(null, to, from);
 
     // Phase 1: Leaving component guards + leaveGuards + beforeLeave
-    guards = extractComponentsGuards(leavingRecords.reverse(), 'beforeLeave', to, from);
+    const guards = extractComponentsGuards(leavingRecords.reverse(), 'beforeLeave', to, from);
     for (const record of leavingRecords) {
       record.leaveGuards?.forEach((guard) => {
         guards.push(guardToPromiseFn(guard, to, from));

@@ -1,45 +1,41 @@
 import { describe, expect, it } from 'vitest';
-import { createTreeNodeValue } from '../../src/core/treeNodeValue';
+import { type TreeNodeValueParam, createTreeNodeValue } from '../../src/core/treeNodeValue';
 
 describe('treeNodeValue parsing', () => {
   it('parses dynamic routes [id]', () => {
     const nodeValue = createTreeNodeValue('[id]');
     expect(nodeValue.isParam()).toBe(true);
-    if (nodeValue.isParam()) {
-      expect(nodeValue.pathParams[0].paramName).toBe('id');
-      expect(nodeValue.pathParams[0].isSplat).toBe(false);
-      expect(nodeValue.pathSegment).toBe(':id');
-    }
+    const param = nodeValue as TreeNodeValueParam;
+    expect(param.pathParams[0].paramName).toBe('id');
+    expect(param.pathParams[0].isSplat).toBe(false);
+    expect(param.pathSegment).toBe(':id');
   });
 
   it('parses catch-all routes [...path]', () => {
     const nodeValue = createTreeNodeValue('[...path]');
     expect(nodeValue.isParam()).toBe(true);
-    if (nodeValue.isParam()) {
-      expect(nodeValue.pathParams[0].paramName).toBe('path');
-      expect(nodeValue.pathParams[0].isSplat).toBe(true);
-      expect(nodeValue.pathSegment).toBe(':path(.*)');
-    }
+    const param = nodeValue as TreeNodeValueParam;
+    expect(param.pathParams[0].paramName).toBe('path');
+    expect(param.pathParams[0].isSplat).toBe(true);
+    expect(param.pathSegment).toBe(':path(.*)');
   });
 
   it('parses optional routes [[id]]', () => {
     const nodeValue = createTreeNodeValue('[[id]]');
     expect(nodeValue.isParam()).toBe(true);
-    if (nodeValue.isParam()) {
-      expect(nodeValue.pathParams[0].paramName).toBe('id');
-      expect(nodeValue.pathParams[0].optional).toBe(true);
-      expect(nodeValue.pathSegment).toBe(':id?');
-    }
+    const param = nodeValue as TreeNodeValueParam;
+    expect(param.pathParams[0].paramName).toBe('id');
+    expect(param.pathParams[0].optional).toBe(true);
+    expect(param.pathSegment).toBe(':id?');
   });
 
   it('keeps custom regex for raw path params', () => {
     const nodeValue = createTreeNodeValue(':id(\\d+)', undefined, { format: 'path' });
     expect(nodeValue.isParam()).toBe(true);
-    if (nodeValue.isParam()) {
-      expect(nodeValue.pathParams[0].paramName).toBe('id');
-      expect(nodeValue.pathParams[0].regexp).toBe('\\d+');
-      expect(nodeValue.re).toBe('(\\d+)');
-    }
+    const param = nodeValue as TreeNodeValueParam;
+    expect(param.pathParams[0].paramName).toBe('id');
+    expect(param.pathParams[0].regexp).toBe('\\d+');
+    expect(param.re).toBe('(\\d+)');
   });
 
   it('rejects invalid custom regex in raw path params', () => {
@@ -89,12 +85,12 @@ describe('treeNodeValue parsing', () => {
   it('caches re and score for param nodes', () => {
     const node = createTreeNodeValue(':id', undefined, { format: 'path' });
     expect(node.isParam()).toBe(true);
-    if (node.isParam()) {
-      expect(node.re).toBe('([^/]+?)');
-      expect(node.re).toBe('([^/]+?)');
-      const s1 = node.score;
-      const s2 = node.score;
-      expect(s1).toEqual(s2);
-    }
+    const param = node as TreeNodeValueParam;
+    expect(param.re).toBe('([^/]+?)');
+    // Verify cache returns same value
+    expect(param.re).toBe('([^/]+?)');
+    const s1 = param.score;
+    const s2 = param.score;
+    expect(s1).toEqual(s2);
   });
 });

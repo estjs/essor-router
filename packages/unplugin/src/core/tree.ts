@@ -355,6 +355,7 @@ export class TreeNode {
    * Generates a regexp based on this node and its parents. This regexp is used by the custom resolver
    */
   get regexp(): string {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let node: TreeNode | undefined = this;
     // we build the node list from parent to child
     const nodeList: TreeNode[] = [];
