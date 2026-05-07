@@ -1,4 +1,4 @@
-import { defineConfigRoutes } from 'essor-router-unplugin';
+import { defineConfigRoutes } from 'unplugin-essor-router';
 
 export default defineConfigRoutes([
   {

@@ -31,21 +31,21 @@
 ```bash
 # npm
 npm install essor-router
-npm install -D essor-router-unplugin
+npm install -D unplugin-essor-router
 
 # pnpm
 pnpm add essor-router
-pnpm add -D essor-router-unplugin
+pnpm add -D unplugin-essor-router
 
 # yarn
 yarn add essor-router
-yarn add -D essor-router-unplugin
+yarn add -D unplugin-essor-router
 ```
 
 ### Monorepo 拆分说明
 
 - `essor-router`: 运行时包（history、matcher、router API）
-- `essor-router-unplugin`: 文件路由与代码生成插件包
+- `unplugin-essor-router`: 文件路由与代码生成插件包
 - `essor-router-ts-plugin`: TypeScript 语言服务插件，为 `useRoute()` 提供路由级精确类型
 - 文件路由以代码文件（`.tsx/.ts/.jsx/.js`）为核心，不依赖 SFC route block。
 

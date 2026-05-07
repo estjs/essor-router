@@ -177,7 +177,7 @@ export { EditableTreeNode } from './core/extendRoutes';
  * Adds useful auto imports to the AutoImport config:
  * @example
  * ```js
- * import { essorRouterAutoImports } from 'essor-router-unplugin'
+ * import { essorRouterAutoImports } from 'unplugin-essor-router'
  *
  * AutoImport({
  *   imports: [essorRouterAutoImports],

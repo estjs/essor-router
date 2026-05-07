@@ -4,7 +4,7 @@ This repository contains the router runtime, file-based routing unplugin, and a 
 
 ## Repo Summary
 - `essor-router`: runtime package (history, matcher, router APIs)
-- `essor-router-unplugin`: file-based routes, codegen, and typed routes
+- `unplugin-essor-router`: file-based routes, codegen, and typed routes
 - `essor-router-ts-plugin`: TypeScript language service plugin for route-aware types
 
 ## Directory Map
@@ -70,7 +70,7 @@ Root scripts (see `package.json`):
 
 Focused package runs:
 - `pnpm --filter essor-router test`
-- `pnpm --filter essor-router-unplugin test`
+- `pnpm --filter unplugin-essor-router test`
 - `pnpm --filter essor-router-ts-plugin test`
 
 ## Coding Style

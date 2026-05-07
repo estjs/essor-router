@@ -1,6 +1,6 @@
 # File-Based Routing with Unplugin
 
-This guide is the complete reference for `essor-router-unplugin`: setup, file conventions, `defineRoute()` capabilities, generated modules, typing, HMR, and production best practices.
+This guide is the complete reference for `unplugin-essor-router`: setup, file conventions, `defineRoute()` capabilities, generated modules, typing, HMR, and production best practices.
 
 ## What You Get
 
@@ -18,7 +18,7 @@ This guide is the complete reference for `essor-router-unplugin`: setup, file co
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
-import essorRouter from 'essor-router-unplugin/vite'
+import essorRouter from 'unplugin-essor-router/vite'
 
 export default defineConfig({
   plugins: [essorRouter({ routesFolder: 'src/pages' })],
@@ -114,6 +114,6 @@ Best practices:
 - Hydration mismatch with SSR: keep server/client route tree and `defineRoute()` behavior deterministic.
 
 Useful commands:
-- `pnpm --filter essor-router-unplugin test`
-- `pnpm --filter essor-router-unplugin typecheck`
-- `pnpm --filter essor-router-unplugin run build`
+- `pnpm --filter unplugin-essor-router test`
+- `pnpm --filter unplugin-essor-router typecheck`
+- `pnpm --filter unplugin-essor-router run build`

@@ -1,14 +1,14 @@
 # Unplugin API
 
-`essor-router-unplugin` generates file-based routes, resolver code, and typed declarations for Essor Router.
+`unplugin-essor-router` generates file-based routes, resolver code, and typed declarations for Essor Router.
 
 ## Entry Points
 
-- `essor-router-unplugin/vite`
-- `essor-router-unplugin/rollup`
-- `essor-router-unplugin/webpack`
-- `essor-router-unplugin/rolldown`
-- `essor-router-unplugin/esbuild`
+- `unplugin-essor-router/vite`
+- `unplugin-essor-router/rollup`
+- `unplugin-essor-router/webpack`
+- `unplugin-essor-router/rolldown`
+- `unplugin-essor-router/esbuild`
 
 ## Virtual Modules
 

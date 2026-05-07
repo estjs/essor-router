@@ -1,6 +1,6 @@
 # Unplugin 文件路由完整使用指南
 
-本文是 `essor-router-unplugin` 的完整说明：安装、路由约定、`defineRoute()` 全字段、类型系统、HMR 与生产实践。
+本文是 `unplugin-essor-router` 的完整说明：安装、路由约定、`defineRoute()` 全字段、类型系统、HMR 与生产实践。
 
 ## 你能获得什么
 
@@ -18,7 +18,7 @@
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
-import essorRouter from 'essor-router-unplugin/vite'
+import essorRouter from 'unplugin-essor-router/vite'
 
 export default defineConfig({
   plugins: [essorRouter({ routesFolder: 'src/pages' })],
@@ -114,6 +114,6 @@ essorRouter({
 - SSR 水合不一致：保证服务端与客户端路由树、`defineRoute()` 行为完全一致。
 
 常用验证命令：
-- `pnpm --filter essor-router-unplugin test`
-- `pnpm --filter essor-router-unplugin typecheck`
-- `pnpm --filter essor-router-unplugin run build`
+- `pnpm --filter unplugin-essor-router test`
+- `pnpm --filter unplugin-essor-router typecheck`
+- `pnpm --filter unplugin-essor-router run build`

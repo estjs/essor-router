@@ -4,7 +4,7 @@ Config-based routing lets you define routes explicitly in a TypeScript/JavaScrip
 
 ## Overview
 
-By default, `essor-router-unplugin` scans the `routesFolder` directory and generates routes from the file system (`mode: 'file'`). Config-based routing (`mode: 'config'`) offers an alternative where you declare your route tree in a single config file.
+By default, `unplugin-essor-router` scans the `routesFolder` directory and generates routes from the file system (`mode: 'file'`). Config-based routing (`mode: 'config'`) offers an alternative where you declare your route tree in a single config file.
 
 **When to use config-based routing:**
 
@@ -32,7 +32,7 @@ Create a file like `src/routes.config.ts`:
 
 ```ts
 // src/routes.config.ts
-import { defineConfigRoutes } from 'essor-router-unplugin'
+import { defineConfigRoutes } from 'unplugin-essor-router'
 
 export default defineConfigRoutes([
   { name: 'home', path: '/', component: () => import('./pages/Home.tsx') },
@@ -47,7 +47,7 @@ Update your build config to use `mode: 'config'`:
 
 ```tsx
 // vite.config.ts
-import essorRouter from 'essor-router-unplugin/vite'
+import essorRouter from 'unplugin-essor-router/vite'
 
 export default {
   plugins: [
@@ -183,7 +183,7 @@ The `routesFolder` option is **ignored** in `'config'` mode (the plugin does not
 
 ```ts
 // src/routes.config.ts
-import { defineConfigRoutes } from 'essor-router-unplugin'
+import { defineConfigRoutes } from 'unplugin-essor-router'
 
 export default defineConfigRoutes([
   // Public routes

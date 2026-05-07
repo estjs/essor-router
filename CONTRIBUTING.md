@@ -50,7 +50,7 @@ essor-router/
 
 ```bash
 pnpm --filter essor-router test
-pnpm --filter essor-router-unplugin test
+pnpm --filter unplugin-essor-router test
 pnpm --filter essor-router-ts-plugin test
 ```
 

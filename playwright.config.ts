@@ -62,7 +62,7 @@ export default defineConfig({
   webServer: [
     {
       command:
-        'pnpm --filter essor-router build && pnpm --filter essor-router-unplugin build && pnpm --filter essor-router-ts-plugin build && cd examples/file-routes && ../../node_modules/.bin/vite --host --port 3002 --strictPort',
+        'pnpm --filter essor-router build && pnpm --filter unplugin-essor-router build && pnpm --filter essor-router-ts-plugin build && cd examples/file-routes && ../../node_modules/.bin/vite --host --port 3002 --strictPort',
       url: 'http://localhost:3002/',
       reuseExistingServer: !process.env.CI,
     },

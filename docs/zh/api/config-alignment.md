@@ -1,12 +1,12 @@
 # 配置对齐指南
 
-> 本文涉及 `essor-router-unplugin`（构建插件）和 `essor-router-ts-plugin`（TypeScript 语言服务插件）之间的配置对齐关系。
+> 本文涉及 `unplugin-essor-router`（构建插件）和 `essor-router-ts-plugin`（TypeScript 语言服务插件）之间的配置对齐关系。
 
 ---
 
 ## 路由类型生成的两种模式
 
-`essor-router-unplugin` 是唯一的类型生成出口，支持两种输入方式，也可同时使用。
+`unplugin-essor-router` 是唯一的类型生成出口，支持两种输入方式，也可同时使用。
 
 ### 模式一：文件路由（自动扫描）
 
@@ -27,7 +27,7 @@ routerPlugin({
 
 ```ts
 // src/routes.config.ts
-import { defineConfigRoutes } from 'essor-router-unplugin'
+import { defineConfigRoutes } from 'unplugin-essor-router'
 
 export default defineConfigRoutes([
   { name: 'home',     path: '/',           component: () => import('./pages/Home.tsx') },

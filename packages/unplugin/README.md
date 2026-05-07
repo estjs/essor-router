@@ -1,9 +1,9 @@
-# essor-router-unplugin
+# unplugin-essor-router
 
 > File-system based routes and typed route generation for [Essor Router](https://github.com/estjs/essor-router). Supports Vite, Rollup, Webpack, Rolldown, and esbuild.
 
-[![npm](https://img.shields.io/npm/v/essor-router-unplugin)](https://www.npmjs.com/package/essor-router-unplugin)
-[![license](https://img.shields.io/npm/l/essor-router-unplugin)](https://github.com/estjs/essor-router/blob/main/LICENSE)
+[![npm](https://img.shields.io/npm/v/unplugin-essor-router)](https://www.npmjs.com/package/unplugin-essor-router)
+[![license](https://img.shields.io/npm/l/unplugin-essor-router)](https://github.com/estjs/essor-router/blob/main/LICENSE)
 
 ## Features
 
@@ -18,7 +18,7 @@
 ## Installation
 
 ```bash
-pnpm add -D essor-router-unplugin
+pnpm add -D unplugin-essor-router
 ```
 
 ---
@@ -30,7 +30,7 @@ pnpm add -D essor-router-unplugin
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
-import routerPlugin from 'essor-router-unplugin/vite'
+import routerPlugin from 'unplugin-essor-router/vite'
 
 export default defineConfig({
   plugins: [
@@ -42,7 +42,7 @@ export default defineConfig({
 })
 ```
 
-Other bundlers: import from `essor-router-unplugin/rollup`, `/webpack`, `/rolldown`, `/esbuild`.
+Other bundlers: import from `unplugin-essor-router/rollup`, `/webpack`, `/rolldown`, `/esbuild`.
 
 ---
 
@@ -73,7 +73,7 @@ Define routes explicitly in a config file. The plugin statically analyzes it at 
 
 ```ts
 // src/routes.config.ts
-import { defineConfigRoutes } from 'essor-router-unplugin'
+import { defineConfigRoutes } from 'unplugin-essor-router'
 
 export default defineConfigRoutes([
   {
@@ -258,7 +258,7 @@ The plugin exports `essorRouterAutoImports` for use with `unplugin-auto-import`:
 
 ```ts
 import AutoImport from 'unplugin-auto-import/vite'
-import { essorRouterAutoImports } from 'essor-router-unplugin'
+import { essorRouterAutoImports } from 'unplugin-essor-router'
 
 // in vite.config.ts plugins:
 AutoImport({ imports: [essorRouterAutoImports] })

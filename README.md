@@ -46,14 +46,14 @@ The official router for [Essor](https://github.com/estjs/essor) — a lightweigh
 | Package | Description |
 |---------|-------------|
 | [`essor-router`](./packages/router) | Runtime router (history, matcher, router APIs) |
-| [`essor-router-unplugin`](./packages/unplugin) | File-based routes, codegen, and typed routes |
+| [`unplugin-essor-router`](./packages/unplugin) | File-based routes, codegen, and typed routes |
 | [`essor-router-ts-plugin`](./packages/ts-plugin) | TypeScript language service plugin for route-aware types |
 
 ## Quick Start
 
 ```bash
 pnpm add essor-router
-pnpm add -D essor-router-unplugin
+pnpm add -D unplugin-essor-router
 ```
 
 ```tsx

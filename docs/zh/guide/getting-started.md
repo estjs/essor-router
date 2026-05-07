@@ -221,15 +221,15 @@ const router = createRouter({
 
 ## 文件系统路由（推荐）
 
-对于大型项目，推荐使用 `essor-router-unplugin` 从 `src/pages/` 目录自动生成路由：
+对于大型项目，推荐使用 `unplugin-essor-router` 从 `src/pages/` 目录自动生成路由：
 
 ```bash
-pnpm add -D essor-router-unplugin
+pnpm add -D unplugin-essor-router
 ```
 
 ```ts
 // vite.config.ts
-import routerPlugin from 'essor-router-unplugin/vite'
+import routerPlugin from 'unplugin-essor-router/vite'
 
 export default defineConfig({
   plugins: [routerPlugin()],

@@ -1,9 +1,9 @@
-# essor-router-unplugin
+# unplugin-essor-router
 
 > 基于文件系统的路由与类型化路由生成插件，服务于 [Essor Router](https://github.com/estjs/essor-router)。支持 Vite、Rollup、Webpack、Rolldown 和 esbuild。
 
-[![npm](https://img.shields.io/npm/v/essor-router-unplugin)](https://www.npmjs.com/package/essor-router-unplugin)
-[![license](https://img.shields.io/npm/l/essor-router-unplugin)](https://github.com/estjs/essor-router/blob/main/LICENSE)
+[![npm](https://img.shields.io/npm/v/unplugin-essor-router)](https://www.npmjs.com/package/unplugin-essor-router)
+[![license](https://img.shields.io/npm/l/unplugin-essor-router)](https://github.com/estjs/essor-router/blob/main/LICENSE)
 
 ## 功能特性
 
@@ -18,7 +18,7 @@
 ## 安装
 
 ```bash
-pnpm add -D essor-router-unplugin
+pnpm add -D unplugin-essor-router
 ```
 
 ---
@@ -30,7 +30,7 @@ pnpm add -D essor-router-unplugin
 ```ts
 // vite.config.ts
 import { defineConfig } from 'vite'
-import routerPlugin from 'essor-router-unplugin/vite'
+import routerPlugin from 'unplugin-essor-router/vite'
 
 export default defineConfig({
   plugins: [
@@ -42,7 +42,7 @@ export default defineConfig({
 })
 ```
 
-其他构建工具：从 `essor-router-unplugin/rollup`、`/webpack`、`/rolldown`、`/esbuild` 引入。
+其他构建工具：从 `unplugin-essor-router/rollup`、`/webpack`、`/rolldown`、`/esbuild` 引入。
 
 ---
 
@@ -73,7 +73,7 @@ export default defineConfig({
 
 ```ts
 // src/routes.config.ts
-import { defineConfigRoutes } from 'essor-router-unplugin'
+import { defineConfigRoutes } from 'unplugin-essor-router'
 
 export default defineConfigRoutes([
   {
@@ -258,7 +258,7 @@ export default function UserPage() { /* ... */ }
 
 ```ts
 import AutoImport from 'unplugin-auto-import/vite'
-import { essorRouterAutoImports } from 'essor-router-unplugin'
+import { essorRouterAutoImports } from 'unplugin-essor-router'
 
 // vite.config.ts plugins 中：
 AutoImport({ imports: [essorRouterAutoImports] })

@@ -23,7 +23,7 @@ async function waitUntil(assertion: () => void | Promise<void>, timeout = 3000, 
 
 describe('e2e: defineRoute generation', () => {
   it('generates route records and resolver from code-file routes', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages');
@@ -77,7 +77,7 @@ describe('e2e: defineRoute generation', () => {
   });
 
   it('removes route records after file unlink in watch mode', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     const waitFor = async (
       assertion: () => void | Promise<void>,
@@ -135,7 +135,7 @@ export default function About() { return null }
   });
 
   it('stops route watchers only once when stopWatcher is called repeatedly', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages');
@@ -167,7 +167,7 @@ export default function About() { return null }
   });
 
   it('prioritizes custom-regex routes before plain dynamic routes in resolver', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages');
@@ -224,7 +224,7 @@ export default function AnyPage(){ return null }
   });
 
   it('sorts resolver routes by matcher specificity matrix', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages');
@@ -311,7 +311,7 @@ export default function Page(){ return null }
   });
 
   it('handles group + _parent + alias/path override combinations', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages/(admin)/users');
@@ -370,7 +370,7 @@ export default function UserDetails(){ return null }
   });
 
   it('keeps defineRoute merge metadata when updating sibling named-view files', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages/dashboard');
@@ -445,7 +445,7 @@ export default function Dashboard(){ return null }
   });
 
   it('drops defineRoute merge metadata after unlinking the defining named-view file', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     const waitFor = async (
       assertion: () => void | Promise<void>,
@@ -514,7 +514,7 @@ export default function Dashboard(){ return null }
   });
 
   it('keeps resolver and dts in sync when param parser files are added/removed', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages/users');
@@ -577,7 +577,7 @@ export default function Dashboard(){ return null }
   });
 
   it('triggers route updates for param parser changes when dts is disabled', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'essor-router-unplugin-e2e-'));
+    const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 
     try {
       const pagesDir = join(root, 'src/pages/users');
@@ -611,7 +611,7 @@ export default function Dashboard(){ return null }
         async updateRoutes() {
           routeUpdateCount++;
         },
-        reload() {},
+        reload() { },
       });
 
       await ctx.scanPages(true);

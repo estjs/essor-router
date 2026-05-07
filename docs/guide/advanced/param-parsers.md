@@ -16,11 +16,11 @@ Essor Router supports two kinds of parsers:
 
 ## Enabling Param Parsers
 
-Param parsers are an **experimental feature**. Enable them in your `essor-router-unplugin` config:
+Param parsers are an **experimental feature**. Enable them in your `unplugin-essor-router` config:
 
 ```tsx
 // vite.config.ts
-import essorRouter from 'essor-router-unplugin/vite'
+import essorRouter from 'unplugin-essor-router/vite'
 
 export default {
   plugins: [
@@ -498,7 +498,7 @@ Parameter parser "myParser" not found for route "/users/:id".
 
 ```tsx
 // vite.config.ts
-import essorRouter from 'essor-router-unplugin/vite'
+import essorRouter from 'unplugin-essor-router/vite'
 
 export default {
   plugins: [

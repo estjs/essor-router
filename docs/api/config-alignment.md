@@ -1,12 +1,12 @@
 # Configuration Alignment Guide
 
-> Covers `essor-router-unplugin` (build plugin) and `essor-router-ts-plugin` (TypeScript language service plugin).
+> Covers `unplugin-essor-router` (build plugin) and `essor-router-ts-plugin` (TypeScript language service plugin).
 
 ---
 
 ## Two Modes for Route Type Generation
 
-`essor-router-unplugin` is the single source of typed route generation. It supports two input modes controlled by the `mode` option.
+`unplugin-essor-router` is the single source of typed route generation. It supports two input modes controlled by the `mode` option.
 
 ### The `mode` Option
 
@@ -51,7 +51,7 @@ Declare routes in a separate config file. unplugin statically analyzes it and ge
 
 ```ts
 // src/routes.config.ts
-import { defineConfigRoutes } from 'essor-router-unplugin'
+import { defineConfigRoutes } from 'unplugin-essor-router'
 
 export default defineConfigRoutes([
   { name: 'home',     path: '/',           component: () => import('./pages/Home.tsx') },
@@ -175,7 +175,7 @@ src/pages/
 **Plugin config:**
 ```ts
 // vite.config.ts
-import essorRouter from 'essor-router-unplugin/vite'
+import essorRouter from 'unplugin-essor-router/vite'
 
 export default {
   plugins: [
@@ -193,7 +193,7 @@ export default {
 **Single config file:**
 ```ts
 // src/routes.config.ts
-import { defineConfigRoutes } from 'essor-router-unplugin'
+import { defineConfigRoutes } from 'unplugin-essor-router'
 
 export default defineConfigRoutes([
   { name: 'index',              path: '/',               component: () => import('./pages/index') },
@@ -210,7 +210,7 @@ export default defineConfigRoutes([
 **Plugin config:**
 ```ts
 // vite.config.ts
-import essorRouter from 'essor-router-unplugin/vite'
+import essorRouter from 'unplugin-essor-router/vite'
 
 export default {
   plugins: [

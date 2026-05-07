@@ -228,15 +228,15 @@ No URL changes. Useful for SSR and testing.
 
 ## File-Based Routing (Recommended)
 
-For larger projects, use `essor-router-unplugin` to auto-generate routes from your `src/pages/` directory:
+For larger projects, use `unplugin-essor-router` to auto-generate routes from your `src/pages/` directory:
 
 ```bash
-pnpm add -D essor-router-unplugin
+pnpm add -D unplugin-essor-router
 ```
 
 ```ts
 // vite.config.ts
-import routerPlugin from 'essor-router-unplugin/vite'
+import routerPlugin from 'unplugin-essor-router/vite'
 
 export default defineConfig({
   plugins: [routerPlugin()],

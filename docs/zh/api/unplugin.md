@@ -1,14 +1,14 @@
 # Unplugin API 参考
 
-`essor-router-unplugin` 用于生成文件路由、resolver 代码与类型声明。
+`unplugin-essor-router` 用于生成文件路由、resolver 代码与类型声明。
 
 ## 入口
 
-- `essor-router-unplugin/vite`
-- `essor-router-unplugin/rollup`
-- `essor-router-unplugin/webpack`
-- `essor-router-unplugin/rolldown`
-- `essor-router-unplugin/esbuild`
+- `unplugin-essor-router/vite`
+- `unplugin-essor-router/rollup`
+- `unplugin-essor-router/webpack`
+- `unplugin-essor-router/rolldown`
+- `unplugin-essor-router/esbuild`
 
 ## 虚拟模块
 
