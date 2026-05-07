@@ -5,13 +5,21 @@
     "jsxImportSource": "essor",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "plugins": [
-      {
-        "name": "essor-router-ts-plugin"
-      }
-    ],
-    "types": ["vite/client"],
-    "strict": true
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["src", "typed-router.d.ts"]
+  "include": [
+    "src",
+    "typed-router.d.ts"
+  ]
 }

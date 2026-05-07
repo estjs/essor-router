@@ -5,7 +5,7 @@ export default function Home() {
 
   const handleTypedNavigation = () => {
     // router.push() expects strong types for parameters based on the name!
-    router.push({ name: '/users/[id]', params: { id: 789 } });
+    router.push({ name: '/users/[id]', params: { id: '789' } });
   };
 
   return (

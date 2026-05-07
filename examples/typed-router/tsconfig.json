@@ -5,16 +5,10 @@
     "jsxImportSource": "essor",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "paths": {
-      "essor-router/auto-routes": ["./typed-router.d.ts"]
-    },
-    "plugins": [
-      {
-        "name": "essor-router-ts-plugin"
-      }
-    ],
-    "types": ["vite/client", "@estjs/signals", "@estjs/template"],
     "strict": true
   },
-  "include": ["src", "typed-router.d.ts", ".essor/types"]
+  "include": [
+    "src",
+    "typed-router.d.ts"
+  ]
 }

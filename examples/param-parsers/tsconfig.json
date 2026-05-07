@@ -4,17 +4,22 @@
     "jsx": "preserve",
     "jsxImportSource": "essor",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "paths": {
-      "essor-router": ["./node_modules/essor-router"]
+      "@/*": [
+        "./src/*"
+      ]
     },
-    "plugins": [
-      {
-        "name": "essor-router-ts-plugin"
-      }
-    ],
-    "types": ["vite/client", "@estjs/signals", "@estjs/template"],
-    "strict": true
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["src", "typed-router.d.ts", ".essor/types"]
+  "include": [
+    "src",
+    "typed-router.d.ts"
+  ]
 }
