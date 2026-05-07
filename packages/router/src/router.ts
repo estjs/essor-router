@@ -137,10 +137,6 @@ export function createRouter(options: RouterOptions): Router {
     ? createHistory(options.history, options.base)
     : (options.history as RouterHistory);
 
-  // NOTE: using `shallowSignal` rather than `signal` so essor does not
-  // deep-wrap the stored route object in a `reactive()` proxy. This keeps
-  // `currentRoute.value` referentially identical to what navigation writes,
-  // mirroring vue-router's `shallowRef` semantics.
   const currentRoute = shallowSignal<RouteLocationNormalizedLoaded>(START_LOCATION_NORMALIZED);
   const routeLocationContext = createReactiveRoute(currentRoute);
 

@@ -28,8 +28,8 @@ import { RouterLink, RouterView, createRouter, createWebHistory } from 'essor-ro
 
 // 定义路由列表
 const routes = [
-  { path: '/', component: () => import('./pages/Home.vue') },
-  { path: '/about', component: () => import('./pages/About.vue') },
+  { path: '/', component: () => import('./pages/Home.tsx') },
+  { path: '/about', component: () => import('./pages/About.tsx') },
 ];
 
 // 创建路由实例

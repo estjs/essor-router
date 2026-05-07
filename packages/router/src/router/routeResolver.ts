@@ -33,20 +33,6 @@ export interface RouteResolver {
   ) => Exclude<RouteLocationRaw, string> | RouteLocationNormalized;
 }
 
-/**
- * Creates the reactive route object exposed via `useRoute()` / provided as
- * `routeLocationKey`. Mirrors vue-router 4.x / 5.x semantics: a stable
- * object whose property reads always forward to `currentRoute.value[key]`,
- * so that `computed()`/`effect()` consumers transparently track the
- * underlying signal.
- *
- * NOTE: vue-router wraps the getter object with `shallowReactive`. Essor's
- * `shallowReactive` does not preserve nested-property tracking when the
- * underlying signal is replaced wholesale (as router navigations do), so we
- * instead expose a plain `Proxy` that delegates every read to the signal.
- * This makes any access — `route.path`, `route.matched.at(-1)`, etc. — a
- * direct signal read that participates in essor's reactivity.
- */
 export function createReactiveRoute(
   currentRoute: Signal<RouteLocationNormalizedLoaded>,
 ): RouteLocationNormalizedLoaded {

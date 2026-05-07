@@ -16,7 +16,8 @@
     "coverage": "pnpm -r --filter './packages/*' run coverage",
     "test:e2e": "playwright test",
     "changelog": "tsx scripts/changelog.ts",
-    "publish-ci": "tsx scripts/publish-ci.ts"
+    "prerelease": "pnpm run lint && pnpm run build && pnpm run typecheck && pnpm run test",
+    "release": "pnpm run changelog && pnpm run prerelease && bumpp package.json packages/*/package.json --no-git-checks --commit --push --tag"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^2.2.4",
