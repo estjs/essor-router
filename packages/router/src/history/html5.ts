@@ -9,7 +9,6 @@ import {
   NavigationType,
   type RouterHistory,
   type ValueContainer,
-  createHref,
   normalizeBase,
 } from './common';
 
@@ -304,6 +303,7 @@ function useHistoryStateNavigation(base: string) {
  */
 export function createWebHistory(base?: string): RouterHistory {
   base = normalizeBase(base);
+  const HREF_BASE = base.replace(/^[^#]+#/, '#');
 
   const historyNavigation = useHistoryStateNavigation(base);
   const historyListeners = useHistoryListeners(
@@ -323,7 +323,7 @@ export function createWebHistory(base?: string): RouterHistory {
       location: '',
       base,
       go,
-      createHref: createHref.bind(null, base),
+      createHref: (location: HistoryLocation) => HREF_BASE + location,
     },
 
     historyNavigation,

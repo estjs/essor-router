@@ -6,7 +6,6 @@ import {
   NavigationType,
   type RouterHistory,
   START,
-  createHref,
   normalizeBase,
 } from './common';
 
@@ -22,6 +21,7 @@ export function createMemoryHistory(base: string = ''): RouterHistory {
   let queue: HistoryLocation[] = [START];
   let position: number = 0;
   base = normalizeBase(base);
+  const HREF_BASE = base.replace(/^[^#]+#/, '#');
 
   function setLocation(location: HistoryLocation) {
     position++;
@@ -53,12 +53,16 @@ export function createMemoryHistory(base: string = ''): RouterHistory {
     // TODO: should be kept in queue
     state: {},
     base,
-    createHref: createHref.bind(null, base),
+    createHref: (location: HistoryLocation) => HREF_BASE + location,
 
     replace(to) {
       // remove current entry and decrement position
-      queue.splice(position--, 1);
-      setLocation(to);
+      if (position === 0) {
+        queue[0] = to;
+      } else {
+        queue.splice(position--, 1);
+        setLocation(to);
+      }
     },
 
     push(to) {
