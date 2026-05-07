@@ -53,4 +53,48 @@ describe('treeNodeValue parsing', () => {
       'must be alone in its segment',
     );
   });
+
+  it('caches overrides between accesses', () => {
+    const node = createTreeNodeValue('test');
+    node.setOverride('file1', { path: '/override1' });
+    const first = node.overrides;
+    const second = node.overrides;
+    expect(first).toBe(second);
+    expect(first.path).toBe('/override1');
+  });
+
+  it('invalidates overrides cache on setOverride', () => {
+    const node = createTreeNodeValue('test');
+    node.setOverride('file1', { path: '/first' });
+    expect(node.overrides.path).toBe('/first');
+    node.setOverride('file2', { path: '/second' });
+    expect(node.overrides.path).toBe('/second');
+  });
+
+  it('invalidates overrides cache on mergeOverride', () => {
+    const node = createTreeNodeValue('test');
+    node.setOverride('file1', { path: '/first' });
+    node.mergeOverride('file1', { meta: { key: 'value' } });
+    expect(node.overrides.meta).toEqual({ key: 'value' });
+  });
+
+  it('invalidates overrides cache on removeOverride', () => {
+    const node = createTreeNodeValue('test');
+    node.setOverride('file1', { path: '/first', name: 'testName' } as any);
+    expect(node.overrides.name).toBe('testName');
+    node.removeOverride('name');
+    expect(node.overrides.name).toBeUndefined();
+  });
+
+  it('caches re and score for param nodes', () => {
+    const node = createTreeNodeValue(':id', undefined, { format: 'path' });
+    expect(node.isParam()).toBe(true);
+    if (node.isParam()) {
+      expect(node.re).toBe('([^/]+?)');
+      expect(node.re).toBe('([^/]+?)');
+      const s1 = node.score;
+      const s2 = node.score;
+      expect(s1).toEqual(s2);
+    }
+  });
 });

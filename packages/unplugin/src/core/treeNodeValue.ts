@@ -78,7 +78,8 @@ class _TreeNodeValueBase {
    * Overrides defined by each file. The map is necessary to handle named views.
    */
   private _overrides = new Map<string, RouteRecordOverride>();
-  // TODO: measure perf bottlenecks with large trees and use caching if it can potentially improve
+  private _cachedOverrides: RouteRecordOverride | undefined;
+  private _overridesDirty = true;
 
   /**
    * View name (essor Router feature) mapped to their corresponding file. By default, the view name is `default` unless
@@ -201,7 +202,10 @@ class _TreeNodeValueBase {
   }
 
   get overrides() {
-    return [...this._overrides.entries()]
+    if (!this._overridesDirty && this._cachedOverrides !== undefined) {
+      return this._cachedOverrides;
+    }
+    this._cachedOverrides = [...this._overrides.entries()]
       .sort(([nameA], [nameB]) =>
         nameA === nameB
           ? 0
@@ -214,10 +218,13 @@ class _TreeNodeValueBase {
       .reduce((acc, [_path, routeBlock]) => {
         return mergeRouteRecordOverride(acc, routeBlock);
       }, {} as RouteRecordOverride);
+    this._overridesDirty = false;
+    return this._cachedOverrides;
   }
 
   setOverride(filePath: string, routeBlock: CustomRouteBlock | undefined) {
     this._overrides.set(filePath, routeBlock || {});
+    this._overridesDirty = true;
   }
 
   /**
@@ -229,6 +236,7 @@ class _TreeNodeValueBase {
     for (const [_filePath, routeBlock] of this._overrides) {
       delete routeBlock[key];
     }
+    this._overridesDirty = true;
   }
 
   /**
@@ -240,6 +248,7 @@ class _TreeNodeValueBase {
   mergeOverride(filePath: string, routeBlock: CustomRouteBlock) {
     const existing = this._overrides.get(filePath) || {};
     this._overrides.set(filePath, mergeRouteRecordOverride(existing, routeBlock));
+    this._overridesDirty = true;
   }
 
   /**
@@ -265,6 +274,7 @@ class _TreeNodeValueBase {
 
     const existing = this._overrides.get(EDITS_OVERRIDE_NAME)!;
     existing[key] = value;
+    this._overridesDirty = true;
   }
 }
 
@@ -390,6 +400,8 @@ export const escapeRegex = (str: string): string => str.replaceAll(REGEX_CHARS_R
 
 export class TreeNodeValueParam extends _TreeNodeValueBase {
   override _type: TreeNodeType.param = TreeNodeType.param;
+  private _cachedRe: string | undefined;
+  private _cachedScore: number[] | undefined;
 
   constructor(
     rawSegment: string,
@@ -403,12 +415,11 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
 
   // Calculate score for each subsegment to handle mixed static/param parts
   get score(): number[] {
-    return this.subSegments.map((segment) => {
+    if (this._cachedScore !== undefined) return this._cachedScore;
+    this._cachedScore = this.subSegments.map((segment) => {
       if (isString(segment)) {
-        // Static subsegment gets highest score
         return 300;
       } else {
-        // Parameter subsegment - calculate malus based on param properties
         const malus = segment.isSplat
           ? 500
           : (segment.optional ? 10 : 0) + (segment.repeatable ? 20 : 0);
@@ -416,16 +427,17 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
         return 80 - malus + bonus;
       }
     });
+    return this._cachedScore;
   }
 
   /**
    * Generates the regex pattern for the path segment.
    */
   get re(): string {
+    if (this._cachedRe !== undefined) return this._cachedRe;
     let regexp = '';
     for (let i = 0; i < this.subSegments.length; i++) {
       const segment = this.subSegments[i];
-      // skip empty sub segments
       if (!segment) continue;
 
       if (isString(segment)) {
@@ -436,26 +448,21 @@ export class TreeNodeValueParam extends _TreeNodeValueBase {
         const reSource = segment.regexp || '[^/]+?';
         let re = segment.repeatable ? `((?:${reSource})(?:/(?:${reSource}))*)` : `(${reSource})`;
         if (segment.optional) {
-          // check ahead if there is a static segment after this one that starts with a slash
-          // TODO: trailingSlash behavior
           const prevSegment = this.subSegments[i - 1];
-          // is there a slash right before us
           if (
             (!prevSegment || (isString(prevSegment) && prevSegment.endsWith('/'))) &&
-            // avoid the transformation when the optional param is the whole path
             this.subSegments.length > 1
           ) {
             re = `(?:\\/${re})?`;
-            // remove the escaped trailing slash from the previous static segment
             regexp = regexp.slice(0, -2);
           } else {
-            // just make the regexp group optional
             re += '?';
           }
         }
         regexp += re;
       }
     }
+    this._cachedRe = regexp;
     return regexp;
   }
 

@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { relative, resolve } from 'pathe';
+import { dirname, relative, resolve } from 'pathe';
 import { parse as babelParse } from '@babel/parser';
 import type { PrefixTree, TreeNode } from './tree';
 import type {
@@ -145,7 +145,7 @@ function extractRoutesFromFile(configPath: string, options: ResolvedOptions): Pa
   }
 
   const src = readFileSync(configPath, 'utf8');
-  const configDir = configPath.slice(0, configPath.lastIndexOf('/'));
+  const configDir = dirname(configPath);
 
   let ast: ReturnType<typeof babelParse>;
   try {
