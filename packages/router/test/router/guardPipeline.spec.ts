@@ -81,4 +81,59 @@ describe('createGuardPipeline', () => {
       }
     }
   });
+
+  it('executes beforeEach before beforeResolve', async () => {
+    const pipeline = createGuardPipeline();
+    const calls: string[] = [];
+
+    pipeline.beforeGuards.add((_to, _from, next) => {
+      calls.push('beforeEach');
+      next();
+    });
+    pipeline.beforeResolveGuards.add((_to, _from, next) => {
+      calls.push('beforeResolve');
+      next();
+    });
+
+    await pipeline.navigate(
+      { ...baseRoute, matched: [], path: '/next', fullPath: '/next' },
+      { ...baseRoute, matched: [], path: '/', fullPath: '/' },
+      async () => Promise.resolve(),
+      async () => {
+        calls.push('dataHooks');
+      },
+    );
+
+    const beforeEachIdx = calls.indexOf('beforeEach');
+    const beforeResolveIdx = calls.indexOf('beforeResolve');
+    const dataHooksIdx = calls.indexOf('dataHooks');
+
+    expect(beforeEachIdx).toBeLessThan(beforeResolveIdx);
+    expect(beforeResolveIdx).toBeLessThan(dataHooksIdx);
+  });
+
+  it('runs canceledNavigationCheck after each phase', async () => {
+    const pipeline = createGuardPipeline();
+    let checkCount = 0;
+
+    pipeline.beforeGuards.add((_to, _from, next) => {
+      next();
+    });
+    pipeline.beforeResolveGuards.add((_to, _from, next) => {
+      next();
+    });
+
+    await pipeline.navigate(
+      { ...baseRoute, matched: [], path: '/next', fullPath: '/next' },
+      { ...baseRoute, matched: [], path: '/', fullPath: '/' },
+      async () => {
+        checkCount++;
+        Promise.resolve();
+      },
+      async () => { },
+    );
+
+    // canceledNavigationCheck is called once per phase (6 phases)
+    expect(checkCount).toBe(6);
+  });
 });

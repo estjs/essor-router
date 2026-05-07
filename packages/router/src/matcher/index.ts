@@ -313,10 +313,10 @@ export function createRouterMatcher(
     let parentMatcher: RouteRecordMatcher | undefined = matcher;
     while (parentMatcher) {
       // reversed order so parents are at the beginning
-
-      matched.unshift(parentMatcher.record);
+      matched.push(parentMatcher.record);
       parentMatcher = parentMatcher.parent;
     }
+    matched.reverse();
 
     return {
       name,
@@ -373,8 +373,8 @@ export function normalizeRouteRecord(record: RouteRecordRaw): RouteRecordNormali
     props: normalizeRecordProps(record),
     children: record.children || [],
     instances: {},
-    leaveGuards: new Set(),
-    updateGuards: new Set(),
+    leaveGuards: undefined,
+    updateGuards: undefined,
     enterCallbacks: {},
     components:
       'components' in record

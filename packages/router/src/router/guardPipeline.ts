@@ -49,14 +49,16 @@ export function createGuardPipeline(): GuardPipeline {
   ) {
     let guards: Lazy<any>[];
     const [leavingRecords, updatingRecords, enteringRecords] = extractChangingRecords(to, from);
+    const canceledNavigationCheck = checkCanceledNavigationAndReject.bind(null, to, from);
 
+    // Phase 1: Leaving component guards + leaveGuards + beforeLeave
     guards = extractComponentsGuards(leavingRecords.reverse(), 'beforeLeave', to, from);
     for (const record of leavingRecords) {
-      record.leaveGuards.forEach((guard) => {
+      record.leaveGuards?.forEach((guard) => {
         guards.push(guardToPromiseFn(guard, to, from));
       });
       if (record.beforeLeave && Object.values(record.instances).some((instance) => !!instance)) {
-        if (Array.isArray(record.beforeLeave)) {
+        if (isArray(record.beforeLeave)) {
           for (const guard of record.beforeLeave) {
             guards.push(guardToPromiseFn(guard, to, from));
           }
@@ -66,58 +68,57 @@ export function createGuardPipeline(): GuardPipeline {
       }
     }
 
-    const canceledNavigationCheck = checkCanceledNavigationAndReject.bind(null, to, from);
-    guards.push(canceledNavigationCheck);
-
-    return runGuardQueue(guards)
-      .then(() => {
-        guards = [];
-        for (const guard of beforeGuards.list()) {
-          guards.push(guardToPromiseFn(guard, to, from));
-        }
-        guards.push(canceledNavigationCheck);
-        return runGuardQueue(guards);
-      })
-      .then(() => {
-        guards = extractComponentsGuards(updatingRecords, 'beforeRouteUpdate', to, from);
+    // Define phases after Phase 1 (which allocates the first guards array)
+    const phases: Array<() => Lazy<any>[]> = [
+      // Phase 1: leaving guards (already collected above)
+      () => guards,
+      // Phase 2: Global beforeEach guards
+      () => beforeGuards.list().map((guard) => guardToPromiseFn(guard, to, from)),
+      // Phase 3: Updating component guards + updateGuards
+      () => {
+        const g = extractComponentsGuards(updatingRecords, 'beforeRouteUpdate', to, from);
         for (const record of updatingRecords) {
-          record.updateGuards.forEach((guard) => {
-            guards.push(guardToPromiseFn(guard, to, from));
+          record.updateGuards?.forEach((guard) => {
+            g.push(guardToPromiseFn(guard, to, from));
           });
         }
-        guards.push(canceledNavigationCheck);
-        return runGuardQueue(guards);
-      })
-      .then(() => {
-        guards = [];
+        return g;
+      },
+      // Phase 4: Entering route beforeEnter guards
+      () => {
+        const g: Lazy<any>[] = [];
         for (const record of enteringRecords) {
           if (record.beforeEnter) {
             if (isArray(record.beforeEnter)) {
               for (const beforeEnter of record.beforeEnter) {
-                guards.push(guardToPromiseFn(beforeEnter, to, from));
+                g.push(guardToPromiseFn(beforeEnter, to, from));
               }
             } else {
-              guards.push(guardToPromiseFn(record.beforeEnter, to, from));
+              g.push(guardToPromiseFn(record.beforeEnter, to, from));
             }
           }
         }
-        guards.push(canceledNavigationCheck);
-        return runGuardQueue(guards);
-      })
-      .then(() => {
+        return g;
+      },
+      // Phase 5: Entering component beforeRouteEnter guards
+      () => {
         to.matched.forEach((record) => (record.enterCallbacks = {}));
-        guards = extractComponentsGuards(enteringRecords, 'beforeRouteEnter', to, from);
-        guards.push(canceledNavigationCheck);
-        return runGuardQueue(guards);
-      })
-      .then(() => {
-        guards = [];
-        for (const guard of beforeResolveGuards.list()) {
-          guards.push(guardToPromiseFn(guard, to, from));
-        }
-        guards.push(canceledNavigationCheck);
-        return runGuardQueue(guards);
-      })
+        return extractComponentsGuards(enteringRecords, 'beforeRouteEnter', to, from);
+      },
+      // Phase 6: Global beforeResolve guards
+      () => beforeResolveGuards.list().map((guard) => guardToPromiseFn(guard, to, from)),
+    ];
+
+    let promise: Promise<void> = Promise.resolve();
+    for (const collectGuards of phases) {
+      promise = promise.then(async () => {
+        const phaseGuards = collectGuards();
+        phaseGuards.push(canceledNavigationCheck);
+        await runGuardQueue(phaseGuards);
+      });
+    }
+
+    return promise
       .then(() => runRouteDataHooks(to))
       .catch((error) =>
         isNavigationFailure(error, ErrorTypes.NAVIGATION_CANCELLED) ? error : Promise.reject(error),

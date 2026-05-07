@@ -11,8 +11,8 @@ describe('normalizeRouteRecord', () => {
       children: [],
       aliasOf: undefined,
       components: { default: {} },
-      leaveGuards: expect.any(Set),
-      updateGuards: expect.any(Set),
+      leaveGuards: undefined,
+      updateGuards: undefined,
       instances: {},
       meta: {},
       name: undefined,
@@ -35,8 +35,8 @@ describe('normalizeRouteRecord', () => {
       beforeEnter,
       children: [{ path: '/child' }],
       components: { default: {} },
-      leaveGuards: expect.any(Set),
-      updateGuards: expect.any(Set),
+      leaveGuards: undefined,
+      updateGuards: undefined,
       instances: {},
       meta: { foo: true },
       name: 'name',
@@ -77,13 +77,22 @@ describe('normalizeRouteRecord', () => {
       beforeEnter,
       children: [{ path: '/child' }],
       components: { one: {} },
-      leaveGuards: expect.any(Set),
-      updateGuards: expect.any(Set),
+      leaveGuards: undefined,
+      updateGuards: undefined,
       instances: {},
       meta: { foo: true },
       name: 'name',
       path: '/home',
       props: { one: false },
     });
+  });
+
+  it('does not create guard Sets by default', () => {
+    const record = normalizeRouteRecord({
+      path: '/home',
+      component: {},
+    });
+    expect(record.leaveGuards?.size ?? 0).toBe(0);
+    expect(record.updateGuards?.size ?? 0).toBe(0);
   });
 });

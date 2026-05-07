@@ -55,13 +55,13 @@ export interface RouteRecordNormalized {
    *
 
    */
-  leaveGuards: Set<NavigationGuard>;
+  leaveGuards: Set<NavigationGuard> | undefined;
   /**
    * Registered update guards
    *
 
    */
-  updateGuards: Set<NavigationGuard>;
+  updateGuards: Set<NavigationGuard> | undefined;
   /**
    * Registered beforeRouteEnter callbacks passed to `next` or returned in guards
    *
