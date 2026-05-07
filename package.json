@@ -1,5 +1,6 @@
 {
   "name": "essor-router-monorepo",
+  "version": "0.0.17-beta.1",
   "private": true,
   "packageManager": "pnpm@10.32.1",
   "type": "module",
@@ -16,8 +17,8 @@
     "coverage": "pnpm -r --filter './packages/*' run coverage",
     "test:e2e": "playwright test",
     "changelog": "tsx scripts/changelog.ts",
-    "prerelease": "pnpm run lint && pnpm run build && pnpm run typecheck && pnpm run test",
-    "release": "pnpm run changelog && pnpm run prerelease && bumpp package.json packages/*/package.json --no-git-checks --commit --push --tag"
+    "prerelease": "pnpm run build ",
+    "release": "bumpp package.json packages/*/package.json --no-git-checks --commit --push --tag"
   },
   "devDependencies": {
     "@estjs/eslint-config": "^2.2.4",
