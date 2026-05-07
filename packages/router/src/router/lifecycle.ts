@@ -1,5 +1,5 @@
 import { nextTick, provide, toRaw } from 'essor';
-import { routerKey, routerViewLocationKey } from '@/injectionSymbols';
+import { routeLocationKey, routerKey, routerViewLocationKey } from '@/injectionSymbols';
 import {
   ErrorTypes,
   type NavigationFailure,
@@ -12,7 +12,7 @@ import { noop } from '../utils';
 import { useCallbacks } from '../utils/callbacks';
 import { isBrowser } from '../utils/env';
 import { warn } from '../warning';
-import { computeScrollPosition, getScrollKey, saveScrollPosition } from '../scrollBehavior';
+import { computeScrollPosition, getScrollKey, saveScrollPosition, scrollPositions } from '../scrollBehavior';
 import type {
   RouteLocation,
   RouteLocationNormalized,
@@ -28,6 +28,7 @@ type OnReadyCallback = [() => void, (reason?: Error) => void];
 interface LifecycleOptions {
   router: { listening: boolean };
   currentRoute: { value: RouteLocationNormalizedLoaded };
+  routeLocationContext: RouteLocationNormalizedLoaded;
   resolve: (to: string) => RouteLocation;
   setPendingLocation: (location: RouteLocation) => void;
   pushWithRedirect: (
@@ -191,6 +192,8 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
 
   function init(routerInstance: any) {
     activeViewCount++;
+    if (activeViewCount > 1) return;
+
     const shouldPerformInitialNavigation =
       isBrowser && !started && toRaw(options.currentRoute.value) === START_LOCATION_NORMALIZED;
 
@@ -201,6 +204,7 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
       });
     }
     provide(routerKey, routerInstance);
+    provide(routeLocationKey, options.routeLocationContext);
     provide(routerViewLocationKey, options.currentRoute);
   }
 
@@ -227,6 +231,7 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
       }
     }
     options.clearCaches();
+    scrollPositions.clear();
     started = false;
     ready = false;
   }

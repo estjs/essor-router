@@ -1,7 +1,21 @@
 import { insert, isSignal, memoEffect, omitProps, patchAttr } from 'essor';
 import { isFunction, isObject } from '@estjs/shared';
+import type { Signal } from 'essor';
 
-export function LinkComponent(props) {
+interface LinkComponentProps {
+  href: { readonly value: string } | string;
+  onClick?: (e: MouseEvent) => void;
+  onMouseenter?: (e: MouseEvent) => void;
+  onFocus?: (e: FocusEvent) => void;
+  onTouchstart?: (e: TouchEvent) => void;
+  onElement?: (el: HTMLAnchorElement) => void;
+  ariaCurrent?: { readonly value: string | null | undefined } | string | null;
+  class?: { readonly value: string } | string;
+  children?: unknown;
+  [key: string]: unknown;
+}
+
+export function LinkComponent(props: LinkComponentProps): HTMLAnchorElement | null {
   if (typeof document === 'undefined') {
     return null;
   }
@@ -11,21 +25,6 @@ export function LinkComponent(props) {
 
   el.addEventListener('click', (event) => {
     props.onClick?.(event);
-
-    const currentTarget = event.currentTarget as Element | null;
-    const target = currentTarget?.getAttribute('target');
-    const shouldPreventDefault =
-      !event.defaultPrevented &&
-      !event.metaKey &&
-      !event.altKey &&
-      !event.ctrlKey &&
-      !event.shiftKey &&
-      (event.button === undefined || event.button === 0) &&
-      !(target && /\b_blank\b/i.test(target));
-
-    if (shouldPreventDefault) {
-      event.preventDefault();
-    }
   });
   el.addEventListener('mouseenter', (event) => props.onMouseenter?.(event));
   el.addEventListener('focus', (event) => props.onFocus?.(event));

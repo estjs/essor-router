@@ -46,7 +46,7 @@ type History = 'history' | 'hash' | 'memory';
 
 export interface RouterOptions extends PathParserOptions {
   base?: string;
-  history?: History | RouterHistory;
+  history: History | RouterHistory;
   routes: Readonly<RouteRecordRaw[]>;
   scrollBehavior?: RouterScrollBehavior;
   parseQuery?: (search: string) => any;
@@ -104,18 +104,6 @@ export interface PrerenderPathInfo {
 }
 
 // ---------------------------------------------------------------------------
-// Route location context (associates reactive route with a Router instance)
-// ---------------------------------------------------------------------------
-
-const routeLocationContextKey = Symbol(__DEV__ ? 'router route location' : '');
-
-type RouterWithRouteLocationContext = Router & {
-  [routeLocationContextKey]: RouteLocationNormalizedLoaded;
-};
-
-let activeRouter: Router | undefined;
-
-// ---------------------------------------------------------------------------
 // History factory
 // ---------------------------------------------------------------------------
 
@@ -138,10 +126,6 @@ export function createHistory(mode: History | RouterHistory, base?: string): Rou
 // ---------------------------------------------------------------------------
 
 export function createRouter(options: RouterOptions): Router {
-  if (!options.history) {
-    throw new Error('Provide the "history" option when calling createRouter()');
-  }
-
   // --- Core infrastructure ---
   const matcher = createRouterMatcher(options.routes, options);
   const parseQuery = options.parseQuery || defaultParseQuery;
@@ -312,6 +296,7 @@ export function createRouter(options: RouterOptions): Router {
   const lifecycle = setupRouterLifecycle({
     router,
     currentRoute,
+    routeLocationContext,
     resolve: (to) => resolver.resolve(to as any),
     setPendingLocation,
     pushWithRedirect: navigation.push as any,
@@ -330,23 +315,7 @@ export function createRouter(options: RouterOptions): Router {
   router.init = () => lifecycle.init(router);
   router.destroy = lifecycle.destroy;
 
-  // --- Context & activation ---
-  (router as RouterWithRouteLocationContext)[routeLocationContextKey] = routeLocationContext;
-  activeRouter = router;
-
   return router;
-}
-
-// ---------------------------------------------------------------------------
-// Module-level accessors
-// ---------------------------------------------------------------------------
-
-export function getActiveRouter(): Router | undefined {
-  return activeRouter;
-}
-
-export function getRouteLocationContext(router: Router): RouteLocationNormalizedLoaded {
-  return (router as RouterWithRouteLocationContext)[routeLocationContextKey];
 }
 
 // ---------------------------------------------------------------------------

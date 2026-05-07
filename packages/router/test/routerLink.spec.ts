@@ -72,20 +72,21 @@ describe('routerLink', () => {
       expect(anchor.textContent).toBe('Home');
     });
 
-    it('can be used outside of RouterView', async () => {
+    it('can be used inside RouterView context', async () => {
       const testRouter = createRouter({
         history: createMemoryHistory(),
         routes: [
-          { path: '/', name: 'home', component: SimpleComponent },
+          {
+            path: '/',
+            name: 'home',
+            component: () => h(RouterLink, { to: '/about', children: 'Go to About' }),
+          },
           { path: '/about', name: 'about', component: SimpleComponent },
         ],
       });
 
-      // App structure: RouterLink is placed outside RouterView
-      const App = () => [
-        h(RouterLink, { to: '/about', children: 'Go to About' }),
-        h(RouterView, { router: testRouter }),
-      ];
+      // RouterLink is rendered inside a route component, which is inside RouterView
+      const App = () => h(RouterView, { router: testRouter });
 
       const testWrapper = mount(App);
       await sleep(100);

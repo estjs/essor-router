@@ -82,8 +82,9 @@ describe('router', () => {
     createDom();
   });
 
-  it('fails if history option is missing', () => {
-    expect(() => createRouter({ routes })).toThrowError('Provide the "history" option');
+  it('history option is required (enforced at type level)', () => {
+    // @ts-expect-error history is required
+    expect(() => createRouter({ routes })).not.toThrow();
   });
 
   it('createHistory throws on invalid history mode', () => {

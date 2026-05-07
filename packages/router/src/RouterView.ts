@@ -13,7 +13,6 @@ import {
 import { isFunction, isNumber, isObject } from '@estjs/shared';
 import {
   matchedRouteKey,
-  routeLocationKey,
   routerKey,
   routerViewLocationKey,
   viewDepthKey,
@@ -23,7 +22,7 @@ import {
   type RouteLocationNormalized,
   START_LOCATION_NORMALIZED,
 } from './types';
-import { enqueueMicrotask, logRouterError } from './warning';
+import { logRouterError } from './warning';
 import type { Router } from './router';
 
 // ---------------------------------------------------------------------------
@@ -183,7 +182,7 @@ export const RouterView = (props: RouterViewProps) => {
 
   // --- Lifecycle ---
   router.init();
-  onDestroy(() => enqueueMicrotask(() => router.destroy()));
+  onDestroy(() => router.destroy());
 
   // --- Reactive state ---
   const injectedRoute = inject(routerViewLocationKey) || router.currentRoute;
@@ -196,7 +195,6 @@ export const RouterView = (props: RouterViewProps) => {
 
   // --- Context provision for children ---
   provide(routerKey, router);
-  provide(routeLocationKey, routeToDisplay as any);
   provide(
     viewDepthKey,
     computed(() => depth.value + 1),

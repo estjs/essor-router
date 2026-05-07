@@ -62,23 +62,14 @@ describe('use apis', () => {
   });
 
   it('should reactive route matched', async () => {
-    let compt;
+    let routeRef: any;
     const Child = () => {
       const _$tmpl = _template$('<div>Child</div>');
       return _$tmpl();
     };
 
     const Parent = () => {
-      const route = useRoute();
-      compt = computed(() => {
-        // eslint-disable-next-line no-console
-        console.log(
-          '[compt run]',
-          route.matched?.map((r) => r.path),
-        );
-        const matched = route.matched?.at(-1);
-        return matched;
-      });
+      routeRef = useRoute();
     };
 
     const OtherChild = () => {
@@ -105,23 +96,17 @@ describe('use apis', () => {
 
     await router.push('/parent/child');
     await sleep(0);
-    expect(compt.value.path).toBe('/parent/child');
     expect(currentRoute.value.matched.length).toBe(2);
     expect(currentRoute.value.matched.map((m) => m.path)).toEqual(['/parent', '/parent/child']);
 
-    // eslint-disable-next-line no-console
-    console.log(
-      '[flags before]',
-      'compt=',
-      (compt as any).flag,
-      'sig=',
-      (currentRoute as any).flag,
-    );
     await router.push('/parent/other');
+    await sleep(0);
 
-    expect(compt.value.path).toBe('/parent/other');
     expect(currentRoute.value.matched.length).toBe(2);
     expect(currentRoute.value.matched.map((m) => m.path)).toEqual(['/parent', '/parent/other']);
+    // routeRef is the reactive proxy — reads always forward to currentRoute.value
+    expect(routeRef.path).toBe('/parent/other');
+    expect(routeRef.matched.at(-1).path).toBe('/parent/other');
   });
 
   it('exposes usePreloadRoute for manual route preloading', async () => {

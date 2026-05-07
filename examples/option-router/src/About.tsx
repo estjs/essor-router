@@ -1,7 +1,8 @@
-import { useRouter } from 'essor-router';
+import { useRoute, useRouter } from 'essor-router';
 
 export default function About() {
   const router = useRouter();
+  const route = useRoute();
 
   const onClick = () => {
     router.push('/');
@@ -9,6 +10,7 @@ export default function About() {
   return (
     <div class="about" onClick={onClick}>
       About
+      <div>route path:{route?.path}</div>
     </div>
   );
 }

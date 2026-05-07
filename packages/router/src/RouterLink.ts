@@ -252,39 +252,24 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
 
     const to = peekTo(props.to);
 
-    // Ensure router is still available
     if (!router) {
-      if (__DEV__) {
-        warn('Router is not available for navigation');
-      }
+      if (__DEV__) warn('Router is not available for navigation');
       return Promise.resolve();
     }
 
-    try {
-      const startNavigation = () =>
-        router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
-      const navigation = new Promise<void | NavigationFailure>((resolve) => {
-        setTimeout(() => {
-          startNavigation().then(resolve);
-        }, 0);
+    const doNav = () => router[props.replace ? 'replace' : 'push'](to as any).catch(noop);
+
+    if (
+      props.viewTransition &&
+      typeof document !== 'undefined' &&
+      'startViewTransition' in document
+    ) {
+      return new Promise<void | NavigationFailure>((resolve) => {
+        (document as any).startViewTransition(() => doNav().then(resolve));
       });
-
-      // Use View Transitions API if available and enabled
-      if (
-        props.viewTransition &&
-        typeof document !== 'undefined' &&
-        'startViewTransition' in document
-      ) {
-        (document as any).startViewTransition(() => navigation);
-      }
-
-      return navigation;
-    } catch (error) {
-      if (__DEV__) {
-        warn('Navigation failed:', error);
-      }
-      return Promise.resolve();
     }
+
+    return doNav();
   }
 
   const href = signal(route.value?.href || '#');

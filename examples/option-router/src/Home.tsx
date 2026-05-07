@@ -1,7 +1,8 @@
-import { useRouter } from 'essor-router';
+import { useRoute, useRouter } from 'essor-router';
 
 export default function Home() {
   const router = useRouter();
+  const route = useRoute();
 
   const onClick = () => {
     router.push('/about');
@@ -20,6 +21,7 @@ export default function Home() {
       <div onClick={onRandomClick} class="to-random">
         random router
       </div>
+      <div>route path:{route?.path}</div>
     </div>
   );
 }
