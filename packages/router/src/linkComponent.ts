@@ -1,6 +1,5 @@
 import { insert, isSignal, memoEffect, omitProps, patchAttr } from 'essor';
 import { isFunction, isObject } from '@estjs/shared';
-import type { Signal } from 'essor';
 
 interface LinkComponentProps {
   href: { readonly value: string } | string;

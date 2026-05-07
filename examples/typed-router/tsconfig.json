@@ -7,8 +7,5 @@
     "moduleResolution": "Bundler",
     "strict": true
   },
-  "include": [
-    "src",
-    "typed-router.d.ts"
-  ]
+  "include": ["src", "typed-router.d.ts"]
 }

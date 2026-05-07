@@ -18,6 +18,4 @@ components.d.ts
 /playwright/.cache/
 doc_build
 typed-router.d.ts
-test-results
-.claude
 

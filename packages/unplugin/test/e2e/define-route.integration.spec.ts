@@ -611,7 +611,7 @@ export default function Dashboard(){ return null }
         async updateRoutes() {
           routeUpdateCount++;
         },
-        reload() { },
+        reload() {},
       });
 
       await ctx.scanPages(true);

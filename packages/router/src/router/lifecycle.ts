@@ -12,11 +12,7 @@ import { noop } from '../utils';
 import { isBrowser } from '../utils/env';
 import { warn } from '../warning';
 import { unregisterActiveRouter } from '../useApi';
-import {
-  computeScrollPosition,
-  getScrollKey,
-  type ScrollPositionStore,
-} from '../scrollBehavior';
+import { type ScrollPositionStore, computeScrollPosition, getScrollKey } from '../scrollBehavior';
 import type { ReadinessController } from './readiness';
 import type {
   RouteLocation,

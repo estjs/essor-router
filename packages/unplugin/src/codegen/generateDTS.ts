@@ -46,14 +46,15 @@ export function generateDTS({
 // It's recommended to commit this file.
 // Make sure to add this file to your tsconfig.json file as an "includes" or "files" entry.
 
-${paramsTypesDeclaration
-      ? `
+${
+  paramsTypesDeclaration
+    ? `
 // Custom route params parsers
 ${paramsTypesDeclaration}
 
 `.trimStart()
-      : ''
-    }
+    : ''
+}
 
       import type {
     RouteRecordInfo,

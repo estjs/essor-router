@@ -147,12 +147,12 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
     if (__DEV__) {
       logRouterError(
         'useLink() requires an active router instance. ' +
-        'Make sure you have created a router with createRouter() and it is active.',
+          'Make sure you have created a router with createRouter() and it is active.',
       );
     }
     throw new Error(
       'useLink() requires an active router instance. ' +
-      'Make sure you have created a router with createRouter() and it is active.',
+        'Make sure you have created a router with createRouter() and it is active.',
     );
   }
 
@@ -222,8 +222,8 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
       getOriginalPath(routeMatched) === parentRecordPath &&
       currentMatched[currentMatched.length - 1].path !== parentRecordPath
       ? currentMatched.findIndex((record: RouteRecord) =>
-        isSameRouteRecord(matched[length - 2] as RouteRecord, record),
-      )
+          isSameRouteRecord(matched[length - 2] as RouteRecord, record),
+        )
       : index;
   });
 
@@ -452,15 +452,15 @@ export const RouterLink = (props: RouterLinkProps): any => {
       ? props.children()
       : props.children
     : createComponent(LinkComponent, {
-      'ariaCurrent': ariaCurrent,
-      'href': link.href,
-      'onClick': handleClick,
-      'onMouseenter': prefetch.onIntent,
-      'onFocus': prefetch.onIntent,
-      'onTouchstart': prefetch.onIntent,
-      'onElement': prefetch.setTarget,
-      'data-router-prefetch-id': prefetchId,
-      'class': elClass,
-      'children': props.children,
-    });
+        'ariaCurrent': ariaCurrent,
+        'href': link.href,
+        'onClick': handleClick,
+        'onMouseenter': prefetch.onIntent,
+        'onFocus': prefetch.onIntent,
+        'onTouchstart': prefetch.onIntent,
+        'onElement': prefetch.setTarget,
+        'data-router-prefetch-id': prefetchId,
+        'class': elClass,
+        'children': props.children,
+      });
 };

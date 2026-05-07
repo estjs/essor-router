@@ -210,7 +210,7 @@ export function createRouter(options: RouterOptions): Router {
       if (!parentMatcher) {
         if (__DEV__)
           warn(`Parent route "${String(parentOrRoute)}" not found when adding child route`);
-        return () => { };
+        return () => {};
       }
     }
 
@@ -270,8 +270,8 @@ export function createRouter(options: RouterOptions): Router {
     // Lifecycle
     onError: readiness.onError,
     isReady: readiness.isReady,
-    init: (() => { }) as Router['init'],
-    destroy: (() => { }) as Router['destroy'],
+    init: (() => {}) as Router['init'],
+    destroy: (() => {}) as Router['destroy'],
 
     // Prerender
     getPrerenderPaths: () => collectPrerenderPaths(matcher.getRoutes().map((r) => r.record)),

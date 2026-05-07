@@ -27,22 +27,37 @@ const ENC_HASH_RE = /%(?:5B|5D|5E|7B|7C|7D)/g;
 
 function encHashReplacer(m: string): string {
   switch (m) {
-    case '%5B': return '[';
-    case '%5D': return ']';
-    case '%5E': return '^';
-    case '%7B': return '{';
-    case '%7C': return '|';
-    case '%7D': return '}';
-    default: return m;
+    case '%5B':
+      return '[';
+    case '%5D':
+      return ']';
+    case '%5E':
+      return '^';
+    case '%7B':
+      return '{';
+    case '%7C':
+      return '|';
+    case '%7D':
+      return '}';
+    default:
+      return m;
   }
 }
 
 const ENC_QUERY_RE = /%(?:5B|5D|5E|60|7B|7C|7D|20)|[+#&]/g;
 
 const ENC_QUERY_TABLE: Record<string, string> = {
-  '%5B': '[', '%5D': ']', '%5E': '^', '%60': '`',
-  '%7B': '{', '%7C': '|', '%7D': '}', '%20': '+',
-  '+': '%2B', '#': '%23', '&': '%26',
+  '%5B': '[',
+  '%5D': ']',
+  '%5E': '^',
+  '%60': '`',
+  '%7B': '{',
+  '%7C': '|',
+  '%7D': '}',
+  '%20': '+',
+  '+': '%2B',
+  '#': '%23',
+  '&': '%26',
 };
 
 const ENC_QUERY_KEY_RE = /%(?:5B|5D|5E|60|7B|7C|7D|20)|[+#&=]/g;
@@ -56,26 +71,39 @@ const ENC_PATH_RE = /%(?:5B|5D|7C)|[#?]/g;
 
 function encPathReplacer(m: string): string {
   switch (m) {
-    case '%5B': return '[';
-    case '%5D': return ']';
-    case '%7C': return '|';
-    case '#': return '%23';
-    case '?': return '%3F';
-    default: return m;
+    case '%5B':
+      return '[';
+    case '%5D':
+      return ']';
+    case '%7C':
+      return '|';
+    case '#':
+      return '%23';
+    case '?':
+      return '%3F';
+    default:
+      return m;
   }
 }
 
-const ENC_PARAM_RE = /%(?:5B|5D|7C)|[#?\/]/g;
+const ENC_PARAM_RE = /%(?:5B|5D|7C)|[#?/]/g;
 
 function encParamReplacer(m: string): string {
   switch (m) {
-    case '%5B': return '[';
-    case '%5D': return ']';
-    case '%7C': return '|';
-    case '#': return '%23';
-    case '?': return '%3F';
-    case '/': return '%2F';
-    default: return m;
+    case '%5B':
+      return '[';
+    case '%5D':
+      return ']';
+    case '%7C':
+      return '|';
+    case '#':
+      return '%23';
+    case '?':
+      return '%3F';
+    case '/':
+      return '%2F';
+    default:
+      return m;
   }
 }
 
@@ -86,7 +114,7 @@ function encParamReplacer(m: string): string {
  * @returns encoded string
  */
 export function encodeHash(text: string): string {
-  return encodeURI(`${text}`).replace(ENC_HASH_RE, encHashReplacer);
+  return encodeURI(`${text}`).replaceAll(ENC_HASH_RE, encHashReplacer);
 }
 
 /**
@@ -97,7 +125,7 @@ export function encodeHash(text: string): string {
  * @returns encoded string
  */
 export function encodeQueryValue(text: string | number): string {
-  return encodeURI(`${text}`).replace(ENC_QUERY_RE, (m) => ENC_QUERY_TABLE[m] ?? m);
+  return encodeURI(`${text}`).replaceAll(ENC_QUERY_RE, (m) => ENC_QUERY_TABLE[m] ?? m);
 }
 
 /**
@@ -106,7 +134,7 @@ export function encodeQueryValue(text: string | number): string {
  * @param text - string to encode
  */
 export function encodeQueryKey(text: string | number): string {
-  return encodeURI(`${text}`).replace(ENC_QUERY_KEY_RE, (m) => ENC_QUERY_KEY_TABLE[m] ?? m);
+  return encodeURI(`${text}`).replaceAll(ENC_QUERY_KEY_RE, (m) => ENC_QUERY_KEY_TABLE[m] ?? m);
 }
 
 /**
@@ -116,7 +144,7 @@ export function encodeQueryKey(text: string | number): string {
  * @returns encoded string
  */
 export function encodePath(text: string | number): string {
-  return encodeURI(`${text}`).replace(ENC_PATH_RE, encPathReplacer);
+  return encodeURI(`${text}`).replaceAll(ENC_PATH_RE, encPathReplacer);
 }
 
 /**
@@ -129,7 +157,7 @@ export function encodePath(text: string | number): string {
  * @returns encoded string
  */
 export function encodeParam(text: string | number | null | undefined): string {
-  return text == null ? '' : encodeURI(`${text}`).replace(ENC_PARAM_RE, encParamReplacer);
+  return text == null ? '' : encodeURI(`${text}`).replaceAll(ENC_PARAM_RE, encParamReplacer);
 }
 
 /**

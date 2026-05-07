@@ -130,7 +130,7 @@ describe('createGuardPipeline', () => {
         checkCount++;
         Promise.resolve();
       },
-      async () => { },
+      async () => {},
     );
 
     // canceledNavigationCheck is called once per phase (6 phases)

@@ -314,7 +314,8 @@ export function createNavigationCoordinator(
         }
       });
 
-    routeDataCache.set(key, task);    return task;
+    routeDataCache.set(key, task);
+    return task;
   }
 
   async function preloadRoute(to: RouteLocationRaw): Promise<RouteLocationNormalizedLoaded> {

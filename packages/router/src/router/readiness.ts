@@ -25,9 +25,9 @@ export interface ReadinessController {
   onFirstReady(fn: () => void): void;
 }
 
-export function createReadinessController(
-  currentRoute?: { value: RouteLocationNormalizedLoaded },
-): ReadinessController {
+export function createReadinessController(currentRoute?: {
+  value: RouteLocationNormalizedLoaded;
+}): ReadinessController {
   const readyHandlers = useCallbacks<OnReadyCallback>();
   const errorListeners = useCallbacks<ErrorListener>();
 
