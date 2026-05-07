@@ -608,7 +608,7 @@ export default function Dashboard(){ return null }
         invalidatePage() {
           return false;
         },
-        async updateRoutes() {
+        updateRoutes() {
           routeUpdateCount++;
         },
         reload() {},

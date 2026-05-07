@@ -114,8 +114,8 @@ function getElementPosition(
  * caller should abort early.
  */
 function validateElementSelector(selector: string, isIdSelector: boolean): boolean {
-  if (!isIdSelector || !document.getElementById(selector.slice(1))) {
-    try {
+  try {
+    if (!isIdSelector || !document.querySelector(selector)) {
       const foundEl = document.querySelector(selector);
       if (isIdSelector && foundEl) {
         warn(
@@ -123,12 +123,12 @@ function validateElementSelector(selector: string, isIdSelector: boolean): boole
         );
         return false;
       }
-    } catch {
-      warn(
-        `The selector "${selector}" is invalid. If you are using an id selector, make sure to escape it. You can find more information at https://mathiasbynens.be/notes/css-escapes.`,
-      );
-      return false;
     }
+  } catch {
+    warn(
+      `The selector "${selector}" is invalid. If you are using an id selector, make sure to escape it. You can find more information at https://mathiasbynens.be/notes/css-escapes.`,
+    );
+    return false;
   }
   return true;
 }
@@ -136,10 +136,7 @@ function validateElementSelector(selector: string, isIdSelector: boolean): boole
 function resolveScrollElement(positionEl: string | Element): Element | null {
   if (!isString(positionEl)) return positionEl;
 
-  const isIdSelector = positionEl.startsWith('#');
-  return isIdSelector
-    ? document.getElementById(positionEl.slice(1))
-    : document.querySelector(positionEl);
+  return document.querySelector(positionEl);
 }
 
 export function scrollToPosition(position: ScrollPosition): void {

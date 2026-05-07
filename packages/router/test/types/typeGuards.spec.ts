@@ -100,12 +100,8 @@ describe('typeGuards', () => {
         },
         (input) => {
           const result = isRouteLocation(input);
-          // Verify the result matches expected behavior
-          if (_isString(input) || _isObject(input)) {
-            expect(result).toBe(true);
-          } else {
-            expect(result).toBe(false);
-          }
+          const expected = _isString(input) || _isObject(input);
+          expect(result).toBe(expected);
         },
         100,
       );
@@ -176,11 +172,8 @@ describe('typeGuards', () => {
         (input) => {
           const result = isRouteName(input);
           // Verify the result matches expected behavior
-          if (_isString(input) || _isSymbol(input)) {
-            expect(result).toBe(true);
-          } else {
-            expect(result).toBe(false);
-          }
+          const expected = _isString(input) || _isSymbol(input);
+          expect(result).toBe(expected);
         },
         100,
       );

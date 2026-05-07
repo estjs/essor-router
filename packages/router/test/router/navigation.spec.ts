@@ -53,10 +53,10 @@ describe('createNavigationCoordinator', () => {
           replace: vi.fn(),
         },
         triggerAfterEach: vi.fn(),
-        navigate: async () => undefined,
+        navigate: () => Promise.resolve(),
         markAsReady: () => undefined,
-        triggerError: async (error) => Promise.reject(error),
-        handleScroll: async () => undefined,
+        triggerError: (error: any) => Promise.reject(error),
+        handleScroll: () => undefined,
       }),
     };
   }
@@ -80,7 +80,7 @@ describe('createNavigationCoordinator', () => {
 
   it('caches route data hooks by fullPath', async () => {
     const { coordinator } = createCoordinator();
-    const loader = vi.fn(async () => undefined);
+    const loader = vi.fn(() => Promise.resolve());
     const route = {
       ...currentRoute.value,
       fullPath: '/users/1',
@@ -96,7 +96,7 @@ describe('createNavigationCoordinator', () => {
   it('evicts the oldest cached route data task when cache grows beyond the limit', async () => {
     const { coordinator } = createCoordinator();
     const routeCount = 33;
-    const loaders = Array.from({ length: routeCount }, () => vi.fn(async () => undefined));
+    const loaders = Array.from({ length: routeCount }, () => vi.fn(() => Promise.resolve()));
 
     for (const [index, loader] of loaders.entries()) {
       await coordinator.runRouteDataHooks({
@@ -126,7 +126,7 @@ describe('createNavigationCoordinator', () => {
           resolveFirstLoader = resolve;
         }),
     );
-    const secondLoader = vi.fn(async () => undefined);
+    const secondLoader = vi.fn(() => Promise.resolve());
 
     const firstRoute = {
       ...currentRoute.value,

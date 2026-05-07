@@ -447,7 +447,7 @@ export function createRoutesContext(options: ResolvedOptions) {
       import('../codegen/generateRouteMap'),
       import('../codegen/generateRouteTree'),
       import('../codegen/generateRouteFileInfoMap'),
-      import('../codegen/generateDTS'),
+      import('../codegen/generateDts'),
       import('../codegen/generateParamParsers'),
     ]);
 

@@ -535,8 +535,6 @@ export function createTreeNodeValue(
 
   // only apply to files, not to manually added routes
   if (options.format === 'file' && openingPar >= 0) {
-    let groupName: string;
-
     const closingPar = segment.lastIndexOf(')');
     if (closingPar < 0 || closingPar < openingPar) {
       warn(
@@ -547,7 +545,7 @@ export function createTreeNodeValue(
       return new TreeNodeValueStatic(segment, parent, segment);
     }
 
-    groupName = segment.slice(openingPar + 1, closingPar);
+    const groupName = segment.slice(openingPar + 1, closingPar);
     const before = segment.slice(0, openingPar);
     const after = segment.slice(closingPar + 1);
 

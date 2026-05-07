@@ -70,7 +70,7 @@ const routes = [
   {
     path: '/post/:id',
     loader: async ({ params }) => {
-      return fetchPost(params.id);
+      return await fetchPost(params.id);
     },
     component: BlogPost,
   }

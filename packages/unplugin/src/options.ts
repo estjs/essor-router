@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { isPackageExists as isPackageInstalled } from 'local-pkg';
 import { resolve } from 'pathe';
 import { isFunction, isString } from '@estjs/shared';
@@ -138,7 +139,7 @@ export interface Options {
   /**
    * Array of `picomatch` globs to ignore. Note the globs are relative to the cwd, so avoid writing
    * something like `['ignored']` to match folders named that way, instead provide a path similar to the `routesFolder`:
-   * `['src/pages/ignored/**']` or use `['**​/ignored']` to match every folder named `ignored`.
+   * `['src/pages/ignored/**']` or use `['**\/ignored']` to match every folder named `ignored`.
    * @default `[]`
    */
   exclude?: string[] | string;

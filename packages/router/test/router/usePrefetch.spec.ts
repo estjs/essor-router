@@ -32,10 +32,9 @@ describe('usePrefetch', () => {
   });
 
   it('runs preload on viewport mode when IntersectionObserver is unavailable', async () => {
-    const preload = vi.fn(async () => {});
+    const preload = vi.fn(async () => {}) as unknown as () => Promise<unknown>;
     const originalIO = (globalThis as any).IntersectionObserver;
-    // @ts-expect-error test override
-    globalThis.IntersectionObserver = undefined;
+    (globalThis as any).IntersectionObserver = undefined;
 
     try {
       const prefetch = usePrefetch({
@@ -49,7 +48,6 @@ describe('usePrefetch', () => {
 
       expect(preload).toHaveBeenCalledTimes(1);
     } finally {
-      // @ts-expect-error test override
       globalThis.IntersectionObserver = originalIO;
     }
   });
@@ -81,7 +79,6 @@ describe('usePrefetch', () => {
     }
 
     const originalIO = (globalThis as any).IntersectionObserver;
-    // @ts-expect-error test override
     globalThis.IntersectionObserver = FakeIntersectionObserver as any;
 
     try {
@@ -100,7 +97,6 @@ describe('usePrefetch', () => {
       expect(disconnect).toHaveBeenCalledTimes(1);
     } finally {
       target.remove();
-      // @ts-expect-error test override
       globalThis.IntersectionObserver = originalIO;
     }
   });
@@ -112,7 +108,7 @@ describe('usePrefetch', () => {
       disconnect() {}
     }
     const originalIO = (globalThis as any).IntersectionObserver;
-    // @ts-expect-error test override
+
     globalThis.IntersectionObserver = FakeIntersectionObserver as any;
 
     try {
@@ -127,7 +123,6 @@ describe('usePrefetch', () => {
 
       expect(preload).not.toHaveBeenCalled();
     } finally {
-      // @ts-expect-error test override
       globalThis.IntersectionObserver = originalIO;
     }
   });
@@ -148,8 +143,8 @@ describe('usePrefetch', () => {
     expect(preload).not.toHaveBeenCalled();
   });
 
-  it('disconnects a pending viewport observer when disposed', async () => {
-    const preload = vi.fn(async () => {});
+  it('disconnects a pending viewport observer when disposed', () => {
+    const preload = vi.fn(() => {}) as unknown as () => Promise<unknown>;
     const target = document.createElement('a');
     target.dataset.routerPrefetchId = 'link-dispose';
     document.body.append(target);
@@ -165,7 +160,7 @@ describe('usePrefetch', () => {
     }
 
     const originalIO = (globalThis as any).IntersectionObserver;
-    // @ts-expect-error test override
+
     globalThis.IntersectionObserver = FakeIntersectionObserver as any;
 
     try {
@@ -182,13 +177,13 @@ describe('usePrefetch', () => {
       expect(preload).not.toHaveBeenCalled();
     } finally {
       target.remove();
-      // @ts-expect-error test override
+
       globalThis.IntersectionObserver = originalIO;
     }
   });
 
-  it('observes an explicitly registered detached target in viewport mode', async () => {
-    const preload = vi.fn(async () => {});
+  it('observes an explicitly registered detached target in viewport mode', () => {
+    const preload = vi.fn(() => {}) as unknown as () => Promise<unknown>;
     const target = document.createElement('a');
 
     const disconnect = vi.fn();
@@ -207,7 +202,7 @@ describe('usePrefetch', () => {
     }
 
     const originalIO = (globalThis as any).IntersectionObserver;
-    // @ts-expect-error test override
+
     globalThis.IntersectionObserver = FakeIntersectionObserver as any;
 
     try {
@@ -225,7 +220,6 @@ describe('usePrefetch', () => {
       expect(disconnect).toHaveBeenCalledTimes(1);
       expect(preload).not.toHaveBeenCalled();
     } finally {
-      // @ts-expect-error test override
       globalThis.IntersectionObserver = originalIO;
     }
   });

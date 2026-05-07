@@ -6,6 +6,7 @@ export default estjs(
       'unicorn/prefer-modern-dom-apis': 'off',
       'unicorn/error-message': 'off',
       'unicorn/no-array-push-push': 'off',
+      'unused-imports/no-unused-vars': 'off',
     },
 
     typescript: {
@@ -14,6 +15,9 @@ export default estjs(
       '@typescript-eslint/prefer-literal-enum-member': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
+    },
+    test: {
+      'vitest/expect-expect': 'off',
     },
     ignores: ['dist', 'doc_build', 'docs'],
   },

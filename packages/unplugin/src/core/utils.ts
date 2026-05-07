@@ -280,8 +280,6 @@ export class ImportsMap {
   // e.g map['essor-router']['myUseRouter'] = 'useRouter' -> import { useRouter as myUseRouter } from 'essor-router'
   private map = new Map<string, Map<string, string>>();
 
-  constructor() {}
-
   add(path: string, importEntry: ImportEntry): this;
   add(path: string, importEntry: string): this;
   add(path: string, importEntry: string | ImportEntry): this {

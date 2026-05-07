@@ -224,7 +224,7 @@ export const route = defineRoute({
     },
   },
   loader: async ({ params }) => {
-    return fetchUser(params.id)
+    return await fetchUser(params.id);
   },
 })
 

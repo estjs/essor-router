@@ -1,7 +1,7 @@
+import process from 'node:process';
 import { describe, expect, it } from 'vitest';
 import unplugin, { DEFAULT_OPTIONS, resolveOptions } from '../../src';
 import { MODULE_ROUTES_PATH, VIRTUAL_PREFIX } from '../../src/core/moduleConstants';
-
 describe('unplugin entry', () => {
   it('exposes bundler adapters', () => {
     expect(unplugin.vite).toBeTypeOf('function');

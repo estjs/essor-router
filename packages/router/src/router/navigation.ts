@@ -272,10 +272,7 @@ export function createNavigationCoordinator(
     return route.fullPath;
   }
 
-  async function runRouteDataHooks(
-    to: RouteLocationNormalized,
-    abortActive = false,
-  ): Promise<void> {
+  function runRouteDataHooks(to: RouteLocationNormalized, abortActive = false): Promise<void> {
     const key = createPreloadRouteKey(to);
     const cached = routeDataCache.get(key);
     if (cached) {
@@ -318,7 +315,7 @@ export function createNavigationCoordinator(
     return task;
   }
 
-  async function preloadRoute(to: RouteLocationRaw): Promise<RouteLocationNormalizedLoaded> {
+  function preloadRoute(to: RouteLocationRaw): Promise<RouteLocationNormalizedLoaded> {
     const resolved = options.resolve(to) as RouteLocationNormalized;
     const key = createPreloadRouteKey(resolved);
     const existing = preloadRouteCache.get(key);

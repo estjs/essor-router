@@ -150,7 +150,7 @@ describe('router', () => {
     expect('Cannot remove non-existent route "missing-route"').toHaveBeenWarned();
   });
 
-  it('returns render modes based on route start flags', async () => {
+  it('returns render modes based on route start flags', () => {
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -170,7 +170,7 @@ describe('router', () => {
     expect(router.getRouteRenderMode('prerender')).toBe('prerender');
   });
 
-  it('collects prerender paths with meta defaults', async () => {
+  it('collects prerender paths with meta defaults', () => {
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -273,7 +273,6 @@ describe('router', () => {
   });
 
   it('allows to customize parseQuery', async () => {
-    // eslint-disable-next-line unused-imports/no-unused-vars
     const parseQuery = vitest.fn((_) => ({}));
     const { router } = await newRouter({ parseQuery });
     const to = router.resolve('/foo?bar=baz');
@@ -282,7 +281,6 @@ describe('router', () => {
   });
 
   it('allows to customize stringifyQuery', async () => {
-    // eslint-disable-next-line unused-imports/no-unused-vars
     const stringifyQuery = vitest.fn((_) => '');
     const { router } = await newRouter({ stringifyQuery });
     const to = router.resolve({ query: { foo: 'bar' } });
@@ -292,7 +290,6 @@ describe('router', () => {
   });
 
   it('creates an empty query with no query', async () => {
-    // eslint-disable-next-line unused-imports/no-unused-vars
     const stringifyQuery = vitest.fn((_) => '');
     const { router } = await newRouter({ stringifyQuery });
     const to = router.resolve({ hash: '#a' });

@@ -192,7 +192,7 @@ function extractRoutesFromFile(configPath: string, options: ResolvedOptions): Pa
 /**
  * Inserts a list of parsed config routes into an existing {@link PrefixTree}.
  * The tree population algorithm mirrors the file-based route insertion so that
- * all downstream code-generation (generateRouteRecords, generateDTS…) works
+ * all downstream code-generation (generateRouteRecords, generateDts…) works
  * without modification.
  */
 function insertRoutesIntoTree(

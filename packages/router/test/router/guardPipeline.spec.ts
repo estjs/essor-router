@@ -29,15 +29,15 @@ describe('createGuardPipeline', () => {
       next();
     });
 
-    const runRouteDataHooks = vi.fn(async () => {
+    const runRouteDataHooks = vi.fn(() => {
       calls.push('dataHooks');
     });
 
     await pipeline.navigate(
       { ...baseRoute },
       { ...baseRoute },
-      async () => Promise.resolve(),
-      runRouteDataHooks,
+      () => Promise.resolve(),
+      runRouteDataHooks as any,
     );
 
     expect(calls).toEqual(['beforeEach', 'beforeResolve', 'dataHooks']);
@@ -54,8 +54,8 @@ describe('createGuardPipeline', () => {
     const result = await pipeline.navigate(
       { ...baseRoute, fullPath: '/next', path: '/next' },
       { ...baseRoute },
-      async () => Promise.reject(cancelError),
-      async () => Promise.resolve(),
+      () => Promise.reject(cancelError),
+      () => Promise.resolve(),
     );
 
     expect(result).toBe(cancelError);
@@ -98,8 +98,8 @@ describe('createGuardPipeline', () => {
     await pipeline.navigate(
       { ...baseRoute, matched: [], path: '/next', fullPath: '/next' },
       { ...baseRoute, matched: [], path: '/', fullPath: '/' },
-      async () => Promise.resolve(),
-      async () => {
+      () => Promise.resolve(),
+      () => {
         calls.push('dataHooks');
       },
     );
@@ -126,11 +126,10 @@ describe('createGuardPipeline', () => {
     await pipeline.navigate(
       { ...baseRoute, matched: [], path: '/next', fullPath: '/next' },
       { ...baseRoute, matched: [], path: '/', fullPath: '/' },
-      async () => {
+      () => {
         checkCount++;
-        Promise.resolve();
       },
-      async () => {},
+      () => {},
     );
 
     // canceledNavigationCheck is called once per phase (6 phases)

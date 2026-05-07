@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { TokenType, tokenizePath } from '../../src/matcher/pathTokenizer';
 import { tokensToParser } from '../../src/matcher/pathParserRanker';
 
@@ -21,6 +22,132 @@ describe('path parser', () => {
 
     it('escapes {', () => {
       expect(tokenizePath('/\\{')).toEqual([[{ type: TokenType.Static, value: '{' }]]);
+    });
+
+    it('escapes non-colon char after param', () => {
+      expect(tokenizePath('/:foo\\-abc')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'foo',
+            regexp: '',
+            repeatable: false,
+            optional: false,
+          },
+          { type: TokenType.Static, value: '-abc' },
+        ],
+      ]);
+    });
+
+    it('escapes ) inside custom re to allow nested groups', () => {
+      expect(tokenizePath('/:id((?:a-[^/]+\\)?)')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'id',
+            regexp: '(?:a-[^/]+)?',
+            repeatable: false,
+            optional: false,
+          },
+        ],
+      ]);
+    });
+
+    it('escapes + after empty custom re', () => {
+      expect(tokenizePath('/:p()\\+')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'p',
+            regexp: '',
+            repeatable: false,
+            optional: false,
+          },
+          { type: TokenType.Static, value: '+' },
+        ],
+      ]);
+    });
+
+    it('escapes + after param', () => {
+      expect(tokenizePath('/:p\\+')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'p',
+            regexp: '',
+            repeatable: false,
+            optional: false,
+          },
+          { type: TokenType.Static, value: '+' },
+        ],
+      ]);
+    });
+
+    it('escapes : after optional param with custom re', () => {
+      expect(tokenizePath('/:foo([^:]+)?\\:abc')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'foo',
+            regexp: '[^:]+',
+            repeatable: false,
+            optional: true,
+          },
+          { type: TokenType.Static, value: ':abc' },
+        ],
+      ]);
+    });
+
+    it('escapes : after param', () => {
+      expect(tokenizePath('/:foo\\:abc')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'foo',
+            regexp: '',
+            repeatable: false,
+            optional: false,
+          },
+          { type: TokenType.Static, value: ':abc' },
+        ],
+      ]);
+    });
+
+    it('escapes : after param with custom re', () => {
+      expect(tokenizePath('/:foo([^:]+)\\:abc')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'foo',
+            regexp: '[^:]+',
+            repeatable: false,
+            optional: false,
+          },
+          { type: TokenType.Static, value: ':abc' },
+        ],
+      ]);
+    });
+
+    it('escapes : between two params', () => {
+      expect(tokenizePath('/:foo([^:]+)\\::bar')).toEqual([
+        [
+          {
+            type: TokenType.Param,
+            value: 'foo',
+            regexp: '[^:]+',
+            repeatable: false,
+            optional: false,
+          },
+          { type: TokenType.Static, value: ':' },
+          {
+            type: TokenType.Param,
+            value: 'bar',
+            regexp: '',
+            repeatable: false,
+            optional: false,
+          },
+        ],
+      ]);
     });
 
     // not sure how useful this is and if it's worth supporting because of the
@@ -404,7 +531,7 @@ describe('path parser', () => {
       });
     });
 
-    // eslint-disable-next-line test/no-identical-title
+    // eslint-disable-next-line vitest/no-identical-title
     it('static single', () => {
       matchRegExp('^/home$', [[{ type: TokenType.Static, value: 'home' }]]);
     });
@@ -546,7 +673,6 @@ describe('path parser', () => {
       options?: Parameters<typeof tokensToParser>[1],
     ) {
       const pathParser = tokensToParser(tokenizePath(path), options);
-
       expect(pathParser.parse(pathToTest)).toEqual(params);
     }
 
@@ -598,9 +724,77 @@ describe('path parser', () => {
       matchParams('/home', '/other/home', {}, { start: false });
     });
 
+    it('defaults to matching the end', () => {
+      // The default should behave like `end: true`
+      const optionSets = [{}, { end: true }];
+
+      for (const options of optionSets) {
+        matchParams('/home', '/home', {}, options);
+        matchParams('/home', '/home/', {}, options);
+        matchParams('/home', '/home/other', null, options);
+        matchParams('/home', '/homepage', null, options);
+
+        matchParams('/home/', '/home', {}, options);
+        matchParams('/home/', '/home/', {}, options);
+        matchParams('/home/', '/home/other', null, options);
+        matchParams('/home/', '/homepage', null, options);
+      }
+    });
+
     it('can not match the end', () => {
-      matchParams('/home', '/home/other', null, { end: true });
-      matchParams('/home', '/home/other', {}, { end: false });
+      const options = { end: false };
+
+      matchParams('/home', '/home', {}, options);
+      matchParams('/home', '/home/', {}, options);
+      matchParams('/home', '/home/other', {}, options);
+      matchParams('/home', '/homepage', {}, options);
+
+      matchParams('/home/:p', '/home', null, options);
+      matchParams('/home/:p', '/home/', null, options);
+      matchParams('/home/:p', '/home/a', { p: 'a' }, options);
+      matchParams('/home/:p', '/home/a/', { p: 'a' }, options);
+      matchParams('/home/:p', '/home/a/b', { p: 'a' }, options);
+      matchParams('/home/:p', '/homepage', null, options);
+
+      matchParams('/home/', '/home', {}, options);
+      matchParams('/home/', '/home/', {}, options);
+      matchParams('/home/', '/home/other', {}, options);
+      matchParams('/home/', '/homepage', {}, options);
+
+      matchParams('/home/:p/', '/home', null, options);
+      matchParams('/home/:p/', '/home/', null, options);
+      matchParams('/home/:p/', '/home/a', { p: 'a' }, options);
+      matchParams('/home/:p/', '/home/a/', { p: 'a' }, options);
+      matchParams('/home/:p/', '/home/a/b', { p: 'a' }, options);
+      matchParams('/home/:p/', '/homepage', null, options);
+    });
+
+    it('can not match the end when strict', () => {
+      const options = { end: false, strict: true };
+
+      matchParams('/home', '/home', {}, options);
+      matchParams('/home', '/home/', {}, options);
+      matchParams('/home', '/home/other', {}, options);
+      matchParams('/home', '/homepage', null, options);
+
+      matchParams('/home/:p', '/home', null, options);
+      matchParams('/home/:p', '/home/', null, options);
+      matchParams('/home/:p', '/home/a', { p: 'a' }, options);
+      matchParams('/home/:p', '/home/a/', { p: 'a' }, options);
+      matchParams('/home/:p', '/home/a/b', { p: 'a' }, options);
+      matchParams('/home/:p', '/homepage', null, options);
+
+      matchParams('/home/', '/home', null, options);
+      matchParams('/home/', '/home/', {}, options);
+      matchParams('/home/', '/home/other', {}, options);
+      matchParams('/home/', '/homepage', null, options);
+
+      matchParams('/home/:p/', '/home', null, options);
+      matchParams('/home/:p/', '/home/', null, options);
+      matchParams('/home/:p/', '/home/a', null, options);
+      matchParams('/home/:p/', '/home/a/', { p: 'a' }, options);
+      matchParams('/home/:p/', '/home/a/b', { p: 'a' }, options);
+      matchParams('/home/:p/', '/homepage', null, options);
     });
 
     it('should not match optional params + static without leading slash', () => {
@@ -717,6 +911,24 @@ describe('path parser', () => {
       matchParams('/one/:a*', '/one/two/three', {
         a: ['two', 'three'],
       });
+    });
+
+    it('param followed by escaped colon and static', () => {
+      matchParams('/:foo\\:abc', '/section:abc', { foo: 'section' });
+      matchParams('/:foo\\:abc', '/sectionabc', null);
+    });
+
+    it('param with custom re followed by escaped colon and another param', () => {
+      matchParams('/:foo([^:]+)\\::bar', '/section:aaabbbccc', {
+        foo: 'section',
+        bar: 'aaabbbccc',
+      });
+    });
+
+    it('escaped + becomes part of static path, not a repeat modifier', () => {
+      matchParams('/:p\\+', '/abc+', { p: 'abc' });
+      matchParams('/:p\\+', '/abc', null);
+      matchParams('/:p()\\+', '/abc+', { p: 'abc' });
     });
 
     // end of parsing urls

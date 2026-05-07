@@ -407,6 +407,7 @@ export class TreeNode {
    */
   get score(): number[][] {
     const scores: number[][] = [];
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let node: TreeNode | undefined = this;
 
     while (node && !node.isRoot()) {
@@ -430,6 +431,7 @@ export class TreeNode {
    */
   get matcherPatternPathDynamicParts(): TreeNodeValueMatcherPart {
     const parts: TreeNodeValueMatcherPart = [];
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let node: TreeNode | undefined = this;
 
     while (node && !node.isRoot()) {

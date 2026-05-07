@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { createFilter } from 'unplugin-utils';
 import MagicString from 'magic-string';
 import { findStaticImports, parseStaticImport } from 'mlly';

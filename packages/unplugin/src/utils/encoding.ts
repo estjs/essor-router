@@ -1,5 +1,5 @@
+import process from 'node:process';
 import { warn } from '../core/utils';
-
 /**
  * Encoding Rules (␣ = Space)
  * - Path: ␣ " < > # ? { }

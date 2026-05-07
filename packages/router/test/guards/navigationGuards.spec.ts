@@ -217,12 +217,10 @@ describe('navigationGuards', () => {
           const guardFn = guardToPromiseFn(guard, mockTo, mockFrom);
           try {
             await guardFn();
-            // If it resolves, guard should have been 'pass'
-            expect(guard).toHaveBeenCalled();
           } catch {
-            // If it rejects, guard should have been 'fail', 'redirect', or 'error'
-            expect(guard).toHaveBeenCalled();
+            // guard rejects for 'fail', 'redirect', or 'error'
           }
+          expect(guard).toHaveBeenCalled();
         },
         50,
       );

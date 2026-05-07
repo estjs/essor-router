@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import process from 'node:process';
 import { describe, expect, it } from 'vitest';
 import { resolveOptions } from '../../src/options';
 import { PrefixTree } from '../../src/core/tree';
@@ -9,7 +10,6 @@ import { generateRouteNamedMap } from '../../src/codegen/generateRouteMap';
 import { generateRouteRecords } from '../../src/codegen/generateRouteRecords';
 import { generateRouteResolver } from '../../src/codegen/generateRouteResolver';
 import { ImportsMap } from '../../src/core/utils';
-
 const __dirname = (() => {
   if (import.meta.url.startsWith('file:')) {
     try {

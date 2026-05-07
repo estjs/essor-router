@@ -1,5 +1,6 @@
 import { assign, isArray } from '../utils';
-import { type Token, TokenType } from './pathTokenizer';
+import { TokenType } from './pathTokenizer';
+import type { Token } from './pathTokenizer';
 
 export type PathParams = Record<string, string | string[]>;
 
@@ -48,7 +49,7 @@ export interface PathParser {
 }
 
 /**
-
+ * @internal
  */
 export interface _PathParserOptions {
   /**
@@ -67,7 +68,7 @@ export interface _PathParserOptions {
 
   /**
    * Should the RegExp match from the beginning by prepending a `^` to it.
-
+   * @internal
    *
    * @defaultValue `true`
    */
@@ -75,6 +76,8 @@ export interface _PathParserOptions {
 
   /**
    * Should the RegExp match until the end by appending a `$` to it.
+   *
+   * @deprecated this option will alsways be `true` in the future. Open a discussion in vuejs/router if you need this to be `false`
    *
    * @defaultValue `true`
    */
@@ -111,7 +114,7 @@ const enum PathScore {
 }
 
 // Special Regex characters that must be escaped in static tokens
-const REGEX_CHARS_RE = /[$()*+./?[\\\]^{}]/g;
+const REGEX_CHARS_RE = /[.+*?^${}()[\]/\\]/g;
 
 /**
  * Creates a path parser from an array of Segments (a segment is an array of Tokens)
@@ -135,10 +138,10 @@ export function tokensToParser(
 
   for (const segment of segments) {
     // the root segment needs special treatment
-    const segmentScores: number[] = segment.length > 0 ? [] : [PathScore.Root];
+    const segmentScores: number[] = segment.length ? [] : [PathScore.Root];
 
     // allow trailing slash
-    if (options.strict && segment.length === 0) pattern += '/';
+    if (options.strict && !segment.length) pattern += '/';
     for (let tokenIndex = 0; tokenIndex < segment.length; tokenIndex++) {
       const token = segment[tokenIndex];
       // resets the score if we are inside a sub-segment /:a-other-:b
@@ -210,7 +213,7 @@ export function tokensToParser(
 
   if (options.end) pattern += '$';
   // allow paths like /dynamic to only match dynamic or dynamic/... but not dynamic_something_else
-  else if (options.strict) pattern += '(?:/|$)';
+  else if (options.strict && !pattern.endsWith('/')) pattern += '(?:/|$)';
 
   const re = new RegExp(pattern, options.sensitive ? '' : 'i');
 
@@ -317,7 +320,10 @@ function compareScoreArray(a: number[], b: number[]): number {
  * @param b - second PathParser
  * @returns 0 if both are equal, < 0 if a should be sorted first, > 0 if b
  */
-export function comparePathParserScore(a: PathParser, b: PathParser): number {
+export function comparePathParserScore(
+  a: Pick<PathParser, 'score'>,
+  b: Pick<PathParser, 'score'>,
+): number {
   let i = 0;
   const aScore = a.score;
   const bScore = b.score;
@@ -348,7 +354,13 @@ export function comparePathParserScore(a: PathParser, b: PathParser): number {
  *
  * @param score - score to check
  * @returns true if the last entry is negative
- */ function isLastScoreNegative(score: PathParser['score']): boolean {
-  const last = score.at(-1);
-  return score.length > 0 && last!.at(-1)! < 0;
+ */
+function isLastScoreNegative(score: PathParser['score']): boolean {
+  const last = score[score.length - 1];
+  return score.length > 0 && last[last.length - 1] < 0;
 }
+export const PATH_PARSER_OPTIONS_DEFAULTS: PathParserOptions = {
+  strict: false,
+  end: true,
+  sensitive: false,
+};

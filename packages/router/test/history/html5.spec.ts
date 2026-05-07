@@ -313,7 +313,7 @@ describe('history HTMl5', () => {
       });
     });
 
-    it('suppresses consecutive go(_, false) popstate callbacks', async () => {
+    it('suppresses consecutive go(_, false) popstate callbacks', () => {
       const originalAddEventListener = window.addEventListener.bind(window);
       let popstateHandler: ((event: { state: any }) => void) | undefined;
       const addEventListenerSpy = vitest

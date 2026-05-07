@@ -71,14 +71,14 @@ createApp(App, '#app');
 
 ```tsx
 import {
-  createWebHistory,      // HTML5 History API
-  createWebHashHistory,   // Hash mode (#/)
   createMemoryHistory,    // In-memory (SSR/testing)
+  createWebHashHistory,   // Hash mode (#/)
+  createWebHistory,       // HTML5 History API
 } from 'essor-router';
 
 const router = createRouter({ history: createWebHistory('/app/'), routes });
 // or shorthand:
-const router = createRouter({ history: 'history', routes });
+createRouter({ history: 'history', routes });
 ```
 
 ### Composition API

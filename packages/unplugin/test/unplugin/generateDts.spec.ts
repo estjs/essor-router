@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { generateDTS } from '../../src/codegen/generateDTS';
+import { generateDTS } from '../../src/codegen/generateDts';
 
 // Minimal stubs used across tests
 const NAMED_MAP = `export interface RouteNamedMap {
