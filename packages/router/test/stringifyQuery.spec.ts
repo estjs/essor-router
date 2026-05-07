@@ -58,4 +58,26 @@ describe('stringifyQuery', () => {
   it('keeps = in value', () => {
     expect(stringifyQuery({ a: '=' })).toEqual('a==');
   });
+
+  it('protects against prototype pollution', () => {
+    const obj: any = { a: '1' };
+    (Object.prototype as any)._polluted = 'should-not-appear';
+    try {
+      const result = stringifyQuery(obj);
+      expect(result).not.toContain('polluted');
+      expect(result).not.toContain('_polluted');
+    } finally {
+      delete (Object.prototype as any)._polluted;
+    }
+  });
+
+  it('handles many keys efficiently', () => {
+    const query: Record<string, string> = {};
+    const expectedParts: string[] = [];
+    for (let i = 0; i < 100; i++) {
+      query[`key${i}`] = `val${i}`;
+      expectedParts.push(`key${i}=val${i}`);
+    }
+    expect(stringifyQuery(query)).toBe(expectedParts.join('&'));
+  });
 });

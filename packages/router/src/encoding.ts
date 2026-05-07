@@ -17,52 +17,66 @@ import { warn } from './warning';
  * encoded everywhere because some browsers like FF encode it when directly
  * written while others don't. Safari and IE don't encode ``"<>{}``` in hash.
  */
-// const EXTRA_RESERVED_RE = /[!'()*]/g
-// const encodeReservedReplacer = (c: string) => '%' + c.charCodeAt(0).toString(16)
 
-const HASH_RE = /#/g; // %23
-const AMPERSAND_RE = /&/g; // %26
-const SLASH_RE = /\//g; // %2F
-const EQUAL_RE = /=/g; // %3D
-const IM_RE = /\?/g; // %3F
 export const PLUS_RE = /\+/g; // %2B
-/**
- * NOTE: It's not clear to me if we should encode the + symbol in queries, it
- * seems to be less flexible than not doing so and I can't find out the legacy
- * systems requiring this for regular requests like text/html. In the standard,
- * the encoding of the plus character is only mentioned for
- * application/x-www-form-urlencoded
- * (https://url.spec.whatwg.org/#urlencoded-parsing) and most browsers seems lo
- * leave the plus character as is in queries. To be more flexible, we allow the
- * plus character on the query, but it can also be manually encoded by the user.
- *
- * Resources:
- * - https://url.spec.whatwg.org/#urlencoded-parsing
- * - https://stackoverflow.com/questions/1634271/url-encoding-the-space-character-or-20
- */
 
-const ENC_BRACKET_OPEN_RE = /%5B/g; // [
-const ENC_BRACKET_CLOSE_RE = /%5D/g; // ]
-const ENC_CARET_RE = /%5E/g; // ^
-const ENC_BACKTICK_RE = /%60/g; // `
-const ENC_CURLY_OPEN_RE = /%7B/g; // {
-const ENC_PIPE_RE = /%7C/g; // |
-const ENC_CURLY_CLOSE_RE = /%7D/g; // }
-const ENC_SPACE_RE = /%20/g; // }
+// Combined regexes: replace multiple chained replaceAll calls with a single
+// regex + replacer callback to reduce intermediate string allocations.
 
-/**
- * Encode characters that need to be encoded on the path, search and hash
- * sections of the URL.
- *
+const ENC_HASH_RE = /%(?:5B|5D|5E|7B|7C|7D)/g;
 
- * @param text - string to encode
- * @returns encoded string
- */
-function commonEncode(text: string | number): string {
-  return encodeURI(`${text}`)
-    .replaceAll(ENC_PIPE_RE, '|')
-    .replaceAll(ENC_BRACKET_OPEN_RE, '[')
-    .replaceAll(ENC_BRACKET_CLOSE_RE, ']');
+function encHashReplacer(m: string): string {
+  switch (m) {
+    case '%5B': return '[';
+    case '%5D': return ']';
+    case '%5E': return '^';
+    case '%7B': return '{';
+    case '%7C': return '|';
+    case '%7D': return '}';
+    default: return m;
+  }
+}
+
+const ENC_QUERY_RE = /%(?:5B|5D|5E|60|7B|7C|7D|20)|[+#&]/g;
+
+const ENC_QUERY_TABLE: Record<string, string> = {
+  '%5B': '[', '%5D': ']', '%5E': '^', '%60': '`',
+  '%7B': '{', '%7C': '|', '%7D': '}', '%20': '+',
+  '+': '%2B', '#': '%23', '&': '%26',
+};
+
+const ENC_QUERY_KEY_RE = /%(?:5B|5D|5E|60|7B|7C|7D|20)|[+#&=]/g;
+
+const ENC_QUERY_KEY_TABLE: Record<string, string> = {
+  ...ENC_QUERY_TABLE,
+  '=': '%3D',
+};
+
+const ENC_PATH_RE = /%(?:5B|5D|7C)|[#?]/g;
+
+function encPathReplacer(m: string): string {
+  switch (m) {
+    case '%5B': return '[';
+    case '%5D': return ']';
+    case '%7C': return '|';
+    case '#': return '%23';
+    case '?': return '%3F';
+    default: return m;
+  }
+}
+
+const ENC_PARAM_RE = /%(?:5B|5D|7C)|[#?\/]/g;
+
+function encParamReplacer(m: string): string {
+  switch (m) {
+    case '%5B': return '[';
+    case '%5D': return ']';
+    case '%7C': return '|';
+    case '#': return '%23';
+    case '?': return '%3F';
+    case '/': return '%2F';
+    default: return m;
+  }
 }
 
 /**
@@ -72,10 +86,7 @@ function commonEncode(text: string | number): string {
  * @returns encoded string
  */
 export function encodeHash(text: string): string {
-  return commonEncode(text)
-    .replaceAll(ENC_CURLY_OPEN_RE, '{')
-    .replaceAll(ENC_CURLY_CLOSE_RE, '}')
-    .replaceAll(ENC_CARET_RE, '^');
+  return encodeURI(`${text}`).replace(ENC_HASH_RE, encHashReplacer);
 }
 
 /**
@@ -86,18 +97,7 @@ export function encodeHash(text: string): string {
  * @returns encoded string
  */
 export function encodeQueryValue(text: string | number): string {
-  return (
-    commonEncode(text)
-      // Encode the space as +, encode the + to differentiate it from the space
-      .replaceAll(PLUS_RE, '%2B')
-      .replaceAll(ENC_SPACE_RE, '+')
-      .replaceAll(HASH_RE, '%23')
-      .replaceAll(AMPERSAND_RE, '%26')
-      .replaceAll(ENC_BACKTICK_RE, '`')
-      .replaceAll(ENC_CURLY_OPEN_RE, '{')
-      .replaceAll(ENC_CURLY_CLOSE_RE, '}')
-      .replaceAll(ENC_CARET_RE, '^')
-  );
+  return encodeURI(`${text}`).replace(ENC_QUERY_RE, (m) => ENC_QUERY_TABLE[m] ?? m);
 }
 
 /**
@@ -106,7 +106,7 @@ export function encodeQueryValue(text: string | number): string {
  * @param text - string to encode
  */
 export function encodeQueryKey(text: string | number): string {
-  return encodeQueryValue(text).replaceAll(EQUAL_RE, '%3D');
+  return encodeURI(`${text}`).replace(ENC_QUERY_KEY_RE, (m) => ENC_QUERY_KEY_TABLE[m] ?? m);
 }
 
 /**
@@ -116,7 +116,7 @@ export function encodeQueryKey(text: string | number): string {
  * @returns encoded string
  */
 export function encodePath(text: string | number): string {
-  return commonEncode(text).replaceAll(HASH_RE, '%23').replaceAll(IM_RE, '%3F');
+  return encodeURI(`${text}`).replace(ENC_PATH_RE, encPathReplacer);
 }
 
 /**
@@ -129,7 +129,7 @@ export function encodePath(text: string | number): string {
  * @returns encoded string
  */
 export function encodeParam(text: string | number | null | undefined): string {
-  return text == null ? '' : encodePath(text).replaceAll(SLASH_RE, '%2F');
+  return text == null ? '' : encodeURI(`${text}`).replace(ENC_PARAM_RE, encParamReplacer);
 }
 
 /**

@@ -88,34 +88,31 @@ export function parseQuery(search: string): LocationQuery {
  * @returns string version of the query without the leading `?`
  */
 export function stringifyQuery(query: LocationQueryRaw): string {
-  let search = '';
-  for (let key in query) {
+  const parts: string[] = [];
+  for (const key of Object.keys(query)) {
     const value = query[key];
-    key = encodeQueryKey(key);
+    const encodedKey = encodeQueryKey(key);
     if (value == null) {
-      // only null adds the value
       if (value !== undefined) {
-        search += (search.length > 0 ? '&' : '') + key;
+        parts.push(encodedKey);
       }
       continue;
     }
-    // keep null values
     const values: LocationQueryValueRaw[] = isArray(value)
       ? value.map((v) => v && encodeQueryValue(v))
       : [value && encodeQueryValue(value)];
 
-    values.forEach((value) => {
-      // skip undefined values in arrays as if they were not present
-      // smaller code than using filter
-      if (value !== undefined) {
-        // only append & with non-empty search
-        search += (search.length > 0 ? '&' : '') + key;
-        if (value != null) search += `=${value}`;
+    for (const v of values) {
+      if (v !== undefined) {
+        if (v != null) {
+          parts.push(`${encodedKey}=${v}`);
+        } else {
+          parts.push(encodedKey);
+        }
       }
-    });
+    }
   }
-
-  return search;
+  return parts.join('&');
 }
 
 /**
@@ -128,8 +125,9 @@ export function stringifyQuery(query: LocationQueryRaw): string {
  */
 export function normalizeQuery(query: LocationQueryRaw | undefined): LocationQuery {
   const normalizedQuery: LocationQuery = {};
+  if (!query) return normalizedQuery;
 
-  for (const key in query) {
+  for (const key of Object.keys(query)) {
     const value = query[key];
     if (value !== undefined) {
       normalizedQuery[key] = isArray(value)

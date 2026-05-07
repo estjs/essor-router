@@ -1,6 +1,7 @@
 import {
   encodeHash,
   encodeParam,
+  encodePath,
   encodeQueryKey,
   encodeQueryValue,
   // decode,
@@ -140,6 +141,50 @@ describe('encoding', () => {
 
     it('encodes a specific charset', () => {
       expect(encodeHash(toEncode)).toBe(encodedToEncode);
+    });
+  });
+
+  describe('single-pass edge cases', () => {
+    it('encodes mixed special characters in query value', () => {
+      expect(encodeQueryValue('a+b c#d&e')).toBe('a%2Bb+c%23d%26e');
+    });
+
+    it('encodes query key with equals sign', () => {
+      expect(encodeQueryKey('foo=bar')).toBe('foo%3Dbar');
+    });
+
+    it('encodes path with hash and question mark', () => {
+      expect(encodePath('path#frag?query')).toBe('path%23frag%3Fquery');
+    });
+
+    it('encodes param with slash', () => {
+      expect(encodeParam('a/b')).toBe('a%2Fb');
+    });
+
+    it('encodes hash with all special chars', () => {
+      // Hash un-encodes { } ^ | [ ] but keeps backtick encoded
+      expect(encodeHash('a{b}c^d`e|f[g]h')).toBe('a{b}c^d%60e|f[g]h');
+    });
+
+    it('handles strings with only safe characters', () => {
+      expect(encodeQueryValue('abcdef')).toBe('abcdef');
+      expect(encodeQueryKey('abcdef')).toBe('abcdef');
+      expect(encodeHash('abcdef')).toBe('abcdef');
+      expect(encodePath('abcdef')).toBe('abcdef');
+      expect(encodeParam('abcdef')).toBe('abcdef');
+    });
+
+    it('handles empty string', () => {
+      expect(encodeQueryValue('')).toBe('');
+      expect(encodeQueryKey('')).toBe('');
+      expect(encodeHash('')).toBe('');
+      expect(encodePath('')).toBe('');
+      expect(encodeParam('')).toBe('');
+    });
+
+    it('handles null/undefined param', () => {
+      expect(encodeParam(null)).toBe('');
+      expect(encodeParam(undefined)).toBe('');
     });
   });
 });
