@@ -17,40 +17,31 @@ export interface ConfigRoute {
 
 export type ConfigRoutes = readonly ConfigRoute[];
 
-type PropertyOf<T, K extends PropertyKey> = K extends keyof T
-  ? T[K]
-  : undefined;
+type PropertyOf<T, K extends PropertyKey> = K extends keyof T ? T[K] : undefined;
 
 type ExtraKeys<Input, Allowed> = Exclude<keyof Input, keyof Allowed>;
 
 type ExactProps<Input, Allowed> =
-  ExtraKeys<Input, Allowed> extends never
-    ? unknown
-    : { [Key in ExtraKeys<Input, Allowed>]: never };
+  ExtraKeys<Input, Allowed> extends never ? unknown : { [Key in ExtraKeys<Input, Allowed>]: never };
 
 type StrictConfigRoute<Route> = Route extends object
   ? ExactProps<Route, ConfigRoute> & {
-      path: PropertyOf<Route, 'path'> extends string
-        ? PropertyOf<Route, 'path'>
-        : string;
+      path: PropertyOf<Route, 'path'> extends string ? PropertyOf<Route, 'path'> : string;
       name?: PropertyOf<Route, 'name'> extends string | undefined
         ? PropertyOf<Route, 'name'>
         : string;
-      component?: PropertyOf<Route, "component"> extends
-        | ConfigRouteComponent
-        | undefined
-        ? PropertyOf<Route, "component">
+      component?: PropertyOf<Route, 'component'> extends ConfigRouteComponent | undefined
+        ? PropertyOf<Route, 'component'>
         : ConfigRouteComponent;
-      children?: PropertyOf<Route, "children"> extends readonly unknown[]
-        ? StrictConfigRoutes<PropertyOf<Route, "children">>
+      children?: PropertyOf<Route, 'children'> extends readonly unknown[]
+        ? StrictConfigRoutes<PropertyOf<Route, 'children'>>
         : readonly ConfigRoute[];
     }
   : ConfigRoute;
 
-type StrictConfigRoutes<Routes extends readonly unknown[]> =
-  number extends Routes["length"]
-    ? readonly StrictConfigRoute<Routes[number]>[]
-    : { readonly [Index in keyof Routes]: StrictConfigRoute<Routes[Index]> };
+type StrictConfigRoutes<Routes extends readonly unknown[]> = number extends Routes['length']
+  ? readonly StrictConfigRoute<Routes[number]>[]
+  : { readonly [Index in keyof Routes]: StrictConfigRoute<Routes[Index]> };
 
 /**
  * Zero-cost identity function. Used by the plugin to locate the config entry point

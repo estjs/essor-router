@@ -53,7 +53,7 @@ describe('isReady', () => {
     const remove = router.beforeEach(() => {
       throw error;
     });
-    router.push('/foo').catch(() => { });
+    router.push('/foo').catch(() => {});
     await expect(router.isReady()).rejects.toBe(error);
     expect(errorSpy).toHaveBeenCalledTimes(1);
     expect(errorSpy).toHaveBeenCalledWith(
@@ -66,7 +66,7 @@ describe('isReady', () => {
 
     // result can change
     remove();
-    router.push('/foo').catch(() => { });
+    router.push('/foo').catch(() => {});
     await expect(router.isReady()).resolves.toBe(undefined);
     expect(errorSpy).toHaveBeenCalledTimes(1);
   });
@@ -76,7 +76,7 @@ describe('isReady', () => {
     const errorSpy = vitest.fn();
     router.onError(errorSpy);
     const remove = router.beforeEach(() => false);
-    router.push('/foo').catch(() => { });
+    router.push('/foo').catch(() => {});
     await expect(router.isReady()).rejects.toMatchObject({
       to: expect.objectContaining({ path: '/foo' }),
       from: expect.objectContaining({ path: '/' }),
@@ -84,7 +84,7 @@ describe('isReady', () => {
     expect(errorSpy).toHaveBeenCalledTimes(0);
 
     // can be checked again
-    router.push('/foo').catch(() => { });
+    router.push('/foo').catch(() => {});
     await expect(router.isReady()).rejects.toMatchObject({
       to: expect.objectContaining({ path: '/foo' }),
       from: expect.objectContaining({ path: '/' }),
@@ -93,7 +93,7 @@ describe('isReady', () => {
 
     // result can change
     remove();
-    router.push('/foo').catch(() => { });
+    router.push('/foo').catch(() => {});
     await expect(router.isReady()).resolves.toBe(undefined);
     expect(errorSpy).toHaveBeenCalledTimes(0);
   });
@@ -102,7 +102,7 @@ describe('isReady', () => {
     const router = newRouter();
     const errorSpy = vitest.fn();
     router.onError(errorSpy);
-    router.push('/fail-lazy').catch(() => { });
+    router.push('/fail-lazy').catch(() => {});
 
     await expect(router.isReady()).rejects.toEqual(expect.any(Error));
     expect(errorSpy).toHaveBeenCalledTimes(1);

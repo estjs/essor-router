@@ -1,7 +1,7 @@
-import { existsSync, readFileSync } from "node:fs";
-import { dirname, relative, resolve } from "pathe";
-import { parse as babelParse } from "@babel/parser";
-import type { PrefixTree, TreeNode } from "./tree";
+import { existsSync, readFileSync } from 'node:fs';
+import { dirname, relative, resolve } from 'pathe';
+import { parse as babelParse } from '@babel/parser';
+import type { PrefixTree, TreeNode } from './tree';
 import type {
   ArrayExpression,
   CallExpression,
@@ -9,14 +9,14 @@ import type {
   ObjectExpression,
   ObjectProperty,
   StringLiteral,
-} from "@babel/types";
-import type { ResolvedOptions } from "../options";
+} from '@babel/types';
+import type { ResolvedOptions } from '../options';
 export {
   defineConfigRoutes,
   type ConfigRoute,
   type ConfigRouteComponent,
   type ConfigRoutes,
-} from "../runtime";
+} from '../runtime';
 
 /**
  * A statically parsed route from the config file.
@@ -32,23 +32,18 @@ export interface ParsedConfigRoute {
 
 // ─── Babel AST helpers ───────────────────────────────────────────────────────
 
-function getStringValue(
-  node: Expression | null | undefined,
-): string | undefined {
-  if (node?.type === "StringLiteral") return (node as StringLiteral).value;
+function getStringValue(node: Expression | null | undefined): string | undefined {
+  if (node?.type === 'StringLiteral') return (node as StringLiteral).value;
   return undefined;
 }
 
-function getObjectProp(
-  obj: ObjectExpression,
-  key: string,
-): Expression | undefined {
+function getObjectProp(obj: ObjectExpression, key: string): Expression | undefined {
   for (const prop of obj.properties) {
     if (
-      prop.type === "ObjectProperty" &&
+      prop.type === 'ObjectProperty' &&
       !prop.computed &&
-      ((prop.key.type === "Identifier" && prop.key.name === key) ||
-        (prop.key.type === "StringLiteral" && prop.key.value === key))
+      ((prop.key.type === 'Identifier' && prop.key.name === key) ||
+        (prop.key.type === 'StringLiteral' && prop.key.value === key))
     ) {
       const p = prop as ObjectProperty;
       return p.value as Expression;
@@ -65,11 +60,11 @@ function extractImportPath(expr: Expression | undefined): string | undefined {
   if (!expr) return undefined;
 
   // `() => import('...')` or `async () => import('...')`
-  if (expr.type === "ArrowFunctionExpression") {
+  if (expr.type === 'ArrowFunctionExpression') {
     const body = expr.body;
-    if (body.type === "CallExpression") {
+    if (body.type === 'CallExpression') {
       return extractImportPath(body as unknown as Expression);
-    } else if (body.type === "BlockStatement") {
+    } else if (body.type === 'BlockStatement') {
       // 检查里面是否有 return import(...)
       // 简单起见，这里假设就长那样。
       return undefined;
@@ -77,12 +72,9 @@ function extractImportPath(expr: Expression | undefined): string | undefined {
   }
 
   // `import('...')`
-  if (expr.type === "CallExpression") {
+  if (expr.type === 'CallExpression') {
     const call = expr as CallExpression;
-    if (
-      call.callee.type === "Import" &&
-      call.arguments[0]?.type === "StringLiteral"
-    ) {
+    if (call.callee.type === 'Import' && call.arguments[0]?.type === 'StringLiteral') {
       return (call.arguments[0] as StringLiteral).value;
     }
   }
@@ -95,27 +87,23 @@ function parseRouteObject(
   configDir: string,
   options: ResolvedOptions,
 ): ParsedConfigRoute | null {
-  const pathNode = getObjectProp(obj, "path");
+  const pathNode = getObjectProp(obj, 'path');
   const path = getStringValue(pathNode);
   if (!path) return null; // `path` is required and must be a string literal
 
-  const name = getStringValue(getObjectProp(obj, "name"));
+  const name = getStringValue(getObjectProp(obj, 'name'));
 
   // resolve component path relative to the config file's directory
-  const importPath = extractImportPath(getObjectProp(obj, "component"));
+  const importPath = extractImportPath(getObjectProp(obj, 'component'));
   let componentPath: string | undefined;
   if (importPath) {
     componentPath = relative(options.root, resolve(configDir, importPath));
   }
 
-  const childrenNode = getObjectProp(obj, "children");
+  const childrenNode = getObjectProp(obj, 'children');
   let children: ParsedConfigRoute[] | undefined;
-  if (childrenNode?.type === "ArrayExpression") {
-    children = parseRouteArray(
-      childrenNode as ArrayExpression,
-      configDir,
-      options,
-    );
+  if (childrenNode?.type === 'ArrayExpression') {
+    children = parseRouteArray(childrenNode as ArrayExpression, configDir, options);
   }
 
   return {
@@ -133,12 +121,8 @@ function parseRouteArray(
 ): ParsedConfigRoute[] {
   const routes: ParsedConfigRoute[] = [];
   for (const elem of arr.elements) {
-    if (elem?.type === "ObjectExpression") {
-      const route = parseRouteObject(
-        elem as ObjectExpression,
-        configDir,
-        options,
-      );
+    if (elem?.type === 'ObjectExpression') {
+      const route = parseRouteObject(elem as ObjectExpression, configDir, options);
       if (route) routes.push(route);
     }
   }
@@ -149,39 +133,29 @@ function parseRouteArray(
  * Statically parses a `defineConfigRoutes([...])` call from `configPath`
  * and returns the extracted route definitions.
  */
-function extractRoutesFromFile(
-  configPath: string,
-  options: ResolvedOptions,
-): ParsedConfigRoute[] {
+function extractRoutesFromFile(configPath: string, options: ResolvedOptions): ParsedConfigRoute[] {
   if (!existsSync(configPath)) {
-    throw new Error(
-      `[essor-router] Failed to parse configRoutes file: ${configPath}`,
-    );
+    throw new Error(`[essor-router] Failed to parse configRoutes file: ${configPath}`);
   }
 
-  const src = readFileSync(configPath, "utf8");
+  const src = readFileSync(configPath, 'utf8');
   const configDir = dirname(configPath);
 
   let ast: ReturnType<typeof babelParse>;
   try {
     ast = babelParse(src, {
-      sourceType: "module",
-      plugins: ["typescript", "jsx"],
+      sourceType: 'module',
+      plugins: ['typescript', 'jsx'],
     });
   } catch {
-    throw new Error(
-      `[essor-router] Failed to parse configRoutes file: ${configPath}`,
-    );
+    throw new Error(`[essor-router] Failed to parse configRoutes file: ${configPath}`);
   }
 
   // Walk top-level statements looking for `export default defineConfigRoutes([...])`
   for (const node of ast.program.body) {
     let callExpr: CallExpression | undefined;
 
-    if (
-      node.type === "ExportDefaultDeclaration" &&
-      node.declaration.type === "CallExpression"
-    ) {
+    if (node.type === 'ExportDefaultDeclaration' && node.declaration.type === 'CallExpression') {
       callExpr = node.declaration as CallExpression;
     }
 
@@ -190,17 +164,16 @@ function extractRoutesFromFile(
     // Verify the callee is `defineConfigRoutes`
     const callee = callExpr.callee;
     const calleeName =
-      callee.type === "Identifier"
+      callee.type === 'Identifier'
         ? callee.name
-        : callee.type === "MemberExpression" &&
-            callee.property.type === "Identifier"
+        : callee.type === 'MemberExpression' && callee.property.type === 'Identifier'
           ? callee.property.name
           : undefined;
 
-    if (calleeName !== "defineConfigRoutes") continue;
+    if (calleeName !== 'defineConfigRoutes') continue;
 
     const firstArg = callExpr.arguments[0];
-    if (firstArg?.type === "ArrayExpression") {
+    if (firstArg?.type === 'ArrayExpression') {
       return parseRouteArray(firstArg as ArrayExpression, configDir, options);
     }
   }
@@ -224,12 +197,12 @@ function insertRoutesIntoTree(
 ): void {
   for (const route of routes) {
     // Remove the leading `/` so the path is relative, matching file-based route style
-    const normalizedPath = route.path.replace(/^\//, "");
+    const normalizedPath = route.path.replace(/^\//, '');
 
     // resolve the absolute path to register it correctly into the tree map
     const componentAbsolutePath = route.componentPath
       ? resolve(options.root, route.componentPath)
-      : "";
+      : '';
 
     const node: TreeNode = parentNode
       ? parentNode.insertParsedPath(normalizedPath, componentAbsolutePath)
@@ -242,7 +215,7 @@ function insertRoutesIntoTree(
 
     // Store the component path so _RouteFileInfoMap can be populated
     if (componentAbsolutePath) {
-      node.value.components.set("default", componentAbsolutePath);
+      node.value.components.set('default', componentAbsolutePath);
     }
 
     if (route.children?.length) {
@@ -255,10 +228,7 @@ function insertRoutesIntoTree(
  * Entry point for config-based route loading.
  * Reads `options.configRoutes`, parses it via Babel, and populates `tree`.
  */
-export function loadConfigRoutes(
-  tree: PrefixTree,
-  options: ResolvedOptions,
-): void {
+export function loadConfigRoutes(tree: PrefixTree, options: ResolvedOptions): void {
   const configPath = options.configRoutes!;
   const routes = extractRoutesFromFile(configPath, options);
   insertRoutesIntoTree(routes, tree, options);

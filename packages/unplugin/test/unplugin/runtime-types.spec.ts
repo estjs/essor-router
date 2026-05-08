@@ -26,12 +26,9 @@ function getDiagnostics(fileName: string): string[] {
 
   return ts.getPreEmitDiagnostics(program).map((diagnostic) => {
     const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-    if (!diagnostic.file || typeof diagnostic.start !== "number")
-      return message;
+    if (!diagnostic.file || typeof diagnostic.start !== 'number') return message;
 
-    const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(
-      diagnostic.start,
-    );
+    const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
     return `${line + 1}:${character + 1} ${message}`;
   });
 }
