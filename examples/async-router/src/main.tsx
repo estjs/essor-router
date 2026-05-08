@@ -6,15 +6,15 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      component: import('./Home'),
+      component: () => import('./Home'),
     },
     {
       path: '/about',
-      component: import('./About'),
+      component: () => import('./About'),
     },
     {
       path: '/:pathMatch(.*)*',
-      component: import('./NotFound'),
+      component: () => import('./NotFound'),
     },
   ],
 });

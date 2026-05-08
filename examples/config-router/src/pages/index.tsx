@@ -4,7 +4,7 @@ export default function Home() {
   const router = useRouter();
 
   const handleTypedNavigation = () => {
-    router.push({ name: '/users/[id]', params: { id: 789 } });
+    router.push({ name: 'users-detail', params: { id: '789' } });
   };
 
   return (
