@@ -5,6 +5,20 @@ toc: false
 docClass: timeline
 ---
 
+## [0.0.17-beta.1](https://github.com/estjs/essor-router/compare/v0.0.16-beta.7...v0.0.17-beta.1) `2026-05-07`
+
+## [0.0.17-beta.2](https://github.com/estjs/essor-router/compare/v0.0.17-beta.1...v0.0.17-beta.2) `2026-05-08`
+
+
+### Features
+
+* **router:** add lazy route component support ([c488707](https://github.com/estjs/essor-router/commit/c48870794d1c601af4d6693f0e21d1107bef1bcd))
+* **unplugin:** tighten defineConfigRoutes typing ([9841ac3](https://github.com/estjs/essor-router/commit/9841ac3b9640ea01977136781346185a930a0500))
+* **unplugin:** wrap async route imports with lazyRouteComponent ([475c0fc](https://github.com/estjs/essor-router/commit/475c0fc578a15e1a2b4b717bc078b6320412859d))
+
+
+
+
 ## [0.0.6-beta.3](https://github.com/estjs/essor-router/compare/3cd82cfbc36e335be0b61ebac69d436c471406a9...v0.0.6-beta.3) `2024-06-11`
 
 
