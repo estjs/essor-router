@@ -13,6 +13,7 @@ const banner = `/**
 export default defineConfig({
   entryPoints: {
     index: './src/index.ts',
+    config: './src/runtime.ts',
     vite: './src/vite.ts',
     webpack: './src/webpack.ts',
     rollup: './src/rollup.ts',

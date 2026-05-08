@@ -27,6 +27,15 @@ function buildTestTree() {
 }
 
 describe('generateRouteRecords snapshot', () => {
+  it('keeps async route imports lazy', () => {
+    const { tree, options } = buildTestTree();
+    const importsMap = new ImportsMap();
+    const output = generateRouteRecords(tree, options, importsMap);
+
+    expect(output).toContain(`component: lazyRouteComponent(() => import('/src/pages/index.tsx'))`);
+    expect(importsMap.toString()).toContain(`import { lazyRouteComponent } from 'essor-router'`);
+  });
+
   it('generates stable route records for standard routes', () => {
     const { tree, options } = buildTestTree();
     const importsMap = new ImportsMap();

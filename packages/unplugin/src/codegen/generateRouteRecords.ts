@@ -133,7 +133,8 @@ export function generatePageImport(
 ) {
   const mode = isFunction(importMode) ? importMode(filepath) : importMode;
   if (mode === 'async') {
-    return `() => import(${toStringLiteral(filepath)})`;
+    importsMap.add('essor-router', 'lazyRouteComponent');
+    return `lazyRouteComponent(() => import(${toStringLiteral(filepath)}))`;
   }
   // mode === 'sync'
   // return the name of the import e.g. `_page_0` for `import _page_0 from '...'`

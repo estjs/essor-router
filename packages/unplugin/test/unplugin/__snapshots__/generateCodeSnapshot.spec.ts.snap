@@ -10,18 +10,18 @@ exports[`generateRouteRecords snapshot > generates route with nested children 1`
       {
         path: ':id',
         name: '/users/[id]',
-        component: () => import('/src/pages/users/[id].tsx'),
+        component: lazyRouteComponent(() => import('/src/pages/users/[id].tsx')),
         children: [
           {
             path: 'posts',
             name: '/users/[id]/posts',
-            component: () => import('/src/pages/users/[id]/posts.tsx'),
+            component: lazyRouteComponent(() => import('/src/pages/users/[id]/posts.tsx')),
             /* no children */
           },
           {
             path: 'settings',
             name: '/users/[id]/settings',
-            component: () => import('/src/pages/users/[id]/settings.tsx'),
+            component: lazyRouteComponent(() => import('/src/pages/users/[id]/settings.tsx')),
             /* no children */
           }
         ],
@@ -31,26 +31,29 @@ exports[`generateRouteRecords snapshot > generates route with nested children 1`
 ]"
 `;
 
-exports[`generateRouteRecords snapshot > generates stable imports map for standard routes 1`] = `""`;
+exports[`generateRouteRecords snapshot > generates stable imports map for standard routes 1`] = `
+"import { lazyRouteComponent } from 'essor-router'
+"
+`;
 
 exports[`generateRouteRecords snapshot > generates stable route records for standard routes 1`] = `
 "[
   {
     path: '/',
     name: '/',
-    component: () => import('/src/pages/index.tsx'),
+    component: lazyRouteComponent(() => import('/src/pages/index.tsx')),
     /* no children */
   },
   {
     path: '/:all(.*)',
     name: '/[...all]',
-    component: () => import('/src/pages/[...all].tsx'),
+    component: lazyRouteComponent(() => import('/src/pages/[...all].tsx')),
     /* no children */
   },
   {
     path: '/about',
     name: '/about',
-    component: () => import('/src/pages/about.tsx'),
+    component: lazyRouteComponent(() => import('/src/pages/about.tsx')),
     /* no children */
   },
   {
@@ -61,12 +64,12 @@ exports[`generateRouteRecords snapshot > generates stable route records for stan
       {
         path: ':id',
         name: '/users/[id]',
-        component: () => import('/src/pages/users/[id].tsx'),
+        component: lazyRouteComponent(() => import('/src/pages/users/[id].tsx')),
         children: [
           {
             path: 'posts',
             name: '/users/[id]/posts',
-            component: () => import('/src/pages/users/[id]/posts.tsx'),
+            component: lazyRouteComponent(() => import('/src/pages/users/[id]/posts.tsx')),
             /* no children */
           }
         ],
@@ -120,7 +123,7 @@ const __route_0 = normalizeRouteRecord({
     /* trailingSlash */
   ),
   components: {
-    'default': () => import('/src/pages/users/[id]/posts/[postId].tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/users/[id]/posts/[postId].tsx'))
   },
 })
 
@@ -136,7 +139,7 @@ const __route_0 = normalizeRouteRecord({
   name: '/',
   path: new MatcherPatternPathStatic('/'),
   components: {
-    'default': () => import('/src/pages/index.tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/index.tsx'))
   },
 })
 
@@ -151,7 +154,7 @@ const __route_1 = normalizeRouteRecord({
     null,
   ),
   components: {
-    'default': () => import('/src/pages/[...all].tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/[...all].tsx'))
   },
 })
 
@@ -168,7 +171,7 @@ const __route_0 = normalizeRouteRecord({
   name: '/',
   path: new MatcherPatternPathStatic('/'),
   components: {
-    'default': () => import('/src/pages/index.tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/index.tsx'))
   },
 })
 
@@ -176,7 +179,7 @@ const __route_1 = normalizeRouteRecord({
   name: '/about',
   path: new MatcherPatternPathStatic('/about'),
   components: {
-    'default': () => import('/src/pages/about.tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/about.tsx'))
   },
 })
 
@@ -184,7 +187,7 @@ const __route_2 = normalizeRouteRecord({
   name: '/contact',
   path: new MatcherPatternPathStatic('/contact'),
   components: {
-    'default': () => import('/src/pages/contact.tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/contact.tsx'))
   },
 })
 
@@ -202,7 +205,7 @@ const __route_0 = normalizeRouteRecord({
   name: '/',
   path: new MatcherPatternPathStatic('/'),
   components: {
-    'default': () => import('/src/pages/index.tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/index.tsx'))
   },
 })
 
@@ -217,7 +220,7 @@ const __route_1 = normalizeRouteRecord({
     null,
   ),
   components: {
-    'default': () => import('/src/pages/[...all].tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/[...all].tsx'))
   },
 })
 
@@ -225,7 +228,7 @@ const __route_2 = normalizeRouteRecord({
   name: '/about',
   path: new MatcherPatternPathStatic('/about'),
   components: {
-    'default': () => import('/src/pages/about.tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/about.tsx'))
   },
 })
 
@@ -240,7 +243,7 @@ const __route_3 = normalizeRouteRecord({
     /* trailingSlash */
   ),
   components: {
-    'default': () => import('/src/pages/users/[id].tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/users/[id].tsx'))
   },
 })
 const __route_4 = normalizeRouteRecord({
@@ -254,7 +257,7 @@ const __route_4 = normalizeRouteRecord({
     /* trailingSlash */
   ),
   components: {
-    'default': () => import('/src/pages/users/[id]/posts.tsx')
+    'default': lazyRouteComponent(() => import('/src/pages/users/[id]/posts.tsx'))
   },
   parent: __route_3,
 })
@@ -270,6 +273,7 @@ export const resolver = createFixedResolver([
 `;
 
 exports[`generateRouteResolver snapshot > generates stable resolver for standard routes 2`] = `
-"import { createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router/experimental'
+"import { lazyRouteComponent } from 'essor-router'
+import { createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router/experimental'
 "
 `;

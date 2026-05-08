@@ -167,7 +167,7 @@ export default createUnplugin<Options | undefined>((opt = {}, _meta) => {
 
 export { createRoutesContext };
 export { getFileBasedRouteName, getPascalCaseRouteName } from './core/utils';
-export { defineConfigRoutes } from './core/configSource';
+export { defineConfigRoutes } from './runtime';
 
 // Route Tree and edition
 export { createTreeNodeValue } from './core/treeNodeValue';

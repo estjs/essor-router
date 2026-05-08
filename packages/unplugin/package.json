@@ -49,6 +49,11 @@
       "types": "./dist/esbuild.d.ts",
       "require": "./dist/esbuild.cjs",
       "import": "./dist/esbuild.mjs"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "require": "./dist/config.cjs",
+      "import": "./dist/config.mjs"
     }
   },
   "sideEffects": false,
