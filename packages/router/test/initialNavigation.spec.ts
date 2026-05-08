@@ -90,6 +90,31 @@ describe('initial Navigation', () => {
     }
   });
 
+  it('renders the initial route when the matched component comes from a promise-returning loader', async () => {
+    const LazyFoo = () => {
+      const div = document.createElement('div');
+      div.textContent = 'Lazy Foo';
+      return div;
+    };
+
+    const { router } = newRouter('/foo', {
+      routes: [
+        { path: '/', component },
+        { path: '/foo', component: () => Promise.resolve(LazyFoo) },
+      ],
+    });
+
+    const wrapper = mount(() => h(RouterView, { router }));
+
+    try {
+      await sleep(50);
+      expect(router.currentRoute.value).toMatchObject({ path: '/foo' });
+      expect(wrapper.text()).toContain('Lazy Foo');
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
   it('restores saved scroll position on pop navigation', async () => {
     Object.defineProperty(window, 'scrollX', {
       value: 12,

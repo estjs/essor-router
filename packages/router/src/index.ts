@@ -19,6 +19,7 @@ export type { ErrorListener, _ErrorListener, Router } from './router';
 export { NavigationFailureType, isNavigationFailure } from './errors';
 export type { NavigationFailure, ErrorTypes, NavigationRedirectError } from './errors';
 
+export { lazyRouteComponent } from './types';
 export { onBeforeRouteLeave, onBeforeRouteUpdate, loadRouteLocation } from './navigationGuards';
 export { RouterLink, useLink } from './RouterLink';
 export type { RouterLinkProps, RouterLinkOptions, UseLinkReturn } from './RouterLink';
@@ -57,6 +58,7 @@ export type {
   RouteRecordRedirect,
   RouteMeta,
   RouteComponent,
+  RouteComponentLoader,
   RouteLoader,
   RouteLoaderContext,
   RouteSearchValidator,

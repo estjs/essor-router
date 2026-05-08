@@ -283,10 +283,38 @@ export type RouteComponent = ComponentFn<Record<string, unknown>> & {
   __vccOpts?: Record<string, unknown>;
   displayName?: string;
 }; // Essor component type
+
+/**
+ * Module shape returned by async route component loaders.
+ */
+export type RouteComponentModule = RouteComponent | { default: RouteComponent };
+
+const ROUTE_COMPONENT_LOADER_KEY = '__routeComponentLoader';
+
+export type RouteComponentLoader = Lazy<RouteComponentModule> & {
+  [ROUTE_COMPONENT_LOADER_KEY]: true;
+};
+
+export function lazyRouteComponent(loader: Lazy<RouteComponentModule>): RouteComponentLoader {
+  Object.defineProperty(loader, ROUTE_COMPONENT_LOADER_KEY, {
+    value: true,
+    enumerable: false,
+    configurable: false,
+  });
+
+  return loader as RouteComponentLoader;
+}
+
+export function isRouteComponentLoader(component: unknown): component is RouteComponentLoader {
+  return (
+    typeof component === 'function' &&
+    !!(component as unknown as Record<string, unknown>)[ROUTE_COMPONENT_LOADER_KEY]
+  );
+}
 /**
  * Allowed Component definitions in route records provided by the user
  */
-export type RawRouteComponent = RouteComponent | Lazy<RouteComponent>;
+export type RawRouteComponent = RouteComponent | Lazy<RouteComponentModule>;
 
 /**
  * Possible values for a user-defined route record's name

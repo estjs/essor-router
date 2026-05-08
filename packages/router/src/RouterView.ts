@@ -3,6 +3,7 @@ import {
   type Signal,
   computed,
   createComponent,
+  defineAsyncComponent,
   effect,
   inject,
   onDestroy,
@@ -19,9 +20,12 @@ import {
 } from './injectionSymbols';
 import {
   type RouteComponent,
+  type RouteComponentModule,
   type RouteLocationNormalized,
   START_LOCATION_NORMALIZED,
 } from './types';
+import { isESModule } from './utils';
+import { resolveRouteComponent } from './navigationGuards';
 import { logRouterError } from './warning';
 import type { Router } from './router';
 
@@ -93,13 +97,36 @@ function invokeComponent(component: RouteComponent, props: Record<string, unknow
   // errors synchronously inside the caller's try/catch. For non-function
   // components fall back to essor's createComponent so the instance lifecycle
   // (mount/unmount) still runs normally.
-  return isFunction(component)
-    ? (component as (p: Record<string, unknown>) => unknown)(props)
-    : createComponent(component, props);
+  if (!isFunction(component)) {
+    return createComponent(component, props);
+  }
+
+  const rendered = (component as (p: Record<string, unknown>) => unknown)(props);
+  if (!isPromiseLikeValue(rendered)) {
+    return rendered;
+  }
+
+  const AsyncRouteComponent = defineAsyncComponent(
+    () =>
+      Promise.resolve(rendered as Promise<RouteComponentModule>).then((resolved) => {
+        if (!resolved) {
+          throw new Error('Failed to resolve async route component.');
+        }
+
+        return isESModule(resolved) ? resolved.default : resolved;
+      }),
+    { delay: 0 },
+  );
+
+  return createComponent(AsyncRouteComponent, props);
 }
 
 function normalizeError(error: unknown): Error {
   return error instanceof Error ? error : new Error(String(error));
+}
+
+function isPromiseLikeValue(value: unknown): value is Promise<unknown> {
+  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
 }
 
 /**
@@ -189,6 +216,7 @@ export const RouterView = (props: RouterViewProps) => {
   const routeToDisplay = signal<RouteLocationNormalized>(START_LOCATION_NORMALIZED);
   const depth = signal<number>(0);
   const matchedRouteRef = signal<RouteLocationNormalized['matched'][number] | undefined>(undefined);
+  const resolvedComponentRef = signal<RouteComponent | null | undefined>(undefined);
 
   // Calculate base depth for nested RouterViews
   const injectedDepth = isIndependentRoot ? 0 : inject<Signal<number> | number>(viewDepthKey) || 0;
@@ -217,11 +245,60 @@ export const RouterView = (props: RouterViewProps) => {
     matchedRouteRef.value = route?.matched?.[nextDepth];
   });
 
+  let componentLoadId = 0;
+  effect(() => {
+    const matchedRoute = matchedRouteRef.value;
+    const viewName = props.name || 'default';
+    const rawComponent = matchedRoute?.components?.[viewName];
+    const loadId = ++componentLoadId;
+
+    if (!matchedRoute || !rawComponent) {
+      resolvedComponentRef.value = rawComponent as RouteComponent | undefined;
+      return;
+    }
+
+    const applyResolvedComponent = (component: RouteComponent) => {
+      if (loadId !== componentLoadId || matchedRouteRef.value !== matchedRoute) return;
+      matchedRoute.components![viewName] = component;
+      resolvedComponentRef.value = component;
+    };
+
+    const applyAsyncResolvedComponent = (componentPromise: Promise<RouteComponent>) => {
+      resolvedComponentRef.value = null;
+      Promise.resolve(componentPromise)
+        .then((component) => {
+          applyResolvedComponent(component);
+        })
+        .catch((error) => {
+          if (loadId !== componentLoadId || matchedRouteRef.value !== matchedRoute) return;
+          const normalized = normalizeError(error);
+          if (__DEV__) logRouterError('RouterView failed to load component:', normalized);
+          props.onError?.(normalized);
+          resolvedComponentRef.value = null;
+        });
+    };
+
+    try {
+      const resolved = resolveRouteComponent(rawComponent as any, matchedRoute.path, viewName);
+
+      if (isPromiseLikeValue(resolved)) {
+        applyAsyncResolvedComponent(Promise.resolve(resolved));
+      } else {
+        applyResolvedComponent(resolved as RouteComponent);
+      }
+    } catch (error) {
+      const normalized = normalizeError(error);
+      if (__DEV__) logRouterError('RouterView failed to load component:', normalized);
+      props.onError?.(normalized);
+      resolvedComponentRef.value = null;
+    }
+  });
+
   // --- Render ---
   const renderView = computed(() => {
     const matchedRoute = matchedRouteRef.value;
     const viewName = props.name || 'default';
-    const ViewComponent = matchedRoute?.components?.[viewName];
+    const ViewComponent = resolvedComponentRef.value;
 
     const rendered = ViewComponent
       ? safeRenderComponent(

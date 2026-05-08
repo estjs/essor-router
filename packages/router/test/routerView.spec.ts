@@ -74,6 +74,78 @@ describe('routerView - Comprehensive Tests', () => {
       expect(wrapper.text()).toContain('Home');
     });
 
+    it('should render a route component loaded from a promise-returning loader', async () => {
+      router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: () => Promise.resolve(HomeComponent) }],
+      });
+
+      wrapper = mount(() => h(RouterView, { router }));
+      await router.push('/');
+      await sleep(50);
+
+      expect(wrapper.text()).toContain('Home');
+    });
+
+    it('should render a route component loaded from a promise-returning ESM loader', async () => {
+      router = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          {
+            path: '/',
+            name: 'home',
+            component: () =>
+              Promise.resolve({
+                __esModule: true,
+                default: HomeComponent,
+              }),
+          },
+        ],
+      });
+
+      wrapper = mount(() => h(RouterView, { router }));
+      await router.push('/');
+      await sleep(50);
+
+      expect(wrapper.text()).toContain('Home');
+    });
+
+    it('should render a route component loaded from a wrapped promise-returning loader', async () => {
+      const loadPage = vi.fn(() => Promise.resolve(HomeComponent));
+
+      router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: () => loadPage() }],
+      });
+
+      wrapper = mount(() => h(RouterView, { router }));
+      await router.push('/');
+      await sleep(50);
+
+      expect(loadPage).toHaveBeenCalledTimes(1);
+      expect(wrapper.text()).toContain('Home');
+    });
+
+    it('should not treat function components that call Promise utilities as lazy loaders', async () => {
+      const InlineComponent = () => {
+        void Promise.resolve('noop');
+        const div = document.createElement('div');
+        div.textContent = 'Inline';
+        return div;
+      };
+
+      router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: InlineComponent }],
+      });
+
+      wrapper = mount(() => h(RouterView, { router }));
+      await router.push('/');
+      await sleep(50);
+
+      expect(wrapper.text()).toContain('Inline');
+    });
+
     it('should initialize and destroy router', async () => {
       router = createRouter({
         history: createMemoryHistory(),

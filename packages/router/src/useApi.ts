@@ -64,7 +64,9 @@ export function createRouteAccessor(container: RouteContainer): RouteLocationNor
 export function useRouter(): Router {
   const router = inject(routerKey) || activeRouter;
   if (!router) {
-    warn('useRouter() requires an active router instance. Make sure a router is active.');
+    throw new Error(
+      'useRouter() requires an active router instance. Make sure a router is active.',
+    );
   }
   return router;
 }

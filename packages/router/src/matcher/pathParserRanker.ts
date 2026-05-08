@@ -48,10 +48,7 @@ export interface PathParser {
   stringify(params: PathParams): string;
 }
 
-/**
- * @internal
- */
-export interface _PathParserOptions {
+export interface PathParserOptions {
   /**
    * Makes the RegExp case-sensitive.
    *
@@ -67,14 +64,6 @@ export interface _PathParserOptions {
   strict?: boolean;
 
   /**
-   * Should the RegExp match from the beginning by prepending a `^` to it.
-   * @internal
-   *
-   * @defaultValue `true`
-   */
-  start?: boolean;
-
-  /**
    * Should the RegExp match until the end by appending a `$` to it.
    *
    * @deprecated this option will alsways be `true` in the future. Open a discussion in vuejs/router if you need this to be `false`
@@ -84,7 +73,17 @@ export interface _PathParserOptions {
   end?: boolean;
 }
 
-export type PathParserOptions = Pick<_PathParserOptions, 'end' | 'sensitive' | 'strict'>;
+/**
+ * @internal
+ */
+export interface _PathParserOptions extends PathParserOptions {
+  /**
+   * Should the RegExp match from the beginning by prepending a `^` to it.
+   *
+   * @defaultValue `true`
+   */
+  start?: boolean;
+}
 
 // default pattern for a param: non-greedy everything but /
 const BASE_PARAM_PATTERN = '[^/]+?';

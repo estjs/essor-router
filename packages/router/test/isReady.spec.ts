@@ -1,4 +1,4 @@
-import { type RouterHistory, createMemoryHistory, createRouter } from '../src';
+import { type RouterHistory, createMemoryHistory, createRouter, lazyRouteComponent } from '../src';
 import { components } from './utils';
 import type { RouteRecordRaw } from '../src/types';
 
@@ -11,10 +11,9 @@ const routes: RouteRecordRaw[] = [
   { path: '/foo', component, name: 'Foo' },
   {
     path: '/fail-lazy',
-    // eslint-disable-next-line require-await
-    component: async () => {
+    component: lazyRouteComponent(() => {
       throw new Error('async');
-    },
+    }),
   },
 ];
 
@@ -54,7 +53,7 @@ describe('isReady', () => {
     const remove = router.beforeEach(() => {
       throw error;
     });
-    router.push('/foo').catch(() => {});
+    router.push('/foo').catch(() => { });
     await expect(router.isReady()).rejects.toBe(error);
     expect(errorSpy).toHaveBeenCalledTimes(1);
     expect(errorSpy).toHaveBeenCalledWith(
@@ -67,7 +66,7 @@ describe('isReady', () => {
 
     // result can change
     remove();
-    router.push('/foo').catch(() => {});
+    router.push('/foo').catch(() => { });
     await expect(router.isReady()).resolves.toBe(undefined);
     expect(errorSpy).toHaveBeenCalledTimes(1);
   });
@@ -77,7 +76,7 @@ describe('isReady', () => {
     const errorSpy = vitest.fn();
     router.onError(errorSpy);
     const remove = router.beforeEach(() => false);
-    router.push('/foo').catch(() => {});
+    router.push('/foo').catch(() => { });
     await expect(router.isReady()).rejects.toMatchObject({
       to: expect.objectContaining({ path: '/foo' }),
       from: expect.objectContaining({ path: '/' }),
@@ -85,7 +84,7 @@ describe('isReady', () => {
     expect(errorSpy).toHaveBeenCalledTimes(0);
 
     // can be checked again
-    router.push('/foo').catch(() => {});
+    router.push('/foo').catch(() => { });
     await expect(router.isReady()).rejects.toMatchObject({
       to: expect.objectContaining({ path: '/foo' }),
       from: expect.objectContaining({ path: '/' }),
@@ -94,18 +93,21 @@ describe('isReady', () => {
 
     // result can change
     remove();
-    router.push('/foo').catch(() => {});
+    router.push('/foo').catch(() => { });
     await expect(router.isReady()).resolves.toBe(undefined);
     expect(errorSpy).toHaveBeenCalledTimes(0);
   });
 
-  it('rejects failed lazy loading', () => {
+  it('rejects failed lazy loading', async () => {
     const router = newRouter();
     const errorSpy = vitest.fn();
     router.onError(errorSpy);
-    router.push('/fail-lazy').catch(() => {});
-    //TODO: this is not working
-    // await expect(router.isReady()).rejects.toEqual(expect.any(Error));
-    // expect(errorSpy).toHaveBeenCalledTimes(1);
+    router.push('/fail-lazy').catch(() => { });
+
+    await expect(router.isReady()).rejects.toEqual(expect.any(Error));
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+    expect(errorSpy.mock.calls[0]?.[0]).toBeInstanceOf(Error);
+    expect(errorSpy.mock.calls[0]?.[1]).toMatchObject({ path: '/fail-lazy' });
+    expect(errorSpy.mock.calls[0]?.[2]).toMatchObject({ path: '/' });
   });
 });

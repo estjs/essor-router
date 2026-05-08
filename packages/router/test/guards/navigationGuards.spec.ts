@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { lazyRouteComponent } from '../../src';
 import {
   extractComponentsGuards,
   guardToPromiseFn,
@@ -312,6 +313,29 @@ describe('navigationGuards', () => {
       expect(mockGuard).toHaveBeenCalled();
     });
 
+    it('should extract guards from promise-returning component loaders', async () => {
+      const mockGuard = vi.fn((to, from, next) => next());
+      const mockComponent = lazyRouteComponent(() =>
+        Promise.resolve({
+          beforeRouteEnter: mockGuard,
+        }),
+      );
+
+      const mockRecord: RouteRecordNormalized = {
+        path: '/test',
+        components: { default: mockComponent },
+        instances: {},
+        children: [],
+        enterCallbacks: {},
+      } as any;
+
+      const guards = extractComponentsGuards([mockRecord], 'beforeRouteEnter', mockTo, mockFrom);
+      expect(guards).toHaveLength(1);
+
+      await guards[0]();
+      expect(mockGuard).toHaveBeenCalled();
+    });
+
     it('should handle ES modules with default export', async () => {
       const mockGuard = vi.fn((to, from, next) => next());
       const mockComponent = Promise.resolve({
@@ -419,6 +443,20 @@ describe('navigationGuards', () => {
       expect(isRouteComponent(component)).toBe(false);
     });
 
+    it('should return false for branded route component loaders', () => {
+      const component = lazyRouteComponent(() => Promise.resolve({ default: (() => null) as any }));
+      expect(isRouteComponent(component)).toBe(false);
+    });
+
+    it('should return true for function components that use Promise utilities', () => {
+      const component = () => {
+        void Promise.resolve('noop');
+        return document.createElement('div');
+      };
+
+      expect(isRouteComponent(component as any)).toBe(true);
+    });
+
     it('should return false for non-functions', () => {
       expect(isRouteComponent({} as any)).toBe(false);
       expect(isRouteComponent('string' as any)).toBe(false);
@@ -475,6 +513,63 @@ describe('navigationGuards', () => {
     it('should load lazy components', async () => {
       const mockComponent = { name: 'LazyComponent' };
       const lazyComponent = Promise.resolve(mockComponent);
+
+      const mockRecord = {
+        path: '/test',
+        components: { default: lazyComponent },
+      };
+
+      const mockRoute: RouteLocationNormalized = {
+        path: '/test',
+        name: 'test',
+        params: {},
+        query: {},
+        hash: '',
+        fullPath: '/test',
+        matched: [mockRecord as any],
+        meta: {},
+        redirectedFrom: undefined,
+      };
+
+      const result = await loadRouteLocation(mockRoute);
+      expect(result).toBe(mockRoute);
+      expect(mockRecord.components.default).toBe(mockComponent);
+    });
+
+    it('should load promise-returning component loaders', async () => {
+      const mockComponent = { name: 'LazyComponent' };
+      const lazyComponent = lazyRouteComponent(() => Promise.resolve(mockComponent));
+
+      const mockRecord = {
+        path: '/test',
+        components: { default: lazyComponent },
+      };
+
+      const mockRoute: RouteLocationNormalized = {
+        path: '/test',
+        name: 'test',
+        params: {},
+        query: {},
+        hash: '',
+        fullPath: '/test',
+        matched: [mockRecord as any],
+        meta: {},
+        redirectedFrom: undefined,
+      };
+
+      const result = await loadRouteLocation(mockRoute);
+      expect(result).toBe(mockRoute);
+      expect(mockRecord.components.default).toBe(mockComponent);
+    });
+
+    it('should load promise-returning ESM component loaders', async () => {
+      const mockComponent = { name: 'LazyComponent' };
+      const lazyComponent = lazyRouteComponent(() =>
+        Promise.resolve({
+          __esModule: true,
+          default: mockComponent,
+        }),
+      );
 
       const mockRecord = {
         path: '/test',
