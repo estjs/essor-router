@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { resolveOptions } from '../../src/options';
-import { TreeNode } from '../../src/core/tree';
+import { PrefixTree, TreeNode } from '../../src/core/tree';
 
 describe('file routing tree', () => {
   it('builds root index and dynamic param paths', () => {
@@ -42,5 +42,25 @@ describe('file routing tree', () => {
     expect(node.fullPath).toBe('/users/:id(\\d+)');
     expect(node.path).toBe(':id(\\d+)');
     expect(root.getChildrenSorted()[0]?.path).toBe('/users');
+  });
+
+  it('removes file overrides when removing a mapped child', () => {
+    const root = new PrefixTree(resolveOptions({}));
+    const defaultFile = '/src/pages/dashboard/index.tsx';
+    const sidebarFile = '/src/pages/dashboard/index@sidebar.tsx';
+
+    const node = root.insert('dashboard/index', defaultFile);
+    root.insert('dashboard/index@sidebar', sidebarFile);
+    node.setCustomRouteBlock(defaultFile, { name: 'dashboard' });
+    node.setCustomRouteBlock(sidebarFile, { meta: { view: 'sidebar' } });
+
+    expect(node.value.overrides.name).toBe('dashboard');
+    expect(node.value.overrides.meta).toEqual({ view: 'sidebar' });
+
+    root.removeChild(defaultFile);
+
+    expect(node.value.overrides.name).toBeUndefined();
+    expect(node.value.overrides.meta).toEqual({ view: 'sidebar' });
+    expect(node.components).toMatchObject({ sidebar: sidebarFile });
   });
 });

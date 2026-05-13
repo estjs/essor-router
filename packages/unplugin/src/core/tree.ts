@@ -564,6 +564,7 @@ export class PrefixTree extends TreeNode {
           break;
         }
       }
+      node.value.deleteOverride(filePath);
 
       this.map.delete(filePath);
 

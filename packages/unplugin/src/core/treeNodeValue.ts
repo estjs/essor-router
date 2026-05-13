@@ -227,6 +227,12 @@ class _TreeNodeValueBase {
     this._overridesDirty = true;
   }
 
+  deleteOverride(filePath: string) {
+    if (this._overrides.delete(filePath)) {
+      this._overridesDirty = true;
+    }
+  }
+
   /**
    * Remove all overrides for a given key.
    *

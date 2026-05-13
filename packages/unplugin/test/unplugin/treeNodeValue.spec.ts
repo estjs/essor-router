@@ -82,6 +82,15 @@ describe('treeNodeValue parsing', () => {
     expect(node.overrides.name).toBeUndefined();
   });
 
+  it('invalidates overrides cache on deleteOverride', () => {
+    const node = createTreeNodeValue('test');
+    node.setOverride('file1', { path: '/first', name: 'firstName' } as any);
+    node.setOverride('file2', { path: '/second', name: 'secondName' } as any);
+    expect(node.overrides.name).toBe('secondName');
+    node.deleteOverride('file2');
+    expect(node.overrides.name).toBe('firstName');
+  });
+
   it('caches re and score for param nodes', () => {
     const node = createTreeNodeValue(':id', undefined, { format: 'path' });
     expect(node.isParam()).toBe(true);
