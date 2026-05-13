@@ -1,6 +1,5 @@
 import { toRaw } from 'essor';
 import { ErrorTypes, type NavigationFailure, isNavigationFailure } from '../errors';
-import { isSameRouteRecord } from '../location';
 import { extractComponentsGuards, guardToPromiseFn } from '../navigationGuards';
 import { isArray } from '../utils';
 import { useCallbacks } from '../utils/callbacks';
@@ -150,21 +149,22 @@ function extractChangingRecords(to: RouteLocationNormalized, from: RouteLocation
   const updatingRecords: RouteRecordNormalized[] = [];
   const enteringRecords: RouteRecordNormalized[] = [];
 
-  const len = Math.max(from.matched.length, to.matched.length);
-  for (let i = 0; i < len; i++) {
-    const recordFrom = from.matched[i];
-    if (recordFrom) {
-      if (to.matched.some((record) => isSameRouteRecord(toRaw(record), toRaw(recordFrom)))) {
-        updatingRecords.push(recordFrom);
-      } else {
-        leavingRecords.push(recordFrom);
-      }
+  // Build identity Sets for O(1) lookups instead of O(n) .some() calls
+  const toRawRecords = new Set(to.matched.map((r) => toRaw(r).aliasOf || toRaw(r)));
+  const fromRawRecords = new Set(from.matched.map((r) => toRaw(r).aliasOf || toRaw(r)));
+
+  for (const recordFrom of from.matched) {
+    const rawFrom = toRaw(recordFrom).aliasOf || toRaw(recordFrom);
+    if (toRawRecords.has(rawFrom)) {
+      updatingRecords.push(recordFrom);
+    } else {
+      leavingRecords.push(recordFrom);
     }
-    const recordTo = to.matched[i];
-    if (
-      recordTo &&
-      !from.matched.some((record) => isSameRouteRecord(toRaw(record), toRaw(recordTo)))
-    ) {
+  }
+
+  for (const recordTo of to.matched) {
+    const rawTo = toRaw(recordTo).aliasOf || toRaw(recordTo);
+    if (!fromRawRecords.has(rawTo)) {
       enteringRecords.push(recordTo);
     }
   }

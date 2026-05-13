@@ -86,8 +86,6 @@ export type RouteLocationNormalizedTyped = HasTypedRoutes extends true
     }[keyof RouteNamedMap]
   : RouteLocationNormalizedLoaded;
 
-export type TODO = any;
-
 /**
 
  */

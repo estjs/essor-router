@@ -57,6 +57,7 @@ describe('file routing tree', () => {
     expect(node.value.overrides.name).toBe('dashboard');
     expect(node.value.overrides.meta).toEqual({ view: 'sidebar' });
 
+    // eslint-disable-next-line unicorn/prefer-dom-node-remove
     root.removeChild(defaultFile);
 
     expect(node.value.overrides.name).toBeUndefined();

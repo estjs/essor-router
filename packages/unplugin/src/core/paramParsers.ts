@@ -1,10 +1,10 @@
-import { type Stats } from 'node:fs';
-import { watch as fsWatch, type FSWatcher } from 'chokidar';
+import { type FSWatcher, watch as fsWatch } from 'chokidar';
 import { camelCase } from '@estjs/shared';
 import { parse as parsePathe, relative, resolve } from 'pathe';
 import picomatch from 'picomatch';
 import { glob } from 'tinyglobby';
 import { getPollingWatchOptions } from './watcherOptions';
+import type { Stats } from 'node:fs';
 import type { ParamParsersMap } from '../codegen/generateParamParsers';
 
 export const PARAM_PARSER_GLOB = '*.{ts,js}';

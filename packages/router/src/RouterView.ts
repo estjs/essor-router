@@ -24,7 +24,7 @@ import {
   type RouteLocationNormalized,
   START_LOCATION_NORMALIZED,
 } from './types';
-import { isESModule } from './utils';
+import { isESModule, isPromiseLike, normalizeError } from './utils';
 import { resolveRouteComponent } from './navigationGuards';
 import { logRouterError } from './warning';
 import type { Router } from './router';
@@ -102,7 +102,7 @@ function invokeComponent(component: RouteComponent, props: Record<string, unknow
   }
 
   const rendered = (component as (p: Record<string, unknown>) => unknown)(props);
-  if (!isPromiseLikeValue(rendered)) {
+  if (!isPromiseLike(rendered)) {
     return rendered;
   }
 
@@ -119,14 +119,6 @@ function invokeComponent(component: RouteComponent, props: Record<string, unknow
   );
 
   return createComponent(AsyncRouteComponent, props);
-}
-
-function normalizeError(error: unknown): Error {
-  return error instanceof Error ? error : new Error(String(error));
-}
-
-function isPromiseLikeValue(value: unknown): value is Promise<unknown> {
-  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
 }
 
 /**
@@ -159,13 +151,7 @@ function safeRenderComponent(
     }
   };
 
-  try {
-    return createComponent(SafeWrapper, {});
-  } catch (error) {
-    if (__DEV__) logRouterError('RouterView failed to render component:', normalizeError(error));
-    onError?.(normalizeError(error));
-    return null;
-  }
+  return createComponent(SafeWrapper, {});
 }
 
 // ---------------------------------------------------------------------------
@@ -281,7 +267,7 @@ export const RouterView = (props: RouterViewProps) => {
     try {
       const resolved = resolveRouteComponent(rawComponent as any, matchedRoute.path, viewName);
 
-      if (isPromiseLikeValue(resolved)) {
+      if (isPromiseLike(resolved)) {
         applyAsyncResolvedComponent(Promise.resolve(resolved));
       } else {
         applyResolvedComponent(resolved as RouteComponent);

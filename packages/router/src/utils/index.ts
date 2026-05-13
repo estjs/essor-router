@@ -1,4 +1,4 @@
-import { isArray, isObject } from '@estjs/shared';
+import { isArray, isFunction, isObject } from '@estjs/shared';
 import type { RouteComponent, RouteParamValueRaw, RouteParams, RouteParamsRaw } from '../types';
 
 export * from './env';
@@ -41,4 +41,18 @@ export { isArray, isObject, isString, isFunction } from '@estjs/shared';
 
 export function isAsyncFunction(fn: Function): boolean {
   return _toString.call(fn) === '[object AsyncFunction]';
+}
+
+/**
+ * Checks if a value is a Promise-like object (thenable).
+ */
+export function isPromiseLike(value: unknown): value is Promise<unknown> {
+  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
+}
+
+/**
+ * Normalizes an unknown error value into an Error instance.
+ */
+export function normalizeError(error: unknown): Error {
+  return error instanceof Error ? error : new Error(String(error));
 }

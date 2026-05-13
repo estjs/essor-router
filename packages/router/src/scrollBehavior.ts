@@ -115,14 +115,12 @@ function getElementPosition(
  */
 function validateElementSelector(selector: string, isIdSelector: boolean): boolean {
   try {
-    if (!isIdSelector || !document.querySelector(selector)) {
-      const foundEl = document.querySelector(selector);
-      if (isIdSelector && foundEl) {
-        warn(
-          `The selector "${selector}" should be passed as "el: document.querySelector('${selector}')" because it starts with "#".`,
-        );
-        return false;
-      }
+    const el = document.querySelector(selector);
+    if (!el && isIdSelector) {
+      warn(
+        `The selector "${selector}" should be passed as "el: document.querySelector('${selector}')" because it starts with "#".`,
+      );
+      return false;
     }
   } catch {
     warn(

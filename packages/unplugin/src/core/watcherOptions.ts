@@ -1,5 +1,6 @@
+import process from 'node:process';
 function getEnv(name: string): string | undefined {
-  return globalThis.process?.env?.[name];
+  return process?.env?.[name];
 }
 
 export function shouldUsePollingWatcher() {

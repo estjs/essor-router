@@ -1,4 +1,4 @@
-import { cwd } from 'node:process';
+import process, { cwd } from 'node:process';
 import { isPackageExists as isPackageInstalled } from 'local-pkg';
 import { resolve } from 'pathe';
 import { isFunction, isString } from '@estjs/shared';
@@ -296,7 +296,7 @@ export const DEFAULT_OPTIONS = {
   pathParser: {
     dotNesting: true,
   },
-  watch: !globalThis.process?.env?.CI,
+  watch: !process?.env?.CI,
   mode: 'file' as 'file' | 'config',
   experimental: {},
 } satisfies Options;

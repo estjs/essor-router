@@ -7,11 +7,11 @@ export class LRUCache<K, V> {
   }
 
   get(key: K): V | undefined {
-    const value = this._map.get(key);
-    if (value !== undefined) {
-      this._map.delete(key);
-      this._map.set(key, value);
-    }
+    if (!this._map.has(key)) return undefined;
+    const value = this._map.get(key)!;
+    // Move to end (most recently used)
+    this._map.delete(key);
+    this._map.set(key, value);
     return value;
   }
 

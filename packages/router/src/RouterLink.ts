@@ -1,7 +1,7 @@
 import { computed, createComponent, effect, onDestroy, signal, stop } from 'essor';
 import { isSameRouteLocationParams, isSameRouteRecord } from './location';
 import { isArray, noop } from './utils';
-import { warn } from './warning';
+import { logRouterError, warn } from './warning';
 import { createRouteAccessor, useRoute, useRouter } from './useApi';
 import { LinkComponent } from './linkComponent';
 import { usePrefetch } from './router/usePrefetch';
@@ -10,12 +10,6 @@ import type { Router } from './router';
 import type { RouteRecord } from './matcher/types';
 import type { NavigationFailure } from './errors';
 import type { RouteLocationNormalized, RouteLocationRawTyped } from './types';
-
-function logRouterError(...args: unknown[]) {
-  if (__DEV__) {
-    console.error(...args);
-  }
-}
 
 // Define specific types for RouterLink children
 export type RouterLinkChildren =
@@ -263,11 +257,6 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
 
     const to = peekTo(props.to);
 
-    if (!router) {
-      if (__DEV__) warn('Router is not available for navigation');
-      return Promise.resolve();
-    }
-
     const doNav = () => (props.replace ? router.replace(to) : router.push(to)).catch(noop);
 
     if (
@@ -404,30 +393,27 @@ export const RouterLink = (props: RouterLinkProps): any => {
    * Computed class string combining user classes and active states
    */
   const buildClass = () => {
-    const classes: string[] = [];
+    let result = props.class || '';
 
-    // Add user-provided class first
-    if (props.class) {
-      classes.push(props.class);
-    }
-
-    // Add active class
     if (link.isActive.value) {
-      classes.push(getLinkClass(props.activeClass, options?.linkActiveClass, 'router-link-active'));
-    }
-
-    // Add exact active class
-    if (link.isExactActive.value) {
-      classes.push(
-        getLinkClass(
-          props.exactActiveClass,
-          options?.linkExactActiveClass,
-          'router-link-exact-active',
-        ),
+      const activeClass = getLinkClass(
+        props.activeClass,
+        options?.linkActiveClass,
+        'router-link-active',
       );
+      result = result ? `${result} ${activeClass}` : activeClass;
     }
 
-    return classes.join(' ');
+    if (link.isExactActive.value) {
+      const exactClass = getLinkClass(
+        props.exactActiveClass,
+        options?.linkExactActiveClass,
+        'router-link-exact-active',
+      );
+      result = result ? `${result} ${exactClass}` : exactClass;
+    }
+
+    return result;
   };
 
   const elClass = signal(buildClass());

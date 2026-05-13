@@ -37,8 +37,7 @@ import type { NavigationFailure } from './errors';
 import type { RouterHistory } from './history/common';
 import type { PathParserOptions } from './matcher/pathParserRanker';
 
-export type { ErrorListener };
-export type { ErrorListener as _ErrorListener };
+export type { ErrorListener, ErrorListener as _ErrorListener };
 
 // ---------------------------------------------------------------------------
 // Types

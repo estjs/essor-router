@@ -4,9 +4,8 @@ import type {
   RouteRecordMultipleViews,
   RouteRecordRaw,
   _RouteRecordBase,
+  _RouteRecordProps,
 } from '../types';
-
-type _RouteRecordProps = any;
 
 // normalize component/components into components and make every property always present
 /**

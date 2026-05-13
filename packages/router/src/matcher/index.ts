@@ -12,14 +12,13 @@ import { assign, noop } from '../utils';
 import { type RouteRecordMatcher, createRouteRecordMatcher } from './pathMatcher';
 import { comparePathParserScore } from './pathParserRanker';
 import {
-  checkChildMissingNameWithEmptyPath as validateChildMissingNameWithEmptyPath,
-  isRecordChildOf as validateIsRecordChildOf,
-  checkMissingParamsInAbsolutePath as validateMissingParamsInAbsolutePath,
-  checkSameParams as validateSameParams,
+  checkChildMissingNameWithEmptyPath,
+  checkMissingParamsInAbsolutePath,
+  checkSameParams,
+  isRecordChildOf,
 } from './validation';
 import type { RouteRecordNormalized } from './types';
 import type { PathParams, PathParserOptions } from './pathParserRanker';
-type _RouteRecordProps = any;
 
 /**
  * Internal RouterMatcher
@@ -77,7 +76,7 @@ export function createRouterMatcher(
     const isRootAdd = !originalRecord;
     const mainNormalizedRecord = normalizeRouteRecord(record);
     if (__DEV__) {
-      validateChildMissingNameWithEmptyPath(mainNormalizedRecord, parent);
+      checkChildMissingNameWithEmptyPath(mainNormalizedRecord, parent);
     }
     // we might be the child of an alias
     mainNormalizedRecord.aliasOf = originalRecord && originalRecord.record;
@@ -127,15 +126,14 @@ export function createRouterMatcher(
       // create the object beforehand, so it can be passed to children
       matcher = createRouteRecordMatcher(normalizedRecord, parent, options);
 
-      if (__DEV__ && parent && path[0] === '/')
-        validateMissingParamsInAbsolutePath(matcher, parent);
+      if (__DEV__ && parent && path[0] === '/') checkMissingParamsInAbsolutePath(matcher, parent);
 
       // if we are an alias we must tell the original record that we exist,
       // so we can be removed
       if (originalRecord) {
         originalRecord.alias.push(matcher);
         if (__DEV__) {
-          validateSameParams(originalRecord, matcher);
+          checkSameParams(originalRecord, matcher);
         }
       } else {
         // otherwise, the first record is the original and others are aliases
@@ -213,8 +211,7 @@ export function createRouterMatcher(
       i < matchers.length &&
       comparePathParserScore(matcher, matchers[i]) >= 0 &&
       // Adding children with empty path should still appear before the parent
-      (matcher.record.path !== matchers[i].record.path ||
-        !validateIsRecordChildOf(matcher, matchers[i]))
+      (matcher.record.path !== matchers[i].record.path || !isRecordChildOf(matcher, matchers[i]))
     )
       i++;
     matchers.splice(i, 0, matcher);
@@ -388,15 +385,13 @@ export function normalizeRouteRecord(record: RouteRecordRaw): RouteRecordNormali
  * components. Also accept a boolean for components.
  * @param record
  */
-function normalizeRecordProps(record: RouteRecordRaw): Record<string, _RouteRecordProps> {
-  const propsObject = {} as Record<string, _RouteRecordProps>;
+function normalizeRecordProps(record: RouteRecordRaw): Record<string, any> {
+  const propsObject = {} as Record<string, any>;
   // props does not exist on redirect records, but we can set false directly
   const props = record.props || false;
   if ('component' in record) {
     propsObject.default = props;
   } else {
-    // NOTE: we could also allow a function to be applied to every component.
-    // Would need user feedback for use cases
     for (const name in record.components) propsObject[name] = isObject(props) ? props[name] : props;
   }
 
@@ -432,63 +427,4 @@ function mergeOptions<T extends object>(defaults: T, partialOptions: Partial<T>)
   }
 
   return options;
-}
-
-type ParamKey = RouteRecordMatcher['keys'][number];
-
-function isSameParam(a: ParamKey, b: ParamKey): boolean {
-  return a.name === b.name && a.optional === b.optional && a.repeatable === b.repeatable;
-}
-
-/**
- * Check if a path and its alias have the same required params
- *
- * @param a - original record
- * @param b - alias record
- */
-function checkSameParams(a: RouteRecordMatcher, b: RouteRecordMatcher) {
-  for (const key of a.keys) {
-    if (!key.optional && !b.keys.some(isSameParam.bind(null, key)))
-      return warn(
-        `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"`,
-      );
-  }
-  for (const key of b.keys) {
-    if (!key.optional && !a.keys.some(isSameParam.bind(null, key)))
-      return warn(
-        `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"`,
-      );
-  }
-}
-
-/**
- * A route with a name and a child with an empty path without a name should warn when adding the route
- *
- * @param mainNormalizedRecord - RouteRecordNormalized
- * @param parent - RouteRecordMatcher
- */
-function checkChildMissingNameWithEmptyPath(
-  mainNormalizedRecord: RouteRecordNormalized,
-  parent?: RouteRecordMatcher,
-) {
-  if (parent && parent.record.name && !mainNormalizedRecord.name && !mainNormalizedRecord.path) {
-    warn(
-      `The route named "${String(
-        parent.record.name,
-      )}" has a child without a name and an empty path. Using that name won't render the empty path child so you probably want to move the name to the child instead. If this is intentional, add a name to the child route to remove the warning.`,
-    );
-  }
-}
-
-function checkMissingParamsInAbsolutePath(record: RouteRecordMatcher, parent: RouteRecordMatcher) {
-  for (const key of parent.keys) {
-    if (!record.keys.some(isSameParam.bind(null, key)))
-      return warn(
-        `Absolute path "${record.record.path}" must have the exact same param named "${key.name}" as its parent "${parent.record.path}".`,
-      );
-  }
-}
-
-function isRecordChildOf(record: RouteRecordMatcher, parent: RouteRecordMatcher): boolean {
-  return parent.children.some((child) => child === record || isRecordChildOf(record, child));
 }

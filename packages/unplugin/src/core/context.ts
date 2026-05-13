@@ -283,15 +283,15 @@ export function createRoutesContext(options: ResolvedOptions) {
     // unlinkDir event
   }
 
-  async function generateResolver() {
+  function generateResolver() {
     return generateResolverModule(routeTree, options, paramParsersMap);
   }
 
-  async function generateRoutes() {
+  function generateRoutes() {
     return generateRoutesModule(routeTree, options);
   }
 
-  async function generateDTS() {
+  function generateDTS() {
     return generateTypedRouterDts(routeTree, options, paramParsersMap);
   }
 

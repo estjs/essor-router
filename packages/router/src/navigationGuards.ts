@@ -21,7 +21,7 @@ import {
   type NavigationRedirectError,
   createRouterError,
 } from './errors';
-import { isAsyncFunction, isESModule } from './utils';
+import { isAsyncFunction, isESModule, isPromiseLike } from './utils';
 import { warn } from './warning';
 import { matchedRouteKey } from './injectionSymbols';
 import type { RouteRecordNormalized } from './matcher/types';
@@ -174,7 +174,7 @@ export function guardToPromiseFn(
         const message = `The "next" callback was never called inside of ${
           guard.name ? `"${guard.name}"` : ''
         }:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
-        if (isPromiseLikeValue(guardReturn)) {
+        if (isPromiseLike(guardReturn)) {
           guardCall = guardCall.then((resolvedValue: NavigationGuardReturn) => {
             // @ts-expect-error: _called is added at canOnlyBeCalledOnce
             if (!next._called) {
@@ -193,16 +193,6 @@ export function guardToPromiseFn(
       }
       guardCall.catch((error: Error) => reject(error));
     });
-}
-
-function isPromiseLikeComponent(
-  value: unknown,
-): value is Promise<RouteComponentModule | null | undefined | void> {
-  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
-}
-
-function isPromiseLikeValue(value: unknown): value is Promise<unknown> {
-  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
 }
 
 function normalizeResolvedRouteComponent(resolved: RouteComponentModule): RouteComponent {
@@ -240,7 +230,7 @@ export function resolveRouteComponent(
     ).then(normalizeOrThrow);
   }
 
-  if (isPromiseLikeComponent(rawComponent)) {
+  if (isPromiseLike(rawComponent)) {
     return Promise.resolve(rawComponent).then(normalizeOrThrow);
   }
 
@@ -253,15 +243,14 @@ function canOnlyBeCalledOnce(
   from: RouteLocationNormalized,
 ): NavigationGuardNext {
   let called = 0;
-  return function () {
+  return function (...args: any[]) {
     if (called++ === 1)
       warn(
         `The "next" callback was called more than once in one navigation guard when going from "${from.fullPath}" to "${to.fullPath}". It should be called exactly one time in each navigation guard. This will fail in production.`,
       );
     // @ts-expect-error: we put it in the original one because it's easier to check
     next._called = true;
-    // eslint-disable-next-line prefer-spread, prefer-rest-params
-    if (called === 1) next.apply(null, arguments as any);
+    if (called === 1) (next as any)(...args);
   };
 }
 
@@ -355,7 +344,7 @@ export function loadRouteLocation(
                     name,
                   );
 
-                  if (isPromiseLikeComponent(resolved)) {
+                  if (isPromiseLike(resolved)) {
                     promises.push(
                       resolved.then((resolvedComponent) => {
                         record.components![name] = resolvedComponent;

@@ -48,8 +48,6 @@ export function parseURL(
     searchString = '',
     hash = '';
 
-  // Could use URL and URLSearchParams but IE 11 doesn't support it
-  // TODO: move to new URL()
   const hashPos = location.indexOf('#');
   let searchPos = location.indexOf('?');
   // the hash appears before the search, so it's not part of the search string
