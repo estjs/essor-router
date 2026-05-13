@@ -1,5 +1,5 @@
 import { inject, onDestroy } from 'essor';
-import { isFunction, isObject, isPromise } from '@estjs/shared';
+import { isFunction, isObject } from '@estjs/shared';
 import {
   type NavigationGuard,
   type NavigationGuardNext,
@@ -174,7 +174,7 @@ export function guardToPromiseFn(
         const message = `The "next" callback was never called inside of ${
           guard.name ? `"${guard.name}"` : ''
         }:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
-        if (isPromise(guardReturn)) {
+        if (isPromiseLikeValue(guardReturn)) {
           guardCall = guardCall.then((resolvedValue: NavigationGuardReturn) => {
             // @ts-expect-error: _called is added at canOnlyBeCalledOnce
             if (!next._called) {
@@ -198,6 +198,10 @@ export function guardToPromiseFn(
 function isPromiseLikeComponent(
   value: unknown,
 ): value is Promise<RouteComponentModule | null | undefined | void> {
+  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
+}
+
+function isPromiseLikeValue(value: unknown): value is Promise<unknown> {
   return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
 }
 

@@ -37,7 +37,7 @@ export const noop = () => {};
  */
 export const _toString = Object.prototype.toString;
 
-export { isArray, isObject, isString, isFunction, isPromise } from '@estjs/shared';
+export { isArray, isObject, isString, isFunction } from '@estjs/shared';
 
 export function isAsyncFunction(fn: Function): boolean {
   return _toString.call(fn) === '[object AsyncFunction]';
