@@ -1,4 +1,4 @@
-import process from 'node:process';
+import { cwd } from 'node:process';
 import { createFilter } from 'unplugin-utils';
 import MagicString from 'magic-string';
 import { findStaticImports, parseStaticImport } from 'mlly';
@@ -78,7 +78,7 @@ function isObjectFilter(filter: StringFilter): filter is {
 export function AutoExportLoaders({
   transformFilter,
   loadersPathsGlobs,
-  root = process.cwd(),
+  root = cwd(),
 }: AutoExportLoadersOptions): Plugin {
   const filterPaths = createFilter(loadersPathsGlobs);
   const isTransformTarget = isObjectFilter(transformFilter)

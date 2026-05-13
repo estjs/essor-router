@@ -1,9 +1,9 @@
-import process from 'node:process';
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
 import picomatch from 'picomatch';
 import path, { resolve } from 'pathe';
 import { isFunction, isString, isUndefined } from '@estjs/shared';
 import { appendExtensionListToPattern, asRoutePath } from './utils';
+import { getPollingWatchOptions } from './watcherOptions';
 import type { Stats } from 'node:fs';
 import type { ResolvedOptions, RoutesFolderOption, RoutesFolderOptionResolved } from '../options';
 // TODO: export an implementable interface to create a watcher and let users provide a different watcher than chokidar to improve performance on windows
@@ -36,9 +36,8 @@ export class RoutesFolderWatcher {
       cwd: this.src,
       ignoreInitial: true,
       ignorePermissionErrors: true,
-      // usePolling: !!process.env.CI,
-      // interval: process.env.CI ? 100 : undefined,
-      awaitWriteFinish: !!process.env.CI,
+      ...getPollingWatchOptions(),
+      awaitWriteFinish: !!globalThis.process?.env?.CI,
       ignored: (filePath: string, stats?: Stats) => {
         // let folders pass, they are ignored by the glob pattern
         if (!stats || stats.isDirectory()) {

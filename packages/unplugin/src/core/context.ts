@@ -1,9 +1,8 @@
-import { type Stats, promises as fs } from 'node:fs';
+import { promises as fs } from 'node:fs';
 import { glob } from 'tinyglobby';
-import { dirname, parse as parsePathe, relative, resolve } from 'pathe';
+import { dirname, relative, resolve } from 'pathe';
 import { type FSWatcher, watch as fsWatch } from 'chokidar';
-import picomatch from 'picomatch';
-import { camelCase, isFunction } from '@estjs/shared';
+import { isFunction } from '@estjs/shared';
 import { EditableTreeNode } from './extendRoutes';
 import { definePageTransform, extractDefinePageInfo } from './definePage';
 import {
@@ -11,9 +10,17 @@ import {
   RoutesFolderWatcher,
   resolveFolderOptions,
 } from './RoutesFolderWatcher';
-import { ImportsMap, asRoutePath, logTree, throttle } from './utils';
+import { asRoutePath, logTree, throttle } from './utils';
 import { PrefixTree, type TreeNode } from './tree';
 import { loadConfigRoutes } from './configSource';
+import { generateTypedRouterDts } from './dts';
+import { generateResolverModule, generateRoutesModule } from './virtualModules';
+import {
+  createParamParserWatcher,
+  deleteParamParserFile,
+  scanParamParserFolder,
+  setParamParserFile,
+} from './paramParsers';
 import type { ParamParsersMap } from '../codegen/generateParamParsers';
 import type { ResolvedOptions, ServerContext } from '../options';
 
@@ -74,9 +81,6 @@ export function createRoutesContext(options: ResolvedOptions) {
     }
 
     // ── File-based routing (existing logic, unchanged) ────────────────────────
-    const PARAM_PARSER_GLOB = '*.{ts,js}';
-    const isParamParserMatch = picomatch(PARAM_PARSER_GLOB);
-
     // get the initial list of pages
     await Promise.all([
       ...routesFolder
@@ -114,43 +118,10 @@ export function createRoutesContext(options: ResolvedOptions) {
         }),
       ...(options.experimental.paramParsers?.dir.map((folder) => {
         if (startWatchers) {
-          watchers.push(
-            setupParamParserWatcher(
-              fsWatch('.', {
-                cwd: folder,
-                ignoreInitial: true,
-                ignorePermissionErrors: true,
-                ignored: (filePath: string, stats?: Stats) => {
-                  // let folders pass, they are ignored by the glob pattern
-                  if (!stats || stats.isDirectory()) {
-                    return false;
-                  }
-
-                  return !isParamParserMatch(relative(folder, filePath));
-                },
-              }),
-              folder,
-            ),
-          );
+          watchers.push(setupParamParserWatcher(folder));
         }
 
-        return glob(PARAM_PARSER_GLOB, {
-          cwd: folder,
-          onlyFiles: true,
-          expandDirectories: false,
-        }).then((paramParserFiles) => {
-          for (const file of paramParserFiles) {
-            const fileName = parsePathe(file).name;
-            const name = camelCase(fileName);
-            // TODO: could be simplified to only one import that starts with / for vite
-            const absolutePath = resolve(folder, file);
-            paramParsersMap.set(fileName, {
-              name,
-              typeName: `Param_${name}`,
-              absolutePath,
-              relativePath: relative(dtsDir, absolutePath),
-            });
-          }
+        return scanParamParserFolder(paramParsersMap, folder, dtsDir).then(() => {
           logger.log(
             'Parsed param parsers',
             [...paramParsersMap].map((p) => p[0]),
@@ -270,27 +241,21 @@ export function createRoutesContext(options: ResolvedOptions) {
     }
   }
 
-  function setupParamParserWatcher(watcher: FSWatcher, cwd: string) {
-    logger.log(`🤖 Scanning param parsers in ${cwd}`);
-    return watcher
-      .on('add', (file) => {
-        const fileName = parsePathe(file).name;
-        const name = camelCase(fileName);
-        const absolutePath = resolve(cwd, file);
-        paramParsersMap.set(fileName, {
-          name,
-          typeName: `Param_${name}`,
-          absolutePath,
-          relativePath: relative(dtsDir, absolutePath),
-        });
+  function setupParamParserWatcher(folder: string) {
+    logger.log(`🤖 Scanning param parsers in ${folder}`);
+    return createParamParserWatcher(
+      folder,
+      (file) => {
+        setParamParserFile(paramParsersMap, folder, file, dtsDir);
         writeConfigFiles();
         server?.updateRoutes();
-      })
-      .on('unlink', (file) => {
-        paramParsersMap.delete(parsePathe(file).name);
+      },
+      (file) => {
+        deleteParamParserFile(paramParsersMap, file);
         writeConfigFiles();
         server?.updateRoutes();
-      });
+      },
+    );
   }
 
   function setupWatcher(watcher: RoutesFolderWatcher) {
@@ -318,150 +283,16 @@ export function createRoutesContext(options: ResolvedOptions) {
     // unlinkDir event
   }
 
-  /**
-   * Generates the shared handleHotUpdate function snippet used for HMR.
-   */
-  function hmrHandleHotUpdate(): string {
-    return `export function handleHotUpdate(_router, _hotUpdateCallback) {
-  if (import.meta.hot) {
-    import.meta.hot.data.router = _router
-    import.meta.hot.data.router_hotUpdateCallback = _hotUpdateCallback
-  }
-}`;
-  }
-
-  /**
-   * Generates the shared HMR accept snippet with the given module-specific reload logic.
-   * @param reloadModuleName - the name to use in the error message ('routes' or 'resolver')
-   * @param reloadBody - the module-specific reload logic to run inside the accept callback
-   */
-  function hmrAccept(reloadModuleName: string, reloadBody: string): string {
-    return `if (import.meta.hot) {
-  import.meta.hot.accept((mod) => {
-    const router = import.meta.hot.data.router
-    if (!router) {
-      import.meta.hot.invalidate('[essor-router:HMR] Cannot replace the ${reloadModuleName} because there is no active router. Reloading.')
-      return
-    }
-    ${reloadBody}
-    // call the hotUpdateCallback for custom updates
-    import.meta.hot.data.router_hotUpdateCallback?.(mod.${reloadModuleName === 'routes' ? 'routes' : 'resolver'})
-    const route = router.currentRoute.value
-    router.replace({
-      ${
-        reloadModuleName === 'routes'
-          ? `...route,
-      // NOTE: we should be able to just do ...route but the router
-      // currently skips resolving and can give errors with renamed routes
-      // so we explicitly set remove matched and name
-      name: undefined,
-      matched: undefined,`
-          : `path: route.path,
-      query: route.query,
-      hash: route.hash,`
-      }
-      force: true
-    })
-  })
-}`;
-  }
-
   async function generateResolver() {
-    const [
-      { generateRouteResolver },
-      { generateDuplicatedRoutesWarnings },
-      { generateAliasWarnings },
-      { collectMissingParamParsers },
-    ] = await Promise.all([
-      import('../codegen/generateRouteResolver'),
-      import('../codegen/generateDuplicateRoutesWarnings'),
-      import('../codegen/generateAliasWarnings'),
-      import('../codegen/generateParamParsers'),
-    ]);
-
-    const importsMap = new ImportsMap();
-    const resolverCode = generateRouteResolver(routeTree, options, importsMap, paramParsersMap);
-
-    let imports = importsMap.toString();
-    if (imports) imports += '\n';
-
-    const missingParsers = collectMissingParamParsers(routeTree, paramParsersMap);
-    let missingParserErrors = '';
-    if (missingParsers.length > 0) {
-      missingParserErrors = `\n${missingParsers
-        .map(
-          ({ parser, routePath, filePaths }) =>
-            `console.error('[essor-router] Parameter parser "${parser}" not found for route "${routePath}". File: ${filePaths.join(', ')}')`,
-        )
-        .join('\n')}\n`;
-    }
-
-    const routeDupsWarns = generateDuplicatedRoutesWarnings(routeTree);
-    const aliasWarns = generateAliasWarnings(routeTree);
-
-    return `${imports}${routeDupsWarns}\n${aliasWarns}\n${missingParserErrors}${resolverCode}\n${hmrHandleHotUpdate()}\n${hmrAccept(
-      'resolver',
-      'router._hmrReplaceResolver(mod.resolver)',
-    )}`;
+    return generateResolverModule(routeTree, options, paramParsersMap);
   }
 
   async function generateRoutes() {
-    const [{ generateRouteRecords }, { generateDuplicatedRoutesWarnings }] = await Promise.all([
-      import('../codegen/generateRouteRecords'),
-      import('../codegen/generateDuplicateRoutesWarnings'),
-    ]);
-
-    const importsMap = new ImportsMap();
-    const routeList = `export const routes = ${generateRouteRecords(
-      routeTree,
-      options,
-      importsMap,
-    )}\n`;
-
-    let imports = importsMap.toString();
-    if (imports) imports += '\n';
-
-    const routeDupsWarns = generateDuplicatedRoutesWarnings(routeTree);
-
-    return `${imports}${routeDupsWarns}\n${routeList}${hmrHandleHotUpdate()}\n${hmrAccept(
-      'routes',
-      `router.clearRoutes()
-    for (const route of mod.routes) {
-      router.addRoute(route)
-    }`,
-    )}\n`;
+    return generateRoutesModule(routeTree, options);
   }
 
   async function generateDTS() {
-    const [
-      { generateRouteNamedMap },
-      { generateRouteTreeMap },
-      { generateRouteFileInfoMap },
-      { generateDTS: _generateDTS },
-      {
-        generateParamParsersTypesDeclarations,
-        generateParamParserCustomType,
-        warnMissingParamParsers,
-      },
-    ] = await Promise.all([
-      import('../codegen/generateRouteMap'),
-      import('../codegen/generateRouteTree'),
-      import('../codegen/generateRouteFileInfoMap'),
-      import('../codegen/generateDts'),
-      import('../codegen/generateParamParsers'),
-    ]);
-
-    if (options.experimental.paramParsers?.dir.length) {
-      warnMissingParamParsers(routeTree, paramParsersMap);
-    }
-
-    return _generateDTS({
-      routeNamedMap: generateRouteNamedMap(routeTree, options, paramParsersMap),
-      routeTreeMap: generateRouteTreeMap(routeTree),
-      routeFileInfoMap: generateRouteFileInfoMap(routeTree, { root }),
-      paramsTypesDeclaration: generateParamParsersTypesDeclarations(paramParsersMap),
-      customParamsType: generateParamParserCustomType(paramParsersMap),
-    });
+    return generateTypedRouterDts(routeTree, options, paramParsersMap);
   }
 
   let lastDTS: string | undefined;
@@ -495,11 +326,11 @@ export function createRoutesContext(options: ResolvedOptions) {
   // subsequent calls after the first execution will wait 500ms-100ms to execute (throttling)
   const writeConfigFiles = throttle(_writeConfigFiles, 500, 100);
 
-  function stopWatcher() {
+  async function stopWatcher() {
     const activeWatchers = watchers.splice(0);
     if (activeWatchers.length) {
       logger.log('🛑 stopping watcher');
-      activeWatchers.forEach((watcher) => watcher.close());
+      await Promise.all(activeWatchers.map((watcher) => watcher.close()));
     }
   }
 

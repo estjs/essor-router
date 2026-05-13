@@ -1,8 +1,9 @@
-import process from 'node:process';
+import { cwd } from 'node:process';
 import { isPackageExists as isPackageInstalled } from 'local-pkg';
 import { resolve } from 'pathe';
 import { isFunction, isString } from '@estjs/shared';
-import { getFileBasedRouteName, isArray, warn } from './core/utils';
+import { isArray, warn } from './core/utils';
+import { getFileBasedRouteName } from './core/routeNames';
 import type { EditableTreeNode } from './core/extendRoutes';
 import type { TreeNode } from './core/tree';
 import type { ParseSegmentOptions } from './core/treeNodeValue';
@@ -288,14 +289,14 @@ export const DEFAULT_OPTIONS = {
   filePatterns: ['**/*'],
   getRouteName: getFileBasedRouteName,
   importMode: 'async',
-  root: process.cwd(),
+  root: cwd(),
   dts: isPackageInstalled('typescript'),
   logs: false,
   _inspect: false,
   pathParser: {
     dotNesting: true,
   },
-  watch: !process.env.CI,
+  watch: !globalThis.process?.env?.CI,
   mode: 'file' as 'file' | 'config',
   experimental: {},
 } satisfies Options;

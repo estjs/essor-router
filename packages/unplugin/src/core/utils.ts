@@ -1,8 +1,8 @@
-import { camelCase, capitalize, isArray, isObject, isString } from '@estjs/shared';
+import { isObject as sharedIsObject, isString } from '@estjs/shared';
 import { toStringLiteral } from '../utils';
 import type { ResolvedOptions, RoutesFolderOptionResolved } from '../options';
 import type { TreeNode } from './tree';
-import type { RouteRecordOverride, TreePathParam } from './treeNodeValue';
+import type { RouteRecordOverride } from './treeNodeValue';
 
 export function warn(msg: string, type: 'warn' | 'error' | 'debug' = 'warn'): void {
   console[type](`⚠️  [essor-router]: ${msg}`);
@@ -46,7 +46,7 @@ function printTree(
   return treeStr;
 }
 
-export { isArray };
+export const isArray = Array.isArray;
 
 export function trimExtension(path: string, extensions: ResolvedOptions['extensions']) {
   for (const extension of extensions) {
@@ -99,62 +99,6 @@ export function joinPath(...paths: string[]): string {
   return result || '/';
 }
 
-function paramToName({ paramName, modifier, isSplat }: TreePathParam) {
-  return `${isSplat ? '$' : ''}${paramName.charAt(0).toUpperCase() + paramName.slice(1)}${
-    modifier
-    // ? modifier === '+'
-    //   ? 'OneOrMore'
-    //   : modifier === '?'
-    //   ? 'ZeroOrOne'
-    //   : 'ZeroOrMore'
-    // : ''
-  }`;
-}
-
-/**
- * Creates a name based of the node path segments.
- *
- * @param node - the node to get the path from
- * @param parent - the parent node
- * @returns a route name
- */
-export function getPascalCaseRouteName(node: TreeNode): string {
-  if (node.parent?.isRoot() && node.value.pathSegment === '') return 'Root';
-
-  let name = node.value.subSegments
-    .map((segment) => {
-      if (isString(segment)) {
-        return capitalize(camelCase(segment));
-      }
-      // else it's a param
-      return paramToName(segment);
-    })
-    .join('');
-
-  if (node.value.components.size && node.children.has('index')) {
-    name += 'Parent';
-  }
-
-  const parent = node.parent;
-
-  return (
-    (parent && !parent.isRoot() ? getPascalCaseRouteName(parent).replace(/Parent$/, '') : '') + name
-  );
-}
-
-/**
- * Joins the path segments of a node into a name that corresponds to the filepath represented by the node.
- *
- * @param node - the node to get the path from
- * @returns a route name
- */
-export function getFileBasedRouteName(node: TreeNode): string {
-  if (!node.parent) return '';
-  return `${getFileBasedRouteName(node.parent)}/${
-    node.value.rawSegment === 'index' ? '' : node.value.rawSegment
-  }`;
-}
-
 export function mergeRouteRecordOverride(
   a: RouteRecordOverride,
   b: RouteRecordOverride,
@@ -197,7 +141,7 @@ export function mergeRouteRecordOverride(
   return merged;
 }
 
-export { isObject };
+export const isObject = sharedIsObject;
 
 function mergeDeep(...objects: Array<Record<string, unknown>>): Record<string, unknown> {
   return objects.reduce(

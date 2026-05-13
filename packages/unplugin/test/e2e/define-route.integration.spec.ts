@@ -1,10 +1,26 @@
 import { mkdir, mkdtemp, readFile, rm, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { resolveOptions } from '../../src/options';
 import { createRoutesContext } from '../../src/core/context';
 import { RoutesFolderWatcher } from '../../src/core/RoutesFolderWatcher';
+
+type RoutesContext = ReturnType<typeof createRoutesContext>;
+
+const activeContexts = new Set<RoutesContext>();
+
+function trackContext(ctx: RoutesContext) {
+  activeContexts.add(ctx);
+  return ctx;
+}
+
+afterEach(async () => {
+  for (const ctx of activeContexts) {
+    await ctx.stopWatcher();
+  }
+  activeContexts.clear();
+});
 
 async function waitUntil(assertion: () => void | Promise<void>, timeout = 3000, interval = 50) {
   const end = Date.now() + timeout;
@@ -53,7 +69,7 @@ describe('e2e: defineRoute generation', () => {
         watch: false,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(false);
 
       const routesCode = await ctx.generateRoutes();
@@ -117,7 +133,7 @@ export default function About() { return null }
         watch: true,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(true);
 
       expect(await ctx.generateRoutes()).toContain(`name: 'about'`);
@@ -128,7 +144,7 @@ export default function About() { return null }
         expect(await ctx.generateRoutes()).not.toContain(`name: 'about'`);
       });
 
-      ctx.stopWatcher();
+      await ctx.stopWatcher();
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -153,11 +169,11 @@ export default function About() { return null }
         watch: true,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(true);
 
-      ctx.stopWatcher();
-      ctx.stopWatcher();
+      await ctx.stopWatcher();
+      await ctx.stopWatcher();
 
       expect(closeSpy).toHaveBeenCalledTimes(1);
       closeSpy.mockRestore();
@@ -201,7 +217,7 @@ export default function AnyPage(){ return null }
         watch: false,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(false);
 
       const resolverCode = await ctx.generateResolver();
@@ -279,7 +295,7 @@ export default function Page(){ return null }
         watch: false,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(false);
 
       const resolverCode = await ctx.generateResolver();
@@ -351,7 +367,7 @@ export default function UserDetails(){ return null }
         watch: false,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(false);
 
       const routesCode = await ctx.generateRoutes();
@@ -402,7 +418,7 @@ export default function Dashboard(){ return null }
         watch: true,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(true);
 
       let routesCode = await ctx.generateRoutes();
@@ -438,7 +454,7 @@ export default function Dashboard(){ return null }
         expect(routesCode).toContain('_mergeRouteRecord(');
       });
 
-      ctx.stopWatcher();
+      await ctx.stopWatcher();
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -496,7 +512,7 @@ export default function Dashboard(){ return null }
         watch: true,
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(true);
 
       expect(await ctx.generateRoutes()).toContain('_mergeRouteRecord(');
@@ -507,7 +523,7 @@ export default function Dashboard(){ return null }
         expect(await ctx.generateRoutes()).not.toContain('_mergeRouteRecord(');
       });
 
-      ctx.stopWatcher();
+      await ctx.stopWatcher();
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -535,7 +551,7 @@ export default function Dashboard(){ return null }
         experimental: { paramParsers: true },
       });
 
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       await ctx.scanPages(true);
 
       const dtsPath = join(root, 'typed-router.d.ts');
@@ -570,7 +586,7 @@ export default function Dashboard(){ return null }
         expect(dtsCode).not.toContain(`'uuid'`);
       });
 
-      ctx.stopWatcher();
+      await ctx.stopWatcher();
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -600,7 +616,7 @@ export default function Dashboard(){ return null }
       });
 
       let routeUpdateCount = 0;
-      const ctx = createRoutesContext(options);
+      const ctx = trackContext(createRoutesContext(options));
       ctx.setServerContext({
         invalidate() {
           return false;
@@ -637,7 +653,7 @@ export default function Dashboard(){ return null }
         expect(routeUpdateCount).toBeGreaterThan(afterAddCount);
       });
 
-      ctx.stopWatcher();
+      await ctx.stopWatcher();
     } finally {
       await rm(root, { recursive: true, force: true });
     }
