@@ -1,5 +1,5 @@
 import { defineRoute } from 'essor-router/experimental';
-import { useRoute } from 'essor-router';
+import { signal } from 'essor';
 
 // Fake authentication and fetch API
 const fakeAuthCheck = () =>
@@ -8,6 +8,9 @@ const fetchUserProfile = (id: string) =>
   new Promise<{ id: string; name: string; role: string }>((resolve) =>
     setTimeout(() => resolve({ id, name: 'Alice Admin', role: 'SuperUser' }), 500),
   );
+const profileData = signal<{ profile: { id: string; name: string; role: string } } | null>(null);
+const profile = await fetchUserProfile('1');
+profileData.value = { profile };
 
 export const route = defineRoute({
   // Intercept before loading data or component
@@ -29,22 +32,25 @@ export const route = defineRoute({
 });
 
 export default function Profile() {
-  // `useRoute` provides fully typed data returned from the `loader`
-  const { loaderData } = useRoute();
-
   return (
     <div>
       <h2>User Profile Loader Example</h2>
-      {loaderData ? (
-        <div style={{ padding: '10px', background: '#333', color: '#fff', borderRadius: '4px' }}>
+      {profileData.value ? (
+        <div
+          style={{
+            'padding': '10px',
+            'background': '#333',
+            'color': '#fff',
+            'border-radius': '4px',
+          }}>
           <p>
-            <strong>Name:</strong> {loaderData.profile.name}
+            <strong>Name:</strong> {profileData.value.profile.name}
           </p>
           <p>
-            <strong>Role:</strong> {loaderData.profile.role}
+            <strong>Role:</strong> {profileData.value.profile.role}
           </p>
           <p>
-            <strong>ID:</strong> {loaderData.profile.id}
+            <strong>ID:</strong> {profileData.value.profile.id}
           </p>
         </div>
       ) : (

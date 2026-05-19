@@ -40,7 +40,7 @@ const router = createRouter({
 const App = () => {
   return (
     <div style={{ padding: '20px' }}>
-      <p style={{ color: '#666', borderBottom: '1px solid #ccc', paddingBottom: '10px' }}>
+      <p style={{ 'color': '#666', 'border-bottom': '1px solid #ccc', 'padding-bottom': '10px' }}>
         <em>
           Note: This is a basic configuration passing a runtime array of route objects. For typed or
           file-based usage, see the other examples.

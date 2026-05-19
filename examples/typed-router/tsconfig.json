@@ -1,11 +1,14 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "preserve",
     "jsxImportSource": "essor",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "strict": true
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true
   },
-  "include": ["src", "typed-router.d.ts"]
+  "include": ["src", "typed-router.d.ts", "vite.config.ts"]
 }

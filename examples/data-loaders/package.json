@@ -9,17 +9,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "essor": "^0.0.16-beta.1",
+    "essor": "^0.0.16-beta.8",
     "essor-router": "workspace:*"
   },
   "devDependencies": {
-    "@estjs/eslint-config": "^2.2.4",
-    "@types/node": "^25.5.0",
-    "eslint": "^10.0.3",
-    "typescript": "^5.9.3",
-    "unplugin-essor": "^0.0.16-beta.1",
+    "@estjs/eslint-config": "^2.3.0",
+    "@types/node": "^25.9.0",
+    "eslint": "^10.4.0",
+    "typescript": "^6.0.3",
+    "unplugin-essor": "^0.0.16-beta.8",
     "unplugin-essor-router": "workspace:*",
-    "vite": "^8.0.0",
+    "vite": "^8.0.13",
     "vite-plugin-inspect": "^11.3.3"
   }
 }

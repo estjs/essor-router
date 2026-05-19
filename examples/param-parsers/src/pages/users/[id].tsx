@@ -11,7 +11,13 @@ export default function UserParams() {
     <div>
       <h2>Param Parsers Example</h2>
       <p data-testid="user-id">ID: {params.id}</p>
-      <div style={{ padding: '10px', background: '#333', color: '#fff', borderRadius: '4px' }}>
+      <div
+        style={{
+          'padding': '10px',
+          'background': '#333',
+          'color': '#fff',
+          'border-radius': '4px',
+        }}>
         <p>
           <strong>Raw Path Param:</strong> {params.id}
         </p>

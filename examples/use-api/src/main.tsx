@@ -20,7 +20,7 @@ function Home() {
     const _$el = _$tmpl();
     const _n$ = _child$(_$el);
     const _n$2 = _next$(_n$, 1);
-    _insert$(_$el, () => route.query.q, _n$2);
+    _insert$(_$el, () => route.query.q, _n$2 ?? undefined);
     return _$el;
   })();
 }

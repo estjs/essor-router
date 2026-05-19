@@ -5,23 +5,23 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite --host --port 3011",
-    "typecheck": "tsc  --noEmit",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest -r test"
   },
   "dependencies": {
-    "essor": "^0.0.16-beta.1",
+    "essor": "^0.0.16-beta.8",
     "essor-router": "workspace:*"
   },
   "devDependencies": {
-    "@estjs/eslint-config": "^2.2.4",
-    "@types/node": "^25.5.0",
-    "eslint": "^10.0.3",
-    "happy-dom": "^20.8.4",
-    "typescript": "^5.9.3",
-    "unplugin-essor": "^0.0.16-beta.1",
-    "vite": "^8.0.0",
+    "@estjs/eslint-config": "^2.3.0",
+    "@types/node": "^25.9.0",
+    "eslint": "^10.4.0",
+    "happy-dom": "^20.9.0",
+    "typescript": "^6.0.3",
+    "unplugin-essor": "^0.0.16-beta.8",
+    "vite": "^8.0.13",
     "vite-plugin-inspect": "^11.3.3",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.6"
   }
 }
