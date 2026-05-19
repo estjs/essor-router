@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from '../types';
+import type { RouteLocationNormalized, RouteRecordRaw } from '../types';
 
 /**
  * Helper to define page properties with file-based routing.
@@ -21,6 +21,7 @@ export interface DefineRouteLoaderContext<
   TSearch = unknown,
 > {
   params: TParams;
+  route: RouteLocationNormalized;
   search: TSearch;
   signal?: AbortSignal;
   context?: unknown;

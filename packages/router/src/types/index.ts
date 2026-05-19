@@ -328,12 +328,36 @@ export type _RouteRecordProps =
   | ((to: RouteLocationNormalized) => Record<string, any>);
 
 export interface RouteLoaderContext {
+  /**
+   * Params parsed from the resolved route.
+   */
   params: RouteParams;
+
+  /**
+   * The resolved route currently being preloaded or navigated to.
+   */
+  route: RouteLocationNormalized;
+
+  /**
+   * Query/search values parsed from the resolved route.
+   */
   search: LocationQuery;
+
+  /**
+   * Signal aborted when a newer navigation supersedes this loader run.
+   */
   signal?: AbortSignal;
+
+  /**
+   * Reserved extension point for app/framework adapters.
+   */
   context?: unknown;
 }
 
+/**
+ * Data hook executed before a route is committed. `beforeLoad` runs before
+ * `loader` on each matched record, and both receive the same context shape.
+ */
 export type RouteLoader = (ctx: RouteLoaderContext) => unknown | Promise<unknown>;
 export type RouteSearchValidator = (input: unknown) => unknown;
 

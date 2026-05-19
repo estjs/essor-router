@@ -286,18 +286,30 @@ export function createNavigationCoordinator(
     const search = to.query;
     const controller = new AbortController();
     routeDataControllers.set(key, controller);
+    const checkCancelled = () => {
+      if (controller.signal.aborted) {
+        throw createRouterError<NavigationFailure>(ErrorTypes.NAVIGATION_CANCELLED, {
+          from: options.currentRoute.value,
+          to,
+        });
+      }
+    };
     const task = (async () => {
       for (const record of to.matched) {
         const ctx: RouteLoaderContext = {
           params: to.params as RouteParams,
+          route: to,
           search,
           signal: controller.signal,
         };
+        checkCancelled();
         if (record.beforeLoad) {
           await record.beforeLoad(ctx);
+          checkCancelled();
         }
         if (record.loader) {
           await record.loader(ctx);
+          checkCancelled();
         }
       }
     })()

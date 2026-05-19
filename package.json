@@ -16,6 +16,7 @@
     "typecheck:examples": "pnpm run build && pnpm -r --filter './examples/*' run typecheck",
     "test": "pnpm run test:unit",
     "test:unit": "vitest run",
+    "test:unplugin": "vitest run --project unplugin",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "test:e2e": "playwright test",

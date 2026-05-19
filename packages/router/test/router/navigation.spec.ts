@@ -149,6 +149,70 @@ describe('createNavigationCoordinator', () => {
     expect(firstSignal?.aborted).toBe(true);
 
     resolveFirstLoader();
-    await firstTask;
+    await expect(firstTask).rejects.toMatchObject({ type: 8 });
+  });
+
+  it('passes the resolved route and runs beforeLoad before loader', async () => {
+    const { coordinator } = createCoordinator();
+    const calls: string[] = [];
+    const beforeLoad = vi.fn((ctx: any) => {
+      calls.push(`before:${ctx.route.fullPath}`);
+      expect(ctx.route.params).toEqual({ id: '1' });
+    });
+    const loader = vi.fn((ctx: any) => {
+      calls.push(`loader:${ctx.route.fullPath}`);
+      expect(ctx.route.query).toEqual({ tab: 'info' });
+    });
+    const route = {
+      ...currentRoute.value,
+      fullPath: '/users/1?tab=info',
+      params: { id: '1' },
+      query: { tab: 'info' },
+      matched: [{ beforeLoad, loader }],
+    } as any;
+
+    await coordinator.runRouteDataHooks(route);
+
+    expect(calls).toEqual(['before:/users/1?tab=info', 'loader:/users/1?tab=info']);
+    expect(beforeLoad).toHaveBeenCalledTimes(1);
+    expect(loader).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not cache a route data task that was aborted before it settled', async () => {
+    const { coordinator, setPending } = createCoordinator();
+    let resolveFirstLoader!: () => void;
+    let shouldPauseFirstLoader = true;
+    const firstLoader = vi.fn(() => {
+      if (!shouldPauseFirstLoader) return Promise.resolve();
+      shouldPauseFirstLoader = false;
+      return new Promise<void>((resolve) => {
+        resolveFirstLoader = resolve;
+      });
+    });
+    const secondLoader = vi.fn(() => Promise.resolve());
+    const firstRoute = {
+      ...currentRoute.value,
+      fullPath: '/users/1',
+      matched: [{ loader: firstLoader }],
+    } as any;
+    const secondRoute = {
+      ...currentRoute.value,
+      fullPath: '/users/2',
+      matched: [{ loader: secondLoader }],
+    } as any;
+
+    setPending(firstRoute);
+    const firstTask = coordinator.runRouteDataHooks(firstRoute, true);
+    const firstTaskResult = firstTask.catch((error) => error);
+    await Promise.resolve();
+
+    setPending(secondRoute);
+    await coordinator.runRouteDataHooks(secondRoute, true);
+    resolveFirstLoader();
+    await expect(firstTaskResult).resolves.toMatchObject({ type: 8 });
+
+    setPending(firstRoute);
+    await coordinator.runRouteDataHooks(firstRoute, true);
+    expect(firstLoader).toHaveBeenCalledTimes(2);
   });
 });

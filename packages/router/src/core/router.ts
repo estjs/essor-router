@@ -46,19 +46,61 @@ export type { ErrorListener, ErrorListener as _ErrorListener };
 type History = 'history' | 'hash' | 'memory';
 
 export interface RouterOptions extends PathParserOptions {
+  /**
+   * Base URL used by string history modes and generated hrefs.
+   */
   base?: string;
+
+  /**
+   * History implementation or shorthand mode. Use `memory` for tests and SSR.
+   */
   history: History | RouterHistory;
+
+  /**
+   * Initial route records registered when the router is created.
+   */
   routes: Readonly<RouteRecordRaw[]>;
+
+  /**
+   * Optional scroll handler called after successful navigations in the browser.
+   */
   scrollBehavior?: RouterScrollBehavior;
+
+  /**
+   * Custom query parser. Receives the raw search string without the leading `?`.
+   */
   parseQuery?: (search: string) => any;
+
+  /**
+   * Custom query stringifier. Must return a string without the leading `?`.
+   */
   stringifyQuery?: (query: any) => string;
+
+  /**
+   * Class applied by RouterLink when the target route is active.
+   */
   linkActiveClass?: string;
+
+  /**
+   * Class applied by RouterLink when the target route exactly matches.
+   */
   linkExactActiveClass?: string;
 }
 
 export interface Router {
+  /**
+   * Reactive current route. It is updated only after a navigation is committed.
+   */
   readonly currentRoute: Signal<RouteLocationNormalizedLoaded>;
+
+  /**
+   * Normalized router options passed to `createRouter`.
+   */
   readonly options: RouterOptions;
+
+  /**
+   * Whether the router listens to history changes.
+   */
   listening: boolean;
 
   addRoute(parentName: RouteRecordName, route: RouteRecordRaw): () => void;
@@ -75,6 +117,10 @@ export interface Router {
 
   push(to: RouteLocationRawTyped): Promise<NavigationFailure | void | undefined>;
   replace(to: RouteLocationRawTyped): Promise<NavigationFailure | void | undefined>;
+
+  /**
+   * Preloads async route components and route data hooks for a target location.
+   */
   preloadRoute(to: RouteLocationRawTyped): Promise<RouteLocationNormalizedLoaded>;
 
   back(): ReturnType<Router['go']>;
