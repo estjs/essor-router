@@ -1,4 +1,4 @@
-import { stringifyQuery } from '../src/query';
+import { stringifyQuery } from '../src/core/query';
 import { mockWarn } from './utils';
 
 describe('stringifyQuery', () => {

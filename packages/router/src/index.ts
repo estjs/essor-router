@@ -3,31 +3,31 @@ export { createMemoryHistory } from './history/memory';
 export { createWebHashHistory } from './history/hash';
 export { createRouterMatcher } from './matcher';
 
-export { parseQuery, stringifyQuery } from './query';
+export { parseQuery, stringifyQuery } from './core/query';
 export type {
   LocationQuery,
   LocationQueryRaw,
   LocationQueryValue,
   LocationQueryValueRaw,
-} from './query';
+} from './core/query';
 export { RouteRecordNormalized } from './matcher/types';
 export type { RouterHistory, HistoryState } from './history/common';
 
-export { createRouter, RouterOptions } from './router';
-export type { ErrorListener, _ErrorListener, Router } from './router';
+export { createRouter, RouterOptions } from './core/router';
+export type { ErrorListener, _ErrorListener, Router } from './core/router';
 
-export { NavigationFailureType, isNavigationFailure } from './errors';
-export type { NavigationFailure, ErrorTypes, NavigationRedirectError } from './errors';
+export { NavigationFailureType, isNavigationFailure } from './core/errors';
+export type { NavigationFailure, ErrorTypes, NavigationRedirectError } from './core/errors';
 
 export { lazyRouteComponent } from './types';
-export { onBeforeRouteLeave, onBeforeRouteUpdate, loadRouteLocation } from './navigationGuards';
-export { RouterLink, useLink } from './RouterLink';
-export type { RouterLinkProps, RouterLinkOptions, UseLinkReturn } from './RouterLink';
-export { guardLinkEvent } from './router/guardEvent';
-export { RouterView, RouterViewProps } from './RouterView';
-export type { RouterScrollBehavior } from './scrollBehavior';
+export { onBeforeRouteLeave, onBeforeRouteUpdate, loadRouteLocation } from './navigation/guards';
+export { RouterLink, useLink } from './components/RouterLink';
+export type { RouterLinkProps, RouterLinkOptions, UseLinkReturn } from './components/RouterLink';
+export { guardLinkEvent } from './navigation/guardEvent';
+export { RouterView, RouterViewProps } from './components/RouterView';
+export type { RouterScrollBehavior } from './core/scrollBehavior';
 
-export * from './useApi';
+export * from './core/useApi';
 export type {
   // route location
   _RouteLocationBase,

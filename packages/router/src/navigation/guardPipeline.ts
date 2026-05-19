@@ -1,8 +1,8 @@
 import { toRaw } from 'essor';
-import { ErrorTypes, type NavigationFailure, isNavigationFailure } from '../errors';
-import { extractComponentsGuards, guardToPromiseFn } from '../navigationGuards';
+import { ErrorTypes, type NavigationFailure, isNavigationFailure } from '../core/errors';
 import { isArray } from '../utils';
 import { useCallbacks } from '../utils/callbacks';
+import { extractComponentsGuards, guardToPromiseFn } from './guards';
 import type {
   Lazy,
   NavigationGuardWithThis,

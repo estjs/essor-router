@@ -1,5 +1,5 @@
-import { PLUS_RE, decode, encodeQueryKey, encodeQueryValue } from './encoding';
-import { isArray } from './utils';
+import { PLUS_RE, decode, encodeQueryKey, encodeQueryValue } from '../encoding';
+import { isArray } from '../utils';
 
 /**
  * Possible values in normalized {@link LocationQuery}. `null` renders the query

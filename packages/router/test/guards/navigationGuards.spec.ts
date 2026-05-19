@@ -7,8 +7,8 @@ import {
   loadRouteLocation,
   onBeforeRouteLeave,
   onBeforeRouteUpdate,
-} from '../../src/navigationGuards';
-import { ErrorTypes } from '../../src/errors';
+} from '../../src/navigation/guards';
+import { ErrorTypes } from '../../src/core/errors';
 import {
   createAsyncMockGuard,
   createMockGuard,

@@ -13,18 +13,18 @@ import {
   type RouteLocationRaw,
   isRouteComponentLoader,
   isRouteLocation,
-} from './types';
+} from '../types';
 
 import {
   ErrorTypes,
   type NavigationFailure,
   type NavigationRedirectError,
   createRouterError,
-} from './errors';
-import { isAsyncFunction, isESModule, isPromiseLike } from './utils';
-import { warn } from './warning';
-import { matchedRouteKey } from './injectionSymbols';
-import type { RouteRecordNormalized } from './matcher/types';
+} from '../core/errors';
+import { isAsyncFunction, isESModule, isPromiseLike } from '../utils';
+import { warn } from '../core/warning';
+import { matchedRouteKey } from '../core/injectionSymbols';
+import type { RouteRecordNormalized } from '../matcher/types';
 
 type RouteComponentResolverInput =
   | RawRouteComponent

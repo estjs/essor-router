@@ -14,11 +14,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed, createComponent as h, signal } from 'essor';
 import { RouterLink, RouterView, createMemoryHistory, createRouter } from '../src';
-import { LinkComponent } from '../src/linkComponent';
+import { LinkComponent } from '../src/components/linkComponent';
 import { mount, sleep } from './utils';
 import { generateRouteLocation, randomBoolean, testWithMultipleInputs } from './helpers/test-utils';
 import type { RouteLocationRawTyped } from '../src/types';
-import type { Router } from '../src/router';
+import type { Router } from '../src/core/router';
 
 describe('routerLink', () => {
   let router: Router;

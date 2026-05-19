@@ -94,6 +94,7 @@ declare global {
       location: JSDOM['window']['location'];
       history: JSDOM['window']['history'];
       document: JSDOM['window']['document'];
+      Node: JSDOM['window']['Node'];
       before?: Function;
     }
   }
@@ -111,6 +112,7 @@ export function createDom(options?: ConstructorOptions) {
     global.location = dom.window.location as any;
     global.history = dom.window.history as any;
     global.document = dom.window.document as any;
+    global.Node = dom.window.Node as any;
   } catch {}
   return dom;
 }

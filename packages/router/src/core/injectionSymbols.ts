@@ -1,7 +1,7 @@
-import type { RouteRecordNormalized } from './matcher/types';
+import type { RouteRecordNormalized } from '../matcher/types';
 import type { Computed, InjectionKey, Signal } from 'essor';
 import type { Router } from './router';
-import type { RouteLocationNormalizedLoaded } from './types';
+import type { RouteLocationNormalizedLoaded } from '../types';
 
 /**
  * RouteRecord being rendered by the closest ancestor Router View. Used for

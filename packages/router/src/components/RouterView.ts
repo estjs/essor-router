@@ -17,31 +17,24 @@ import {
   routerKey,
   routerViewLocationKey,
   viewDepthKey,
-} from './injectionSymbols';
+} from '../core/injectionSymbols';
 import {
   type RouteComponent,
   type RouteComponentModule,
   type RouteLocationNormalized,
   START_LOCATION_NORMALIZED,
-} from './types';
-import { isESModule, isPromiseLike, normalizeError } from './utils';
-import { resolveRouteComponent } from './navigationGuards';
-import { logRouterError } from './warning';
-import type { Router } from './router';
+} from '../types';
+import { isESModule, isPromiseLike, normalizeError } from '../utils';
+import { resolveRouteComponent } from '../navigation/guards';
+import { logRouterError } from '../core/warning';
+import type { Router } from '../core/router';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 /** Children content accepted by RouterView */
-export type RouterViewChildren =
-  | string
-  | number
-  | (() => string | number | HTMLElement | RouteComponent | null)
-  | HTMLElement
-  | RouteComponent
-  | null
-  | undefined;
+export type RouterViewChildren = unknown;
 
 /** Props for the RouterView component */
 export interface RouterViewProps extends ComponentProps {

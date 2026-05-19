@@ -1,18 +1,22 @@
 import { nextTick, provide, toRaw } from 'essor';
-import { routeLocationKey, routerKey, routerViewLocationKey } from '@/injectionSymbols';
+import { routeLocationKey, routerKey, routerViewLocationKey } from '../core/injectionSymbols';
 import {
   ErrorTypes,
   type NavigationFailure,
   type NavigationRedirectError,
   isNavigationFailure,
-} from '../errors';
+} from '../core/errors';
 import { NavigationType, type RouterHistory } from '../history/common';
 import { START_LOCATION_NORMALIZED } from '../types';
 import { noop } from '../utils';
 import { isBrowser } from '../utils/env';
-import { warn } from '../warning';
-import { unregisterActiveRouter } from '../useApi';
-import { type ScrollPositionStore, computeScrollPosition, getScrollKey } from '../scrollBehavior';
+import { warn } from '../core/warning';
+import { unregisterActiveRouter } from '../core/useApi';
+import {
+  type ScrollPositionStore,
+  computeScrollPosition,
+  getScrollKey,
+} from '../core/scrollBehavior';
 import type { ReadinessController } from './readiness';
 import type {
   RouteLocation,

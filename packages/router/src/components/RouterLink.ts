@@ -1,24 +1,18 @@
 import { computed, createComponent, effect, onDestroy, signal, stop } from 'essor';
-import { isSameRouteLocationParams, isSameRouteRecord } from './location';
-import { isArray, noop } from './utils';
-import { logRouterError, warn } from './warning';
-import { createRouteAccessor, useRoute, useRouter } from './useApi';
+import { isSameRouteLocationParams, isSameRouteRecord } from '../core/location';
+import { isArray, noop } from '../utils';
+import { logRouterError, warn } from '../core/warning';
+import { createRouteAccessor, useRoute, useRouter } from '../core/useApi';
+import { usePrefetch } from '../navigation/usePrefetch';
+import { guardLinkEvent } from '../navigation/guardEvent';
 import { LinkComponent } from './linkComponent';
-import { usePrefetch } from './router/usePrefetch';
-import { guardLinkEvent } from './router/guardEvent';
-import type { Router } from './router';
-import type { RouteRecord } from './matcher/types';
-import type { NavigationFailure } from './errors';
-import type { RouteLocationNormalized, RouteLocationRawTyped } from './types';
+import type { Router } from '../core/router';
+import type { RouteRecord } from '../matcher/types';
+import type { NavigationFailure } from '../core/errors';
+import type { RouteLocationNormalized, RouteLocationRawTyped } from '../types';
 
 // Define specific types for RouterLink children
-export type RouterLinkChildren =
-  | string
-  | number
-  | (() => string | number | HTMLElement | null)
-  | HTMLElement
-  | null
-  | undefined;
+export type RouterLinkChildren = unknown;
 
 export interface RouterLinkOptions {
   /**

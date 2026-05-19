@@ -1,6 +1,6 @@
 import { shallowSignal } from 'essor';
 import { isFunction, isObject, isString } from '@estjs/shared';
-import { isBrowser } from './utils';
+import { isBrowser } from '../utils';
 import {
   type NavigationGuardWithThis,
   type NavigationHookAfter,
@@ -11,12 +11,17 @@ import {
   type RouteRecordName,
   type RouteRecordRaw,
   START_LOCATION_NORMALIZED,
-} from './types';
-import { createRouterMatcher } from './matcher';
-import { createWebHistory } from './history/html5';
-import { createWebHashHistory } from './history/hash';
-import { createMemoryHistory } from './history/memory';
-import { parseQuery as defaultParseQuery, stringifyQuery as defaultStringifyQuery } from './query';
+} from '../types';
+import { createRouterMatcher } from '../matcher';
+import { createWebHistory } from '../history/html5';
+import { createWebHashHistory } from '../history/hash';
+import { createMemoryHistory } from '../history/memory';
+import { createReactiveRoute, createRouteResolver } from '../navigation/routeResolver';
+import { createGuardPipeline } from '../navigation/guardPipeline';
+import { createNavigationCoordinator } from '../navigation/navigation';
+import { setupRouterLifecycle } from '../navigation/lifecycle';
+import { type ErrorListener, createReadinessController } from '../navigation/readiness';
+import { registerActiveRouter } from './useApi';
 import {
   type RouterScrollBehavior,
   type _ScrollPositionNormalized,
@@ -24,18 +29,13 @@ import {
   getScrollKey,
   scrollToPosition,
 } from './scrollBehavior';
-import { registerActiveRouter } from './useApi';
-import { createReactiveRoute, createRouteResolver } from './router/routeResolver';
-import { createGuardPipeline } from './router/guardPipeline';
-import { createNavigationCoordinator } from './router/navigation';
-import { setupRouterLifecycle } from './router/lifecycle';
-import { type ErrorListener, createReadinessController } from './router/readiness';
+import { parseQuery as defaultParseQuery, stringifyQuery as defaultStringifyQuery } from './query';
 import { warn } from './warning';
 import type { Signal } from 'essor';
-import type { RouteRecord } from './matcher/types';
+import type { RouteRecord } from '../matcher/types';
 import type { NavigationFailure } from './errors';
-import type { RouterHistory } from './history/common';
-import type { PathParserOptions } from './matcher/pathParserRanker';
+import type { RouterHistory } from '../history/common';
+import type { PathParserOptions } from '../matcher/pathParserRanker';
 
 export type { ErrorListener, ErrorListener as _ErrorListener };
 

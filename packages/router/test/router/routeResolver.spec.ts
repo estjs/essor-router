@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createRouteResolver } from '../../src/router/routeResolver';
-import { parseQuery, stringifyQuery } from '../../src/query';
+import { createRouteResolver } from '../../src/navigation/routeResolver';
+import { parseQuery, stringifyQuery } from '../../src/core/query';
 import { START_LOCATION_NORMALIZED } from '../../src/types';
 
 describe('createRouteResolver', () => {

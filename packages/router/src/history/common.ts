@@ -1,5 +1,5 @@
 import { isBrowser } from '../utils';
-import { removeTrailingSlash } from '../location';
+import { removeTrailingSlash } from '../core/location';
 
 export type HistoryLocation = string;
 /**

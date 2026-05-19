@@ -1,5 +1,5 @@
 import { isFunction } from '@estjs/shared';
-import { createRouter as newRouter } from '../src/router';
+import { createRouter as newRouter } from '../src/core/router';
 import * as encoding from '../src/encoding';
 import { createMemoryHistory } from '../src';
 import { components } from './utils';

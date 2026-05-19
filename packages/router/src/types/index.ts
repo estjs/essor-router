@@ -1,9 +1,9 @@
 import type { ComponentFn, Signal } from 'essor';
 import type { PathParserOptions } from '../matcher/pathParserRanker';
-import type { LocationQuery, LocationQueryRaw } from '../query';
+import type { LocationQuery, LocationQueryRaw } from '../core/query';
 import type { RouteRecord, RouteRecordNormalized } from '../matcher/types';
 import type { HistoryState } from '../history/common';
-import type { NavigationFailure } from '../errors';
+import type { NavigationFailure } from '../core/errors';
 
 export type Lazy<T> = () => Promise<T>;
 export type Override<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U;

@@ -6,14 +6,14 @@ import {
   type NavigationRedirectError,
   createRouterError,
   isNavigationFailure,
-} from '../errors';
-import { isSameRouteLocation } from '../location';
-import { loadRouteLocation } from '../navigationGuards';
+} from '../core/errors';
+import { isSameRouteLocation } from '../core/location';
 import { START_LOCATION_NORMALIZED } from '../types';
 import { assign } from '../utils';
 import { isBrowser } from '../utils/env';
 import { LRUCache } from '../utils/lru';
-import { warn } from '../warning';
+import { warn } from '../core/warning';
+import { loadRouteLocation } from './guards';
 import type {
   RouteLoaderContext,
   RouteLocation,

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { usePrefetch } from '../../src/router/usePrefetch';
+import { usePrefetch } from '../../src/navigation/usePrefetch';
 
 describe('usePrefetch', () => {
   it('runs preload on intent only once', async () => {

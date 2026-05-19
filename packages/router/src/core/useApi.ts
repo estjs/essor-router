@@ -2,7 +2,7 @@ import { type Signal, inject } from 'essor';
 import { routeLocationKey, routerKey } from './injectionSymbols';
 import { warn } from './warning';
 import type { Router } from './router';
-import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from './types';
+import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from '../types';
 
 // ---------------------------------------------------------------------------
 // Global router fallback — makes useRouter() work for components rendered

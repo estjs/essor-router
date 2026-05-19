@@ -1,4 +1,4 @@
-import { warn } from '../warning';
+import { warn } from '../core/warning';
 import type { RouteRecordNormalized } from './types';
 import type { RouteRecordMatcher } from './pathMatcher';
 

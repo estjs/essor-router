@@ -6,8 +6,8 @@ import {
   type RouteRecordRaw,
   isRouteName,
 } from '../types';
-import { ErrorTypes, type MatcherError, createRouterError } from '../errors';
-import { warn } from '../warning';
+import { ErrorTypes, type MatcherError, createRouterError } from '../core/errors';
+import { warn } from '../core/warning';
 import { assign, noop } from '../utils';
 import { type RouteRecordMatcher, createRouteRecordMatcher } from './pathMatcher';
 import { comparePathParserScore } from './pathParserRanker';

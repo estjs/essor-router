@@ -7,7 +7,7 @@ import {
   createRouter,
 } from '../src';
 import { mount, sleep } from './utils';
-import type { Router } from '../src/router';
+import type { Router } from '../src/core/router';
 
 describe('routerView - Comprehensive Tests', () => {
   let router: Router;

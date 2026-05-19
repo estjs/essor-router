@@ -1,5 +1,5 @@
 import { useCallbacks } from '../utils/callbacks';
-import { warn } from '../warning';
+import { warn } from '../core/warning';
 import { START_LOCATION_NORMALIZED } from '../types';
 import type { RouteLocationNormalized, RouteLocationNormalizedLoaded } from '../types';
 

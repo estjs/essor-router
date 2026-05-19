@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createMemoryHistory } from '../src/history/memory';
-import { createRouter } from '../src/router';
+import { createRouter } from '../src/core/router';
 
 describe('router.clearRoutes', () => {
   it('removes all registered routes', () => {

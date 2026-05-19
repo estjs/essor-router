@@ -1,8 +1,8 @@
+import { isArray } from '../utils';
+import { decode } from '../encoding';
 import { warn } from './warning';
-import { isArray } from './utils';
-import { decode } from './encoding';
-import type { RouteLocation, RouteLocationNormalized, RouteParamValue } from './types';
-import type { RouteRecord } from './matcher/types';
+import type { RouteLocation, RouteLocationNormalized, RouteParamValue } from '../types';
+import type { RouteRecord } from '../matcher/types';
 import type { LocationQuery, LocationQueryRaw } from './query';
 
 /**

@@ -14,6 +14,8 @@ export default defineConfig({
   entryPoints: {
     'index': './src/index.ts',
     'experimental/index': './src/experimental/index.ts',
+    'auto-routes': './src/auto-routes.ts',
+    'auto-resolver': './src/auto-resolver.ts',
   },
   banner: {
     js: banner,

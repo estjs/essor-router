@@ -13,7 +13,7 @@ import type {
   RouteParams,
   RouteRecordRaw,
 } from '../../src/types';
-import type { Router } from '../../src/router';
+import type { Router } from '../../src/core/router';
 
 /**
  * Generate random route parameters for testing

@@ -1,13 +1,13 @@
 import { isString } from '@estjs/shared';
-import { createRouteAccessor } from '../useApi';
+import { createRouteAccessor } from '../core/useApi';
 import { decode, encodeHash, encodeParam } from '../encoding';
-import { parseURL, stringifyURL } from '../location';
+import { parseURL, stringifyURL } from '../core/location';
 import {
   type LocationQuery,
   type parseQuery as defaultParseQuery,
   stringifyQuery as defaultStringifyQuery,
   normalizeQuery,
-} from '../query';
+} from '../core/query';
 import {
   type MatcherLocationRaw,
   type RouteLocation,
@@ -18,7 +18,7 @@ import {
   isRouteLocation,
 } from '../types';
 import { applyToParams, assign } from '../utils';
-import { warn } from '../warning';
+import { warn } from '../core/warning';
 import type { Signal } from 'essor';
 import type { RouterHistory } from '../history/common';
 import type { RouterMatcher } from '../matcher';

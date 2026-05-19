@@ -1,5 +1,5 @@
-import { warn } from '../warning';
-import { stripBase } from '../location';
+import { warn } from '../core/warning';
+import { stripBase } from '../core/location';
 import { assign } from '../utils';
 import {
   type HistoryLocation,

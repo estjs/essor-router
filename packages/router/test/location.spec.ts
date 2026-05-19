@@ -6,7 +6,7 @@ import {
   stringifyURL as originalStringifyURL,
   resolveRelativePath,
   stripBase,
-} from '../src/location';
+} from '../src/core/location';
 import { mockWarn } from './utils';
 
 describe('parseURL', () => {

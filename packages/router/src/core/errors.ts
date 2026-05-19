@@ -1,12 +1,12 @@
 import { isString } from '@estjs/shared';
-import { assign } from './utils';
-import { isBrowser } from './utils/env';
+import { assign } from '../utils';
+import { isBrowser } from '../utils/env';
 import type {
   MatcherLocation,
   MatcherLocationRaw,
   RouteLocationNormalized,
   RouteLocationRaw,
-} from './types';
+} from '../types';
 
 /**
  * Flags so we can combine them when checking for multiple errors. This is the internal version of

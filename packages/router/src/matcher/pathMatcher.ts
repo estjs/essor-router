@@ -1,4 +1,4 @@
-import { warn } from '../warning';
+import { warn } from '../core/warning';
 import { assign } from '../utils';
 import { type PathParser, type PathParserOptions, tokensToParser } from './pathParserRanker';
 import { tokenizePath } from './pathTokenizer';

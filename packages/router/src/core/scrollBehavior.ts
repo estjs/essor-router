@@ -1,7 +1,7 @@
 import { isString } from '@estjs/shared';
+import { LRUCache } from '../utils/lru';
 import { warn } from './warning';
-import { LRUCache } from './utils/lru';
-import type { RouteLocationNormalized, RouteLocationNormalizedLoaded } from './types';
+import type { RouteLocationNormalized, RouteLocationNormalizedLoaded } from '../types';
 
 // ---------------------------------------------------------------------------
 // Types

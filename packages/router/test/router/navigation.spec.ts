@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { isString } from '@estjs/shared';
-import { createNavigationCoordinator } from '../../src/router/navigation';
+import { createNavigationCoordinator } from '../../src/navigation/navigation';
 
 const currentRoute = {
   value: {

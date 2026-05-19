@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ErrorTypes, createRouterError } from '../../src/errors';
-import { createGuardPipeline } from '../../src/router/guardPipeline';
+import { ErrorTypes, createRouterError } from '../../src/core/errors';
+import { createGuardPipeline } from '../../src/navigation/guardPipeline';
 
 const baseRoute = {
   path: '/',

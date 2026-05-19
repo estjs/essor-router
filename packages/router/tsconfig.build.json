@@ -5,15 +5,6 @@
     "declaration": true,
     "stripInternal": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "./dist/**/*",
-    "examples",
-    "playground",
-    "**/test/**/*",
-    "docs",
-    "doc_build",
-    "rspress.config.ts"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["dist", "node_modules", "test", "**/*.spec.ts"]
 }

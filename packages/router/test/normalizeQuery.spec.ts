@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeQuery } from '../src/query';
+import { normalizeQuery } from '../src/core/query';
 
 describe('normalizeQuery', () => {
   it('normalizes number and nullish values', () => {

@@ -1,4 +1,4 @@
-import { warn } from './warning';
+import { warn } from './core/warning';
 
 /**
  * Encoding Rules (␣ = Space)

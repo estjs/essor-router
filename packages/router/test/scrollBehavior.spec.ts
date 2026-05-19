@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createScrollPositionStore, scrollToPosition } from '../src/scrollBehavior';
+import { createScrollPositionStore, scrollToPosition } from '../src/core/scrollBehavior';
 import { mockWarn } from './utils';
 
 describe('scrollBehavior', () => {

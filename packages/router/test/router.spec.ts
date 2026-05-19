@@ -1,7 +1,7 @@
 import fakePromise from 'faked-promise';
 import { type RouterHistory, createMemoryHistory, createRouter, createWebHistory } from '../src';
-import { createHistory } from '../src/router';
-import { NavigationFailureType } from '../src/errors';
+import { createHistory } from '../src/core/router';
+import { NavigationFailureType } from '../src/core/errors';
 import {
   type RouteLocationRaw,
   type RouteRecordRaw,
