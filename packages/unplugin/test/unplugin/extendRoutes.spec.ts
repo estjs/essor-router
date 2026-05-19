@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { resolveOptions } from '../../src/options';
+import { resolveOptions } from '../../src/core/options';
 import { EditableTreeNode } from '../../src/core/extendRoutes';
 import { PrefixTree } from '../../src/core/tree';
 

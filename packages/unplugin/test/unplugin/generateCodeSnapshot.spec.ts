@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ImportsMap } from '../../src/core/utils';
 import { PrefixTree } from '../../src/core/tree';
-import { resolveOptions } from '../../src/options';
+import { resolveOptions } from '../../src/core/options';
 import { generateRouteRecords } from '../../src/codegen/generateRouteRecords';
 import { generateRouteResolver } from '../../src/codegen/generateRouteResolver';
 

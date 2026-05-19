@@ -10,13 +10,13 @@ import type {
   ObjectProperty,
   StringLiteral,
 } from '@babel/types';
-import type { ResolvedOptions } from '../options';
+import type { ResolvedOptions } from './options';
 export {
   defineConfigRoutes,
   type ConfigRoute,
   type ConfigRouteComponent,
   type ConfigRoutes,
-} from '../runtime';
+} from '../config';
 
 /**
  * A statically parsed route from the config file.

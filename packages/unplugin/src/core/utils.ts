@@ -1,6 +1,6 @@
 import { isString, isObject as sharedIsObject } from '@estjs/shared';
 import { toStringLiteral } from '../utils';
-import type { ResolvedOptions, RoutesFolderOptionResolved } from '../options';
+import type { ResolvedOptions, RoutesFolderOptionResolved } from './options';
 import type { TreeNode } from './tree';
 import type { RouteRecordOverride } from './treeNodeValue';
 

@@ -9,7 +9,7 @@ import {
   escapeRegex,
 } from './treeNodeValue';
 import { ESCAPED_TRAILING_SLASH_RE } from './utils';
-import type { ResolvedOptions } from '../options';
+import type { ResolvedOptions } from './options';
 import type { CustomRouteBlock } from './routeBlockTypes';
 import type { RouteMeta } from '../contracts/router';
 

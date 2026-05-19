@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, rm, unlink, writeFile } from 'node:fs/promise
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { resolveOptions } from '../../src/options';
+import { resolveOptions } from '../../src/core/options';
 import { createRoutesContext } from '../../src/core/context';
 import { RoutesFolderWatcher } from '../../src/core/RoutesFolderWatcher';
 
@@ -37,7 +37,7 @@ async function waitUntil(assertion: () => void | Promise<void>, timeout = 3000, 
   throw lastError;
 }
 
-describe('e2e: defineRoute generation', () => {
+describe('defineRoute integration', () => {
   it('generates route records and resolver from code-file routes', async () => {
     const root = await mkdtemp(join(tmpdir(), 'unplugin-essor-router-e2e-'));
 

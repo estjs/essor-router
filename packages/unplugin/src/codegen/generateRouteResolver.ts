@@ -8,7 +8,7 @@ import {
 } from './generateParamParsers';
 import { formatMeta, generatePageImport } from './generateRouteRecords';
 import type { ImportsMap } from '../core/utils';
-import type { ResolvedOptions } from '../options';
+import type { ResolvedOptions } from '../core/options';
 
 /**
  * Compare two score sub-arrays element by element.

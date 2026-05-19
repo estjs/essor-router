@@ -1,4 +1,4 @@
-import { defineConfigRoutes } from '../../../../src/runtime';
+import { defineConfigRoutes } from '../../../../src/config';
 
 defineConfigRoutes([
   {

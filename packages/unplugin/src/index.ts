@@ -1,5 +1,5 @@
-import unplugin from './plugin';
-import { DEFAULT_OPTIONS } from './options';
+import unplugin from './core/plugin';
+import { DEFAULT_OPTIONS } from './core/options';
 
 export type {
   Options,
@@ -8,8 +8,8 @@ export type {
   RoutesFolderOption,
   RoutesFolderOptionResolved,
   ParamParsersOptions,
-} from './options';
-export { resolveOptions } from './options';
+} from './core/options';
+export { resolveOptions } from './core/options';
 export type { TreeNode } from './core/tree';
 export type {
   TreeNodeValue,
@@ -27,8 +27,8 @@ export default unplugin;
 
 export { createRoutesContext } from './core/context';
 export { getFileBasedRouteName, getPascalCaseRouteName } from './core/routeNames';
-export { defineConfigRoutes } from './runtime';
-export type { ConfigRoute, ConfigRouteComponent, ConfigRoutes } from './runtime';
+export { defineConfigRoutes } from './config';
+export type { ConfigRoute, ConfigRouteComponent, ConfigRoutes } from './config';
 
 // Route Tree and edition
 export { createTreeNodeValue } from './core/treeNodeValue';

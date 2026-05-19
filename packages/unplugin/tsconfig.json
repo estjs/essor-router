@@ -1,22 +1,8 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "preserve",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "types": ["vitest/globals"],
-    "allowJs": true,
-    "checkJs": true,
-    "strict": true,
-    "noImplicitAny": false,
-    "noEmit": true,
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
+    "noEmit": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist", "test", "src-legacy"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["dist", "node_modules"]
 }

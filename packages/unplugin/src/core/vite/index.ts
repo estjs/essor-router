@@ -1,6 +1,6 @@
 import { MODULE_RESOLVER_PATH, MODULE_ROUTES_PATH, asVirtualId } from '../moduleConstants';
 import type { ViteDevServer } from 'vite';
-import type { ServerContext } from '../../options';
+import type { ServerContext } from '../options';
 
 export function createViteContext(server: ViteDevServer): ServerContext {
   function invalidate(path: string): false | Promise<void> {

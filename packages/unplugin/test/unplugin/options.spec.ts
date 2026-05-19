@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mergeAllExtensions, resolveOptions } from '../../src/options';
+import { mergeAllExtensions, resolveOptions } from '../../src/core/options';
 import { mockWarn } from '../utils';
 
 describe('unplugin options', () => {

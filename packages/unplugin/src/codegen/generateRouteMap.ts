@@ -2,7 +2,7 @@ import { formatMultilineUnion, pad, toStringLiteral } from '../utils';
 import { type ParamParsersMap, generateParamsTypes } from './generateParamParsers';
 import { EXPERIMENTAL_generateRouteParams, generateRouteParams } from './generateRouteParams';
 import type { TreeNode, TreeNodeNamed } from '../core/tree';
-import type { ResolvedOptions } from '../options';
+import type { ResolvedOptions } from '../core/options';
 
 export { EXPERIMENTAL_generateRouteParams, generateRouteParams };
 

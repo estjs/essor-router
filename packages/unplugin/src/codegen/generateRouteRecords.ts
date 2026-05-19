@@ -2,7 +2,7 @@ import { isFunction, isString } from '@estjs/shared';
 import { pad, toStringLiteral } from '../utils';
 import { generateDefinePageImports } from './generateCommon';
 import type { ImportsMap } from '../core/utils';
-import type { ResolvedOptions } from '../options';
+import type { ResolvedOptions } from '../core/options';
 import type { TreeNode } from '../core/tree';
 
 /**

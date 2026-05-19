@@ -6,7 +6,7 @@ import { isFunction, isString, isUndefined } from '@estjs/shared';
 import { appendExtensionListToPattern, asRoutePath } from './utils';
 import { getPollingWatchOptions } from './watcherOptions';
 import type { Stats } from 'node:fs';
-import type { ResolvedOptions, RoutesFolderOption, RoutesFolderOptionResolved } from '../options';
+import type { ResolvedOptions, RoutesFolderOption, RoutesFolderOptionResolved } from './options';
 // TODO: export an implementable interface to create a watcher and let users provide a different watcher than chokidar to improve performance on windows
 
 export class RoutesFolderWatcher {

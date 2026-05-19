@@ -2,12 +2,12 @@ import process, { cwd } from 'node:process';
 import { isPackageExists as isPackageInstalled } from 'local-pkg';
 import { resolve } from 'pathe';
 import { isFunction, isString } from '@estjs/shared';
-import { isArray, warn } from './core/utils';
-import { getFileBasedRouteName } from './core/routeNames';
-import type { EditableTreeNode } from './core/extendRoutes';
-import type { TreeNode } from './core/tree';
-import type { ParseSegmentOptions } from './core/treeNodeValue';
-import type { _Awaitable } from './utils';
+import { isArray, warn } from './utils';
+import { getFileBasedRouteName } from './routeNames';
+import type { EditableTreeNode } from './extendRoutes';
+import type { TreeNode } from './tree';
+import type { ParseSegmentOptions } from './treeNodeValue';
+import type { _Awaitable } from '../utils';
 
 /**
  * Options for a routes folder.

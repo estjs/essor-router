@@ -1,7 +1,7 @@
 import { type UnpluginOptions, createUnplugin } from 'unplugin';
 import { join } from 'pathe';
-import { createAutoExportPlugin } from './experimental/data-loaders/auto-exports';
-import { createRoutesContext } from './core/context';
+import { createAutoExportPlugin } from '../experimental/data-loaders/auto-exports';
+import { createRoutesContext } from './context';
 import {
   DEFINE_PAGE_QUERY_RE,
   MODULE_RESOLVER_PATH,
@@ -10,10 +10,10 @@ import {
   VIRTUAL_PREFIX,
   asVirtualId as _asVirtualId,
   getVirtualId as _getVirtualId,
-} from './core/moduleConstants';
+} from './moduleConstants';
 import { type Options, mergeAllExtensions, resolveOptions } from './options';
-import { createViteContext } from './core/vite';
-import { appendExtensionListToPattern } from './core/utils';
+import { createViteContext } from './vite';
+import { appendExtensionListToPattern } from './utils';
 
 export default createUnplugin<Options | undefined>((opt = {}, _meta) => {
   const options = resolveOptions(opt);

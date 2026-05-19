@@ -3,7 +3,7 @@ import { dirname, join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadConfigRoutes } from '../../src/core/configSource';
 import { PrefixTree } from '../../src/core/tree';
-import { resolveOptions } from '../../src/options';
+import { resolveOptions } from '../../src/core/options';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

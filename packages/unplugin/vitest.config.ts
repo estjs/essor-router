@@ -6,11 +6,8 @@ export default defineConfig({
     __TEST__: true,
   },
   test: {
-    coverage: {
-      provider: 'v8',
-      include: ['src/**'],
-      reporter: ['text', 'json', 'html'],
-    },
+    name: 'unplugin',
+    include: ['test/**/*.spec.ts'],
     globals: true,
     environment: 'node',
     watch: false,

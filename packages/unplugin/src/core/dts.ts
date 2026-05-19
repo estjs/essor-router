@@ -1,5 +1,5 @@
 import type { ParamParsersMap } from '../codegen/generateParamParsers';
-import type { ResolvedOptions } from '../options';
+import type { ResolvedOptions } from './options';
 import type { PrefixTree } from './tree';
 
 export async function generateTypedRouterDts(

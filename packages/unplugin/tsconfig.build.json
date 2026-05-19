@@ -4,5 +4,6 @@
     "types": [],
     "declaration": true
   },
-  "exclude": ["node_modules", "dist", "./dist/**/*", "**/test/**/*"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["dist", "node_modules", "test", "**/*.spec.ts"]
 }

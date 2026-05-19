@@ -3,7 +3,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { describe, expect, it } from 'vitest';
-import { resolveOptions } from '../../src/options';
+import { resolveOptions } from '../../src/core/options';
 import { PrefixTree } from '../../src/core/tree';
 import { loadConfigRoutes } from '../../src/core/configSource';
 import { generateRouteNamedMap } from '../../src/codegen/generateRouteMap';

@@ -22,7 +22,7 @@ import {
   setParamParserFile,
 } from './paramParsers';
 import type { ParamParsersMap } from '../codegen/generateParamParsers';
-import type { ResolvedOptions, ServerContext } from '../options';
+import type { ResolvedOptions, ServerContext } from './options';
 
 export function createRoutesContext(options: ResolvedOptions) {
   const { dts: preferDTS, root, routesFolder } = options;
