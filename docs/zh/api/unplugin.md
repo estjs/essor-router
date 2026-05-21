@@ -32,10 +32,8 @@ type Options = {
   logs?: boolean // false
   watch?: boolean // !process.env.CI
   pathParser?: { dotNesting?: boolean } // { dotNesting: true }
-  experimental?: {
-    autoExportsDataLoaders?: string | string[] // 仅 Vite
-    paramParsers?: boolean | { dir?: string | string[] } // 默认目录: ['src/params']
-  }
+  autoExportsDataLoaders?: string | string[] // 仅 Vite
+  paramParsers?: boolean | { dir?: string | string[] } // 默认目录: ['src/params']
 }
 ```
 
@@ -74,7 +72,7 @@ Query 参数可配置：
 
 `essorRouterAutoImports` 包含：
 - `essor-router`：`useRoute`、`useRouter`、`onBeforeRouteUpdate`、`onBeforeRouteLeave`
-- `essor-router/experimental`：`definePage`、`defineRoute`
+- `essor-router`：`definePage`、`defineRoute`
 
 ## 推荐基础配置
 

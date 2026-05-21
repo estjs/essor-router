@@ -11,7 +11,7 @@
 - 静态提取 `defineRoute()` / `definePage()` 元信息。
 - 自动生成 `typed-router.d.ts` 与页面级 `$route.ts` 类型文件。
 - 开发态 watch + HMR 自动更新路由与 resolver。
-- 实验能力：param parser、loader 自动导出。
+- 稳定支持：param parser、loader 自动导出。
 
 ## 快速接入（Vite）
 
@@ -52,7 +52,7 @@ export const router = createRouter({ history: 'history', routes, resolver })
 建议使用静态字面量对象，保证可被稳定静态提取。
 
 ```ts
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   name: 'users-id',
@@ -93,10 +93,8 @@ essorRouter({
   dts: 'typed-router.d.ts',
   importMode: file => file.includes('/critical/') ? 'sync' : 'async',
   watch: true,
-  experimental: {
-    paramParsers: { dir: ['src/params'] },
-    autoExportsDataLoaders: ['src/loaders/**'], // 仅 Vite
-  },
+  paramParsers: { dir: ['src/params'] },
+  autoExportsDataLoaders: ['src/loaders/**'], // 仅 Vite
 })
 ```
 

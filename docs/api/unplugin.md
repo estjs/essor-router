@@ -32,10 +32,8 @@ type Options = {
   logs?: boolean // false
   watch?: boolean // !process.env.CI
   pathParser?: { dotNesting?: boolean } // { dotNesting: true }
-  experimental?: {
-    autoExportsDataLoaders?: string | string[] // Vite only
-    paramParsers?: boolean | { dir?: string | string[] } // default dir: ['src/params']
-  }
+  autoExportsDataLoaders?: string | string[] // Vite only
+  paramParsers?: boolean | { dir?: string | string[] } // default dir: ['src/params']
 }
 ```
 
@@ -74,7 +72,7 @@ Query param options:
 
 `essorRouterAutoImports` includes:
 - from `essor-router`: `useRoute`, `useRouter`, `onBeforeRouteUpdate`, `onBeforeRouteLeave`
-- from `essor-router/experimental`: `definePage`, `defineRoute`
+- from `essor-router`: `definePage`, `defineRoute`
 
 ## Recommended Baseline
 

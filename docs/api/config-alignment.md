@@ -242,7 +242,7 @@ router.push({ name: 'users-id', params: { id: '42' } })
 3. **Export route definitions from each page file** if you use `defineRoute()`:
    ```tsx
    // src/pages/users/[id].tsx
-   import { defineRoute } from 'essor-router/experimental'
+   import { defineRoute } from 'essor-router'
    export const route = defineRoute({ name: 'users-id' })
    ```
 

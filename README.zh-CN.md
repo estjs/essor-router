@@ -79,7 +79,7 @@ pnpm add -D essor-router-ts-plugin
 ### 文件路由 API
 
 ```ts
-import { defineRoute } from 'essor-router/experimental';
+import { defineRoute } from 'essor-router';
 
 export const route = defineRoute({
   name: 'home',

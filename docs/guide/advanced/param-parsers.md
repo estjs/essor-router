@@ -16,7 +16,7 @@ Essor Router supports two kinds of parsers:
 
 ## Enabling Param Parsers
 
-Param parsers are an **experimental feature**. Enable them in your `unplugin-essor-router` config:
+Enable param parsers in your `unplugin-essor-router` config:
 
 ```tsx
 // vite.config.ts
@@ -26,9 +26,7 @@ export default {
   plugins: [
     essorRouter({
       routesFolder: 'src/pages',
-      experimental: {
-        paramParsers: true,
-      },
+      paramParsers: true,
     }),
   ],
 }
@@ -38,10 +36,8 @@ This enables the feature with the default `src/params/` folder. For a custom fol
 
 ```tsx
 essorRouter({
-  experimental: {
-    paramParsers: {
-      dir: 'src/app/parsers',
-    },
+  paramParsers: {
+    dir: 'src/app/parsers',
   },
 })
 ```
@@ -50,53 +46,53 @@ For multiple folders:
 
 ```tsx
 essorRouter({
-  experimental: {
-    paramParsers: {
-      dir: ['src/params', 'src/shared/parsers'],
-    },
+  paramParsers: {
+    dir: ['src/params', 'src/shared/parsers'],
   },
 })
 ```
 
 ## Creating a Param Parser
 
-A param parser is a file that exports two functions: `parse` and `get`.
+A param parser is a file that exports a `parser` object with `parse` and `get` methods.
 
 ### Parser Contract
 
 ```ts
 // src/params/parserName.ts
 
-export const parse = (
-  value: string | string[] | null | undefined,
-  options?: { format?: 'value' | 'array' },
-) => {
-  // Validate and transform the raw string input
-  // Return undefined if parsing fails
-}
-
-export const get = (value: any) => {
-  // Return the typed value for type inference
-  // This function is only used for TypeScript type generation
+export const parser = {
+  parse(
+    value: string | string[] | null | undefined,
+    options?: { format?: 'value' | 'array' },
+  ) {
+    // Validate and transform the raw string input
+    // Return undefined if parsing fails
+  },
+  get(value: any) {
+    // Return the typed value for type inference
+    // This function is only used for TypeScript type generation
+  },
 }
 ```
 
 | Export | Purpose | Called at |
 |--------|---------|-----------|
-| `parse(value, options?)` | Validates and transforms the raw string. Return `undefined` on failure | **Runtime** - during route matching |
-| `get(value)` | Returns the typed value used for TypeScript type generation | **Build time** - for `.d.ts` generation only |
+| `parser.parse(value, options?)` | Validates and transforms the raw string. Return `undefined` on failure | **Runtime** - during route matching |
+| `parser.get(value)` | Returns the typed value used for TypeScript type generation | **Build time** - for `.d.ts` generation only |
 
 ### Example: Integer Parser
 
 ```ts
 // src/params/int.ts
-export const parse = (value: string) => {
-  const num = parseInt(value, 10)
-  if (isNaN(num)) return undefined
-  return num
+export const parser = {
+  parse(value: string) {
+    const num = parseInt(value, 10)
+    if (isNaN(num)) return undefined
+    return num
+  },
+  get: (value: number) => value,
 }
-
-export const get = (value: number) => value
 ```
 
 > [!NOTE]
@@ -108,25 +104,27 @@ export const get = (value: number) => value
 // src/params/uuid.ts
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-export const parse = (value: string) => {
-  if (!UUID_RE.test(value)) return undefined
-  return value
+export const parser = {
+  parse(value: string) {
+    if (!UUID_RE.test(value)) return undefined
+    return value
+  },
+  get: (value: string) => value,
 }
-
-export const get = (value: string) => value
 ```
 
 ### Example: Date Parser
 
 ```ts
 // src/params/date.ts
-export const parse = (value: string) => {
-  const date = new Date(value)
-  if (isNaN(date.getTime())) return undefined
-  return date
+export const parser = {
+  parse(value: string) {
+    const date = new Date(value)
+    if (isNaN(date.getTime())) return undefined
+    return date
+  },
+  get: (value: Date) => value,
 }
-
-export const get = (value: Date) => value
 ```
 
 ### Example: Enum Parser
@@ -136,15 +134,16 @@ export const get = (value: Date) => value
 const ALLOWED = ['asc', 'desc'] as const
 type SortOrder = (typeof ALLOWED)[number]
 
-export const parse = (value: string): SortOrder | undefined => {
-  const v = value.toLowerCase()
-  if (ALLOWED.includes(v as SortOrder)) {
-    return v as SortOrder
-  }
-  return undefined
+export const parser = {
+  parse(value: string): SortOrder | undefined {
+    const v = value.toLowerCase()
+    if (ALLOWED.includes(v as SortOrder)) {
+      return v as SortOrder
+    }
+    return undefined
+  },
+  get: (value: SortOrder) => value,
 }
-
-export const get = (value: SortOrder) => value
 ```
 
 ### Example: Boolean Parser (Extended)
@@ -156,14 +155,15 @@ While `bool` is built-in, here's how you'd create one with additional accepted v
 const TRUTHY = ['1', 'true', 'yes', 'on']
 const FALSY = ['0', 'false', 'no', 'off']
 
-export const parse = (value: string): boolean | undefined => {
-  const v = value.toLowerCase()
-  if (TRUTHY.includes(v)) return true
-  if (FALSY.includes(v)) return false
-  return undefined
+export const parser = {
+  parse(value: string): boolean | undefined {
+    const v = value.toLowerCase()
+    if (TRUTHY.includes(v)) return true
+    if (FALSY.includes(v)) return false
+    return undefined
+  },
+  get: (value: boolean) => value,
 }
-
-export const get = (value: boolean) => value
 ```
 
 ### Error Handling in Parsers
@@ -175,13 +175,14 @@ When a parser returns `undefined`, the route either:
 
 ```ts
 // src/params/positiveInt.ts
-export const parse = (value: string) => {
-  const num = parseInt(value, 10)
-  if (isNaN(num) || num < 0) return undefined
-  return num
+export const parser = {
+  parse(value: string) {
+    const num = parseInt(value, 10)
+    if (isNaN(num) || num < 0) return undefined
+    return num
+  },
+  get: (value: number) => value,
 }
-
-export const get = (value: number) => value
 ```
 
 ## Using Parsers in File-Based Routes
@@ -204,7 +205,7 @@ Define parsers directly in your page file using `defineRoute()`:
 
 ```tsx
 // src/pages/users/[id].tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   params: {
@@ -226,7 +227,7 @@ export default UserPage
 
 ```tsx
 // src/pages/orders/[date].tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   params: {
@@ -244,7 +245,7 @@ export const route = defineRoute({
 You can use both a parser and a regex constraint on the same param:
 
 ```tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   path: '/users/:id(\\d+)',
@@ -272,7 +273,7 @@ export const route = defineRoute({
 })
 ```
 
-When `experimental.paramParsers` is enabled with a configured `dir`, the unplugin scans the folders for parser files, reads their `get` function return types, and flows those types into `typed-router.d.ts`. This means:
+When `paramParsers` is enabled with a configured `dir`, the unplugin scans the folders for parser files, reads their `get` function return types, and flows those types into `typed-router.d.ts`. This means:
 
 ```tsx
 // In any component on this route:
@@ -306,12 +307,12 @@ const route = useRoute()
 route.params.published // type: boolean
 ```
 
-## Query Param Parsers (Experimental)
+## Query Param Parsers
 
 Query param parsers work the same way but are configured through `defineRoute()` instead of route file names:
 
 ```tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   params: {
@@ -349,7 +350,7 @@ export const route = defineRoute({
 ### Query Parser Example: Search with Typed Params
 
 ```tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 import { useRoute } from 'essor-router'
 
 export const route = defineRoute({
@@ -486,7 +487,7 @@ Parameter parser "myParser" not found for route "/users/:id".
 1. Restart your dev server
 2. Verify the parser file is inside the configured `dir`
 3. Check that the parser file has correct `parse` and `get` exports
-4. Verify `experimental.paramParsers` is enabled in your config
+4. Verify `paramParsers` is enabled in your config
 
 ### Typescript Error: Type 'string' Not Assignable to Type 'number'
 
@@ -503,19 +504,12 @@ import essorRouter from 'unplugin-essor-router/vite'
 export default {
   plugins: [
     essorRouter({
-      experimental: {
-        // Enable param parsers with default settings (scans src/params/)
-        paramParsers: true,
+      // Enable param parsers with default settings (scans src/params/)
+      paramParsers: true,
 
-        // Or: customize the parser folder(s)
-        paramParsers: {
-          dir: 'src/app/parsers',
-        },
-
-        // Or: multiple folders
-        paramParsers: {
-          dir: ['src/params', 'src/shared/parsers'],
-        },
+      // Or: customize the parser folder(s)
+      paramParsers: {
+        dir: ['src/params', 'src/shared/parsers'],
       },
     }),
   ],
@@ -527,10 +521,16 @@ export default {
 Each parser file (e.g., `src/params/myParser.ts`) must export:
 
 ```ts
-export const parse = (value: string | string[] | null | undefined): YourType | undefined => { ... }
-export const get = (value: YourType): YourType => { ... }
+export const parser = {
+  parse(value: string | string[] | null | undefined): YourType | undefined {
+    // ...
+  },
+  get(value: YourType): YourType {
+    // ...
+  },
+}
 ```
 
-- **`parse`** runs at runtime to validate and transform values
-- **`get`** runs at build time for TypeScript type generation
+- **`parser.parse`** runs at runtime to validate and transform values
+- **`parser.get`** runs at build time for TypeScript type generation
 - The filename (without extension) becomes the parser name used in routes

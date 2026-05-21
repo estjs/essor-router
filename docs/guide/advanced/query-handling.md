@@ -315,12 +315,12 @@ router.push({
 })
 ```
 
-## Query Params with `defineRoute()` (Experimental)
+## Query Params with `defineRoute()`
 
 When using file-based routing with `defineRoute()`, you can configure query parameter parsers and validators:
 
 ```tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   params: {
@@ -349,7 +349,7 @@ export const route = defineRoute({
 ```
 
 > [!NOTE]
-> Query param parsers are an **experimental** feature. Enable them with `experimental.paramParsers: true` in your unplugin config.
+> Enable query param parsers with `paramParsers: true` in your unplugin config.
 
 ## Practical Examples
 

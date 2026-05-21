@@ -11,7 +11,7 @@ This guide is the complete reference for `unplugin-essor-router`: setup, file co
 - Static extraction of `defineRoute()` / `definePage()` metadata.
 - Typed route declarations (`typed-router.d.ts`) and page companion typings (`$route.ts`).
 - Dev watch + HMR updates for route tree and resolver.
-- Experimental param parsers and loader auto-export.
+- Param parsers and loader auto-export.
 
 ## Quick Start (Vite)
 
@@ -52,7 +52,7 @@ export const router = createRouter({ history: 'history', routes, resolver })
 Use static object literals for best extraction reliability.
 
 ```ts
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   name: 'users-id',
@@ -93,10 +93,8 @@ essorRouter({
   dts: 'typed-router.d.ts',
   importMode: file => file.includes('/critical/') ? 'sync' : 'async',
   watch: true,
-  experimental: {
-    paramParsers: { dir: ['src/params'] },
-    autoExportsDataLoaders: ['src/loaders/**'], // Vite only
-  },
+  paramParsers: { dir: ['src/params'] },
+  autoExportsDataLoaders: ['src/loaders/**'], // Vite only
 })
 ```
 
