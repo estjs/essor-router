@@ -1,4 +1,4 @@
-import { defineRoute } from 'essor-router/experimental';
+import { defineRoute } from 'essor-router';
 import { signal } from 'essor';
 
 // Fake authentication and fetch API

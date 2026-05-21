@@ -1,5 +1,4 @@
-import { defineRoute } from 'essor-router/experimental';
-import { useRoute } from 'essor-router';
+import { defineRoute, useRoute } from 'essor-router';
 
 export const route = defineRoute({
   meta: {

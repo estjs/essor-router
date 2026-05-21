@@ -11,7 +11,7 @@ export default function Home() {
         defined by `src/params/id.ts`!
       </p>
 
-      <button onClick={() => router.push({ name: '/users/[id]', params: { id: '789' } })}>
+      <button onClick={() => router.push({ name: '/users/[id=id]', params: { id: 789 } })}>
         Go to Typed User 789
       </button>
     </div>

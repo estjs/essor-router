@@ -17,9 +17,7 @@ export default defineConfig({
     essor(),
     router({
       importMode: 'sync',
-      experimental: {
-        paramParsers: true,
-      },
+      paramParsers: true,
     }),
   ],
 });

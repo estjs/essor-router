@@ -1,10 +1,12 @@
 import { createApp } from 'essor';
 import { RouterLink, RouterView, createRouter, createWebHistory } from 'essor-router';
 import { routes } from 'essor-router/auto-routes';
+import { resolver } from 'essor-router/auto-resolver';
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  resolver,
 });
 
 const App = () => {
