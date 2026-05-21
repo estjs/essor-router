@@ -20,8 +20,8 @@ export type {
 
 export { DEFAULT_OPTIONS };
 
-export { AutoExportLoaders } from './experimental/data-loaders/auto-exports';
-export type { AutoExportLoadersOptions } from './experimental/data-loaders/auto-exports';
+export { AutoExportLoaders } from './data-loaders/auto-exports';
+export type { AutoExportLoadersOptions } from './data-loaders/auto-exports';
 
 export default unplugin;
 
@@ -54,8 +54,7 @@ export const essorRouterAutoImports: Record<
     'useRouter',
     'onBeforeRouteUpdate',
     'onBeforeRouteLeave',
-    // NOTE: the typing seems broken locally, so instead we export it directly from essor-router/experimental
-    // 'definePage',
+    'definePage',
+    'defineRoute',
   ],
-  'essor-router/experimental': ['definePage', 'defineRoute'],
 };

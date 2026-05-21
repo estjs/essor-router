@@ -4,7 +4,7 @@ import { definePageTransform, extractDefinePageInfo } from '../../src/core/defin
 describe('defineRoute macro support', () => {
   it('extracts static route info from defineRoute()', () => {
     const code = `
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   name: 'users-id',
@@ -25,7 +25,7 @@ export const route = defineRoute({
 
   it('extracts query param queryKey option from defineRoute()', () => {
     const code = `
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   name: 'users-search',
@@ -49,7 +49,7 @@ export const route = defineRoute({
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
       const code = `
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 const parserName = 'int'
 export const route = defineRoute({
   params: {
@@ -71,7 +71,7 @@ export const route = defineRoute({
 
   it('marks validateSearch/loader/start for typed route tree generation', () => {
     const code = `
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   name: 'search',
@@ -96,7 +96,7 @@ export const route = defineRoute({
 
   it('removes defineRoute statement from transformed source', async () => {
     const code = `
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 const keep = 1
 const route = defineRoute({ name: 'home' })
 export default function Home() { return keep }
@@ -115,7 +115,7 @@ export default function Home() { return keep }
 
   it('extracts defineRoute object with definePage query lang variants', async () => {
     const code = `
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 const role = 'admin'
 const route = defineRoute({
   name: 'home',

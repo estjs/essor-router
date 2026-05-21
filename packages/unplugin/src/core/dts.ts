@@ -25,7 +25,7 @@ export async function generateTypedRouterDts(
     import('../codegen/generateParamParsers'),
   ]);
 
-  if (options.experimental.paramParsers?.dir.length) {
+  if (options.paramParsers?.dir.length) {
     warnMissingParamParsers(routeTree, paramParsersMap);
   }
 

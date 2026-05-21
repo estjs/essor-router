@@ -273,7 +273,6 @@ export const resolver = createFixedResolver([
 `;
 
 exports[`generateRouteResolver snapshot > generates stable resolver for standard routes 2`] = `
-"import { lazyRouteComponent } from 'essor-router'
-import { createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router/experimental'
+"import { lazyRouteComponent, createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router'
 "
 `;

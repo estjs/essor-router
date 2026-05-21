@@ -87,7 +87,7 @@ ${startIndent}}`;
   if (definePageDataList.length > 0) {
     // remove one tab
     const mergeCallIndent = startIndent.slice(2);
-    importsMap.add('essor-router/experimental', '_mergeRouteRecord');
+    importsMap.add('essor-router', '_mergeRouteRecord');
     return `${mergeCallIndent}_mergeRouteRecord(
 ${routeRecord},
 ${definePageDataList.map((s) => startIndent + s).join(',\n')}

@@ -20,7 +20,7 @@ import type {
   Statement,
   StringLiteral,
 } from '@babel/types';
-import type { ParamParserType } from '../contracts/experimental';
+import type { ParamParserType } from '../contracts/routeDefinition';
 import type { CustomRouteBlock } from './routeBlockTypes';
 
 const MACRO_DEFINE_PAGE = 'definePage';

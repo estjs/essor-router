@@ -168,7 +168,7 @@ describe('generateDTS', () => {
     expect(output).toContain('RouteRecordRaw');
   });
 
-  it('imports the expected types from essor-router/experimental', () => {
+  it('imports route definition inference types from essor-router', () => {
     const output = generateDTS({
       routeNamedMap: NAMED_MAP,
       routeTreeMap: TREE_MAP,
@@ -177,7 +177,7 @@ describe('generateDTS', () => {
       customParamsType: 'never',
     });
 
-    expect(output).toContain("from 'essor-router/experimental'");
+    expect(output).toContain("from 'essor-router'");
     expect(output).toContain('RouteTreeNodeInfo');
   });
 

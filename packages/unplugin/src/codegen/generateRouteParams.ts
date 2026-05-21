@@ -33,7 +33,7 @@ export function generateRouteParams(node: TreeNode, isRaw: boolean): string {
       'Record<never, never>';
 }
 
-export function EXPERIMENTAL_generateRouteParams(
+export function generateRouteParamsWithParsers(
   node: TreeNode,
   types: Array<string | null>,
   isRaw: boolean,

@@ -176,8 +176,7 @@ export const resolver = createFixedResolver([
 `;
 
 exports[`config-based routes parser > should generate stable resolver for config-based routes > RouteResolverImports 1`] = `
-"import { lazyRouteComponent } from 'essor-router'
-import { createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router/experimental'
+"import { lazyRouteComponent, createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router'
 "
 `;
 

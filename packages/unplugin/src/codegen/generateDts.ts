@@ -80,7 +80,7 @@ declare module 'essor-router/auto-routes' {
     InferRouteSearch,
     InferRouteStartOptions,
     RouteTreeNodeInfo,
-  } from 'essor-router/experimental'
+  } from 'essor-router'
 
   interface TypesConfig {
     ParamParsers: ${customParamsType}

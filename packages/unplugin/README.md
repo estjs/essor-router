@@ -166,13 +166,11 @@ type Options = {
   /** Options for path segment parsing. */
   pathParser?: { dotNesting?: boolean }  // default: { dotNesting: true }
 
-  // ──── Experimental ────────────────────────────────────────────
-  experimental?: {
-    /** Vite only: auto-export data loaders from matched files. */
-    autoExportsDataLoaders?: string | string[]
-    /** Enable custom param parsers. */
-    paramParsers?: boolean | { dir?: string | string[] }
-  }
+  /** Vite only: auto-export data loaders from matched files. */
+  autoExportsDataLoaders?: string | string[]
+
+  /** Enable custom param parsers. */
+  paramParsers?: boolean | { dir?: string | string[] }
 }
 ```
 
@@ -198,10 +196,10 @@ Import in your router setup:
 import { createRouter } from 'essor-router'
 // File-based: auto-generated flat routes array
 import { routes }   from 'essor-router/auto-routes'
-// Experimental: pre-built static resolver
+// Pre-built static resolver
 import { resolver } from 'essor-router/auto-resolver'
 
-const router = createRouter({ history: 'history', routes })
+const router = createRouter({ history: 'history', routes, resolver })
 ```
 
 ---
@@ -212,7 +210,7 @@ Add per-page route metadata with full TypeScript inference:
 
 ```ts
 // src/pages/users/[id].tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   name: 'users-id',

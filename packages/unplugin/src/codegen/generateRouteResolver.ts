@@ -97,10 +97,10 @@ export function generateRouteResolver(
     }),
   );
 
-  importsMap.add('essor-router/experimental', 'createFixedResolver');
-  importsMap.add('essor-router/experimental', 'MatcherPatternPathStatic');
-  importsMap.add('essor-router/experimental', 'MatcherPatternPathDynamic');
-  importsMap.add('essor-router/experimental', 'normalizeRouteRecord');
+  importsMap.add('essor-router', 'createFixedResolver');
+  importsMap.add('essor-router', 'MatcherPatternPathStatic');
+  importsMap.add('essor-router', 'MatcherPatternPathDynamic');
+  importsMap.add('essor-router', 'normalizeRouteRecord');
 
   return ts`
 ${records.join('\n\n')}
@@ -358,7 +358,7 @@ export function generateRouteRecordQuery({
     return '';
   }
 
-  importsMap.add('essor-router/experimental', 'MatcherPatternQueryParam');
+  importsMap.add('essor-router', 'MatcherPatternQueryParam');
 
   return `query: [
 ${queryParams
@@ -391,7 +391,7 @@ ${queryParams
 }
 
 /**
- * Generates a merge call for route records with definePage data in the experimental resolver format.
+ * Generates a merge call for route records with definePage data in the resolver format.
  */
 function generateRouteRecordMerge(
   routeRecordObject: string,
@@ -402,7 +402,7 @@ function generateRouteRecordMerge(
     return routeRecordObject;
   }
 
-  importsMap.add('essor-router/experimental', '_mergeRouteRecord');
+  importsMap.add('essor-router', '_mergeRouteRecord');
 
   // Re-indent the route object to be 4 spaces (2 levels from normalizeRouteRecord)
   const indentedRouteObject = routeRecordObject

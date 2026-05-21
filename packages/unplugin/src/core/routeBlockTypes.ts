@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from '../contracts/router';
-import type { DefinePageQueryParamOptions } from '../contracts/experimental';
+import type { DefinePageQueryParamOptions } from '../contracts/routeDefinition';
 
 export interface CustomRouteBlock extends Partial<
   Omit<RouteRecordRaw, 'components' | 'component' | 'children' | 'beforeEnter' | 'name' | 'alias'>

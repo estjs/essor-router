@@ -48,7 +48,7 @@ describe('defineRoute integration', () => {
       await writeFile(
         join(pagesDir, 'index.tsx'),
         [
-          `import { defineRoute } from 'essor-router/experimental'`,
+          `import { defineRoute } from 'essor-router'`,
           `export const route = defineRoute({`,
           `  name: 'home',`,
           `  path: '/',`,
@@ -121,7 +121,7 @@ describe('defineRoute integration', () => {
       const aboutPage = join(pagesDir, 'about.tsx');
       await writeFile(
         aboutPage,
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({ name: 'about' })
 export default function About() { return null }
 `,
@@ -191,7 +191,7 @@ export default function About() { return null }
 
       await writeFile(
         join(pagesDir, 'number.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({
   name: 'user-id-number',
   path: '/users/:id(\\\\d+)',
@@ -202,7 +202,7 @@ export default function NumberPage(){ return null }
 
       await writeFile(
         join(pagesDir, 'any.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({
   name: 'user-id-any',
   path: '/users/:id',
@@ -248,42 +248,42 @@ export default function AnyPage(){ return null }
 
       await writeFile(
         join(pagesDir, 'a.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({ name: 'users-new', path: '/users/new' })
 export default function Page(){ return null }
 `,
       );
       await writeFile(
         join(pagesDir, 'b.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({ name: 'users-id-regex', path: '/users/:id(\\\\d+)' })
 export default function Page(){ return null }
 `,
       );
       await writeFile(
         join(pagesDir, 'c.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({ name: 'users-id', path: '/users/:id' })
 export default function Page(){ return null }
 `,
       );
       await writeFile(
         join(pagesDir, 'd.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({ name: 'users-id-optional', path: '/users/:id?' })
 export default function Page(){ return null }
 `,
       );
       await writeFile(
         join(pagesDir, 'e.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({ name: 'users-id-repeatable', path: '/users/:id+' })
 export default function Page(){ return null }
 `,
       );
       await writeFile(
         join(pagesDir, 'f.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({ name: 'users-splat', path: '/users/:path(.*)' })
 export default function Page(){ return null }
 `,
@@ -340,7 +340,7 @@ export default function Page(){ return null }
 
       await writeFile(
         join(pagesDir, 'index.tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({
   name: 'users-home',
   alias: ['/people'],
@@ -351,7 +351,7 @@ export default function UsersHome(){ return null }
 
       await writeFile(
         join(pagesDir, '[id].tsx'),
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({
   name: 'users-by-id',
   path: '/people/:id',
@@ -397,7 +397,7 @@ export default function UserDetails(){ return null }
 
       await writeFile(
         defaultView,
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({
   name: 'dashboard',
   meta: { requiresAuth: true },
@@ -491,7 +491,7 @@ export default function Dashboard(){ return null }
 
       await writeFile(
         defaultView,
-        `import { defineRoute } from 'essor-router/experimental'
+        `import { defineRoute } from 'essor-router'
 export const route = defineRoute({
   name: 'dashboard',
   meta: { requiresAuth: true },
@@ -548,7 +548,7 @@ export default function Dashboard(){ return null }
         root,
         routesFolder: 'src/pages',
         watch: true,
-        experimental: { paramParsers: true },
+        paramParsers: true,
       });
 
       const ctx = trackContext(createRoutesContext(options));
@@ -612,7 +612,7 @@ export default function Dashboard(){ return null }
         routesFolder: 'src/pages',
         watch: true,
         dts: false,
-        experimental: { paramParsers: true },
+        paramParsers: true,
       });
 
       let routeUpdateCount = 0;

@@ -86,7 +86,7 @@ describe('unplugin framework entries', () => {
         root,
         routesFolder: 'src/pages',
         watch: false,
-        experimental: { autoExportsDataLoaders: 'src/loaders/**' },
+        autoExportsDataLoaders: 'src/loaders/**',
       },
       { framework: 'vite' },
     );

@@ -369,11 +369,13 @@ export class TreeNode {
       node = nodeList[i]!;
       if (node.value.isParam()) {
         const nodeRe = node.value.re;
-        // Ensure we add a connecting slash
-        // if we already have something in the regexp and if the only part of
-        // the segment is an optional param, then the / must be put inside the
-        // non-capturing group
-        if (
+        // The per-segment `re` getter may already wrap the param in a
+        // slash-prefixed optional group like `(?:\/(...))?` when the segment
+        // starts with `/` or with an empty subSegment. In that case it
+        // already encodes the connecting slash, so we must NOT add another.
+        if (nodeRe.startsWith('(?:\\/')) {
+          re += nodeRe;
+        } else if (
           // if we have a segment before or after
           (re || i < nodeList.length - 1) &&
           // if the only part of the segment is an optional (can be repeatable) param
@@ -604,9 +606,13 @@ export function collectDuplicatedRouteNodes(tree: PrefixTree): DuplicatedRouteCo
   // find which nodes take precedence to reorder the list
   const treeNodes = new Set<TreeNode>(...tree);
 
-  // by reading through the map, we get every node that was added to the tree
+  // by reading through the map, we get every node that was added to the tree.
+  // Two files mapped to the same node only conflict when they target the SAME
+  // named view — e.g. `about.tsx` and `about@sidebar.tsx` map to the same node
+  // but are not conflicts because they fill different view slots.
   for (const [filePath, node] of tree.map) {
-    const key = `${node.fullPath}::${node.toString()}`;
+    const viewName = extractViewNameFromFilePath(filePath);
+    const key = `${node.fullPath}::${node.toString()}::${viewName}`;
     let nodes = seen.get(key);
     if (!nodes) {
       nodes = [];
@@ -629,6 +635,20 @@ export function collectDuplicatedRouteNodes(tree: PrefixTree): DuplicatedRouteCo
   );
 
   return dups;
+}
+
+/**
+ * Extracts the named-view suffix from a file path. For `pages/about@sidebar.tsx`
+ * returns `'sidebar'`; for `pages/about.tsx` returns `'default'`. Mirrors the
+ * naming convention enforced by `splitFilePath`.
+ */
+function extractViewNameFromFilePath(filePath: string): string {
+  const base = filePath.split('/').pop() ?? filePath;
+  // Strip extension before reading the @viewName suffix.
+  const dot = base.lastIndexOf('.');
+  const stem = dot > 0 ? base.slice(0, dot) : base;
+  const at = stem.lastIndexOf('@');
+  return at > 0 ? stem.slice(at + 1) : 'default';
 }
 
 /**

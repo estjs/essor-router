@@ -116,7 +116,7 @@ export function createRoutesContext(options: ResolvedOptions) {
             ),
           );
         }),
-      ...(options.experimental.paramParsers?.dir.map((folder) => {
+      ...(options.paramParsers?.dir.map((folder) => {
         if (startWatchers) {
           watchers.push(setupParamParserWatcher(folder));
         }

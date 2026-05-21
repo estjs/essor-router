@@ -16,17 +16,15 @@ export function extractLoadersToExport(
   const importNames = imports.flatMap((i) => {
     const parsed = parseStaticImport(i);
 
-    // since we run post-post, vite will add a leading slash to the specifier
     const specifier = resolve(
       root,
       parsed.specifier.startsWith('/') ? parsed.specifier.slice(1) : parsed.specifier,
     );
 
-    // bail out faster for anything that is not a data loader
     if (!filterPaths(specifier)) return [];
 
     return [parsed.defaultImport, ...Object.values(parsed.namedImports || {})].filter(
-      (v): v is string => !!v && !v.startsWith('_'),
+      (value): value is string => !!value && !value.startsWith('_'),
     );
   });
 
@@ -69,11 +67,7 @@ function isObjectFilter(filter: StringFilter): filter is {
 }
 
 /**
- * Vite Plugin to automatically export loaders from page components.
- *
- * @param options Options
- * @experimental - This API is experimental and can be changed in the future. It's used internally by `experimental.autoExportsDataLoaders`
-
+ * Vite plugin to automatically export data loaders from page components.
  */
 export function AutoExportLoaders({
   transformFilter,
@@ -108,7 +102,6 @@ export function AutoExportLoaders({
 export function createAutoExportPlugin(options: AutoExportLoadersOptions): UnpluginOptions {
   return {
     name: PLUGIN_NAME,
-    // Cast needed due to Vite version differences in monorepo
     vite: AutoExportLoaders(options) as any,
   };
 }

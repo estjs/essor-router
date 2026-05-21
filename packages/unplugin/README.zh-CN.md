@@ -166,13 +166,11 @@ type Options = {
   /** 路径段解析选项。 */
   pathParser?: { dotNesting?: boolean }  // 默认：{ dotNesting: true }
 
-  // ──── 实验性功能 ───────────────────────────────────────────
-  experimental?: {
-    /** 仅 Vite：从匹配文件自动导出 data loaders。 */
-    autoExportsDataLoaders?: string | string[]
-    /** 启用自定义 param parsers。 */
-    paramParsers?: boolean | { dir?: string | string[] }
-  }
+  /** 仅 Vite：从匹配文件自动导出 data loaders。 */
+  autoExportsDataLoaders?: string | string[]
+
+  /** 启用自定义 param parsers。 */
+  paramParsers?: boolean | { dir?: string | string[] }
 }
 ```
 
@@ -198,10 +196,10 @@ type RoutesFolderOption = {
 import { createRouter } from 'essor-router'
 // 文件路由：自动生成的扁平路由数组
 import { routes }   from 'essor-router/auto-routes'
-// 实验性：预构建静态解析器
+// 预构建静态解析器
 import { resolver } from 'essor-router/auto-resolver'
 
-const router = createRouter({ history: 'history', routes })
+const router = createRouter({ history: 'history', routes, resolver })
 ```
 
 ---
@@ -212,7 +210,7 @@ const router = createRouter({ history: 'history', routes })
 
 ```ts
 // src/pages/users/[id].tsx
-import { defineRoute } from 'essor-router/experimental'
+import { defineRoute } from 'essor-router'
 
 export const route = defineRoute({
   name: 'users-id',

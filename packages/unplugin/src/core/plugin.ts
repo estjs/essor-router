@@ -1,6 +1,6 @@
 import { type UnpluginOptions, createUnplugin } from 'unplugin';
 import { join } from 'pathe';
-import { createAutoExportPlugin } from '../experimental/data-loaders/auto-exports';
+import { createAutoExportPlugin } from '../data-loaders/auto-exports';
 import { createRoutesContext } from './context';
 import {
   DEFINE_PAGE_QUERY_RE,
@@ -126,15 +126,14 @@ export default createUnplugin<Options | undefined>((opt = {}, _meta) => {
     },
   ];
 
-  // Experimental options
-  if (options.experimental.autoExportsDataLoaders) {
+  if (options.autoExportsDataLoaders) {
     plugins.push(
       createAutoExportPlugin({
         transformFilter: {
           include: IDS_TO_INCLUDE,
           exclude: options.exclude,
         },
-        loadersPathsGlobs: options.experimental.autoExportsDataLoaders,
+        loadersPathsGlobs: options.autoExportsDataLoaders,
         root: options.root,
       }),
     );

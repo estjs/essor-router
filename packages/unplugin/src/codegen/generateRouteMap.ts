@@ -1,10 +1,10 @@
 import { formatMultilineUnion, pad, toStringLiteral } from '../utils';
 import { type ParamParsersMap, generateParamsTypes } from './generateParamParsers';
-import { EXPERIMENTAL_generateRouteParams, generateRouteParams } from './generateRouteParams';
+import { generateRouteParams, generateRouteParamsWithParsers } from './generateRouteParams';
 import type { TreeNode, TreeNodeNamed } from '../core/tree';
 import type { ResolvedOptions } from '../core/options';
 
-export { EXPERIMENTAL_generateRouteParams, generateRouteParams };
+export { generateRouteParams, generateRouteParamsWithParsers };
 
 export function generateRouteNamedMap(
   node: TreeNode,
@@ -43,18 +43,18 @@ export function generateRouteRecordInfo(
   paramParsersMap: ParamParsersMap,
 ): string {
   let paramParsers: Array<string | null> = [];
-  if (options.experimental.paramParsers) {
+  if (options.paramParsers) {
     paramParsers = generateParamsTypes(node.params, paramParsersMap);
   }
 
   const typeParams = [
     toStringLiteral(node.name),
     toStringLiteral(node.fullPath),
-    options.experimental.paramParsers
-      ? EXPERIMENTAL_generateRouteParams(node, paramParsers, true)
+    options.paramParsers
+      ? generateRouteParamsWithParsers(node, paramParsers, true)
       : generateRouteParams(node, true),
-    options.experimental.paramParsers
-      ? EXPERIMENTAL_generateRouteParams(node, paramParsers, false)
+    options.paramParsers
+      ? generateRouteParamsWithParsers(node, paramParsers, false)
       : generateRouteParams(node, false),
   ];
 

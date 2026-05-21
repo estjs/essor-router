@@ -240,28 +240,31 @@ export interface Options {
   configRoutes?: string;
 
   /**
-   * Experimental options. **Warning**: these can change or be removed at any time, even it patch releases. Keep an eye
-   * on the Changelog.
+   * (Vite only). File paths or globs where loaders are exported. This will be
+   * used to filter imported loaders and automatically re-export them in page
+   * components.
+   */
+  autoExportsDataLoaders?: string | string[];
+
+  /**
+   * Enables custom route param parsers.
+   */
+  paramParsers?: boolean | ParamParsersOptions;
+
+  /**
+   * @deprecated The `experimental` namespace is no longer used. Move its
+   * properties to the top-level options object. This field is read only to
+   * issue a one-time migration warning and will be removed in a future
+   * release.
    */
   experimental?: {
-    /**
-     * (Vite only). File paths or globs where loaders are exported. This will be used to filter out imported loaders and
-     * automatically re export them in page components. You can for example set this to `'src/loaders/**\/*'` (without
-     * the backslash) to automatically re export any imported variable from files in the `src/loaders` folder within a
-     * page component.
-     */
     autoExportsDataLoaders?: string | string[];
-
-    /**
-     * Enable experimental support for the new custom resolvers and allows
-     * defining custom param matchers.
-     */
     paramParsers?: boolean | ParamParsersOptions;
   };
 }
 
 /**
- * Options for experimental param parsers.
+ * Options for param parsers.
  */
 export interface ParamParsersOptions {
   /**
@@ -273,7 +276,7 @@ export interface ParamParsersOptions {
 }
 
 /**
- * Default options for experimental param parsers.
+ * Default options for param parsers.
  */
 export const DEFAULT_PARAM_PARSERS_OPTIONS = {
   dir: ['src/params'],
@@ -298,7 +301,6 @@ export const DEFAULT_OPTIONS = {
   },
   watch: !process?.env?.CI,
   mode: 'file' as 'file' | 'config',
-  experimental: {},
 } satisfies Options;
 
 /**
@@ -365,6 +367,19 @@ function normalizeRouteOption(routeOption: RoutesFolderOption) {
 export function resolveOptions(options: Options) {
   const root = options.root || DEFAULT_OPTIONS.root;
 
+  if (options.experimental) {
+    warn(
+      '[essor-router] The `experimental` options namespace has been removed. ' +
+        'Move `experimental.autoExportsDataLoaders` and `experimental.paramParsers` to the top-level options object.',
+    );
+    options = {
+      ...options,
+      autoExportsDataLoaders:
+        options.autoExportsDataLoaders ?? options.experimental.autoExportsDataLoaders,
+      paramParsers: options.paramParsers ?? options.experimental.paramParsers,
+    };
+  }
+
   const routesFolder = normalizeRoutesFolderOption(
     options.routesFolder || DEFAULT_OPTIONS.routesFolder,
   ).map((routeOption) => ({
@@ -372,28 +387,22 @@ export function resolveOptions(options: Options) {
     src: resolve(root, routeOption.src),
   }));
 
-  const paramParsers = options.experimental?.paramParsers
-    ? options.experimental.paramParsers === true
+  const paramParsers = options.paramParsers
+    ? options.paramParsers === true
       ? DEFAULT_PARAM_PARSERS_OPTIONS
-      : { ...DEFAULT_PARAM_PARSERS_OPTIONS, ...options.experimental.paramParsers }
+      : { ...DEFAULT_PARAM_PARSERS_OPTIONS, ...options.paramParsers }
     : undefined;
 
   const paramParsersDir = (
     paramParsers?.dir ? (isArray(paramParsers.dir) ? paramParsers.dir : [paramParsers.dir]) : []
   ).map((dir) => resolve(root, dir));
 
-  const autoExportsDataLoaders = options.experimental?.autoExportsDataLoaders
-    ? (isArray(options.experimental.autoExportsDataLoaders)
-        ? options.experimental.autoExportsDataLoaders
-        : [options.experimental.autoExportsDataLoaders]
+  const autoExportsDataLoaders = options.autoExportsDataLoaders
+    ? (isArray(options.autoExportsDataLoaders)
+        ? options.autoExportsDataLoaders
+        : [options.autoExportsDataLoaders]
       ).map((path) => resolve(root, path))
     : undefined;
-
-  const experimental = {
-    ...options.experimental,
-    autoExportsDataLoaders,
-    paramParsers: paramParsers && { ...paramParsers, dir: paramParsersDir },
-  };
 
   if (options.extensions) {
     options.extensions = options.extensions
@@ -429,7 +438,8 @@ export function resolveOptions(options: Options) {
   return {
     ...DEFAULT_OPTIONS,
     ...options,
-    experimental,
+    autoExportsDataLoaders,
+    paramParsers: paramParsers && { ...paramParsers, dir: paramParsersDir },
     routesFolder,
     filePatterns,
     exclude,

@@ -103,7 +103,7 @@ export function generateParamParserOptions(
     return varName;
   } else if (NATIVE_PARAM_PARSERS.includes(param.parser)) {
     const varName = `PARAM_PARSER_${param.parser.toUpperCase()}`;
-    importsMap.add('essor-router/experimental', varName);
+    importsMap.add('essor-router', varName);
     return varName;
   }
   return '';

@@ -68,19 +68,17 @@ describe('unplugin options', () => {
     expect(options.exclude).toEqual(['src/pages/ignored/**']);
   });
 
-  it('resolves experimental paramParsers and autoExportsDataLoaders', () => {
+  it('resolves paramParsers and autoExportsDataLoaders as stable top-level options', () => {
     const options = resolveOptions({
-      experimental: {
-        paramParsers: {
-          dir: 'src/params',
-        },
-        autoExportsDataLoaders: ['src/loaders', 'src/extra-loaders'],
+      paramParsers: {
+        dir: 'src/params',
       },
+      autoExportsDataLoaders: ['src/loaders', 'src/extra-loaders'],
     });
 
-    expect(options.experimental?.paramParsers?.dir?.length).toBe(1);
-    expect(options.experimental?.paramParsers?.dir?.[0]).toMatch(/src\/params$/);
-    expect(options.experimental?.autoExportsDataLoaders).toEqual([
+    expect(options.paramParsers?.dir?.length).toBe(1);
+    expect(options.paramParsers?.dir?.[0]).toMatch(/src\/params$/);
+    expect(options.autoExportsDataLoaders).toEqual([
       expect.stringMatching(/src\/loaders$/),
       expect.stringMatching(/src\/extra-loaders$/),
     ]);
