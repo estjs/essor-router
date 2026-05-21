@@ -1,6 +1,6 @@
 {
   "name": "essor-router-monorepo",
-  "version": "0.0.17-beta.4",
+  "version": "0.0.17-beta.5",
   "private": true,
   "packageManager": "pnpm@11.1.3",
   "type": "module",
