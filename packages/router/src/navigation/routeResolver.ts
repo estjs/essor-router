@@ -4,11 +4,13 @@ import { decode, encodeHash, encodeParam } from '../encoding';
 import { parseURL, stringifyURL } from '../core/location';
 import {
   type LocationQuery,
+  type LocationQueryRaw,
   type parseQuery as defaultParseQuery,
   stringifyQuery as defaultStringifyQuery,
   normalizeQuery,
 } from '../core/query';
 import {
+  type MatcherLocation,
   type MatcherLocationRaw,
   type RouteLocation,
   type RouteLocationNormalized,
@@ -21,7 +23,13 @@ import { applyToParams, assign } from '../utils';
 import { warn } from '../core/warning';
 import type { Signal } from 'essor';
 import type { RouterHistory } from '../history/common';
-import type { RouterMatcher } from '../matcher';
+
+export interface MatcherResolver {
+  resolve(
+    location: MatcherLocationRaw & { query?: LocationQueryRaw },
+    currentLocation: MatcherLocation,
+  ): MatcherLocation;
+}
 
 export interface RouteResolver {
   resolve: (
@@ -40,7 +48,7 @@ export function createReactiveRoute(
 }
 
 export function createRouteResolver(
-  matcher: RouterMatcher,
+  matcher: MatcherResolver,
   routerHistory: RouterHistory,
   parseQuery: typeof defaultParseQuery,
   stringifyQuery: typeof defaultStringifyQuery,
@@ -60,7 +68,10 @@ export function createRouteResolver(
 
     if (isString(rawLocation)) {
       const locationNormalized = parseURL(parseQuery, rawLocation, currentLocation.path);
-      const matchedRoute = matcher.resolve({ path: locationNormalized.path }, currentLocation);
+      const matchedRoute = matcher.resolve(
+        { path: locationNormalized.path, query: locationNormalized.query },
+        currentLocation,
+      );
       const href = routerHistory.createHref(locationNormalized.fullPath);
 
       if (__DEV__) {

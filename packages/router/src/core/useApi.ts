@@ -11,13 +11,18 @@ import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from '../ty
 // ---------------------------------------------------------------------------
 
 let activeRouter: Router | undefined;
+let activeRoute: RouteLocationNormalizedLoaded | undefined;
 
 export function registerActiveRouter(router: Router): void {
   activeRouter = router;
+  // Memoize the reactive accessor so repeated useRoute() calls outside of a
+  // RouterView (e.g. header siblings) don't allocate a new proxy each time.
+  activeRoute = createRouteAccessor(router.currentRoute);
 }
 
 export function unregisterActiveRouter(): void {
   activeRouter = undefined;
+  activeRoute = undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -75,11 +80,11 @@ export function useRouter(): Router {
  * Returns the current route location. Equivalent to using `$route` inside templates.
  */
 export function useRoute(): RouteLocationNormalizedLoaded {
-  const route = inject(routeLocationKey);
+  const route = inject(routeLocationKey) || activeRoute;
   if (!route) {
     warn('useRoute() requires an active router instance. Make sure RouterView is mounted.');
   }
-  return route;
+  return route as RouteLocationNormalizedLoaded;
 }
 
 /**

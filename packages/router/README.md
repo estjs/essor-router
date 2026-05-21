@@ -12,7 +12,7 @@ The runtime router for [Essor](https://github.com/estjs/essor) — history, matc
 - **Nested Routes & Views** — Hierarchical layouts with nested `RouterView`
 - **Navigation Guards** — `beforeEach`, `beforeResolve`, `afterEach`, `beforeEnter`, `onBeforeRouteLeave`, `onBeforeRouteUpdate`
 - **Lazy Loading** — Async component loading with `() => import('./Page')`
-- **Route Loaders** — Experimental route data loaders for declarative data fetching
+- **Route Loaders** — Route data loaders for declarative data fetching
 - **Scroll Behavior** — Customizable scroll behavior during navigation
 
 ## Installation
@@ -59,7 +59,8 @@ createApp(App, '#app');
 | Option | Type | Description |
 |--------|------|-------------|
 | `history` | `'history' \| 'hash' \| 'memory' \| RouterHistory` | History mode |
-| `routes` | `RouteRecordRaw[]` | Route definitions |
+| `routes` | `RouteRecordRaw[]` | Route definitions (optional when `resolver` is supplied) |
+| `resolver` | `FixedRouteResolver` | Prebuilt resolver from `unplugin-essor-router` |
 | `base` | `string` | Base URL |
 | `scrollBehavior` | `RouterScrollBehavior` | Scroll behavior callback |
 | `parseQuery` | `(query: string) => LocationQuery` | Custom query parser |
@@ -141,20 +142,71 @@ router.afterEach((to, from, failure) => {
 });
 ```
 
+### Prebuilt resolver (from `unplugin-essor-router`)
+
+The unplugin emits an optimized `FixedRouteResolver` at build time. Pass it to
+`createRouter` to skip the runtime matcher build:
+
+```tsx
+import { resolver } from 'virtual:essor-router/auto-resolver';
+import { createRouter, createWebHistory } from 'essor-router';
+
+const router = createRouter({
+  history: createWebHistory(),
+  resolver,
+});
+```
+
+#### Path matching semantics
+
+- `MatcherPatternPathStatic` matches **case-insensitively** and tolerates a
+  trailing slash: `/About`, `/about`, and `/about/` all resolve to the same
+  record.
+- `MatcherPatternPathDynamic` first tries the raw regex, then retries with the
+  trailing slash stripped.
+- A failed `stringify()` (missing required param) throws
+  `FixedResolverParamError` — distinct from `MatcherError`, which signals a
+  failed *match*.
+
 ## Package Exports
 
 | Export | Path |
 |--------|------|
 | Main | `essor-router` |
-| Experimental | `essor-router/experimental` |
+| Auto routes (virtual) | `essor-router/auto-routes` |
+| Auto resolver (virtual) | `essor-router/auto-resolver` |
+| Experimental (deprecated shim) | `essor-router/experimental` |
 
 ### Main exports
 
-`createRouter`, `createWebHistory`, `createWebHashHistory`, `createMemoryHistory`, `RouterLink`, `RouterView`, `useRoute`, `useRouter`, `onBeforeRouteLeave`, `onBeforeRouteUpdate`, `isNavigationFailure`, `NavigationFailureType`, `parseQuery`, `stringifyQuery`
+`createRouter`, `createWebHistory`, `createWebHashHistory`, `createMemoryHistory`, `RouterLink`, `RouterView`, `useRoute`, `useRouter`, `defineRoute`, `definePage`, `defineStartRoute`, `createFixedResolver`, `MatcherPatternPathStatic`, `MatcherPatternPathDynamic`, `MatcherPatternQueryParam`, `FixedResolverParamError`, `PARAM_PARSER_INT`, `PARAM_PARSER_BOOL`, `onBeforeRouteLeave`, `onBeforeRouteUpdate`, `isNavigationFailure`, `NavigationFailureType`, `parseQuery`, `stringifyQuery`
 
-### Experimental exports
+## Migrating from `0.0.17-beta.4` and earlier
 
-`defineRoute`, `definePage`, `_mergeRouteRecord`, `createFixedResolver`, `MatcherPatternPathStatic`, `MatcherPatternPathDynamic`, `MatcherPatternQueryParam`, `normalizeRouteRecord`, `PARAM_PARSER_INT`, `PARAM_PARSER_BOOL`
+The `essor-router/experimental` entry point has graduated to the main package
+entry. The deprecated subpath still works for one release with a runtime
+warning. Update imports as follows:
+
+```diff
+- import { createFixedResolver, definePage } from 'essor-router/experimental';
++ import { createFixedResolver, definePage } from 'essor-router';
+```
+
+Likewise, the `experimental` namespace on the unplugin options has been
+flattened:
+
+```diff
+  vitePlugin({
+-   experimental: {
+-     paramParsers: true,
+-     autoExportsDataLoaders: 'src/loaders/**/*',
+-   },
++   paramParsers: true,
++   autoExportsDataLoaders: 'src/loaders/**/*',
+  })
+```
+
+Old configs still load with a one-time deprecation warning.
 
 ## License
 

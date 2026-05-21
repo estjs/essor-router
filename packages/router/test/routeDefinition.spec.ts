@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { _mergeRouteRecord } from '../src/experimental';
+import { _mergeRouteRecord, definePage, defineRoute } from '../src';
 
-describe('experimental runtime helpers', () => {
+describe('stable route definition helpers', () => {
+  it('exports definePage and defineRoute from the main entry', () => {
+    const route = { name: 'home', path: '/' };
+
+    expect(definePage(route)).toBe(route);
+    expect(defineRoute(route)).toBe(route);
+  });
+
   it('merges alias/meta/params/start without dropping existing values', () => {
     const merged = _mergeRouteRecord(
       {

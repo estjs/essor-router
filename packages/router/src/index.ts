@@ -15,6 +15,42 @@ export type { RouterHistory, HistoryState } from './history/common';
 
 export { createRouter, RouterOptions } from './core/router';
 export type { ErrorListener, _ErrorListener, Router } from './core/router';
+export { definePage, defineRoute, defineStartRoute } from './routeDefinition';
+export type {
+  DefinePage,
+  DefinePageQueryParamOptions,
+  DefineRouteLoader,
+  DefineRouteLoaderContext,
+  DefineRouteSearchValidator,
+  DefineRouteStartOptions,
+  InferRouteBeforeLoadData,
+  InferRouteDefinitionFromDefinePageModule,
+  InferRouteLoaderData,
+  InferRouteSearch,
+  InferRouteStartOptions,
+  ParamParserType,
+  ParamParserType_Native,
+  RouteTreeNodeInfo,
+} from './routeDefinition';
+export { _mergeRouteRecord } from './routeRecordMerge';
+export {
+  createFixedResolver,
+  FixedResolverParamError,
+  MatcherPatternPathDynamic,
+  MatcherPatternPathStatic,
+  MatcherPatternQueryParam,
+  normalizeRouteRecord,
+  PARAM_PARSER_BOOL,
+  PARAM_PARSER_INT,
+} from './fixedResolver';
+export type {
+  FixedResolverRecordRaw,
+  FixedResolverRecordInput,
+  FixedRouteResolver,
+  MatcherPatternPath,
+  MatcherPatternPathPart,
+  ParamParser,
+} from './fixedResolver';
 
 export { NavigationFailureType, isNavigationFailure } from './core/errors';
 export type { NavigationFailure, ErrorTypes, NavigationRedirectError } from './core/errors';

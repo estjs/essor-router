@@ -1,16 +1,26 @@
-import type { RouteLocationNormalized, RouteRecordRaw } from '../types';
+import type { RouteLocationNormalized, RouteRecordRaw } from './types';
 
 /**
- * Helper to define page properties with file-based routing.
- * **Doesn't do anything**, used for types only.
+ * Defines page-level route properties for file-based routing.
  *
- * @param route - route information to be added to this page
- *
- * @internal
+ * Returns its input unchanged — the function exists so that
+ * `unplugin-essor-router` can statically extract the call site and so users
+ * get full type inference inside the object literal.
  */
-export const definePage = (route: DefinePage) => route;
-export const defineRoute = (route: DefinePage) => route;
-export const defineStartRoute = (route: DefinePage) => route;
+export const definePage = <T extends DefinePage>(route: T): T => route;
+
+/**
+ * Alias of {@link definePage}. The unplugin recognizes both names; prefer
+ * `definePage` for new code.
+ */
+export const defineRoute = definePage;
+
+/**
+ * Alias of {@link definePage}, intended for route files that only set Start
+ * (SSR/preload) metadata. Behaves identically — provided so call sites read
+ * naturally when the file's only purpose is `start: {...}`.
+ */
+export const defineStartRoute = definePage;
 
 export type DefineRouteSearchValidator<TInput = unknown, TOutput = TInput> = (
   input: TInput,
@@ -53,9 +63,7 @@ export interface DefinePage extends Partial<
   name?: string | false;
 
   /**
-   * Custom parameters for the route. Requires `experimental.paramParsers` enabled.
-   *
-   * @experimental
+   * Custom path and query parameter parsers for the route.
    */
   params?: {
     path?: Record<string, ParamParserType>;
@@ -82,7 +90,7 @@ export interface DefinePage extends Partial<
   beforeLoad?: DefineRouteLoader<any, any, any>;
 
   /**
-   * Start metadata for future SSR/preload adapters.
+   * Start metadata for SSR/preload adapters.
    */
   start?: DefineRouteStartOptions;
 }
@@ -141,8 +149,8 @@ export type ParamParserType = ParamParserType_Native | string;
 export interface DefinePageQueryParamOptions<T = unknown> {
   /**
    * The type of the query parameter. Allowed values are native param parsers
-   * and any parser in the params folder. If not provided, the value will kept
-   * as is.
+   * and any parser in the params folder. If not provided, the value will be
+   * kept as is.
    */
   parser?: ParamParserType;
 
@@ -153,9 +161,7 @@ export interface DefinePageQueryParamOptions<T = unknown> {
   queryKey?: string;
 
   /**
-   * Default value if the query parameter is missing or if the match fails
-   * (e.g. a invalid number is passed to the int param parser). If not provided
-   * and the param is not required, the route will match with undefined.
+   * Default value if the query parameter is missing or if the match fails.
    */
   default?: (() => T) | T;
 
@@ -163,7 +169,7 @@ export interface DefinePageQueryParamOptions<T = unknown> {
    * How to format the query parameter value.
    *
    * - 'value' - keep the first value only and pass that to parser
-   * - 'array' - keep all values (even one or none) as an array and pass that to parser
+   * - 'array' - keep all values as an array and pass that to parser
    *
    * @default 'value'
    */
@@ -171,7 +177,7 @@ export interface DefinePageQueryParamOptions<T = unknown> {
 
   /**
    * Whether this query parameter is required. If true and the parameter is
-   * missing (and no default is provided), the route will not match.
+   * missing and no default is provided, the route will not match.
    *
    * @default false
    */
