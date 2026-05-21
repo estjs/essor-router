@@ -485,7 +485,8 @@ router.onError((error, to, from) => {
 | 选项 | 类型 | 描述 |
 |------|------|------|
 | `history` | `'history' \| 'hash' \| 'memory' \| RouterHistory` | 历史模式 |
-| `routes` | `RouteRecordRaw[]` | 初始路由记录 |
+| `routes` | `RouteRecordRaw[]` | 初始路由记录。提供了 `resolver` 时可省略。 |
+| `resolver` | `FixedRouteResolver` | 由 `unplugin-essor-router` 构建期生成的 resolver(来自 `essor-router/auto-resolver`),传入后由它接管匹配,`routes` 变为可选 |
 | `base` | `string` | 基础 URL 路径 |
 | `parseQuery` | `(query: string) => LocationQuery` | 自定义查询解析器 |
 | `stringifyQuery` | `(query: LocationQueryRaw) => string` | 自定义查询序列化器 |

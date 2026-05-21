@@ -139,7 +139,8 @@ Creates a router instance.
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `history` | `'history' \| 'hash' \| 'memory' \| RouterHistory` | — | History mode |
-| `routes` | `RouteRecordRaw[]` | `[]` | Initial route records |
+| `routes` | `RouteRecordRaw[]` | `[]` | Initial route records. Optional when `resolver` is supplied. |
+| `resolver` | `FixedRouteResolver` | — | Prebuilt resolver from `unplugin-essor-router` (`essor-router/auto-resolver`). When passed, matching is delegated to it and `routes` becomes optional. |
 | `base` | `string` | `'/'` | Base URL path |
 | `scrollBehavior` | `RouterScrollBehavior` | — | Custom scroll behavior |
 | `parseQuery` | `(query: string) => LocationQuery` | built-in | Custom query parser |

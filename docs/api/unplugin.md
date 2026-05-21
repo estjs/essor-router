@@ -37,6 +37,14 @@ type Options = {
 }
 ```
 
+::: warning Deprecated
+The `experimental` namespace previously used to enable `paramParsers` and
+`autoExportsDataLoaders` has been flattened. Configs of the form
+`{ experimental: { paramParsers, autoExportsDataLoaders } }` still load
+but print a one-time deprecation warning; move the keys to the top
+level.
+:::
+
 ## `routesFolder` Advanced Shape
 
 ```ts
@@ -59,6 +67,10 @@ The unplugin statically extracts and merges:
 - `params.path` and `params.query`
 - `validateSearch`, `loader`, `beforeLoad`, `start`
 
+`definePage`, `defineRoute`, and `defineStartRoute` are all recognized
+and behave identically — `defineRoute` and `defineStartRoute` are
+aliases of `definePage` provided so call sites read naturally.
+
 Query param options:
 - `queryKey`, `parser`, `format` (`value | array`), `default`, `required`
 
@@ -72,7 +84,7 @@ Query param options:
 
 `essorRouterAutoImports` includes:
 - from `essor-router`: `useRoute`, `useRouter`, `onBeforeRouteUpdate`, `onBeforeRouteLeave`
-- from `essor-router`: `definePage`, `defineRoute`
+- from `essor-router`: `definePage`, `defineRoute`, `defineStartRoute`
 
 ## Recommended Baseline
 

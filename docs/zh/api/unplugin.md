@@ -37,6 +37,12 @@ type Options = {
 }
 ```
 
+::: warning 已废弃
+原先用于启用 `paramParsers` 与 `autoExportsDataLoaders` 的 `experimental`
+命名空间已扁平化。`{ experimental: { paramParsers, autoExportsDataLoaders } }`
+形式仍可加载,但会在控制台打印一次弃用警告;请把两个键直接放到顶层。
+:::
+
 ## `routesFolder` 高级形态
 
 ```ts
@@ -59,6 +65,9 @@ unplugin 会提取并合并：
 - `params.path` 与 `params.query`
 - `validateSearch`、`loader`、`beforeLoad`、`start`
 
+`definePage`、`defineRoute`、`defineStartRoute` 都会被识别,行为完全一致 —
+后两个是 `definePage` 的别名,方便调用处读起来更自然。
+
 Query 参数可配置：
 - `queryKey`、`parser`、`format`（`value | array`）、`default`、`required`
 
@@ -72,7 +81,7 @@ Query 参数可配置：
 
 `essorRouterAutoImports` 包含：
 - `essor-router`：`useRoute`、`useRouter`、`onBeforeRouteUpdate`、`onBeforeRouteLeave`
-- `essor-router`：`definePage`、`defineRoute`
+- `essor-router`：`definePage`、`defineRoute`、`defineStartRoute`
 
 ## 推荐基础配置
 

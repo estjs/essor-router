@@ -38,7 +38,7 @@ createRouter({
 ### routes
 
 - **Type:** `RouteRecordRaw[]`
-- **Required:** Yes
+- **Required:** No (default `[]`)
 
 Initial array of route records:
 
@@ -51,6 +51,37 @@ createRouter({
   ],
 });
 ```
+
+When `resolver` is supplied the records are normally provided through it
+and `routes` can be omitted entirely. If both are passed, `routes` is
+still consumed by the runtime matcher used for `addRoute`, `removeRoute`,
+`hasRoute`, `getRoutes`, and prerender path collection — `resolver` only
+takes over path matching.
+
+### resolver
+
+- **Type:** `FixedRouteResolver`
+- **Required:** No
+
+A prebuilt resolver generated at build time by `unplugin-essor-router`
+and exposed via the virtual module `essor-router/auto-resolver`. Pass it
+to delegate path resolution to compiled lookup tables and skip the
+ranked runtime matcher on every navigation:
+
+```tsx
+import { resolver } from 'essor-router/auto-resolver';
+import { createRouter, createWebHistory } from 'essor-router';
+
+const router = createRouter({
+  history: createWebHistory(),
+  resolver,
+});
+```
+
+You can also build a resolver by hand with `createFixedResolver()` for
+SSR or testing scenarios — see the
+[file-based routing guide](/guide/advanced/file-based-routing-unplugin)
+for details.
 
 ### base
 

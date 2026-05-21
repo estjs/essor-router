@@ -42,6 +42,21 @@
 
 - [Unplugin API](/zh/api/unplugin) - 文件路由、生成模块与配置项
 
+## Resolver 工具集
+
+`unplugin-essor-router` 构建期生成的固定 resolver 用到的稳定积木,从 `essor-router`
+主入口导出。在为 SSR、测试或自定义生成器手工组装 resolver 时会用到:
+
+- `createFixedResolver(records)` - 构建 `FixedRouteResolver`
+- `normalizeRouteRecord(raw)` - 插入前对原始记录归一化
+- `MatcherPatternPathStatic` - 大小写不敏感、尾斜杠容忍的静态路径匹配
+- `MatcherPatternPathDynamic` - 由正则驱动、支持 param parser 的动态路径
+- `MatcherPatternQueryParam` - 带默认值与 `format` 的 query 参数匹配
+- `PARAM_PARSER_INT`、`PARAM_PARSER_BOOL` - 内建参数解析器
+- `FixedResolverParamError` - `stringify` 时缺必填参数会抛出此错误
+- `definePage`、`defineRoute`、`defineStartRoute` - 带类型的页面定义宏
+- `_mergeRouteRecord` - 由生成代码调用的合并辅助函数
+
 ## 工具函数
 
 - [isNavigationFailure](/zh/api/router-instance#isnavigationfailure) - 检查导航失败

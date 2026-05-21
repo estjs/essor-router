@@ -42,6 +42,23 @@ This section contains the complete API reference for essor-router.
 
 - [Unplugin API](/api/unplugin) - File-based routing, generated modules, and options
 
+## Resolver Toolkit
+
+Stable building blocks for the prebuilt resolver emitted by
+`unplugin-essor-router`. Re-exported from the main `essor-router` entry —
+useful when assembling a resolver by hand for SSR, tests, or custom
+generators:
+
+- `createFixedResolver(records)` - build a `FixedRouteResolver`
+- `normalizeRouteRecord(raw)` - normalize a raw record before insertion
+- `MatcherPatternPathStatic` - case-insensitive, trailing-slash-tolerant static path
+- `MatcherPatternPathDynamic` - regex-driven dynamic path with param parsers
+- `MatcherPatternQueryParam` - query-param matcher with default values and `format`
+- `PARAM_PARSER_INT`, `PARAM_PARSER_BOOL` - native param parsers
+- `FixedResolverParamError` - thrown when `stringify` is called with missing required params
+- `definePage`, `defineRoute`, `defineStartRoute` - typed page-definition macros
+- `_mergeRouteRecord` - merge helper used by generated code
+
 ## Utilities
 
 - [isNavigationFailure](/api/router-instance#isnavigationfailure) - Check navigation failures

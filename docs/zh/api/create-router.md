@@ -38,7 +38,7 @@ createRouter({
 ### routes
 
 - **类型：** `RouteRecordRaw[]`
-- **必填：** 是
+- **必填：** 否(默认 `[]`)
 
 初始路由记录数组：
 
@@ -51,6 +51,32 @@ createRouter({
   ],
 });
 ```
+
+提供了 `resolver` 时,记录通常由 resolver 自身携带,`routes` 可整体省略。如果两者
+都传入,`routes` 仍会被运行时 matcher 使用以支持 `addRoute`、`removeRoute`、
+`hasRoute`、`getRoutes` 和预渲染路径收集;`resolver` 只接管路径匹配。
+
+### resolver
+
+- **类型：** `FixedRouteResolver`
+- **必填：** 否
+
+由 `unplugin-essor-router` 构建期生成的 resolver,通过虚拟模块
+`essor-router/auto-resolver` 暴露。传入后,导航时的路径匹配交由编译期的查找表
+完成,跳过运行期的排序 matcher:
+
+```tsx
+import { resolver } from 'essor-router/auto-resolver';
+import { createRouter, createWebHistory } from 'essor-router';
+
+const router = createRouter({
+  history: createWebHistory(),
+  resolver,
+});
+```
+
+对于 SSR 或测试场景,也可以用 `createFixedResolver()` 手工组装 — 详见
+[文件路由指南](/zh/guide/advanced/file-based-routing-unplugin)。
 
 ### base
 
