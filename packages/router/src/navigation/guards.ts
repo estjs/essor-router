@@ -300,9 +300,11 @@ export function extractComponentsGuards(
             // replace the function with the resolved component
             // cannot be null or undefined because we went into the for loop
             record.components![name] = resolvedComponent;
-            const options = (resolvedComponent as any).__vccOpts || resolvedComponent;
-            const guard = options[guardType];
-            return guard && guardToPromiseFn(guard, to, from, record, name)();
+            const option =
+              (resolvedComponent as RouteComponent & { options?: Record<string, unknown> })
+                .options || resolvedComponent;
+            const guard = (option as Record<string, NavigationGuard | undefined>)[guardType];
+            return guard ? guardToPromiseFn(guard, to, from, record, name)() : undefined;
           }),
         );
       }

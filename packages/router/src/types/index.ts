@@ -278,7 +278,6 @@ export interface RouteLocationNormalized extends _RouteLocationBase {
  */
 export type RouteComponent = ComponentFn<Record<string, unknown>> & {
   options?: Record<string, unknown>;
-  __vccOpts?: Record<string, unknown>;
   displayName?: string;
 }; // Essor component type
 
