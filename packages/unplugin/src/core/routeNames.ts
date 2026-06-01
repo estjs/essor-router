@@ -22,7 +22,6 @@ function capitalize(value: string) {
  * Creates a name based of the node path segments.
  *
  * @param node - the node to get the path from
- * @param parent - the parent node
  * @returns a route name
  */
 export function getPascalCaseRouteName(node: TreeNode): string {

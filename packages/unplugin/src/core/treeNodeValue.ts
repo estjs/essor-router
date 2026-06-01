@@ -522,7 +522,7 @@ function resolveTreeNodeValueOptions(
  *
  * @param segment - path segment
  * @param parent - parent node
- * @param options - options
+ * @param opts - options
  */
 export function createTreeNodeValue(
   segment: string,

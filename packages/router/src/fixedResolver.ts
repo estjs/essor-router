@@ -91,7 +91,7 @@ export class MatcherPatternPathDynamic implements MatcherPatternPath {
     // Strip the global/sticky flags: `match()` calls `exec()` up to twice on the
     // same instance, and with `g`/`y` the regex's `lastIndex` would carry over
     // between calls and make the second `exec()` start mid-string (or miss).
-    this.re = re.global || re.sticky ? new RegExp(re.source, re.flags.replace(/[gy]/g, '')) : re;
+    this.re = re.global || re.sticky ? new RegExp(re.source, re.flags.replaceAll(/[gy]/g, '')) : re;
     this.paramNames = Object.keys(params);
     this.source = renderPathTemplate(parts, this.paramNames, params);
   }

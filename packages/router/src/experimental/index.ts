@@ -7,14 +7,12 @@
  * @deprecated
  */
 
-/* eslint-disable no-console */
 if (typeof __DEV__ === 'undefined' || __DEV__) {
   console.warn(
     '[essor-router] Importing from "essor-router/experimental" is deprecated. ' +
       'Import directly from "essor-router" instead.',
   );
 }
-/* eslint-enable no-console */
 
 export {
   createFixedResolver,

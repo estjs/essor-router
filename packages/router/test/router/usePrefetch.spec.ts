@@ -182,6 +182,42 @@ describe('usePrefetch', () => {
     }
   });
 
+  it('does not create an observer when onViewport runs after dispose', () => {
+    const preload = vi.fn(() => {}) as unknown as () => Promise<unknown>;
+    const target = document.createElement('a');
+    target.dataset.routerPrefetchId = 'disposed-before-viewport';
+    document.body.append(target);
+
+    const observe = vi.fn();
+    class FakeIntersectionObserver {
+      observe() {
+        observe();
+      }
+      disconnect() {}
+    }
+
+    const originalIO = (globalThis as any).IntersectionObserver;
+    globalThis.IntersectionObserver = FakeIntersectionObserver as any;
+
+    try {
+      const prefetch = usePrefetch({
+        mode: 'viewport',
+        id: 'disposed-before-viewport',
+        preload,
+      });
+
+      // dispose first (e.g. link unmounted), then the queued onViewport fires
+      prefetch.dispose();
+      prefetch.onViewport();
+
+      expect(observe).not.toHaveBeenCalled();
+      expect(preload).not.toHaveBeenCalled();
+    } finally {
+      target.remove();
+      globalThis.IntersectionObserver = originalIO;
+    }
+  });
+
   it('observes an explicitly registered detached target in viewport mode', () => {
     const preload = vi.fn(() => {}) as unknown as () => Promise<unknown>;
     const target = document.createElement('a');

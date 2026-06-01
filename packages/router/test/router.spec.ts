@@ -133,6 +133,29 @@ describe('router', () => {
     expect(loader).toHaveBeenCalledTimes(1);
   });
 
+  it('evicts the preload cache when a preload fails so a retry can succeed', async () => {
+    let attempt = 0;
+    const loader = vitest.fn(() => {
+      attempt++;
+      // fail the first attempt, succeed afterwards
+      return attempt === 1 ? Promise.reject(new Error('boom')) : Promise.resolve();
+    });
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', component: components.Home },
+        { path: '/lazy/:id', component: components.Foo, loader },
+      ],
+    });
+
+    await router.push('/');
+    await expect(router.preloadRoute('/lazy/1')).rejects.toThrow('boom');
+
+    // the failed task must have been evicted, so a retry re-runs the loader
+    await router.preloadRoute('/lazy/1');
+    expect(loader).toHaveBeenCalledTimes(2);
+  });
+
   it('warns when adding a child route to a missing parent', async () => {
     const { router } = await newRouter();
     const remove = router.addRoute('missing-parent' as any, {
@@ -753,7 +776,7 @@ describe('router', () => {
     });
 
     it('cancels navigation abort if a newer one is finished on user navigation (from history)', async () => {
-      await checkNavigationCancelledOnPush(undefined);
+      await checkNavigationCancelledOnPopstate(false);
     });
   });
 

@@ -20,11 +20,10 @@ describe('fixed resolver', () => {
     });
     const user = normalizeRouteRecord({
       name: 'user',
-      path: new MatcherPatternPathDynamic(
-        /^\/users\/([^/]+?)$/i,
-        { id: [PARAM_PARSER_INT] },
-        ['users', 1],
-      ),
+      path: new MatcherPatternPathDynamic(/^\/users\/([^/]+)$/i, { id: [PARAM_PARSER_INT] }, [
+        'users',
+        1,
+      ]),
       component: {} as any,
     });
     const resolver = createFixedResolver([home, user]);
@@ -38,11 +37,11 @@ describe('fixed resolver', () => {
       name: 'user',
       params: { id: 42 },
     });
-    expect(resolver.resolve({ path: '/users/not-number' }, START_LOCATION_NORMALIZED)).toMatchObject(
-      {
-        matched: [],
-      },
-    );
+    expect(
+      resolver.resolve({ path: '/users/not-number' }, START_LOCATION_NORMALIZED),
+    ).toMatchObject({
+      matched: [],
+    });
   });
 
   it('treats static path matches as case-insensitive and trailing-slash tolerant', () => {
@@ -108,9 +107,7 @@ describe('fixed resolver', () => {
     const list = normalizeRouteRecord({
       name: 'list',
       path: new MatcherPatternPathStatic('/list'),
-      query: [
-        new MatcherPatternQueryParam('tags', 'tag', 'array', undefined, undefined, false),
-      ],
+      query: [new MatcherPatternQueryParam('tags', 'tag', 'array', undefined, undefined, false)],
       component: {} as any,
     });
     const resolver = createFixedResolver([list]);
@@ -121,10 +118,7 @@ describe('fixed resolver', () => {
       params: { tags: ['a'] },
     });
     expect(
-      resolver.resolve(
-        { path: '/list', query: { tag: ['a', 'b'] } },
-        START_LOCATION_NORMALIZED,
-      ),
+      resolver.resolve({ path: '/list', query: { tag: ['a', 'b'] } }, START_LOCATION_NORMALIZED),
     ).toMatchObject({
       params: { tags: ['a', 'b'] },
     });
@@ -166,7 +160,7 @@ describe('fixed resolver', () => {
       }),
       normalizeRouteRecord({
         name: 'slug',
-        path: new MatcherPatternPathDynamic(/^\/([^/]+?)$/i, { slug: [] }, [1]),
+        path: new MatcherPatternPathDynamic(/^\/([^/]+)$/, { slug: [] }, [1]),
         component: {} as any,
       }),
     ]);
@@ -229,11 +223,10 @@ describe('fixed resolver', () => {
   it('falls back to the current location when neither name nor path is provided', () => {
     const user = normalizeRouteRecord({
       name: 'user',
-      path: new MatcherPatternPathDynamic(
-        /^\/users\/([^/]+?)$/i,
-        { id: [PARAM_PARSER_INT] },
-        ['users', 1],
-      ),
+      path: new MatcherPatternPathDynamic(/^\/users\/([^/]+)$/i, { id: [PARAM_PARSER_INT] }, [
+        'users',
+        1,
+      ]),
       component: {} as any,
     });
     const resolver = createFixedResolver([user]);
@@ -249,7 +242,7 @@ describe('fixed resolver', () => {
   it('throws FixedResolverParamError when stringifying without a required param', () => {
     const user = normalizeRouteRecord({
       name: 'user',
-      path: new MatcherPatternPathDynamic(/^\/users\/([^/]+?)$/i, { id: [] }, ['users', 1]),
+      path: new MatcherPatternPathDynamic(/^\/users\/([^/]+)$/i, { id: [] }, ['users', 1]),
       component: {} as any,
     });
     const resolver = createFixedResolver([user]);

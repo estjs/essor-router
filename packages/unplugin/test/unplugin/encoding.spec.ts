@@ -27,4 +27,15 @@ describe('encoding utils', () => {
     expect(decode('%')).toBe('%');
     expect('Error decoding "%"').toHaveBeenWarned();
   });
+
+  it('encodes null/undefined as an empty string', () => {
+    expect(encodePath(null)).toBe('');
+    expect(encodePath(undefined)).toBe('');
+    expect(encodeParam(null)).toBe('');
+  });
+
+  it('decodes null/undefined as null', () => {
+    expect(decode(null)).toBeNull();
+    expect(decode(undefined)).toBeNull();
+  });
 });

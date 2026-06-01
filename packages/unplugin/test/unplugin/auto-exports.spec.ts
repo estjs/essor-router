@@ -1,8 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  AutoExportLoaders,
-  extractLoadersToExport,
-} from '../../src/data-loaders/auto-exports';
+import { AutoExportLoaders, extractLoadersToExport } from '../../src/data-loaders/auto-exports';
 
 describe('auto exports loaders', () => {
   it('extracts loader imports that match configured globs', () => {
