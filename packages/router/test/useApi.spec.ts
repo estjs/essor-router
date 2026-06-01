@@ -1,5 +1,5 @@
 import { createComponent as _h$, template as _template$, child, insert, next } from 'essor';
-import { RouterView, createRouter, usePreloadRoute, useRoute } from '../src';
+import { RouterView, createRouter, usePreloadRoute, useRoute, useRouter } from '../src';
 import { components, mount, sleep } from './utils';
 
 let router;
@@ -144,5 +144,45 @@ describe('use apis', () => {
     await router.push('/probe-params');
 
     expect(paramsText).toBe('none');
+  });
+});
+
+describe('active router fallback stack', () => {
+  function makeRouter() {
+    return createRouter({
+      history: 'memory',
+      routes: [{ path: '/:any(.*)', component: components.Home }],
+    });
+  }
+
+  it('keeps the previous router as fallback when a second router is created', () => {
+    const routerA = makeRouter();
+    let resolvedA: any;
+    const ProbeA = () => {
+      resolvedA = useRouter();
+      return _template$('<div>A</div>')();
+    };
+    routerA.addRoute({ path: '/probe-a', component: ProbeA });
+
+    // Creating a second router must NOT clobber routerA's global fallback.
+    const routerB = makeRouter();
+
+    // The most recently created router becomes the active fallback.
+    let resolvedFallback: any;
+    const ProbeFallback = () => {
+      resolvedFallback = useRouter();
+    };
+    mount(() => _h$(ProbeFallback, {}));
+    expect(resolvedFallback).toBe(routerB);
+
+    // Destroying B should restore A as the fallback, not clear it.
+    routerB.destroy();
+    let afterDestroy: any;
+    const ProbeAfter = () => {
+      afterDestroy = useRouter();
+    };
+    mount(() => _h$(ProbeAfter, {}));
+    expect(afterDestroy).toBe(routerA);
+    void resolvedA;
   });
 });

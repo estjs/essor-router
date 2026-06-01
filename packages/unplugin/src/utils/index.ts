@@ -69,3 +69,18 @@ export function toStringLiteral(str: string): string {
 
   return `'${escaped}'`;
 }
+
+/**
+ * Escapes the Unicode line (U+2028) and paragraph (U+2029) separators in a
+ * string produced by `JSON.stringify`. These characters are valid inside JSON
+ * but are illegal raw inside a JavaScript string literal, so embedding
+ * `JSON.stringify` output directly into generated source can break the module.
+ *
+ * @internal
+ *
+ * @param json A JSON string (typically from `JSON.stringify`).
+ * @returns The JSON string safe to embed as a JS expression.
+ */
+export function escapeJsonForJs(json: string): string {
+  return json.replaceAll(/[\u2028\u2029]/g, (m) => (m === '\u2028' ? '\\u2028' : '\\u2029'));
+}

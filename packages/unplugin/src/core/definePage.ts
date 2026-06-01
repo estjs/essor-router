@@ -10,6 +10,7 @@ import {
   getLang,
   isCallOf,
 } from '../compat/macroCommon';
+import { toStringLiteral } from '../utils';
 import { warn } from './utils';
 import type { Thenable, TransformResult } from 'unplugin';
 import type {
@@ -554,7 +555,7 @@ function generateFilteredImportStatement(parsedImports: ParsedStaticImport, used
   const { namedImports, defaultImport, namespacedImport } = parsedImports;
 
   if (namespacedImport && usedIds.has(namespacedImport)) {
-    return `import * as ${namespacedImport} from '${parsedImports.specifier}'`;
+    return `import * as ${namespacedImport} from ${toStringLiteral(parsedImports.specifier)}`;
   }
 
   let importListCode = '';
@@ -580,5 +581,5 @@ function generateFilteredImportStatement(parsedImports: ParsedStaticImport, used
 
   if (!importListCode) return null;
 
-  return `import ${importListCode} from '${parsedImports.specifier}'`;
+  return `import ${importListCode} from ${toStringLiteral(parsedImports.specifier)}`;
 }
