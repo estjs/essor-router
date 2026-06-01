@@ -6,9 +6,12 @@ describe('mock warn', () => {
     console.warn('This is a warning');
     expect('This is a warning').toHaveBeenWarned();
   });
-  it('warns the expected message exactly 3 times', () => {
+  it('counts only the warnings emitted in the current test', () => {
+    // The spy is cleared before each test, so the single warning emitted by the
+    // previous `it` must NOT be counted here — only these three should.
     console.warn('This is a warning');
     console.warn('This is another warning');
+    console.warn('This is a warning');
     console.warn('This is a warning');
 
     expect('This is a warning').toHaveBeenWarnedTimes(3);

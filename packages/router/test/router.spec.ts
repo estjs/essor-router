@@ -757,6 +757,34 @@ describe('router', () => {
     });
   });
 
+  describe('duplicated navigation', () => {
+    it('returns a duplicated failure when pushing to the current location', async () => {
+      const { router } = await newRouter({ history: 'memory' });
+      // newRouter already pushes to '/', so pushing again is a duplicate
+      const failure = await router.push('/');
+      expect(failure).toMatchObject({ type: NavigationFailureType.duplicated });
+    });
+
+    it('bypasses the duplicated check with force', async () => {
+      const { router } = await newRouter({ history: 'memory' });
+      const failure = await router.push({ path: '/', force: true });
+      expect(failure).toBeUndefined();
+    });
+  });
+
+  describe('infinite redirect', () => {
+    it('rejects when a guard causes an infinite redirect', async () => {
+      const { router } = await newRouter({ history: 'memory' });
+      router.beforeEach((to, _from, next) => {
+        // always redirect back to the same target being navigated to, which
+        // keeps resolving to the same location and trips the dev-only guard
+        next(to.fullPath);
+      });
+      await expect(router.push('/foo')).rejects.toThrow('Infinite redirect in navigation guard');
+      expect(`Detected a possibly infinite redirection in a navigation guard`).toHaveBeenWarned();
+    });
+  });
+
   describe('redirectedFrom', () => {
     it('adds a redirectedFrom property with a redirect in record', async () => {
       const { router } = await newRouter({ history: 'memory' });

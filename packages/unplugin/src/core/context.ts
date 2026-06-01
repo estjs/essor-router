@@ -147,13 +147,22 @@ export function createRoutesContext(options: ResolvedOptions) {
   function watchConfigFile(configPath: string) {
     const watcher = fsWatch(configPath, { ignoreInitial: true });
 
-    watcher.on('change', async () => {
-      logger.log(`Config routes file changed: ${configPath}`);
-      // reset the tree so we can rebuild it from scratch
-      routeTree.children.clear();
-      loadConfigRoutes(routeTree, options);
-      await _writeConfigFiles();
-      server?.updateRoutes();
+    watcher.on('change', () => {
+      // Run fire-and-forget — the chokidar `change` event does not await the
+      // handler, so a rejection (config parse error, write failure) would
+      // otherwise become an unhandled rejection and could crash the dev server.
+      Promise.resolve()
+        .then(async () => {
+          logger.log(`Config routes file changed: ${configPath}`);
+          // reset the tree so we can rebuild it from scratch
+          routeTree.children.clear();
+          loadConfigRoutes(routeTree, options);
+          await _writeConfigFiles();
+          server?.updateRoutes();
+        })
+        .catch((error) => {
+          logger.warn(`Failed to reload config routes for "${configPath}": ${error}`);
+        });
     });
 
     watchers.push(watcher);
