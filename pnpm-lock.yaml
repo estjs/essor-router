@@ -36,8 +36,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0(jiti@2.7.0)
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       faked-promise:
         specifier: ^2.2.2
         version: 2.2.2
@@ -84,8 +84,8 @@ importers:
   examples/async-router:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -106,8 +106,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       vite:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)
@@ -121,8 +121,8 @@ importers:
   examples/basic:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -143,8 +143,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       vite:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)
@@ -158,8 +158,8 @@ importers:
   examples/config-router:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -177,8 +177,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       unplugin-essor-router:
         specifier: workspace:*
         version: link:../../packages/unplugin
@@ -192,8 +192,8 @@ importers:
   examples/data-loaders:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -211,8 +211,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       unplugin-essor-router:
         specifier: workspace:*
         version: link:../../packages/unplugin
@@ -226,8 +226,8 @@ importers:
   examples/file-routes:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -245,8 +245,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       unplugin-essor-router:
         specifier: workspace:*
         version: link:../../packages/unplugin
@@ -260,8 +260,8 @@ importers:
   examples/guards:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -279,8 +279,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       vite:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)
@@ -291,8 +291,8 @@ importers:
   examples/option-router:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -313,8 +313,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       vite:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)
@@ -328,8 +328,8 @@ importers:
   examples/param-parsers:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -347,8 +347,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       unplugin-essor-router:
         specifier: workspace:*
         version: link:../../packages/unplugin
@@ -362,8 +362,8 @@ importers:
   examples/router-link:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -384,8 +384,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       vite:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)
@@ -399,8 +399,8 @@ importers:
   examples/typed-router:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -418,8 +418,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       unplugin-essor-router:
         specifier: workspace:*
         version: link:../../packages/unplugin
@@ -433,8 +433,8 @@ importers:
   examples/use-api:
     dependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       essor-router:
         specifier: workspace:*
         version: link:../../packages/router
@@ -455,8 +455,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       unplugin-essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
       vite:
         specifier: ^8.0.14
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)
@@ -470,12 +470,12 @@ importers:
   packages/router:
     dependencies:
       '@estjs/shared':
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
     devDependencies:
       essor:
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
 
   packages/unplugin:
     dependencies:
@@ -486,8 +486,8 @@ importers:
         specifier: ^7.29.7
         version: 7.29.7
       '@estjs/shared':
-        specifier: ^0.0.16-beta.9
-        version: 0.0.16-beta.9
+        specifier: ^0.0.17-beta.1
+        version: 0.0.17-beta.1
       ast-walker-scope:
         specifier: ^0.9.0
         version: 0.9.0
@@ -1253,11 +1253,11 @@ packages:
       eslint: '>=9'
       prettier: '>=3'
 
-  '@estjs/server@0.0.16-beta.8':
-    resolution: {integrity: sha512-VBJtsqwmNs5rMPFZSe8DmNN3MzrOnwKlYKeLH8VAmFaDIvXNEKTU/Z5XuVB1fXcicIdIbPj9iwGxoHnWYlzzxQ==}
-
   '@estjs/server@0.0.16-beta.9':
     resolution: {integrity: sha512-cE31bYzwYLj61oEeVBYZXAxu+LYaimc3c/R8LlMv0wCptHcXWDdhAjyLVZxViB0mu8EiuImEry1yQrIz4G4E2w==}
+
+  '@estjs/server@0.0.17-beta.1':
+    resolution: {integrity: sha512-JzQ9ghPswwhQynaOlzdDHxUcESc5uUJ4uALEZ6Xg2BgPK4R1pQotqJOnbcpbfSW3EyUnEZ0HAdY3ld+venleIg==}
 
   '@estjs/shared@0.0.16-beta.8':
     resolution: {integrity: sha512-LtrR39SRbzd39Oo9z5sGI9wNcz2WkGKsw36zD9IlUjWV8PUnw/Phlzvm34rRn0dKKvbxlVUin1HcXfxMAMv41w==}
@@ -1265,17 +1265,20 @@ packages:
   '@estjs/shared@0.0.16-beta.9':
     resolution: {integrity: sha512-CKJ3oxMf3MmKCRMJ6NUrJsECloIbiPZ9A4HqEb6ItobT+L48RRVHUI7fK5cRO5amNx7aaz5EuYNtjw3KSoxOWw==}
 
-  '@estjs/signals@0.0.16-beta.8':
-    resolution: {integrity: sha512-px58xrTdbo6esykFwGbE7k/AtxHfbMx3B+1oS01FbSCnqrS86gWGnzaGkF1v7mmmCo1LOfKlw+m6nfPjM2tmAg==}
+  '@estjs/shared@0.0.17-beta.1':
+    resolution: {integrity: sha512-FAVQRN+7YAjlHQYAyvUnidfPREuOhiwV41zH/9QRirCr/3ZJqqoZO/d3ws8zxqsZpukBoZV4reLN10kYubgX/Q==}
 
   '@estjs/signals@0.0.16-beta.9':
     resolution: {integrity: sha512-YBuIHcPpB5BjKDF8b5eeDsO6OP3mMvE+M+lIE3r+VFO3LzW5hZz2xd0fCxCb8l/KpYLK//M6K8j6EWjHmpyzxA==}
 
-  '@estjs/template@0.0.16-beta.8':
-    resolution: {integrity: sha512-WadmMTa8W7V7LWiWooC9QJbn2HQypUwgMwaszZOFRHrl7KkCGrTISKWWKamhc/5tiXp5Iw168d7pOWKFtlpS4w==}
+  '@estjs/signals@0.0.17-beta.1':
+    resolution: {integrity: sha512-tA84VDveHy/VYE5dwdGWClSVNeAJ/S+KMmbo5+zeD9TmY696y6U4XPQwEpNHHVzKMnz3JRUP1pLJ47Cg9N5sQA==}
 
   '@estjs/template@0.0.16-beta.9':
     resolution: {integrity: sha512-x2ByMxN6eJh7ZolSurCgRADGEcEgvRFy20Gdyi+ivJzzpqUDC6gRL3oNpqsKERNRfAneHLHCyJ2X0TUYD8k31w==}
+
+  '@estjs/template@0.0.17-beta.1':
+    resolution: {integrity: sha512-Um12I82y//hMF177OGFYCGDSVrN1bW9I03sNRwxv2cPDjHBEenOF/F7b+9/unOxQ1N1vqdBKwkLzUV6QGMd8CQ==}
 
   '@exodus/bytes@1.15.0':
     resolution: {integrity: sha512-UY0nlA+feH81UGSHv92sLEPLCeZFjXOuHhrIo0HQydScuQc8s0A7kL/UdgwgDq8g8ilksmuoF35YVTNphV2aBQ==}
@@ -2564,8 +2567,8 @@ packages:
   babel-plugin-essor@0.0.16-beta.8:
     resolution: {integrity: sha512-MyP8pK81nMpTRYC70w/NyGywfuvM1KHOukr02rE0dIEaTU3D0RnOnjqyvxkDQxetIejWgVadoSgC0wduo2m8Bg==}
 
-  babel-plugin-essor@0.0.16-beta.9:
-    resolution: {integrity: sha512-J3KWRygFE6j5+g1nn385+hQYLvqogeEY1x73yc+UMWiW8I9WcpAZ5G9kWhxNuLi+D+GJPRSN9QgvRw1mVUybHA==}
+  babel-plugin-essor@0.0.17-beta.1:
+    resolution: {integrity: sha512-VtPYYi6laxNcGmHvRQ0NKoT4QUutlH/scWPaHGxQbNnY/lgR4E50nCiTc2NiWgjLBszboymQjb78sTksJpsq4g==}
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
@@ -3154,11 +3157,11 @@ packages:
     peerDependencies:
       essor: ^0.0.16-beta.1
 
-  essor@0.0.16-beta.8:
-    resolution: {integrity: sha512-SEKekBU5H/zUofAycvGQwQuGwViGExR/zLY7nrjK65gcCjrwJInjo30oF/S+DtMkbzFAoaEGigQhDRnnVmdcWA==}
-
   essor@0.0.16-beta.9:
     resolution: {integrity: sha512-/o7uwvW45GRJDxBISKt+qQIJg1DkH2jHaGa0SmMuOQwSAqJYs0q011cJ3cACLcIYwclkx0Xu8SHHqjRZLwekSA==}
+
+  essor@0.0.17-beta.1:
+    resolution: {integrity: sha512-MQK44uKtF2f8Dd2kaIuNluttIcl8/yewd+j2F7Mk5tMUzDZf52wKsJKU59Ck8koqLYwOGCre/NDu1z4rPkMDKg==}
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -4699,8 +4702,8 @@ packages:
       '@unocss/webpack':
         optional: true
 
-  unplugin-essor@0.0.16-beta.9:
-    resolution: {integrity: sha512-L/tN5DGQqNMWMLEZjgaN9uRAYSsvwMi+ZOU9S9cTE8G1ixVvaPl2TnI77EcuDUlyv2pt1h2GxAVtjCvoW2NULA==}
+  unplugin-essor@0.0.17-beta.1:
+    resolution: {integrity: sha512-xDXMtJMVDKPfOQIyuIo8rd8DADZyiZAL/mWOhvhobRkZKqxF8u4VuTEhK1CmtXGVFMTqPbng+Phv1GW3RgGMSQ==}
     peerDependencies:
       esbuild: '*'
       farm: '*'
@@ -5243,7 +5246,7 @@ snapshots:
 
   '@babel/helper-module-imports@7.28.6':
     dependencies:
-      '@babel/traverse': 7.29.0
+      '@babel/traverse': 7.29.7
       '@babel/types': 7.29.7
     transitivePeerDependencies:
       - supports-color
@@ -5260,7 +5263,7 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/helper-module-imports': 7.28.6
       '@babel/helper-validator-identifier': 7.28.5
-      '@babel/traverse': 7.29.0
+      '@babel/traverse': 7.29.7
     transitivePeerDependencies:
       - supports-color
 
@@ -5287,7 +5290,7 @@ snapshots:
 
   '@babel/helpers@7.29.2':
     dependencies:
-      '@babel/template': 7.28.6
+      '@babel/template': 7.29.7
       '@babel/types': 7.29.7
 
   '@babel/helpers@7.29.7':
@@ -5305,7 +5308,7 @@ snapshots:
 
   '@babel/template@7.28.6':
     dependencies:
-      '@babel/code-frame': 7.29.0
+      '@babel/code-frame': 7.29.7
       '@babel/parser': 7.29.7
       '@babel/types': 7.29.7
 
@@ -5317,11 +5320,11 @@ snapshots:
 
   '@babel/traverse@7.29.0':
     dependencies:
-      '@babel/code-frame': 7.29.0
+      '@babel/code-frame': 7.29.7
       '@babel/generator': 7.29.7
       '@babel/helper-globals': 7.28.0
       '@babel/parser': 7.29.7
-      '@babel/template': 7.28.6
+      '@babel/template': 7.29.7
       '@babel/types': 7.29.7
       debug: 4.4.3
     transitivePeerDependencies:
@@ -5766,9 +5769,9 @@ snapshots:
       - rollup
       - supports-color
 
-  '@estjs/athen-plugin-search@0.0.8-beta.8(essor@0.0.16-beta.8)':
+  '@estjs/athen-plugin-search@0.0.8-beta.8(essor@0.0.16-beta.9)':
     dependencies:
-      essor: 0.0.16-beta.8
+      essor: 0.0.16-beta.9
     optionalDependencies:
       algoliasearch: 5.52.1
       flexsearch: 0.8.212
@@ -5865,40 +5868,41 @@ snapshots:
       - typescript
       - vitest
 
-  '@estjs/server@0.0.16-beta.8':
-    dependencies:
-      '@estjs/shared': 0.0.16-beta.8
-      '@estjs/template': 0.0.16-beta.8
-      '@types/node': 25.9.0
-
   '@estjs/server@0.0.16-beta.9':
     dependencies:
       '@estjs/shared': 0.0.16-beta.9
       '@estjs/signals': 0.0.16-beta.9
       '@estjs/template': 0.0.16-beta.9
 
+  '@estjs/server@0.0.17-beta.1':
+    dependencies:
+      '@estjs/shared': 0.0.17-beta.1
+      '@estjs/signals': 0.0.17-beta.1
+      '@estjs/template': 0.0.17-beta.1
+
   '@estjs/shared@0.0.16-beta.8': {}
 
   '@estjs/shared@0.0.16-beta.9': {}
 
-  '@estjs/signals@0.0.16-beta.8':
-    dependencies:
-      '@estjs/shared': 0.0.16-beta.8
+  '@estjs/shared@0.0.17-beta.1': {}
 
   '@estjs/signals@0.0.16-beta.9':
     dependencies:
       '@estjs/shared': 0.0.16-beta.9
 
-  '@estjs/template@0.0.16-beta.8':
+  '@estjs/signals@0.0.17-beta.1':
     dependencies:
-      '@estjs/shared': 0.0.16-beta.8
-      '@estjs/signals': 0.0.16-beta.8
-      csstype: 3.2.3
+      '@estjs/shared': 0.0.17-beta.1
 
   '@estjs/template@0.0.16-beta.9':
     dependencies:
       '@estjs/shared': 0.0.16-beta.9
       '@estjs/signals': 0.0.16-beta.9
+
+  '@estjs/template@0.0.17-beta.1':
+    dependencies:
+      '@estjs/shared': 0.0.17-beta.1
+      '@estjs/signals': 0.0.17-beta.1
 
   '@exodus/bytes@1.15.0': {}
 
@@ -7039,7 +7043,7 @@ snapshots:
     dependencies:
       '@athen/plugin-analytics': '@estjs/athen-plugin-analytics@0.0.8-beta.8'
       '@athen/plugin-mdx': '@estjs/athen-plugin-mdx@0.0.8-beta.8(rollup@4.60.4)'
-      '@athen/plugin-search': '@estjs/athen-plugin-search@0.0.8-beta.8(essor@0.0.16-beta.8)'
+      '@athen/plugin-search': '@estjs/athen-plugin-search@0.0.8-beta.8(essor@0.0.16-beta.9)'
       '@iconify-json/carbon': 1.2.21
       '@polka/compression': 1.0.0-next.25
       '@svgr/core': 8.1.0(typescript@6.0.3)
@@ -7049,8 +7053,8 @@ snapshots:
       cac: 7.0.0
       copy-to-clipboard: 4.0.2
       dayjs: 1.11.20
-      essor: 0.0.16-beta.8
-      essor-router: 0.0.17-beta.4(essor@0.0.16-beta.8)
+      essor: 0.0.16-beta.9
+      essor-router: 0.0.17-beta.4(essor@0.0.16-beta.9)
       fs-extra: 11.3.5
       glob: 13.0.6
       lodash-es: 4.18.1
@@ -7092,11 +7096,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-plugin-essor@0.0.16-beta.9:
+  babel-plugin-essor@0.0.17-beta.1:
     dependencies:
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.7
-      '@estjs/shared': 0.0.16-beta.9
+      '@estjs/shared': 0.0.17-beta.1
     transitivePeerDependencies:
       - supports-color
 
@@ -7818,23 +7822,23 @@ snapshots:
     dependencies:
       estraverse: 5.3.0
 
-  essor-router@0.0.17-beta.4(essor@0.0.16-beta.8):
+  essor-router@0.0.17-beta.4(essor@0.0.16-beta.9):
     dependencies:
-      '@estjs/shared': 0.0.16-beta.8
-      essor: 0.0.16-beta.8
-
-  essor@0.0.16-beta.8:
-    dependencies:
-      '@estjs/server': 0.0.16-beta.8
-      '@estjs/shared': 0.0.16-beta.8
-      '@estjs/signals': 0.0.16-beta.8
-      '@estjs/template': 0.0.16-beta.8
+      '@estjs/shared': 0.0.16-beta.9
+      essor: 0.0.16-beta.9
 
   essor@0.0.16-beta.9:
     dependencies:
       '@estjs/server': 0.0.16-beta.9
       '@estjs/signals': 0.0.16-beta.9
       '@estjs/template': 0.0.16-beta.9
+      csstype: 3.2.3
+
+  essor@0.0.17-beta.1:
+    dependencies:
+      '@estjs/server': 0.0.17-beta.1
+      '@estjs/signals': 0.0.17-beta.1
+      '@estjs/template': 0.0.17-beta.1
       csstype: 3.2.3
 
   estraverse@5.3.0: {}
@@ -9141,14 +9145,14 @@ snapshots:
 
   parse-json@5.2.0:
     dependencies:
-      '@babel/code-frame': 7.29.0
+      '@babel/code-frame': 7.29.7
       error-ex: 1.3.4
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
 
   parse-json@8.3.0:
     dependencies:
-      '@babel/code-frame': 7.29.0
+      '@babel/code-frame': 7.29.7
       index-to-position: 1.2.0
       type-fest: 4.41.0
 
@@ -9937,10 +9941,10 @@ snapshots:
       - '@emnapi/runtime'
       - vite
 
-  unplugin-essor@0.0.16-beta.9(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)):
+  unplugin-essor@0.0.17-beta.1(esbuild@0.28.0)(rolldown@1.0.2)(rollup@4.60.4)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0)):
     dependencies:
       '@babel/core': 7.29.7
-      babel-plugin-essor: 0.0.16-beta.9
+      babel-plugin-essor: 0.0.17-beta.1
       unplugin: 2.3.11
     optionalDependencies:
       esbuild: 0.28.0

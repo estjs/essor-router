@@ -16,3 +16,10 @@ minimumReleaseAgeExclude:
   - '@estjs/athen-plugin-mdx@0.0.8-beta.8'
   - '@estjs/athen-plugin-search@0.0.8-beta.8'
   - athen@0.0.8-beta.8
+  - '@estjs/server@0.0.17-beta.1'
+  - '@estjs/shared@0.0.17-beta.1'
+  - '@estjs/signals@0.0.17-beta.1'
+  - '@estjs/template@0.0.17-beta.1'
+  - babel-plugin-essor@0.0.17-beta.1
+  - essor@0.0.17-beta.1
+  - unplugin-essor@0.0.17-beta.1

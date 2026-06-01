@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "essor": "^0.0.16",
+    "essor": "^0.0.17-beta.1",
     "essor-router": "workspace:*"
   },
   "devDependencies": {
@@ -17,7 +17,7 @@
     "@types/node": "^25.9.1",
     "eslint": "^10.4.0",
     "typescript": "^6.0.3",
-    "unplugin-essor": "^0.0.16",
+    "unplugin-essor": "^0.0.17-beta.1",
     "vite": "^8.0.14",
     "vite-plugin-inspect": "^11.3.3"
   }
