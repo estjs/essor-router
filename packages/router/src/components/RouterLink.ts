@@ -120,7 +120,6 @@ const FALLBACK_ROUTE: RouteLocationNormalized = {
   redirectedFrom: undefined,
 };
 let routerLinkPrefetchId = 0;
-const routerPrefetchCounters = new WeakMap<object, number>();
 
 /**
  * Hook that provides reactive link properties and navigation handler
@@ -281,13 +280,6 @@ export function useLink(props: RouterLinkProps): UseLinkReturn {
   };
 }
 
-function getNextPrefetchId(router: object) {
-  const nextId = (routerPrefetchCounters.get(router) || 0) + 1;
-  routerPrefetchCounters.set(router, nextId);
-  routerLinkPrefetchId++;
-  return `essor-router-prefetch-${nextId}-${routerLinkPrefetchId}`;
-}
-
 /**
  * Checks if outer params include all inner params
  * @param outer - Outer params object
@@ -329,19 +321,6 @@ function getOriginalPath(record: RouteRecord | undefined): string {
 }
 
 /**
- * Gets the link class based on prop, global, and default values
- * @param propClass - Class from prop
- * @param globalClass - Global class from router options
- * @param defaultClass - Default class
- * @returns Resolved class name
- */
-const getLinkClass = (
-  propClass: string | undefined,
-  globalClass: string | undefined,
-  defaultClass: string,
-): string => propClass ?? globalClass ?? defaultClass;
-
-/**
  * RouterLink component for declarative navigation
  * @param props - RouterLink props
  * @returns Rendered link element or custom content
@@ -358,7 +337,7 @@ export const RouterLink = (props: RouterLinkProps): any => {
   const ariaCurrent = signal<RouterLinkProps['ariaCurrentValue'] | null>(
     link.isExactActive.value ? (props.ariaCurrentValue ?? 'page') : null,
   );
-  const prefetchId = getNextPrefetchId(router);
+  const prefetchId = `essor-router-prefetch-${++routerLinkPrefetchId}`;
 
   const resolvePrefetchMode = () => {
     if (props.prefetch === false) return false;
@@ -395,20 +374,13 @@ export const RouterLink = (props: RouterLinkProps): any => {
     let result = props.class || '';
 
     if (link.isActive.value) {
-      const activeClass = getLinkClass(
-        props.activeClass,
-        options?.linkActiveClass,
-        'router-link-active',
-      );
+      const activeClass = props.activeClass ?? options?.linkActiveClass ?? 'router-link-active';
       result = result ? `${result} ${activeClass}` : activeClass;
     }
 
     if (link.isExactActive.value) {
-      const exactClass = getLinkClass(
-        props.exactActiveClass,
-        options?.linkExactActiveClass,
-        'router-link-exact-active',
-      );
+      const exactClass =
+        props.exactActiveClass ?? options?.linkExactActiveClass ?? 'router-link-exact-active';
       result = result ? `${result} ${exactClass}` : exactClass;
     }
 

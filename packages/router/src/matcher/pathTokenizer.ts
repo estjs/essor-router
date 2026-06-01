@@ -109,10 +109,6 @@ export function tokenizePath(path: string): Array<Token[]> {
     buffer = '';
   }
 
-  function addCharToBuffer() {
-    buffer += char;
-  }
-
   while (i < path.length) {
     char = path[i++];
 
@@ -130,12 +126,12 @@ export function tokenizePath(path: string): Array<Token[]> {
           consumeBuffer();
           state = TokenizerState.Param;
         } else {
-          addCharToBuffer();
+          buffer += char;
         }
         break;
 
       case TokenizerState.EscapeNext:
-        addCharToBuffer();
+        buffer += char;
         state = previousState;
         break;
 
@@ -143,7 +139,7 @@ export function tokenizePath(path: string): Array<Token[]> {
         if (char === '(') {
           state = TokenizerState.ParamRegExp;
         } else if (VALID_PARAM_RE.test(char)) {
-          addCharToBuffer();
+          buffer += char;
         } else {
           consumeBuffer();
           state = TokenizerState.Static;

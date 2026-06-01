@@ -226,7 +226,7 @@ export function createFixedResolver(records: FixedResolverRecordInput[]): FixedR
         throw createRouterError<MatcherError>(ErrorTypes.MATCHER_NOT_FOUND, { location });
       }
 
-      const queryParams = matchQueryParams(node, normalizeQueryLike(location.query));
+      const queryParams = matchQueryParams(node, normalizeQuery(location.query));
       if (!queryParams) {
         throw createRouterError<MatcherError>(ErrorTypes.MATCHER_NOT_FOUND, { location });
       }
@@ -236,7 +236,7 @@ export function createFixedResolver(records: FixedResolverRecordInput[]): FixedR
     }
 
     if (location.path != null) {
-      const query = normalizeQueryLike(location.query);
+      const query = normalizeQuery(location.query);
       for (const node of getPathCandidates(segmentIndex, location.path)) {
         const pathParams = node.pattern.match(location.path);
         if (!pathParams) continue;
@@ -503,10 +503,6 @@ function parseMappedValue<T>(
 function normalizeStaticPath(path: string): string {
   const normalized = path.length > 1 ? path.replace(/\/+$/, '') : path;
   return normalized.toLowerCase();
-}
-
-function normalizeQueryLike(query: LocationQueryRaw | undefined): LocationQuery {
-  return normalizeQuery(query);
 }
 
 function getQueryValue(

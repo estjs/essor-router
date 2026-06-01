@@ -169,8 +169,7 @@ export function guardToPromiseFn(
 
       if (guard.length < 3) {
         guardCall = guardCall.then(next);
-      }
-      if (__DEV__ && guard.length > 2) {
+      } else if (__DEV__) {
         const message = `The "next" callback was never called inside of ${
           guard.name ? `"${guard.name}"` : ''
         }:\n${guard.toString()}\n. If you are returning a value instead of calling "next", make sure to remove the "next" parameter from your function.`;
@@ -195,16 +194,6 @@ export function guardToPromiseFn(
     });
 }
 
-function normalizeResolvedRouteComponent(resolved: RouteComponentModule): RouteComponent {
-  return isESModule(resolved) ? resolved.default : resolved;
-}
-
-function createResolveComponentError(name: string, path: string): Error {
-  return new Error(
-    `Couldn't resolve component "${name}" at "${path}". Ensure you passed a function that returns a promise.`,
-  );
-}
-
 export function resolveRouteComponent(
   rawComponent: RouteComponentResolverInput,
   routePath: string,
@@ -214,10 +203,12 @@ export function resolveRouteComponent(
     resolved: RouteComponentModule | null | undefined | void,
   ): RouteComponent => {
     if (!resolved) {
-      throw createResolveComponentError(name, routePath);
+      throw new Error(
+        `Couldn't resolve component "${name}" at "${routePath}". Ensure you passed a function that returns a promise.`,
+      );
     }
 
-    return normalizeResolvedRouteComponent(resolved);
+    return isESModule(resolved) ? resolved.default : resolved;
   };
 
   if (isRouteComponentLoader(rawComponent)) {
@@ -234,7 +225,8 @@ export function resolveRouteComponent(
     return Promise.resolve(rawComponent).then(normalizeOrThrow);
   }
 
-  return normalizeResolvedRouteComponent(rawComponent as RouteComponentModule);
+  const resolved = rawComponent as RouteComponentModule;
+  return isESModule(resolved) ? resolved.default : resolved;
 }
 
 function canOnlyBeCalledOnce(

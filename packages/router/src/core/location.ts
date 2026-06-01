@@ -123,15 +123,14 @@ export function isSameRouteLocation(
   const aLastIndex = a.matched.length - 1;
   const bLastIndex = b.matched.length - 1;
 
-  const res =
+  return (
     aLastIndex > -1 &&
     aLastIndex === bLastIndex &&
     isSameRouteRecord(a.matched[aLastIndex], b.matched[bLastIndex]) &&
     isSameRouteLocationParams(a.params, b.params) &&
     stringifyQuery(a.query) === stringifyQuery(b.query) &&
-    a.hash === b.hash;
-
-  return res;
+    a.hash === b.hash
+  );
 }
 
 /**

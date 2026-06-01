@@ -122,25 +122,15 @@ export function createRouterError<E extends RouterError>(
   const browserFlag = typeof __BROWSER__ !== 'undefined' ? __BROWSER__ : isBrowser;
 
   // keep full error messages in cjs versions
-  if (__DEV__ || !browserFlag) {
-    return assign(
-      new Error(ErrorTypeMessages[type](params as any)),
-      {
-        type,
-        [NavigationFailureSymbol]: true,
-      } as { type: typeof type },
-      params,
-    ) as E;
-  } else {
-    return assign(
-      new Error(),
-      {
-        type,
-        [NavigationFailureSymbol]: true,
-      } as { type: typeof type },
-      params,
-    ) as E;
-  }
+  const message = __DEV__ || !browserFlag ? ErrorTypeMessages[type](params as any) : '';
+  return assign(
+    new Error(message),
+    {
+      type,
+      [NavigationFailureSymbol]: true,
+    } as { type: typeof type },
+    params,
+  ) as E;
 }
 
 /**
