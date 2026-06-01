@@ -11,6 +11,7 @@ export function usePrefetch(options: UsePrefetchOptions) {
   let viewportObserved = false;
   let observer: IntersectionObserver | undefined;
   let targetEl: Element | null = null;
+  let disposed = false;
 
   const runPreload = () => {
     if (!isBrowser || prefetched) return;
@@ -31,7 +32,10 @@ export function usePrefetch(options: UsePrefetchOptions) {
   };
 
   const onViewport = () => {
-    if (options.mode !== 'viewport' || viewportObserved) return;
+    // `onViewport` is scheduled via queueMicrotask by RouterLink, so the link
+    // may already have unmounted (and disposed) by the time it runs. Bail out so
+    // we don't create an observer on a detached element that nothing will clean up.
+    if (disposed || options.mode !== 'viewport' || viewportObserved) return;
     viewportObserved = true;
 
     if (typeof IntersectionObserver === 'undefined') {
@@ -62,6 +66,7 @@ export function usePrefetch(options: UsePrefetchOptions) {
   };
 
   const dispose = () => {
+    disposed = true;
     observer?.disconnect();
     observer = undefined;
   };

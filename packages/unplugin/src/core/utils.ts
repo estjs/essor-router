@@ -61,12 +61,18 @@ export function trimExtension(path: string, extensions: ResolvedOptions['extensi
   return path;
 }
 
-export function throttle(fn: () => void, wait: number, initialWait: number) {
+export interface ThrottledFn {
+  (): void;
+  /** Cancels any pending invocation and clears outstanding timers. */
+  cancel: () => void;
+}
+
+export function throttle(fn: () => void, wait: number, initialWait: number): ThrottledFn {
   let pendingTimeout: ReturnType<typeof setTimeout> | null = null;
   let pending = false;
   let firstTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  return () => {
+  const throttled = () => {
     if (pendingTimeout == null) {
       pendingTimeout = setTimeout(() => {
         pendingTimeout = null;
@@ -83,6 +89,20 @@ export function throttle(fn: () => void, wait: number, initialWait: number) {
       pending = true;
     }
   };
+
+  throttled.cancel = () => {
+    if (pendingTimeout != null) {
+      clearTimeout(pendingTimeout);
+      pendingTimeout = null;
+    }
+    if (firstTimeout != null) {
+      clearTimeout(firstTimeout);
+      firstTimeout = null;
+    }
+    pending = false;
+  };
+
+  return throttled;
 }
 
 export const LEADING_SLASH_RE = /^\//;

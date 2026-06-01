@@ -1,3 +1,4 @@
+import { toStringLiteral } from '../utils';
 import type { PrefixTree } from '../core/tree';
 
 /**
@@ -13,9 +14,13 @@ export function generateAliasWarnings(tree: PrefixTree): string {
   for (const node of tree.getChildrenDeepSorted()) {
     for (const alias of node.value.alias) {
       if (!alias.startsWith('/')) {
-        warnings.push(
-          `console.warn('[essor-router] Alias "${alias}" for route "${node.value.fullPath}" must be absolute (start with "/"). Relative aliases are not supported in file-based routing.')`,
-        );
+        // Build the message as a plain string and escape it as a whole so an
+        // alias or route path containing a quote/backslash/newline cannot break
+        // out of the generated string literal.
+        const message =
+          `[essor-router] Alias "${alias}" for route "${node.value.fullPath}" ` +
+          `must be absolute (start with "/"). Relative aliases are not supported in file-based routing.`;
+        warnings.push(`console.warn(${toStringLiteral(message)})`);
       }
     }
   }

@@ -53,5 +53,19 @@ export function formatMultilineUnion(items: string[], spaces: number): string {
  * toStringLiteral("it's fine") // returns "'it\'s fine'"
  */
 export function toStringLiteral(str: string): string {
-  return `'${str.replaceAll("'", "\\'")}'`;
+  // Escape every character that would otherwise terminate or corrupt a
+  // single-quoted JS string literal. Backslash MUST be escaped first so the
+  // escapes we introduce below are not themselves doubled. Newlines and the
+  // Unicode line/paragraph separators (U+2028/U+2029) are illegal raw inside a
+  // string literal, so they are escaped too. Without this, a path containing a
+  // backslash (e.g. on Windows) or a newline could break out of the literal in
+  // the generated source — a code-injection / broken-output hazard.
+  const escaped = str
+    .replaceAll('\\', '\\\\')
+    .replaceAll("'", "\\'")
+    .replaceAll('\n', '\\n')
+    .replaceAll('\r', '\\r')
+    .replaceAll(/[\u2028\u2029]/g, (m) => (m === '\u2028' ? '\\u2028' : '\\u2029'));
+
+  return `'${escaped}'`;
 }

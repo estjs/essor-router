@@ -173,9 +173,3 @@ export function normalizeBase(base?: string): string {
   // to build an href
   return removeTrailingSlash(base);
 }
-
-// remove any character before the hash
-const BEFORE_HASH_RE = /^[^#]+#/;
-export function createHref(base: string, location: HistoryLocation): string {
-  return base.replace(BEFORE_HASH_RE, '#') + location;
-}

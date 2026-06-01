@@ -261,23 +261,49 @@ export function createRoutesContext(options: ResolvedOptions) {
   function setupWatcher(watcher: RoutesFolderWatcher) {
     logger.log(`🤖 Scanning files in ${watcher.src}`);
 
+    // The watcher invokes handlers fire-and-forget (it does not await the
+    // returned promise), so any rejection here would become an unhandled
+    // rejection and could crash the dev server. Wrap each async handler so a
+    // transient FS error (e.g. a file deleted mid-rename) is logged instead.
+    const guard =
+      (name: string, fn: (ctx: HandlerContext) => void | Promise<void>) =>
+      (ctx: HandlerContext) => {
+        Promise.resolve()
+          .then(() => fn(ctx))
+          .catch((error) => {
+            logger.warn(`Failed to handle "${name}" for "${ctx.filePath}": ${error}`);
+          });
+      };
+
     return watcher
-      .on('change', async (ctx) => {
-        await updatePage(ctx);
-        writeConfigFiles();
-      })
-      .on('add', async (ctx) => {
-        await addPage(ctx, true);
-        writeConfigFiles();
-      })
-      .on('unlink', (ctx) => {
-        removePage(ctx);
-        writeConfigFiles();
-      })
-      .on('unlinkDir', (ctx) => {
-        removePagesUnderDir(ctx.filePath);
-        writeConfigFiles();
-      });
+      .on(
+        'change',
+        guard('change', async (ctx) => {
+          await updatePage(ctx);
+          writeConfigFiles();
+        }),
+      )
+      .on(
+        'add',
+        guard('add', async (ctx) => {
+          await addPage(ctx, true);
+          writeConfigFiles();
+        }),
+      )
+      .on(
+        'unlink',
+        guard('unlink', (ctx) => {
+          removePage(ctx);
+          writeConfigFiles();
+        }),
+      )
+      .on(
+        'unlinkDir',
+        guard('unlinkDir', (ctx) => {
+          removePagesUnderDir(ctx.filePath);
+          writeConfigFiles();
+        }),
+      );
 
     // TODO: handle folder removal: apparently chokidar only emits a raw event when deleting a folder instead of the
     // unlinkDir event
@@ -327,6 +353,10 @@ export function createRoutesContext(options: ResolvedOptions) {
   const writeConfigFiles = throttle(_writeConfigFiles, 500, 100);
 
   async function stopWatcher() {
+    // Cancel any pending throttled write so a timer can't fire _writeConfigFiles
+    // (and touch the now torn-down server) after the watchers are closed.
+    writeConfigFiles.cancel();
+
     const activeWatchers = watchers.splice(0);
     if (activeWatchers.length) {
       logger.log('🛑 stopping watcher');

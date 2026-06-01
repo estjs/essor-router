@@ -203,6 +203,11 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
     options.scrollPositionStore.clear();
     started = false;
     options.readiness.setReady(false);
+    // Re-arm the history listener for a potential re-init (the router is
+    // reusable: `started` is reset above). `onFirstReady` is one-shot and was
+    // already consumed on the first ready, so without this a remounted
+    // RouterView would never react to browser back/forward again.
+    options.readiness.onFirstReady(setupHistoryListener);
     unregisterActiveRouter();
   }
 

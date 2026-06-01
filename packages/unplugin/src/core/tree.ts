@@ -603,8 +603,11 @@ export interface DuplicatedRouteConflict {
  */
 export function collectDuplicatedRouteNodes(tree: PrefixTree): DuplicatedRouteConflict[][] {
   const seen = new Map<string, DuplicatedRouteConflict[]>();
-  // find which nodes take precedence to reorder the list
-  const treeNodes = new Set<TreeNode>(...tree);
+  // find which nodes take precedence to reorder the list.
+  // NOTE: pass the iterable directly — `new Set(...tree)` would spread every
+  // yielded node into the constructor's argument list, of which Set only reads
+  // the first, silently dropping the rest of the tree.
+  const treeNodes = new Set<TreeNode>(tree);
 
   // by reading through the map, we get every node that was added to the tree.
   // Two files mapped to the same node only conflict when they target the SAME

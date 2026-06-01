@@ -1,3 +1,4 @@
+import { toStringLiteral } from '../utils';
 import { generateHmrBlock } from './hmr';
 import { ImportsMap } from './utils';
 import type { ParamParsersMap } from '../codegen/generateParamParsers';
@@ -31,10 +32,14 @@ export async function generateResolverModule(
   let missingParserErrors = '';
   if (missingParsers.length > 0) {
     missingParserErrors = `\n${missingParsers
-      .map(
-        ({ parser, routePath, filePaths }) =>
-          `console.error('[essor-router] Parameter parser "${parser}" not found for route "${routePath}". File: ${filePaths.join(', ')}')`,
-      )
+      .map(({ parser, routePath, filePaths }) => {
+        // Escape the whole message so a parser name / route path / file path
+        // containing a quote or backslash can't break out of the literal.
+        const message =
+          `[essor-router] Parameter parser "${parser}" not found for route ` +
+          `"${routePath}". File: ${filePaths.join(', ')}`;
+        return `console.error(${toStringLiteral(message)})`;
+      })
       .join('\n')}\n`;
   }
 

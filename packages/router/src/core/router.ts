@@ -248,7 +248,10 @@ export function createRouter(options: RouterOptions): Router {
 
     return Promise.resolve()
       .then(() => scrollBehavior(to, from, scrollPosition))
-      .then((position) => position && scrollToPosition(position));
+      .then((position) => position && scrollToPosition(position))
+      .catch((error) => {
+        if (__DEV__) warn('Error while handling scroll behavior:', error);
+      });
   };
 
   // --- Readiness controller (created first, shared by navigation & lifecycle) ---

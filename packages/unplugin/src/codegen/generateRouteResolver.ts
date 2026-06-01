@@ -366,9 +366,9 @@ ${queryParams
     const parserOptions = generateParamParserOptions(param, importsMap, paramParsersMap);
 
     const args = [
-      `'${param.paramName}'`,
-      `'${param.queryKey || param.paramName}'`,
-      `'${param.format}'`,
+      toStringLiteral(param.paramName),
+      toStringLiteral(param.queryKey || param.paramName),
+      toStringLiteral(param.format),
     ];
 
     if (parserOptions || param.defaultValue !== undefined || param.required) {

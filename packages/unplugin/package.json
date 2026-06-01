@@ -71,13 +71,13 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@babel/generator": "^7.29.1",
-    "@babel/parser": "^7.29.3",
-    "@estjs/shared": "^0.0.16-beta.8",
+    "@babel/generator": "^7.29.7",
+    "@babel/parser": "^7.29.7",
+    "@estjs/shared": "^0.0.16",
     "ast-walker-scope": "^0.9.0",
     "chokidar": "^5.0.0",
     "json5": "^2.2.3",
-    "local-pkg": "^1.1.2",
+    "local-pkg": "^1.2.1",
     "magic-string": "^0.30.21",
     "mlly": "^1.8.2",
     "pathe": "^2.0.3",
@@ -88,7 +88,7 @@
     "yaml": "^2.9.0"
   },
   "devDependencies": {
-    "@babel/types": "^7.29.0",
-    "vite": "^8.0.13"
+    "@babel/types": "^7.29.7",
+    "vite": "^8.0.14"
   }
 }
