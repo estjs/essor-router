@@ -60,15 +60,8 @@ function extractImportPath(expr: Expression | undefined): string | undefined {
   if (!expr) return undefined;
 
   // `() => import('...')` or `async () => import('...')`
-  if (expr.type === 'ArrowFunctionExpression') {
-    const body = expr.body;
-    if (body.type === 'CallExpression') {
-      return extractImportPath(body as unknown as Expression);
-    } else if (body.type === 'BlockStatement') {
-      // 检查里面是否有 return import(...)
-      // 简单起见，这里假设就长那样。
-      return undefined;
-    }
+  if (expr.type === 'ArrowFunctionExpression' && expr.body.type === 'CallExpression') {
+    return extractImportPath(expr.body as unknown as Expression);
   }
 
   // `import('...')`

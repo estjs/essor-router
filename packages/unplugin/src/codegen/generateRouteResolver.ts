@@ -34,8 +34,9 @@ function compareScoreArray(a: number[], b: number[]): number {
 }
 
 function isLastScoreNegative(score: number[][]): boolean {
+  if (score.length === 0) return false;
   const last = score[score.length - 1];
-  return score.length > 0 && last[last.length - 1] < 0;
+  return last[last.length - 1] < 0;
 }
 
 /**
@@ -376,7 +377,7 @@ ${queryParams
     }
 
     if (param.defaultValue !== undefined || param.required) {
-      args.push(param.defaultValue || 'undefined');
+      args.push(param.defaultValue ?? 'undefined');
     }
 
     // we can strip any non true value to save bytes

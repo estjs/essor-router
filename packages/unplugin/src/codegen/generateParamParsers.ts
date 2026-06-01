@@ -22,16 +22,8 @@ const NATIVE_PARAM_PARSERS_TYPES = {
 } satisfies Record<(typeof _NATIVE_PARAM_PARSERS)[number], string>;
 
 export function warnMissingParamParsers(tree: PrefixTree, paramParsers: ParamParsersMap) {
-  for (const node of tree.getChildrenDeepSorted()) {
-    for (const param of node.params) {
-      if (
-        param.parser &&
-        !paramParsers.has(param.parser) &&
-        !NATIVE_PARAM_PARSERS.includes(param.parser)
-      ) {
-        console.warn(`Parameter parser "${param.parser}" not found for route "${node.fullPath}".`);
-      }
-    }
+  for (const { parser, routePath } of collectMissingParamParsers(tree, paramParsers)) {
+    console.warn(`Parameter parser "${parser}" not found for route "${routePath}".`);
   }
 }
 

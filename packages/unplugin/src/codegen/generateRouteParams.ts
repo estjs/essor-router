@@ -18,15 +18,12 @@ export function generateRouteParams(node: TreeNode, isRaw: boolean): string {
           return true;
         })
         .map((param) => {
-          const isOptional = param.optional;
-          const isRepeatable = param.repeatable;
-
           let typeStr = isRaw ? 'string | number' : 'string';
-          if (isRepeatable) {
+          if (param.repeatable) {
             typeStr = `${typeStr}[]`;
             if (isRaw) typeStr += ' | undefined | null';
-          } else if (isOptional && isRaw) typeStr += ' | null | undefined';
-          return `${param.paramName}${isOptional ? '?' : ''}: ${typeStr}`;
+          } else if (param.optional && isRaw) typeStr += ' | null | undefined';
+          return `${param.paramName}${param.optional ? '?' : ''}: ${typeStr}`;
         })
         .join(', ')} }`
     : // no params allowed

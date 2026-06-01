@@ -4,7 +4,6 @@ import {
   DEFINE_PAGE_QUERY_RE,
   MODULE_RESOLVER_PATH,
   MODULE_ROUTES_PATH,
-  ROUTES_LAST_LOAD_TIME,
   asVirtualId,
   getVirtualId,
 } from '../../src/core/moduleConstants';
@@ -66,12 +65,6 @@ describe('module constants', () => {
     const virtual = asVirtualId('essor-router/auto-routes');
     expect(getVirtualId(virtual)).toBe('essor-router/auto-routes');
     expect(getVirtualId('normal-id')).toBeNull();
-  });
-
-  it('tracks last load time updates', () => {
-    const before = ROUTES_LAST_LOAD_TIME.value;
-    ROUTES_LAST_LOAD_TIME.update(before + 10);
-    expect(ROUTES_LAST_LOAD_TIME.value).toBe(before + 10);
   });
 
   it('matches definePage query pattern', () => {

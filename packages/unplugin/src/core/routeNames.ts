@@ -3,15 +3,7 @@ import type { TreeNode } from './tree';
 import type { TreePathParam } from './treeNodeValue';
 
 function paramToName({ paramName, modifier, isSplat }: TreePathParam) {
-  return `${isSplat ? '$' : ''}${paramName.charAt(0).toUpperCase() + paramName.slice(1)}${
-    modifier
-    // ? modifier === '+'
-    //   ? 'OneOrMore'
-    //   : modifier === '?'
-    //   ? 'ZeroOrOne'
-    //   : 'ZeroOrMore'
-    // : ''
-  }`;
+  return `${isSplat ? '$' : ''}${paramName.charAt(0).toUpperCase() + paramName.slice(1)}${modifier}`;
 }
 
 function capitalize(value: string) {

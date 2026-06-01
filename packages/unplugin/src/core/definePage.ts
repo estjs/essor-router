@@ -36,16 +36,15 @@ interface RouteMacroCall {
 }
 
 function getRouteMacroCallFromStatement(statement: Statement): RouteMacroCall | null {
-  if (
-    statement.type === 'ExpressionStatement' &&
-    ROUTE_MACROS.some((macro) => isCallOf(statement.expression, macro))
-  ) {
-    const macro = ROUTE_MACROS.find((macro) => isCallOf(statement.expression, macro))!;
-    return {
-      call: statement.expression as CallExpression,
-      statement,
-      macro,
-    };
+  if (statement.type === 'ExpressionStatement') {
+    const macro = ROUTE_MACROS.find((m) => isCallOf(statement.expression, m));
+    if (macro) {
+      return {
+        call: statement.expression as CallExpression,
+        statement,
+        macro,
+      };
+    }
   }
 
   const variableDeclaration =
@@ -81,7 +80,6 @@ function getRouteMacroCallFromStatement(statement: Statement): RouteMacroCall | 
  * Generate the ast from a code string and an id. Works with SFC and non-SFC files.
  */
 function getCodeAst(code: string, id: string) {
-  const offset = 0;
   let ast: Program | undefined;
   const lang = getLang(id.split(MACRO_DEFINE_PAGE_QUERY)[0]!);
   if (/[jt]sx?$/.test(lang)) {
@@ -92,7 +90,7 @@ function getCodeAst(code: string, id: string) {
     .map((statement) => getRouteMacroCallFromStatement(statement as Statement))
     .filter((value): value is RouteMacroCall => !!value);
 
-  return { ast, offset, routeMacroCalls };
+  return { ast, routeMacroCalls };
 }
 
 export function definePageTransform({
@@ -112,13 +110,11 @@ export function definePageTransform({
   }
 
   let ast: Program | undefined;
-  let offset: number;
   let routeMacroCalls: RouteMacroCall[];
 
   try {
     const result = getCodeAst(code, id);
     ast = result.ast;
-    offset = result.offset;
     routeMacroCalls = result.routeMacroCalls;
   } catch (error) {
     // Handle any syntax errors or parsing errors gracefully
@@ -170,8 +166,8 @@ export function definePageTransform({
       return 'export default {}';
     }
 
-    s.remove(offset + routeRecord.end!, code.length);
-    s.remove(0, offset + routeRecord.start!);
+    s.remove(routeRecord.end!, code.length);
+    s.remove(0, routeRecord.start!);
     s.prepend(`export default `);
 
     // find all static imports and filter out the ones that are not used
@@ -236,7 +232,7 @@ export function definePageTransform({
 
     const s = new MagicString(code);
 
-    s.remove(offset + routeMacroCall.statement.start!, offset + routeMacroCall.statement.end!);
+    s.remove(routeMacroCall.statement.start!, routeMacroCall.statement.end!);
 
     return generateTransform(s, id);
   }
@@ -296,13 +292,7 @@ export function extractDefinePageInfo(
   const definePageNode = routeMacroCalls[0]!.call;
 
   const routeRecord = definePageNode.arguments[0];
-  if (!routeRecord) {
-    throw new SyntaxError(
-      `[${id}]: definePage() expects an object expression as its only argument`,
-    );
-  }
-
-  if (routeRecord.type !== 'ObjectExpression') {
+  if (routeRecord?.type !== 'ObjectExpression') {
     throw new SyntaxError(
       `[${id}]: definePage() expects an object expression as its only argument`,
     );

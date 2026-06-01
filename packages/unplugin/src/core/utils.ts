@@ -50,13 +50,10 @@ export const isArray = Array.isArray;
 
 export function trimExtension(path: string, extensions: ResolvedOptions['extensions']) {
   for (const extension of extensions) {
-    const lastDot = path.endsWith(extension) ? -extension.length : 0;
-    if (lastDot < 0) {
-      // usually only one extension should match
-      return path.slice(0, lastDot);
+    if (path.endsWith(extension)) {
+      return path.slice(0, -extension.length);
     }
   }
-
   // no extension found, return the original path
   return path;
 }

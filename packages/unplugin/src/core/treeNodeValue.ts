@@ -273,7 +273,6 @@ class _TreeNodeValueBase {
    * @param value - value to set in the override
    */
   setEditOverride<K extends keyof RouteRecordOverride>(key: K, value: RouteRecordOverride[K]) {
-    // return this.mergeOverride(EDITS_OVERRIDE_NAME, routeBlock)
     if (!this._overrides.has(EDITS_OVERRIDE_NAME)) {
       this._overrides.set(EDITS_OVERRIDE_NAME, {});
     }
