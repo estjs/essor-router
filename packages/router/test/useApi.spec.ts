@@ -157,32 +157,17 @@ describe('active router fallback stack', () => {
 
   it('keeps the previous router as fallback when a second router is created', () => {
     const routerA = makeRouter();
-    let resolvedA: any;
-    const ProbeA = () => {
-      resolvedA = useRouter();
-      return _template$('<div>A</div>')();
-    };
-    routerA.addRoute({ path: '/probe-a', component: ProbeA });
-
     // Creating a second router must NOT clobber routerA's global fallback.
     const routerB = makeRouter();
 
-    // The most recently created router becomes the active fallback.
-    let resolvedFallback: any;
-    const ProbeFallback = () => {
-      resolvedFallback = useRouter();
-    };
-    mount(() => _h$(ProbeFallback, {}));
-    expect(resolvedFallback).toBe(routerB);
+    // useRouter() outside a RouterView resolves to the most recent router.
+    let fallback: any;
+    mount(() => _h$(() => void (fallback = useRouter()), {}));
+    expect(fallback).toBe(routerB);
 
-    // Destroying B should restore A as the fallback, not clear it.
+    // Destroying B restores A as the fallback instead of clearing it.
     routerB.destroy();
-    let afterDestroy: any;
-    const ProbeAfter = () => {
-      afterDestroy = useRouter();
-    };
-    mount(() => _h$(ProbeAfter, {}));
-    expect(afterDestroy).toBe(routerA);
-    void resolvedA;
+    mount(() => _h$(() => void (fallback = useRouter()), {}));
+    expect(fallback).toBe(routerA);
   });
 });
