@@ -34,7 +34,7 @@ jobs:
         run: pnpm run build
 
       - name: Publish to NPM
-        run: pnpm run publish-ci ${{ github.ref_name }}
+        run: pnpm -filter "./packages/**" -r publish --access public --no-git-checks
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

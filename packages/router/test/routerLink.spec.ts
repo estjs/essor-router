@@ -1,0 +1,1207 @@
+/**
+ * RouterLink Tests
+ *
+ * Comprehensive test suite for RouterLink component covering:
+ * - Basic rendering and navigation
+ * - Click event handling with modifiers
+ * - Active class logic
+ * - Custom rendering modes
+ * - Aria attributes
+ * - Error handling
+ * - Href generation
+ */
+
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { computed, createComponent as h, signal } from 'essor';
+import { RouterLink, RouterView, createMemoryHistory, createRouter } from '../src';
+import { LinkComponent } from '../src/components/linkComponent';
+import { mount, sleep } from './utils';
+import { generateRouteLocation, randomBoolean, testWithMultipleInputs } from './helpers/test-utils';
+import type { RouteLocationRawTyped } from '../src/types';
+import type { Router } from '../src/core/router';
+
+describe('routerLink', () => {
+  let router: Router;
+  let wrapper: any;
+
+  const SimpleComponent = () => {
+    const div = document.createElement('div');
+    div.textContent = 'Simple';
+    return div;
+  };
+
+  const About = () => h(RouterLink, { to: '/', children: ['About'] });
+  const User = () => h(RouterLink, { to: '/users/1', children: ['Users'] });
+  const Home = () => h(RouterLink, { to: '/about', children: ['Home'] });
+
+  beforeEach(async () => {
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: Home },
+        { path: '/about', name: 'about', component: About },
+        { path: '/users/:id', name: 'user', component: User },
+        { path: '/posts/:id?', name: 'post', component: SimpleComponent },
+        { path: '/nested/child', name: 'nested-child', component: SimpleComponent },
+      ],
+    });
+
+    const App = () => {
+      return h(RouterView, { router });
+    };
+    wrapper = mount(App);
+    // router is async, need to wait
+    await sleep(100);
+    // Ensure router has navigated to initial route
+    await router.push('/');
+    await sleep(50);
+  });
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount();
+      wrapper = null;
+    }
+  });
+
+  describe('basic Rendering', () => {
+    it('renders an anchor tag by default', async () => {
+      // Wait for component to render properly
+      await sleep(50);
+      const anchor = wrapper.get('a');
+      expect(anchor).toBeTruthy();
+      expect(anchor.textContent).toBe('Home');
+    });
+
+    it('can be used inside RouterView context', async () => {
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          {
+            path: '/',
+            name: 'home',
+            component: () => h(RouterLink, { to: '/about', children: 'Go to About' }),
+          },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      // RouterLink is rendered inside a route component, which is inside RouterView
+      const App = () => h(RouterView, { router: testRouter });
+
+      const testWrapper = mount(App);
+      await sleep(100);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor).toBeTruthy();
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      const pushSpy = vi.spyOn(testRouter, 'push');
+      anchor.click();
+      await sleep(50);
+
+      expect(pushSpy).toHaveBeenCalled();
+
+      testWrapper.unmount();
+    });
+  });
+
+  describe('navigation Behavior', () => {
+    it('uses view transition when enabled and supported', async () => {
+      const original = (document as any).startViewTransition;
+      const transitionSpy = vi.fn((cb: () => void) => {
+        cb();
+        return { finished: Promise.resolve() };
+      });
+      Object.defineProperty(document, 'startViewTransition', {
+        value: transitionSpy,
+        configurable: true,
+      });
+
+      const TestLink = () =>
+        h(RouterLink, {
+          to: '/about',
+          viewTransition: true,
+          children: 'Go',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestLink },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const pushSpy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+      anchor.click();
+      await sleep(20);
+
+      expect(transitionSpy).toHaveBeenCalledTimes(1);
+      expect(pushSpy).toHaveBeenCalled();
+
+      testWrapper.unmount();
+
+      if (original) {
+        Object.defineProperty(document, 'startViewTransition', {
+          value: original,
+          configurable: true,
+        });
+      } else {
+        delete (document as any).startViewTransition;
+      }
+    });
+
+    it('prefetches on intent when prefetch is enabled', async () => {
+      const preloadSpy = vi.spyOn(router, 'preloadRoute');
+      await router.push('/');
+      await sleep(50);
+
+      const anchor = wrapper.get('a');
+      anchor.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      await sleep(20);
+
+      expect(preloadSpy).toHaveBeenCalledTimes(1);
+      expect(preloadSpy).toHaveBeenCalledWith('/about');
+    });
+
+    it('prefetches latest "to" when "to" is a getter', async () => {
+      let currentTo = '/about';
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: () => currentTo,
+          children: 'Dynamic',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+          { path: '/users/:id', name: 'user', component: SimpleComponent },
+        ],
+      });
+      const preloadSpy = vi.spyOn(testRouter, 'preloadRoute');
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      currentTo = '/users/1';
+
+      const anchor = testWrapper.get('a');
+      anchor.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      await sleep(20);
+
+      expect(preloadSpy).toHaveBeenCalledWith('/users/1');
+
+      testWrapper.unmount();
+    });
+
+    it('updates href when "to" is a getter backed by a signal', async () => {
+      const toSignal = signal<RouteLocationRawTyped>('/about');
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: () => toSignal.value,
+          children: 'Dynamic',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      toSignal.value = '/';
+
+      expect(anchor.getAttribute('href')).toBe('/');
+
+      testWrapper.unmount();
+    });
+
+    it('disconnects viewport prefetch observer when the link unmounts', async () => {
+      const disconnect = vi.fn();
+
+      class FakeIntersectionObserver {
+        observe() {}
+
+        disconnect() {
+          disconnect();
+        }
+      }
+
+      const originalIO = (globalThis as any).IntersectionObserver;
+      // @ts-expect-error test override
+      globalThis.IntersectionObserver = FakeIntersectionObserver as any;
+
+      try {
+        const TestComponent = () =>
+          h(RouterLink, {
+            to: '/about',
+            prefetch: 'viewport',
+            children: 'Viewport',
+          });
+
+        const testRouter = createRouter({
+          history: createMemoryHistory(),
+          routes: [
+            { path: '/', name: 'home', component: TestComponent },
+            { path: '/about', name: 'about', component: SimpleComponent },
+          ],
+        });
+
+        const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+        await testRouter.push('/');
+        await sleep(50);
+
+        testWrapper.unmount();
+        await sleep(0);
+
+        expect(disconnect).toHaveBeenCalledTimes(1);
+      } finally {
+        // @ts-expect-error test override
+        globalThis.IntersectionObserver = originalIO;
+      }
+    });
+
+    it('uses replace when replace prop is true', async () => {
+      // Navigate to home first
+      await router.push('/');
+      await sleep(50);
+
+      // Get the anchor from the rendered Home component (which contains a RouterLink to /about)
+      const anchor = wrapper.get('a');
+      expect(anchor).toBeTruthy();
+      expect(anchor.textContent).toBe('Home');
+
+      // Create a new router with a route that has replace=true
+      const TestLinkComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          replace: true,
+          children: ['Replace Link'],
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestLinkComponent },
+          { path: '/about', name: 'about', component: About },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await sleep(100);
+      await testRouter.push('/');
+      await sleep(50);
+
+      const testSpy = vi.spyOn(testRouter, 'replace').mockResolvedValue(undefined);
+      const testAnchor = testWrapper.get('a');
+      expect(testAnchor).toBeTruthy();
+
+      // Trigger click event
+      testAnchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      await sleep(50); // Allow time for async navigation
+
+      expect(testSpy).toHaveBeenCalledTimes(1);
+
+      testWrapper.unmount();
+    });
+
+    it('does not navigate when target is _blank', async () => {
+      const TestLinkComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: ['Blank Link'],
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestLinkComponent },
+          { path: '/about', name: 'about', component: About },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const pushSpy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+      anchor.setAttribute('target', '_blank');
+      anchor.click();
+      await sleep(20);
+
+      expect(pushSpy).not.toHaveBeenCalled();
+
+      testWrapper.unmount();
+    });
+
+    it('handles object as "to" prop', async () => {
+      // Create a component that renders RouterLink with object "to" prop
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { name: 'user', params: { id: '123' } },
+          children: 'User',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/users/:id', name: 'user', component: User },
+        ],
+      });
+
+      const spy = vi.spyOn(testRouter, 'push').mockResolvedValue(undefined);
+
+      const objectWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = objectWrapper.get('a');
+      expect(anchor).toBeTruthy();
+
+      // Trigger click event
+      anchor.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+      await sleep(150); // Allow time for async navigation
+
+      expect(spy).toHaveBeenCalledWith({ name: 'user', params: { id: '123' } });
+
+      objectWrapper.unmount();
+    });
+  });
+
+  describe('error Handling', () => {
+    it('should handle invalid "to" prop gracefully', async () => {
+      // Mock console to suppress expected warnings and errors
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const TestComponent = () => h(RouterView, { router });
+      const testWrapper = mount(TestComponent);
+      await sleep(50);
+
+      // Create a link with invalid "to" prop
+      const InvalidLink = () =>
+        h(RouterLink, {
+          to: { name: 'non-existent-route' } as any,
+          children: 'Invalid',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: InvalidLink }],
+      });
+
+      const invalidWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = invalidWrapper.get('a');
+      expect(anchor).toBeTruthy();
+      // When resolution fails, it falls back to current location '/'
+      expect(anchor.getAttribute('href')).toBe('/');
+
+      // Verify that warnings were logged (but suppressed from console)
+      expect(consoleWarnSpy).toHaveBeenCalled();
+
+      testWrapper.unmount();
+      invalidWrapper.unmount();
+
+      consoleWarnSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
+    });
+
+    it('should handle route resolution errors', async () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { path: undefined as any },
+          children: 'Test',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      // Should handle the error gracefully
+      const anchor = testWrapper.get('a');
+      expect(anchor).toBeTruthy();
+
+      consoleWarnSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
+      testWrapper.unmount();
+    });
+
+    it('should handle navigation errors gracefully', async () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      // Mock push to throw error
+      const originalPush = testRouter.push;
+      testRouter.push = vi.fn().mockRejectedValue(new Error('Navigation error'));
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/').catch(() => {});
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      anchor.click();
+      await sleep(50);
+
+      // Should not throw, error should be handled
+      expect(testRouter.push).toHaveBeenCalled();
+
+      // Restore
+      testRouter.push = originalPush;
+      consoleWarnSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
+      testWrapper.unmount();
+    });
+  });
+
+  describe('click Event Handling', () => {
+    it('should not navigate with ctrl key pressed', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const spy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+
+      // Simulate click with ctrl key
+      const event = new MouseEvent('click', { ctrlKey: true, bubbles: true });
+      anchor.dispatchEvent(event);
+      await sleep(50);
+
+      expect(spy).not.toHaveBeenCalled();
+      testWrapper.unmount();
+    });
+
+    it('should not navigate with meta key pressed', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const spy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+
+      // Simulate click with meta key
+      const event = new MouseEvent('click', { metaKey: true, bubbles: true });
+      anchor.dispatchEvent(event);
+      await sleep(50);
+
+      expect(spy).not.toHaveBeenCalled();
+      testWrapper.unmount();
+    });
+
+    it('should not navigate with shift key pressed', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const spy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+
+      // Simulate click with shift key
+      const event = new MouseEvent('click', { shiftKey: true, bubbles: true });
+      anchor.dispatchEvent(event);
+      await sleep(50);
+
+      expect(spy).not.toHaveBeenCalled();
+      testWrapper.unmount();
+    });
+
+    it('should not navigate with alt key pressed', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const spy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+
+      // Simulate click with alt key
+      const event = new MouseEvent('click', { altKey: true, bubbles: true });
+      anchor.dispatchEvent(event);
+      await sleep(50);
+
+      expect(spy).not.toHaveBeenCalled();
+      testWrapper.unmount();
+    });
+
+    it('should not navigate on right click', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const spy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+
+      // Simulate right click (button = 2)
+      const event = new MouseEvent('click', { button: 2, bubbles: true });
+      anchor.dispatchEvent(event);
+      await sleep(50);
+
+      expect(spy).not.toHaveBeenCalled();
+      testWrapper.unmount();
+    });
+
+    it('should not navigate when preventDefault is called', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const spy = vi.spyOn(testRouter, 'push');
+      const anchor = testWrapper.get('a');
+
+      // Add event listener that prevents default
+      anchor.addEventListener(
+        'click',
+        (e: Event) => {
+          e.preventDefault();
+        },
+        { capture: true },
+      );
+
+      anchor.click();
+      await sleep(50);
+
+      expect(spy).not.toHaveBeenCalled();
+      testWrapper.unmount();
+    });
+
+    it('should handle target attribute', async () => {
+      // Test that RouterLink passes through the target attribute
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      // Verify the anchor is rendered
+      expect(anchor).toBeTruthy();
+      expect(anchor.getAttribute('href')).toBe('/about');
+      testWrapper.unmount();
+    });
+  });
+
+  describe('active Class Logic', () => {
+    it('applies custom active class when provided', async () => {
+      // Create a component that renders RouterLink with custom activeClass
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          activeClass: 'my-active-class',
+          children: 'Home',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: About },
+        ],
+      });
+
+      const customWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await sleep(100);
+
+      // Ensure we're on the root route to make the link active
+      await testRouter.push('/');
+      await sleep(100);
+
+      const anchor = customWrapper.get('a');
+      expect(anchor).toBeTruthy();
+      expect(anchor.classList.contains('my-active-class')).toBe(true);
+
+      customWrapper.unmount();
+    });
+
+    it('should apply active class for partial match', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/nested',
+          children: 'Nested',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: SimpleComponent },
+          { path: '/nested', name: 'nested', component: TestComponent },
+          { path: '/nested/child', name: 'nested-child', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+
+      // Navigate to nested route first
+      await testRouter.push('/nested');
+      await sleep(100);
+
+      const anchor = testWrapper.get('a');
+      // Should have active class when on the exact route
+      expect(anchor.classList.contains('router-link-active')).toBe(true);
+
+      testWrapper.unmount();
+    });
+
+    it('should apply exact active class only for exact match', async () => {
+      const AboutComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: AboutComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(100);
+
+      const anchor = testWrapper.get('a');
+      // Should not have exact active class when not on the route
+      expect(anchor.classList.contains('router-link-exact-active')).toBe(false);
+
+      testWrapper.unmount();
+    });
+
+    it('should handle custom active class', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          activeClass: 'custom-active',
+          children: 'Home',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.classList.contains('custom-active')).toBe(true);
+      expect(anchor.classList.contains('router-link-active')).toBe(false);
+      testWrapper.unmount();
+    });
+
+    it('should handle custom exact active class', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          exactActiveClass: 'custom-exact-active',
+          children: 'Home',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.classList.contains('custom-exact-active')).toBe(true);
+      expect(anchor.classList.contains('router-link-exact-active')).toBe(false);
+      testWrapper.unmount();
+    });
+
+    it('should combine user class with active classes', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          class: 'user-class',
+          children: 'Home',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.classList.contains('user-class')).toBe(true);
+      expect(anchor.classList.contains('router-link-active')).toBe(true);
+      expect(anchor.classList.contains('router-link-exact-active')).toBe(true);
+      testWrapper.unmount();
+    });
+  });
+
+  describe('custom Rendering', () => {
+    it('should support custom rendering mode', async () => {
+      // Custom mode allows rendering custom children instead of anchor tag
+      // In custom mode, RouterLink returns the children directly
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          custom: true,
+          children: 'Custom Content',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      // In custom mode, children are rendered directly
+      expect(testWrapper.text()).toContain('Custom Content');
+
+      testWrapper.unmount();
+    });
+  });
+
+  describe('aria Attributes', () => {
+    it('defaults aria-current to page when exact active', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          children: 'Home',
+        } as const);
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('aria-current')).toBe('page');
+      testWrapper.unmount();
+    });
+
+    it('should set aria-current when exact active', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/',
+          ariaCurrentValue: 'page',
+          children: 'Home',
+        } as const);
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: TestComponent }],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('aria-current')).toBe('page');
+      testWrapper.unmount();
+    });
+
+    it('should not set aria-current when not exact active', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          ariaCurrentValue: 'page',
+          children: 'About',
+        } as const);
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('aria-current')).toBeNull();
+      testWrapper.unmount();
+    });
+  });
+
+  describe('href Generation', () => {
+    it('should generate correct href for string paths', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: '/about',
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+      testWrapper.unmount();
+    });
+
+    it('should generate correct href for named routes', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { name: 'about' },
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+      testWrapper.unmount();
+    });
+
+    it('should generate correct href with params', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { name: 'user', params: { id: '123' } },
+          children: 'User',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/users/:id', name: 'user', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/users/123');
+      testWrapper.unmount();
+    });
+
+    it('should generate correct href with query', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { path: '/about', query: { foo: 'bar' } },
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about?foo=bar');
+      testWrapper.unmount();
+    });
+
+    it('should generate correct href with hash', async () => {
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: { path: '/about', hash: '#section' },
+          children: 'About',
+        });
+
+      const testRouter = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: TestComponent },
+          { path: '/about', name: 'about', component: SimpleComponent },
+        ],
+      });
+
+      const testWrapper = mount(() => h(RouterView, { router: testRouter }));
+      await testRouter.push('/');
+      await sleep(50);
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about#section');
+      testWrapper.unmount();
+    });
+  });
+
+  describe('reactive "to" prop', () => {
+    it('updates LinkComponent attributes when passed a signal prop', async () => {
+      const href = signal('/about');
+      const testWrapper = mount(() =>
+        h(LinkComponent as any, {
+          href,
+          children: 'Raw',
+        }),
+      );
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      href.value = '/';
+      await sleep(50);
+
+      expect(anchor.getAttribute('href')).toBe('/');
+
+      testWrapper.unmount();
+    });
+
+    it('updates LinkComponent attributes when passed a computed prop', async () => {
+      const hrefSource = signal('/about');
+      const href = computed(() => hrefSource.value);
+      const testWrapper = mount(() =>
+        h(LinkComponent as any, {
+          href,
+          children: 'Computed',
+        }),
+      );
+
+      const anchor = testWrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+
+      hrefSource.value = '/';
+      await sleep(50);
+
+      expect(anchor.getAttribute('href')).toBe('/');
+
+      testWrapper.unmount();
+    });
+
+    it('uses getter value on render', async () => {
+      let currentTo: RouteLocationRawTyped = '/about';
+
+      const TestComponent = () =>
+        h(RouterLink, {
+          to: () => currentTo,
+          children: 'Dynamic',
+        });
+
+      const createMounted = async () => {
+        const testRouter = createRouter({
+          history: createMemoryHistory(),
+          routes: [
+            { path: '/', name: 'home', component: TestComponent },
+            { path: '/about', name: 'about', component: SimpleComponent },
+            { path: '/users/:id', name: 'user', component: SimpleComponent },
+          ],
+        });
+
+        const wrapper = mount(() => h(RouterView, { router: testRouter }));
+        await testRouter.push('/');
+        await sleep(50);
+        return { wrapper, testRouter };
+      };
+
+      let { wrapper } = await createMounted();
+      let anchor = wrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/about');
+      wrapper.unmount();
+
+      currentTo = '/users/1';
+      ({ wrapper } = await createMounted());
+      anchor = wrapper.get('a');
+      expect(anchor.getAttribute('href')).toBe('/users/1');
+      wrapper.unmount();
+    });
+  });
+
+  describe('multiple Input Testing', () => {
+    it('should handle various route locations correctly', async () => {
+      await testWithMultipleInputs(
+        () => generateRouteLocation(randomBoolean()),
+        (location) => {
+          const testRouter = createRouter({
+            history: createMemoryHistory(),
+            routes: [
+              { path: '/', name: 'home', component: SimpleComponent },
+              { path: '/about', name: 'about', component: SimpleComponent },
+              { path: '/:pathMatch(.*)*', name: 'catch-all', component: SimpleComponent },
+            ],
+          });
+
+          try {
+            const resolved = testRouter.resolve(location);
+            expect(resolved).toBeDefined();
+            expect(resolved.href).toBeDefined();
+          } catch {
+            // Some random locations might not resolve, that's okay
+          }
+        },
+        50, // Test with 50 random locations
+      );
+    });
+  });
+});

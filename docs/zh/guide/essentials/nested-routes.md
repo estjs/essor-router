@@ -138,6 +138,83 @@ const routes = [
 ];
 ```
 
+## 绝对嵌套路径
+
+子路由可以使用绝对路径（以 `/` 开头）：
+
+```tsx
+const routes = [
+  {
+    path: '/user/:id',
+    component: User,
+    children: [
+      { path: '', component: UserHome },
+      { path: '/profile/:id', component: UserProfile }, // 绝对路径
+    ],
+  },
+];
+```
+
+## 嵌套命名视图
+
+将嵌套路由与命名视图结合使用：
+
+```tsx
+const routes = [
+  {
+    path: '/dashboard',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '',
+        components: {
+          default: DashboardMain,
+          sidebar: DashboardSidebar,
+        },
+      },
+      {
+        path: 'analytics',
+        components: {
+          default: AnalyticsMain,
+          sidebar: AnalyticsSidebar,
+        },
+      },
+    ],
+  },
+];
+
+function DashboardLayout() {
+  return (
+    <div class="dashboard">
+      <RouterView name="sidebar" />
+      <main>
+        <RouterView />
+      </main>
+    </div>
+  );
+}
+```
+
+## 向嵌套路由传递 Props
+
+```tsx
+const routes = [
+  {
+    path: '/user/:id',
+    component: User,
+    props: true,
+    children: [
+      { path: 'profile', component: UserProfile, props: true },
+      { 
+        path: 'posts', 
+        component: UserPosts, 
+        props: (route) => ({ userId: route.params.id }) 
+      },
+    ],
+  },
+];
+```
+
 ## 完整示例
 
 ```tsx

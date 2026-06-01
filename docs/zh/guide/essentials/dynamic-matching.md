@@ -107,6 +107,26 @@ const routes = [
 
 `pathMatch` 参数将包含匹配的路径段数组。
 
+## 大小写敏感和严格匹配
+
+配置大小写敏感和尾部斜杠行为：
+
+```tsx
+const routes = [
+  {
+    path: '/user/:id',
+    component: User,
+    sensitive: true,  // 大小写敏感匹配
+    strict: true,     // 严格尾部斜杠匹配
+  },
+];
+```
+
+| 选项 | 默认值 | 描述 |
+|--------|---------|-------------|
+| `sensitive` | `false` | 大小写敏感匹配 |
+| `strict` | `false` | 不允许尾部斜杠 |
+
 ## 响应参数变化
 
 当在使用相同组件的路由之间导航时（例如从 `/user/1` 到 `/user/2`），组件会被复用。使用 `onBeforeRouteUpdate` 来响应变化：
@@ -155,4 +175,18 @@ const routes = [
 
 // 匹配：/files/documents/reports/2024
 // params: { path: ['documents', 'reports', '2024'] }
+```
+
+### 可选项卡的用户资料
+
+```tsx
+const routes = [
+  {
+    path: '/user/:id/:tab?',
+    component: UserProfile,
+  },
+];
+
+// 匹配：/user/123 -> { id: '123' }
+// 匹配：/user/123/posts -> { id: '123', tab: 'posts' }
 ```

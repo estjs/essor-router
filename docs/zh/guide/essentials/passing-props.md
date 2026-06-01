@@ -244,6 +244,32 @@ function BlogPost({ year, month, slug }) {
 }
 ```
 
+### 过滤器仪表盘
+
+```tsx
+const routes = [
+  {
+    path: '/dashboard',
+    component: Dashboard,
+    props: (route) => ({
+      dateRange: route.query.range || '7d',
+      metrics: route.query.metrics?.split(',') || ['views', 'clicks'],
+      comparison: route.query.compare === 'true',
+    }),
+  },
+];
+
+function Dashboard({ dateRange, metrics, comparison }) {
+  return (
+    <div>
+      <DateRangePicker value={dateRange} />
+      <MetricsSelector selected={metrics} />
+      <Charts metrics={metrics} comparison={comparison} />
+    </div>
+  );
+}
+```
+
 ## 使用 Props 的好处
 
 1. **复用性**：组件不依赖路由器

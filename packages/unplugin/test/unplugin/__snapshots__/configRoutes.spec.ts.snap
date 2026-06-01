@@ -1,0 +1,269 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`config-based routes parser > should correctly merge file-based and config-based routes > MixedRouteNamedMap 1`] = `
+"export interface RouteNamedMap {
+  'home': RouteRecordInfo<
+    'home',
+    '/',
+    Record<never, never>,
+    Record<never, never>,
+    | never
+  >,
+  'catch-all': RouteRecordInfo<
+    'catch-all',
+    '/:all(.*)*',
+    { all?: string | number[] | undefined | null },
+    { all?: string[] },
+    | never
+  >,
+  '/about': RouteRecordInfo<
+    '/about',
+    '/about',
+    Record<never, never>,
+    Record<never, never>,
+    | never
+  >,
+  '/contact': RouteRecordInfo<
+    '/contact',
+    '/contact',
+    Record<never, never>,
+    Record<never, never>,
+    | never
+  >,
+  'settings': RouteRecordInfo<
+    'settings',
+    '/settings',
+    Record<never, never>,
+    Record<never, never>,
+    | 'settings-profile'
+  >,
+  'settings-profile': RouteRecordInfo<
+    'settings-profile',
+    '/settings/profile',
+    Record<never, never>,
+    Record<never, never>,
+    | never
+  >,
+  'users-id': RouteRecordInfo<
+    'users-id',
+    '/users/:id',
+    { id: string | number },
+    { id: string },
+    | never
+  >,
+}"
+`;
+
+exports[`config-based routes parser > should correctly merge file-based and config-based routes > MixedRouteRecords 1`] = `
+"[
+  {
+    path: '/',
+    name: 'home',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/Home.tsx')),
+    /* no children */
+  },
+  {
+    path: '/:all(.*)*',
+    name: 'catch-all',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/NotFound.tsx')),
+    /* no children */
+  },
+  {
+    path: '/about',
+    name: '/about',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/About.tsx')),
+    /* no children */
+  },
+  {
+    path: '/contact',
+    name: '/contact',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/Contact.tsx')),
+    /* no children */
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/Settings.tsx')),
+    children: [
+      {
+        path: 'profile',
+        name: 'settings-profile',
+        component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx')),
+        /* no children */
+      }
+    ],
+  },
+  {
+    path: '/users',
+    /* internal name: '/users' */
+    /* no component */
+    children: [
+      {
+        path: ':id',
+        name: 'users-id',
+        component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/UserDetail.tsx')),
+        /* no children */
+      }
+    ],
+  }
+]"
+`;
+
+exports[`config-based routes parser > should generate stable resolver for config-based routes > RouteResolver 1`] = `
+"
+const __route_0 = normalizeRouteRecord({
+  name: 'home',
+  path: new MatcherPatternPathStatic('/'),
+  components: {
+    'default': lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/Home.tsx'))
+  },
+})
+
+const __route_1 = normalizeRouteRecord({
+  name: 'catch-all',
+  path: new MatcherPatternPathDynamic(
+    /^//(.*)$/i,
+    {
+      all: [/* no parser */, /* repeatable: */ true, /* optional: */ true],
+    },
+    [["",0]],
+    null,
+  ),
+  components: {
+    'default': lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/NotFound.tsx'))
+  },
+})
+
+const __route_2 = normalizeRouteRecord({
+  name: 'settings',
+  path: new MatcherPatternPathStatic('/settings'),
+  components: {
+    'default': lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/Settings.tsx'))
+  },
+})
+const __route_3 = normalizeRouteRecord({
+  name: 'settings-profile',
+  path: new MatcherPatternPathStatic('/settings/profile'),
+  components: {
+    'default': lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx'))
+  },
+  parent: __route_2,
+})
+
+const __route_4 = normalizeRouteRecord({
+  name: 'users-id',
+  path: new MatcherPatternPathDynamic(
+    /^//users//([^/]+?)$/i,
+    {
+      id: [/* no parser */],
+    },
+    ["users",["",1]],
+    /* trailingSlash */
+  ),
+  components: {
+    'default': lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/UserDetail.tsx'))
+  },
+})
+
+export const resolver = createFixedResolver([
+  __route_3,  // /settings/profile
+  __route_4,  // /users/:id
+  __route_2,  // /settings
+  __route_0,  // /
+  __route_1,  // /:all(.*)*
+])
+"
+`;
+
+exports[`config-based routes parser > should generate stable resolver for config-based routes > RouteResolverImports 1`] = `
+"import { lazyRouteComponent, createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router'
+"
+`;
+
+exports[`config-based routes parser > should generate stable route records for config-based routes > RouteRecords 1`] = `
+"[
+  {
+    path: '/',
+    name: 'home',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/Home.tsx')),
+    /* no children */
+  },
+  {
+    path: '/:all(.*)*',
+    name: 'catch-all',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/NotFound.tsx')),
+    /* no children */
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/Settings.tsx')),
+    children: [
+      {
+        path: 'profile',
+        name: 'settings-profile',
+        component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/SettingsProfile.tsx')),
+        /* no children */
+      }
+    ],
+  },
+  {
+    path: '/users',
+    /* internal name: '/users' */
+    /* no component */
+    children: [
+      {
+        path: ':id',
+        name: 'users-id',
+        component: lazyRouteComponent(() => import('<TEST_ROOT>fixtures/pages/UserDetail.tsx')),
+        /* no children */
+      }
+    ],
+  }
+]"
+`;
+
+exports[`config-based routes parser > should generate stable route records for config-based routes > RouteRecordsImports 1`] = `
+"import { lazyRouteComponent } from 'essor-router'
+"
+`;
+
+exports[`config-based routes parser > should parse basic routes correctly and populate PrefixTree > RouteNamedMap 1`] = `
+"export interface RouteNamedMap {
+  'home': RouteRecordInfo<
+    'home',
+    '/',
+    Record<never, never>,
+    Record<never, never>,
+    | never
+  >,
+  'catch-all': RouteRecordInfo<
+    'catch-all',
+    '/:all(.*)*',
+    { all?: string | number[] | undefined | null },
+    { all?: string[] },
+    | never
+  >,
+  'settings': RouteRecordInfo<
+    'settings',
+    '/settings',
+    Record<never, never>,
+    Record<never, never>,
+    | 'settings-profile'
+  >,
+  'settings-profile': RouteRecordInfo<
+    'settings-profile',
+    '/settings/profile',
+    Record<never, never>,
+    Record<never, never>,
+    | never
+  >,
+  'users-id': RouteRecordInfo<
+    'users-id',
+    '/users/:id',
+    { id: string | number },
+    { id: string },
+    | never
+  >,
+}"
+`;

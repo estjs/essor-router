@@ -1,23 +1,4 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "preserve",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "resolveJsonModule": true,
-    "types": ["vitest/globals"],
-    "allowJs": true,
-    "checkJs": true,
-    "strict": true,
-    "noImplicitAny": false,
-    "noEmit": true,
-    "sourceMap": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true
-  }
+  "references": [{ "path": "./packages/router" }, { "path": "./packages/unplugin" }],
+  "files": []
 }

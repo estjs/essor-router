@@ -1,7 +1,8 @@
 import { RouterView, createRouter, useRoute, useRouter } from 'essor-router';
 import {
+  child as _child$,
   insert as _insert$,
-  mapNodes as _mapNodes$,
+  next as _next$,
   template as _template$,
   createApp,
 } from 'essor';
@@ -17,8 +18,9 @@ function Home() {
   }, 1000);
   return (() => {
     const _$el = _$tmpl();
-    const _$nodes = _mapNodes$(_$el, [1]);
-    _insert$(_$nodes[0], () => route.query.q);
+    const _n$ = _child$(_$el);
+    const _n$2 = _next$(_n$, 1);
+    _insert$(_$el, () => route.query.q, _n$2 ?? undefined);
     return _$el;
   })();
 }

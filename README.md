@@ -1,49 +1,64 @@
 <h1 align="center">essor-router</h1>
 
-<div align="center">
+<p align="center">
+  <img src="https://img.shields.io/github/actions/workflow/status/estjs/essor-router/ci.yml?label=CI&logo=GitHub" alt="CI">
+  <img src="https://img.shields.io/github/license/estjs/essor-router" alt="license">
+  <img src="https://img.shields.io/npm/v/essor-router" alt="version">
+  <img src="https://img.shields.io/npm/dm/essor-router" alt="downloads">
+  <img src="https://img.shields.io/codecov/c/github/estjs/essor-router" alt="coverage">
+</p>
 
-![ci](https://img.shields.io/github/actions/workflow/status/estjs/essor-router/ci.yml?label=CI&logo=GitHub)
-![license](https://img.shields.io/github/license/estjs/essor-router)
-![version](https://img.shields.io/npm/v/essor-router)
-![download](https://img.shields.io/npm/dm/essor-router)
-![codecov](https://img.shields.io/codecov/c/github/estjs/essor-router)
+The official router for [Essor](https://github.com/estjs/essor) — a lightweight, type-safe routing solution.
 
-</div>
+## Table of Contents
 
-The official router for [Essor](https://github.com/estjs/essor) - A lightweight, type-safe routing solution.
+- [Features](#features)
+- [Packages](#packages)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
+- [API Reference](#api-reference)
+- [Examples](#examples)
+- [TypeScript](#typescript)
+- [Browser Support](#browser-support)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
-- 🚀 **Multiple History Modes** - HTML5 History, Hash, and Memory modes
-- 🎯 **Type-Safe** - Full TypeScript support with comprehensive type definitions
-- 🔗 **Nested Routes** - Support for deeply nested route configurations
-- 🛡️ **Navigation Guards** - Global, per-route, and in-component guards
-- 📦 **Lazy Loading** - Async component loading with code splitting
-- 🏷️ **Named Routes & Views** - Named routes and multiple named views
-- 🔄 **Dynamic Routing** - Add/remove routes at runtime
-- 📍 **Route Parameters** - Dynamic segments with custom regex patterns
-- 🔀 **Redirects & Aliases** - Flexible route redirection and aliasing
+- 🚀 **Multiple History Modes** — HTML5 History, Hash, and Memory modes
+- 📁 **File-Based Routing** — Auto-generate routes from `src/pages/`
+- ⚙️ **Config-Based Routing** — Explicit route config with full type inference
+- 🎯 **Type-Safe** — Full TypeScript support with comprehensive type definitions
+- 🔗 **Nested Routes** — Support for deeply nested route configurations
+- 🛡️ **Navigation Guards** — Global, per-route, and in-component guards
+- 📦 **Lazy Loading** — Async component loading with code splitting
+- 🏷️ **Named Routes & Views** — Named routes and multiple named views
+- 🔄 **Dynamic Routing** — Add/remove routes at runtime
+- 📍 **Route Parameters** — Dynamic segments with custom regex patterns
+- 🔀 **Redirects & Aliases** — Flexible route redirection and aliasing
+- 🎨 **Route Meta** — Attach arbitrary data to routes
+- 📜 **Scroll Behavior** — Customizable scroll behavior during navigation
+- 🔍 **Query String** — Custom query parsing and stringifying
+- ⚡ **HMR Support** — Live updates in development
 
-## Installation
+## Packages
 
-```bash
-# npm
-npm install essor-router
-
-# pnpm
-pnpm add essor-router
-
-# yarn
-yarn add essor-router
-```
+| Package | Description |
+|---------|-------------|
+| [`essor-router`](./packages/router) | Runtime router (history, matcher, router APIs) |
+| [`unplugin-essor-router`](./packages/unplugin) | File-based routes, codegen, and typed routes |
 
 ## Quick Start
+
+```bash
+pnpm add essor-router
+pnpm add -D unplugin-essor-router
+```
 
 ```tsx
 import { createApp } from 'essor';
 import { RouterLink, RouterView, createRouter } from 'essor-router';
 
-// Define components
 function Home() {
   return <div>Home Page</div>;
 }
@@ -52,16 +67,14 @@ function About() {
   return <div>About Page</div>;
 }
 
-// Create router instance
 const router = createRouter({
-  history: 'history', // 'history' | 'hash' | 'memory'
+  history: 'history',
   routes: [
     { path: '/', component: Home },
     { path: '/about', component: About },
   ],
 });
 
-// Create app with RouterView
 function App() {
   return (
     <div>
@@ -79,158 +92,110 @@ createApp(App, '#app');
 
 ## Documentation
 
-For detailed documentation, please visit the [docs](./docs) folder or check out the examples below.
-
 ### Core Concepts
 
-- [Router Configuration](#router-configuration)
-- [Route Matching](#route-matching)
-- [Navigation](#navigation)
-- [Navigation Guards](#navigation-guards)
-- [Composition API](#composition-api)
+- [Getting Started](./docs/guide/getting-started.md)
+- [Installation](./docs/guide/installation.md)
+- [Route Configuration](./docs/guide/essentials/route-configuration.md)
+- [Dynamic Matching](./docs/guide/essentials/dynamic-matching.md)
+- [History Mode](./docs/guide/essentials/history-mode.md)
+- [Named Routes](./docs/guide/essentials/named-routes.md)
+- [Named Views](./docs/guide/essentials/named-views.md)
+- [Nested Routes](./docs/guide/essentials/nested-routes.md)
+- [Navigation](./docs/guide/essentials/navigation.md)
+- [Redirect & Alias](./docs/guide/essentials/redirect-and-alias.md)
+- [Passing Props](./docs/guide/essentials/passing-props.md)
 
-### Router Configuration
+### Advanced
 
-```tsx
-import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from 'essor-router';
+- [Navigation Guards](./docs/guide/advanced/navigation-guards.md)
+- [Composition API](./docs/guide/advanced/composition-api.md)
+- [Lazy Loading](./docs/guide/advanced/lazy-loading.md)
+- [Dynamic Routing](./docs/guide/advanced/dynamic-routing.md)
+- [Route Meta](./docs/guide/advanced/meta.md)
+- [Scroll Behavior](./docs/guide/advanced/scroll-behavior.md)
+- [Query Handling](./docs/guide/advanced/query-handling.md)
+- [Custom Param Parsers](./docs/guide/advanced/param-parsers.md)
+- [Config-Based Routing](./docs/guide/advanced/config-based-routing.md)
+- [File-Based Routing](./docs/guide/advanced/file-based-routing-unplugin.md)
 
-const router = createRouter({
-  // History mode - choose one:
-  history: 'history',           // HTML5 History API (recommended)
-  // history: 'hash',           // Hash mode for static hosting
-  // history: 'memory',         // Memory mode for SSR/testing
-  
-  // Or use factory functions for more control:
-  // history: createWebHistory('/base-path/'),
-  // history: createWebHashHistory(),
-  // history: createMemoryHistory(),
-  
-  routes: [
-    // Basic route
-    { path: '/', component: Home },
-    
-    // Named route
-    { path: '/user/:id', name: 'user', component: User },
-    
-    // Nested routes
-    {
-      path: '/dashboard',
-      component: Dashboard,
-      children: [
-        { path: '', component: DashboardHome },
-        { path: 'settings', component: DashboardSettings },
-      ],
-    },
-    
-    // Redirect
-    { path: '/home', redirect: '/' },
-    
-    // Alias
-    { path: '/users', component: Users, alias: '/people' },
-    
-    // Catch-all 404
-    { path: '/:pathMatch(.*)*', component: NotFound },
-  ],
-});
-```
+### API
 
-### Route Matching
+- [createRouter](./docs/api/create-router.md)
+- [Router Instance](./docs/api/router-instance.md)
+- [RouterLink](./docs/api/router-link.md)
+- [RouterView](./docs/api/router-view.md)
+- [Composition API](./docs/api/composition-api.md)
+- [Config Alignment](./docs/api/config-alignment.md)
+- [Unplugin](./docs/api/unplugin.md)
+- [Types](./docs/api/types.md)
 
-essor-router supports powerful path matching with dynamic segments:
+## API Reference
 
-```tsx
-const routes = [
-  // Dynamic segment
-  { path: '/user/:id', component: User },
-  
-  // Multiple segments
-  { path: '/user/:userId/post/:postId', component: Post },
-  
-  // Optional segment
-  { path: '/user/:id?', component: User },
-  
-  // Repeatable segment
-  { path: '/files/:path+', component: Files },
-  
-  // Optional repeatable
-  { path: '/files/:path*', component: Files },
-  
-  // Custom regex
-  { path: '/user/:id(\\d+)', component: User },
-  
-  // Catch-all
-  { path: '/:pathMatch(.*)*', component: NotFound },
-];
-```
+### `createRouter(options)`
 
-### Navigation
+Creates a router instance.
 
-#### Declarative Navigation
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `history` | `'history' \| 'hash' \| 'memory' \| RouterHistory` | — | History mode |
+| `routes` | `RouteRecordRaw[]` | `[]` | Initial route records. Optional when `resolver` is supplied. |
+| `resolver` | `FixedRouteResolver` | — | Prebuilt resolver from `unplugin-essor-router` (`essor-router/auto-resolver`). When passed, matching is delegated to it and `routes` becomes optional. |
+| `base` | `string` | `'/'` | Base URL path |
+| `scrollBehavior` | `RouterScrollBehavior` | — | Custom scroll behavior |
+| `parseQuery` | `(query: string) => LocationQuery` | built-in | Custom query parser |
+| `stringifyQuery` | `(query: LocationQueryRaw) => string` | built-in | Custom query stringifier |
+| `linkActiveClass` | `string` | `'router-link-active'` | Default active class for RouterLink |
+| `linkExactActiveClass` | `string` | `'router-link-exact-active'` | Default exact active class for RouterLink |
 
-```tsx
-import { RouterLink } from 'essor-router';
+### Router Instance
 
-<>
-  {/* String path */}
-  <RouterLink to="/about">About</RouterLink>
+| Property/Method | Description |
+|-----------------|-------------|
+| `currentRoute` | Current route location (reactive signal) |
+| `push(to)` | Navigate to a new location |
+| `replace(to)` | Replace current location |
+| `go(delta)` | Navigate in history by delta |
+| `back()` | Go back in history |
+| `forward()` | Go forward in history |
+| `resolve(to)` | Resolve a raw location |
+| `addRoute(route)` | Add a route dynamically |
+| `removeRoute(name)` | Remove a route by name |
+| `hasRoute(name)` | Check if route exists |
+| `getRoutes()` | Get all route records |
+| `clearRoutes()` | Remove all routes |
+| `beforeEach(guard)` | Add global before guard |
+| `beforeResolve(guard)` | Add global resolve guard |
+| `afterEach(hook)` | Add global after hook |
+| `onError(handler)` | Add error handler |
+| `isReady()` | Promise that resolves when router is ready |
+| `init()` | Initialize the router |
+| `destroy()` | Destroy the router |
+| `preloadRoute(to)` | Preload a route's async components |
 
-  {/* Object with path */}
-  <RouterLink to={{ path: '/user/123' }}>User</RouterLink>
+### Components
 
-  {/* Named route with params */}
-  <RouterLink to={{ name: 'user', params: { id: '123' } }}>User</RouterLink>
+| Component | Description |
+|-----------|-------------|
+| `<RouterView>` | Renders the matched component for the current route |
+| `<RouterLink>` | Creates a link for declarative navigation |
 
-  {/* With query and hash */}
-  <RouterLink to={{ path: '/search', query: { q: 'essor' }, hash: '#results' }}>
-    Search
-  </RouterLink>
+### Composition Functions
 
-  {/* Replace instead of push */}
-  <RouterLink to="/about" replace>About</RouterLink>
-
-  {/* Active class customization */}
-  <RouterLink to="/about" activeClass="active" exactActiveClass="exact-active">
-    About
-  </RouterLink>
-</>
-```
-
-#### Programmatic Navigation
-
-```tsx
-import { useRouter } from 'essor-router';
-
-function MyComponent() {
-  const router = useRouter();
-  
-  // Navigate to path
-  router.push('/about');
-  
-  // Navigate with object
-  router.push({ path: '/user/123' });
-  
-  // Named route
-  router.push({ name: 'user', params: { id: '123' } });
-  
-  // With query
-  router.push({ path: '/search', query: { q: 'essor' } });
-  
-  // Replace current entry
-  router.replace('/about');
-  
-  // Go back/forward
-  router.back();
-  router.forward();
-  router.go(-2);
-}
-```
+| Function | Description |
+|----------|-------------|
+| `useRouter()` | Returns the router instance |
+| `useRoute()` | Returns the current route |
+| `onBeforeRouteLeave(guard)` | Register in-component leave guard |
+| `onBeforeRouteUpdate(guard)` | Register in-component update guard |
 
 ### Navigation Guards
 
-#### Global Guards
-
 ```tsx
-// Before each navigation
+// Global guards
+// In-component guards
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'essor-router';
+
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !isAuthenticated()) {
     next('/login');
@@ -239,165 +204,31 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-// Before resolve (after in-component guards)
-router.beforeResolve((to, from, next) => {
-  next();
-});
-
-// After each navigation
+router.beforeResolve((to, from, next) => { next(); });
 router.afterEach((to, from, failure) => {
-  if (!failure) {
-    analytics.track(to.path);
-  }
+  if (!failure) analytics.track(to.path);
 });
-```
 
-#### Per-Route Guards
-
-```tsx
-const routes = [
-  {
-    path: '/admin',
-    component: Admin,
-    beforeEnter: (to, from, next) => {
-      if (!isAdmin()) {
-        next('/forbidden');
-      } else {
-        next();
-      }
-    },
+// Per-route guard
+const routes = [{
+  path: '/admin',
+  component: Admin,
+  beforeEnter: (to, from, next) => {
+    if (!isAdmin()) next('/forbidden');
+    else next();
   },
-];
-```
-
-#### In-Component Guards
-
-```tsx
-import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'essor-router';
+}];
 
 function Editor() {
   onBeforeRouteLeave((to, from, next) => {
-    if (hasUnsavedChanges()) {
-      if (confirm('Discard changes?')) {
-        next();
-      } else {
-        next(false);
-      }
+    if (hasUnsavedChanges() && !confirm('Discard changes?')) {
+      next(false);
     } else {
       next();
     }
   });
-  
-  onBeforeRouteUpdate((to, from, next) => {
-    // Called when route params change but component is reused
-    next();
-  });
-  
   return <div>Editor</div>;
 }
-```
-
-### Composition API
-
-```tsx
-import { useRoute, useRouter } from 'essor-router';
-
-function MyComponent() {
-  const router = useRouter();
-  const route = useRoute();
-  
-  // Access current route info
-  console.log(route.path);        // '/user/123'
-  console.log(route.params);      // { id: '123' }
-  console.log(route.query);       // { tab: 'profile' }
-  console.log(route.hash);        // '#section'
-  console.log(route.fullPath);    // '/user/123?tab=profile#section'
-  console.log(route.name);        // 'user'
-  console.log(route.meta);        // { requiresAuth: true }
-  console.log(route.matched);     // Array of matched route records
-  
-  // Router instance methods
-  router.push('/new-path');
-  router.replace('/new-path');
-  router.back();
-  router.forward();
-  router.go(n);
-  
-  // Dynamic route management
-  router.addRoute({ path: '/new', component: NewPage });
-  router.removeRoute('routeName');
-  router.hasRoute('routeName');
-  router.getRoutes();
-  
-  return <div>Current path: {route.path}</div>;
-}
-```
-
-### Route Meta
-
-```tsx
-const routes = [
-  {
-    path: '/admin',
-    component: Admin,
-    meta: {
-      requiresAuth: true,
-      roles: ['admin'],
-    },
-  },
-];
-
-// Access in guards
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    // Check authentication
-  }
-  next();
-});
-
-// Access in components
-function Admin() {
-  const route = useRoute();
-  console.log(route.meta.roles); // ['admin']
-}
-```
-
-### Named Views
-
-```tsx
-const routes = [
-  {
-    path: '/dashboard',
-    components: {
-      default: DashboardMain,
-      sidebar: DashboardSidebar,
-      header: DashboardHeader,
-    },
-  },
-];
-
-function Layout() {
-  return (
-    <div>
-      <RouterView name="header" />
-      <div class="content">
-        <RouterView name="sidebar" />
-        <RouterView /> {/* default */}
-      </div>
-    </div>
-  );
-}
-```
-
-### Lazy Loading
-
-```tsx
-const routes = [
-  {
-    path: '/about',
-    component: () => import('./pages/About'),
-  },
-];
 ```
 
 ### Error Handling
@@ -406,113 +237,38 @@ const routes = [
 import { NavigationFailureType, isNavigationFailure } from 'essor-router';
 
 router.afterEach((to, from, failure) => {
-  if (isNavigationFailure(failure)) {
-    console.log('Navigation failed:', failure);
-  }
-  
   if (isNavigationFailure(failure, NavigationFailureType.aborted)) {
     console.log('Navigation was aborted');
   }
-  
   if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {
     console.log('Already at this location');
   }
 });
 
-// Global error handler
 router.onError((error, to, from) => {
   console.error('Router error:', error);
 });
 ```
 
-## API Reference
-
-### createRouter(options)
-
-Creates a router instance.
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `history` | `'history' \| 'hash' \| 'memory' \| RouterHistory` | History mode |
-| `routes` | `RouteRecordRaw[]` | Initial route records |
-| `base` | `string` | Base URL path |
-| `parseQuery` | `(query: string) => LocationQuery` | Custom query parser |
-| `stringifyQuery` | `(query: LocationQueryRaw) => string` | Custom query stringifier |
-| `linkActiveClass` | `string` | Default active class for RouterLink |
-| `linkExactActiveClass` | `string` | Default exact active class for RouterLink |
-
-### Router Instance
-
-| Property/Method | Description |
-|-----------------|-------------|
-| `currentRoute` | Current route location (Signal) |
-| `options` | Router options |
-| `push(to)` | Navigate to a new location |
-| `replace(to)` | Replace current location |
-| `back()` | Go back in history |
-| `forward()` | Go forward in history |
-| `go(delta)` | Go to specific history position |
-| `beforeEach(guard)` | Add global before guard |
-| `beforeResolve(guard)` | Add global resolve guard |
-| `afterEach(hook)` | Add global after hook |
-| `onError(handler)` | Add error handler |
-| `addRoute(route)` | Add a route dynamically |
-| `removeRoute(name)` | Remove a route by name |
-| `hasRoute(name)` | Check if route exists |
-| `getRoutes()` | Get all route records |
-| `resolve(to)` | Resolve a route location |
-| `isReady()` | Promise that resolves when router is ready |
-
-### Components
-
-#### RouterView
-
-Renders the matched component for the current route.
-
-```tsx
-<RouterView 
-  router={router}      // Router instance (optional if provided via context)
-  name="default"       // Named view (default: 'default')
-  route={route}        // Override route to display
-/>
-```
-
-#### RouterLink
-
-Creates a link for navigation.
-
-```tsx
-<RouterLink
-  to="/path"                    // Target location
-  replace={false}               // Use replace instead of push
-  activeClass="active"          // Class when active
-  exactActiveClass="exact"      // Class when exactly active
-  custom={false}                // Disable default anchor rendering
-/>
-```
-
-### Composition Functions
-
-| Function | Description |
-|----------|-------------|
-| `useRouter()` | Returns the router instance |
-| `useRoute()` | Returns the current route |
-| `onBeforeRouteLeave(guard)` | Register leave guard |
-| `onBeforeRouteUpdate(guard)` | Register update guard |
-
 ## Examples
 
-Check out the [examples](./examples) directory for more usage examples:
-
-- [Basic](./examples/basic) - Simple routing setup
-- [Use API](./examples/use-api) - Using composition API
-- [Router Link](./examples/router-link) - RouterLink usage
-- [Async Router](./examples/async-router) - Lazy loading routes
-- [Option Router](./examples/option-router) - Advanced configuration
+| Example | Description |
+|---------|-------------|
+| [basic](./examples/basic) | Simple routing setup with RouterLink |
+| [file-routes](./examples/file-routes) | File-based routing with named views and layouts |
+| [typed-router](./examples/typed-router) | Type-safe routing with auto-generated types |
+| [config-router](./examples/config-router) | Config-based route definitions |
+| [option-router](./examples/option-router) | Programmatic navigation with useRouter |
+| [router-link](./examples/router-link) | RouterLink with memory history |
+| [use-api](./examples/use-api) | Composition API usage |
+| [async-router](./examples/async-router) | Lazy loading routes with hash history |
+| [param-parsers](./examples/param-parsers) | Custom route param parsers |
+| [data-loaders](./examples/data-loaders) | Route data loaders |
+| [guards](./examples/guards) | Comprehensive navigation guards |
 
 ## TypeScript
 
-essor-router is written in TypeScript and provides full type support. You can extend the `RouteMeta` interface to add custom meta fields:
+essor-router is written in TypeScript and provides full type support. Extend the `RouteMeta` interface for custom meta fields:
 
 ```typescript
 // types.d.ts
@@ -527,14 +283,18 @@ declare module 'essor-router' {
 }
 ```
 
+For file-based routing, install the TypeScript plugin for IDE autocompletion:
+
+
+
 ## Browser Support
 
-essor-router supports all modern browsers. For HTML5 History mode, ensure your server is configured to handle client-side routing.
+Supports all modern browsers. For HTML5 History mode, ensure your server handles client-side routing with a catch-all fallback to `index.html`.
 
 ## Contributing
 
-Contributions are welcome! Please read our [contributing guidelines](CONTRIBUTING.md) before submitting a PR.
+Contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ## License
 
-[MIT](./LICENSE) License © 2024-present [estjs](https://github.com/estjs)
+[MIT](./LICENSE) © [estjs](https://github.com/estjs)

@@ -308,3 +308,27 @@ function App() {
   );
 }
 ```
+
+### 分析统计
+
+```tsx
+const routes = [
+  {
+    path: '/checkout',
+    component: Checkout,
+    meta: { 
+      trackPageView: true,
+      pageCategory: 'conversion',
+    },
+  },
+];
+
+router.afterEach((to) => {
+  if (to.meta.trackPageView) {
+    analytics.trackPageView({
+      path: to.fullPath,
+      category: to.meta.pageCategory,
+    });
+  }
+});
+```

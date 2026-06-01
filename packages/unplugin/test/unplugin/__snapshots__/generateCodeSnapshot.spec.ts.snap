@@ -1,0 +1,278 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateRouteRecords snapshot > generates route with nested children 1`] = `
+"[
+  {
+    path: '/users',
+    /* internal name: '/users' */
+    /* no component */
+    children: [
+      {
+        path: ':id',
+        name: '/users/[id]',
+        component: lazyRouteComponent(() => import('/src/pages/users/[id].tsx')),
+        children: [
+          {
+            path: 'posts',
+            name: '/users/[id]/posts',
+            component: lazyRouteComponent(() => import('/src/pages/users/[id]/posts.tsx')),
+            /* no children */
+          },
+          {
+            path: 'settings',
+            name: '/users/[id]/settings',
+            component: lazyRouteComponent(() => import('/src/pages/users/[id]/settings.tsx')),
+            /* no children */
+          }
+        ],
+      }
+    ],
+  }
+]"
+`;
+
+exports[`generateRouteRecords snapshot > generates stable imports map for standard routes 1`] = `
+"import { lazyRouteComponent } from 'essor-router'
+"
+`;
+
+exports[`generateRouteRecords snapshot > generates stable route records for standard routes 1`] = `
+"[
+  {
+    path: '/',
+    name: '/',
+    component: lazyRouteComponent(() => import('/src/pages/index.tsx')),
+    /* no children */
+  },
+  {
+    path: '/:all(.*)',
+    name: '/[...all]',
+    component: lazyRouteComponent(() => import('/src/pages/[...all].tsx')),
+    /* no children */
+  },
+  {
+    path: '/about',
+    name: '/about',
+    component: lazyRouteComponent(() => import('/src/pages/about.tsx')),
+    /* no children */
+  },
+  {
+    path: '/users',
+    /* internal name: '/users' */
+    /* no component */
+    children: [
+      {
+        path: ':id',
+        name: '/users/[id]',
+        component: lazyRouteComponent(() => import('/src/pages/users/[id].tsx')),
+        children: [
+          {
+            path: 'posts',
+            name: '/users/[id]/posts',
+            component: lazyRouteComponent(() => import('/src/pages/users/[id]/posts.tsx')),
+            /* no children */
+          }
+        ],
+      }
+    ],
+  }
+]"
+`;
+
+exports[`generateRouteRecords snapshot > generates sync import when importMode is sync 1`] = `
+"[
+  {
+    path: '/',
+    name: '/',
+    component: _page_0,
+    /* no children */
+  },
+  {
+    path: '/users',
+    /* internal name: '/users' */
+    /* no component */
+    children: [
+      {
+        path: ':id',
+        name: '/users/[id]',
+        component: _page_1,
+        /* no children */
+      }
+    ],
+  }
+]"
+`;
+
+exports[`generateRouteRecords snapshot > generates sync import when importMode is sync 2`] = `
+"import _page_0 from '/src/pages/index.tsx'
+import _page_1 from '/src/pages/users/[id].tsx'
+"
+`;
+
+exports[`generateRouteResolver snapshot > generates resolver with deeply nested dynamic routes 1`] = `
+"
+const __route_0 = normalizeRouteRecord({
+  name: '/users/[id]/posts/[postId]',
+  path: new MatcherPatternPathDynamic(
+    /^\\/users\\/([^/]+?)\\/posts\\/([^/]+?)$/i,
+    {
+      id: [/* no parser */],
+      postId: [/* no parser */],
+    },
+    ["users",1,"posts",1],
+    /* trailingSlash */
+  ),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/users/[id]/posts/[postId].tsx'))
+  },
+})
+
+export const resolver = createFixedResolver([
+  __route_0,  // /users/:id/posts/:postId
+])
+"
+`;
+
+exports[`generateRouteResolver snapshot > generates resolver with splat (catch-all) route 1`] = `
+"
+const __route_0 = normalizeRouteRecord({
+  name: '/',
+  path: new MatcherPatternPathStatic('/'),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/index.tsx'))
+  },
+})
+
+const __route_1 = normalizeRouteRecord({
+  name: '/[...all]',
+  path: new MatcherPatternPathDynamic(
+    /^\\/(.*)$/i,
+    {
+      all: [/* no parser */],
+    },
+    [0],
+    null,
+  ),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/[...all].tsx'))
+  },
+})
+
+export const resolver = createFixedResolver([
+  __route_0,  // /
+  __route_1,  // /:all(.*)
+])
+"
+`;
+
+exports[`generateRouteResolver snapshot > generates resolver with static-only routes 1`] = `
+"
+const __route_0 = normalizeRouteRecord({
+  name: '/',
+  path: new MatcherPatternPathStatic('/'),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/index.tsx'))
+  },
+})
+
+const __route_1 = normalizeRouteRecord({
+  name: '/about',
+  path: new MatcherPatternPathStatic('/about'),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/about.tsx'))
+  },
+})
+
+const __route_2 = normalizeRouteRecord({
+  name: '/contact',
+  path: new MatcherPatternPathStatic('/contact'),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/contact.tsx'))
+  },
+})
+
+export const resolver = createFixedResolver([
+  __route_1,  // /about
+  __route_2,  // /contact
+  __route_0,  // /
+])
+"
+`;
+
+exports[`generateRouteResolver snapshot > generates stable resolver for standard routes 1`] = `
+"
+const __route_0 = normalizeRouteRecord({
+  name: '/',
+  path: new MatcherPatternPathStatic('/'),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/index.tsx'))
+  },
+})
+
+const __route_1 = normalizeRouteRecord({
+  name: '/[...all]',
+  path: new MatcherPatternPathDynamic(
+    /^\\/(.*)$/i,
+    {
+      all: [/* no parser */],
+    },
+    [0],
+    null,
+  ),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/[...all].tsx'))
+  },
+})
+
+const __route_2 = normalizeRouteRecord({
+  name: '/about',
+  path: new MatcherPatternPathStatic('/about'),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/about.tsx'))
+  },
+})
+
+const __route_3 = normalizeRouteRecord({
+  name: '/users/[id]',
+  path: new MatcherPatternPathDynamic(
+    /^\\/users\\/([^/]+?)$/i,
+    {
+      id: [/* no parser */],
+    },
+    ["users",1],
+    /* trailingSlash */
+  ),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/users/[id].tsx'))
+  },
+})
+const __route_4 = normalizeRouteRecord({
+  name: '/users/[id]/posts',
+  path: new MatcherPatternPathDynamic(
+    /^\\/users\\/([^/]+?)\\/posts$/i,
+    {
+      id: [/* no parser */],
+    },
+    ["users",1,"posts"],
+    /* trailingSlash */
+  ),
+  components: {
+    'default': lazyRouteComponent(() => import('/src/pages/users/[id]/posts.tsx'))
+  },
+  parent: __route_3,
+})
+
+export const resolver = createFixedResolver([
+  __route_4,  // /users/:id/posts
+  __route_3,  // /users/:id
+  __route_2,  // /about
+  __route_0,  // /
+  __route_1,  // /:all(.*)
+])
+"
+`;
+
+exports[`generateRouteResolver snapshot > generates stable resolver for standard routes 2`] = `
+"import { lazyRouteComponent, createFixedResolver, MatcherPatternPathStatic, MatcherPatternPathDynamic, normalizeRouteRecord } from 'essor-router'
+"
+`;

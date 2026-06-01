@@ -263,3 +263,86 @@ router.afterEach((to) => {
   document.title = title ? `${title} - 我的应用` : '我的应用';
 });
 ```
+
+### 滚动行为
+
+```tsx
+router.afterEach((to, from) => {
+  if (to.hash) {
+    const element = document.querySelector(to.hash);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  } else if (to.path !== from.path) {
+    window.scrollTo(0, 0);
+  }
+});
+```
+
+## 守卫解析流程
+
+```
+导航触发
+        │
+        ▼
+┌───────────────────┐
+│ beforeRouteLeave  │ (在即将离开的组件中)
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│   beforeEach      │ (全局)
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│ beforeRouteUpdate │ (在复用的组件中)
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│   beforeEnter     │ (在路由配置中)
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│ 解析异步          │ (路由组件)
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│ beforeRouteEnter  │ (在即将激活的组件中)
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│  beforeResolve    │ (全局)
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│ 导航              │
+│ 已确认            │
+└─────────┬─────────┘
+          │
+          ▼
+┌───────────────────┐
+│    afterEach      │ (全局)
+└───────────────────┘
+```
+
+## 错误处理
+
+```tsx
+router.onError((error, to, from) => {
+  console.error('路由错误：', error);
+  
+  // 上报到错误追踪服务
+  errorTracker.captureException(error, {
+    extra: {
+      to: to.fullPath,
+      from: from.fullPath,
+    },
+  });
+});
+```

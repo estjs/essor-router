@@ -247,6 +247,48 @@ console.log('路由器已就绪');
 
 **返回：** `Promise<void>`
 
+## 生命周期
+
+### init
+
+初始化路由器（由 RouterView 自动调用）：
+
+```tsx
+router.init();
+```
+
+### destroy
+
+清理路由器：
+
+```tsx
+router.destroy();
+```
+
+## 预渲染路径
+
+### getPrerenderPaths
+
+返回所有启用了 `start.prerender` 的预渲染入口：
+
+```tsx
+const entries = router.getPrerenderPaths();
+```
+
+静态路由会直接把自身路径放进 `paths`。动态路由需要通过 `start.prerenderPaths` 提供具体路径，否则会被跳过。
+
+```tsx
+{
+  path: '/users/:id',
+  start: {
+    prerender: true,
+    prerenderPaths: ['/users/1', '/users/2'],
+  },
+}
+```
+
+如果 `start.prerenderPaths` 是异步函数，请改用 `router.getPrerenderPathsAsync()`。
+
 ## 导航失败
 
 ### isNavigationFailure
@@ -283,4 +325,48 @@ enum NavigationFailureType {
   cancelled = 8,   // 完成前开始了新导航
   duplicated = 16, // 已在目标位置
 }
+```
+
+## 示例
+
+```tsx
+import { createRouter, isNavigationFailure, NavigationFailureType } from 'essor-router';
+
+const router = createRouter({
+  history: 'history',
+  routes: [...],
+});
+
+// 全局守卫
+router.beforeEach((to, from, next) => {
+  console.log(`从 ${from.path} 导航到 ${to.path}`);
+  next();
+});
+
+router.afterEach((to, from, failure) => {
+  if (failure) {
+    console.error('导航失败：', failure);
+  } else {
+    document.title = to.meta.title || '我的应用';
+  }
+});
+
+// 错误处理
+router.onError((error) => {
+  console.error('路由错误：', error);
+});
+
+// 导航
+async function navigate() {
+  const result = await router.push('/dashboard');
+  
+  if (isNavigationFailure(result, NavigationFailureType.aborted)) {
+    console.log('导航被守卫阻止');
+  }
+}
+
+// 等待就绪
+router.isReady().then(() => {
+  console.log('初始导航完成');
+});
 ```

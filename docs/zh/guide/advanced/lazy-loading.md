@@ -215,6 +215,38 @@ function PrefetchLink({ to, children }) {
 }
 ```
 
+### 预加载可见链接
+
+```tsx
+function PrefetchOnVisible({ to, children }) {
+  const router = useRouter();
+  let observer;
+  
+  const ref = (el) => {
+    if (!el) return;
+    
+    observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          const route = router.resolve(to);
+          loadRouteLocation(route).catch(() => {});
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '50px' }
+    );
+    
+    observer.observe(el);
+  };
+  
+  return (
+    <RouterLink to={to} ref={ref}>
+      {children}
+    </RouterLink>
+  );
+}
+```
+
 ## 懒加载嵌套路由
 
 ```tsx

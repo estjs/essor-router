@@ -14,6 +14,10 @@ hero:
       link: https://github.com/estjs/essor-router
 
 features:
+  - title: 📁 文件系统路由
+    details: 从 pages 目录自动生成路由，支持 [param].tsx、[...catchAll].tsx 和路由组等约定。
+  - title: ⚡ HMR 支持
+    details: 开发时热模块替换，路由更新即时生效。
   - title: 🚀 多种历史模式
     details: 支持 HTML5 History、Hash 和 Memory 模式，适应各种部署场景。
   - title: 🎯 类型安全

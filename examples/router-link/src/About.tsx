@@ -1,5 +1,12 @@
 import { RouterLink } from 'essor-router';
 
 export default function About() {
-  return <RouterLink to="/">About</RouterLink>;
+  return (
+    <div class="about">
+      <h1>About</h1>
+      <RouterLink to="/" class="link">
+        Home
+      </RouterLink>
+    </div>
+  );
 }

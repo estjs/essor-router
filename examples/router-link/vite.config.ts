@@ -1,14 +1,19 @@
-import path from 'node:path';
-import { defineConfig } from 'vite';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import essor from 'unplugin-essor/vite';
-import Inspact from 'vite-plugin-inspect';
+import inspect from 'vite-plugin-inspect';
+import { defineConfig } from 'vite';
+
+const dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
   base: './',
   resolve: {
     alias: {
-      '@/': `${path.resolve(__dirname, '/src')}/`,
+      '@/': `${resolve(dirname, 'src')}/`,
+      'essor': resolve(dirname, 'node_modules/essor'),
+      '@estjs/signals': resolve(dirname, 'node_modules/@estjs/signals'),
     },
   },
-  plugins: [essor(), Inspact()],
+  plugins: [essor(), inspect()],
 });

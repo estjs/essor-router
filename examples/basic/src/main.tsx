@@ -38,7 +38,17 @@ const router = createRouter({
 });
 
 const App = () => {
-  return <RouterView router={router}></RouterView>;
+  return (
+    <div style={{ padding: '20px' }}>
+      <p style={{ 'color': '#666', 'border-bottom': '1px solid #ccc', 'padding-bottom': '10px' }}>
+        <em>
+          Note: This is a basic configuration passing a runtime array of route objects. For typed or
+          file-based usage, see the other examples.
+        </em>
+      </p>
+      <RouterView router={router}></RouterView>
+    </div>
+  );
 };
 
 createApp(App, '#app');

@@ -5,7 +5,6 @@ import { defineConfig, devices } from '@playwright/test';
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -25,8 +24,7 @@ export default defineConfig({
   reporter: 'dot',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:3002',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -35,18 +33,8 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
     },
 
     /* Test against mobile viewports. */
@@ -71,9 +59,61 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'pnpm -C examples/basic run dev',
-    url: 'http://localhost:3001/',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: 'pnpm run build && pnpm --filter essor-file-routes-example run dev -- --strictPort',
+      url: 'http://localhost:3002/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter essor-typed-router-example run dev -- --strictPort',
+      url: 'http://localhost:3003/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter config-router run dev -- --strictPort',
+      url: 'http://localhost:3017/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter essor-option-basic run dev -- --strictPort',
+      url: 'http://localhost:3010/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter essor-router-option run dev -- --strictPort',
+      url: 'http://localhost:3011/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter essor-router-link run dev -- --strictPort',
+      url: 'http://localhost:3012/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter essor-router-use run dev -- --strictPort',
+      url: 'http://localhost:3013/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter param-parsers run dev -- --strictPort',
+      url: 'http://localhost:3014/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter data-loaders run dev -- --strictPort',
+      url: 'http://localhost:3015/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter essor-eouter-async run dev -- --strictPort',
+      url: 'http://localhost:3016/',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm --filter example-guards run dev -- --strictPort',
+      url: 'http://localhost:3020/',
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });

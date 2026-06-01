@@ -66,3 +66,11 @@ function MyComponent() {
 ## Getting Started
 
 Ready to start? Head to the [Installation](/guide/installation) page to set up essor-router in your project.
+
+## Advanced Guides
+
+- [Scroll Behavior](/guide/advanced/scroll-behavior) - Control scroll position during navigation
+- [Query Handling](/guide/advanced/query-handling) - Parse and stringify query strings
+- [Custom Param Parsers](/guide/advanced/param-parsers) - Transform route params to typed values
+- [Config-Based Routing](/guide/advanced/config-based-routing) - Define routes via config file
+- [File-Based Routing Unplugin](/guide/advanced/file-based-routing-unplugin) - Auto-generate routes from pages directory

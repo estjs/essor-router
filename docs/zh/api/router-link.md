@@ -14,7 +14,7 @@ import { RouterLink } from 'essor-router';
 
 ### to
 
-- **类型：** `string | RouteLocationRaw`
+- **类型：** `string | RouteLocationRaw | (() => RouteLocationRaw)`
 - **必填：** 是
 
 目标位置：
@@ -35,6 +35,15 @@ import { RouterLink } from 'essor-router';
 // 带哈希
 <RouterLink to={{ path: '/about', hash: '#team' }}>团队</RouterLink>
 ```
+
+也可以传入 getter 以支持响应式目标：
+
+```tsx
+const $to = signal('/about')
+<RouterLink to={() => $to.value}>Dynamic</RouterLink>
+```
+
+注意：在 JSX 中 `$` 前缀信号会被编译为 `.value` 读，`to={$to}` 会变成静态值。需要响应式 `to` 时请使用 getter。
 
 ### replace
 
@@ -93,6 +102,8 @@ import { RouterLink } from 'essor-router';
 ```tsx
 <RouterLink to="/about" ariaCurrentValue="page">关于</RouterLink>
 ```
+
+未传入时，精确激活默认设置为 `aria-current="page"`。
 
 ### viewTransition
 
@@ -250,6 +261,24 @@ function Navigation() {
 >
   查看资料
 </RouterLink>
+```
+
+### 编程式激活检查
+
+```tsx
+function NavLink({ to, children }) {
+  const route = useRoute();
+  const isActive = route.path.startsWith(to);
+  
+  return (
+    <RouterLink 
+      to={to} 
+      class={`nav-link ${isActive ? 'active' : ''}`}
+    >
+      {children}
+    </RouterLink>
+  );
+}
 ```
 
 ## 无障碍

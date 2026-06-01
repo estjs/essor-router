@@ -66,3 +66,12 @@ function MyComponent() {
 ## 开始使用
 
 准备好了吗？前往[安装](/zh/guide/installation)页面在你的项目中设置 essor-router。
+
+## 进阶指南
+
+- [滚动行为](/zh/guide/advanced/scroll-behavior) - 控制导航时的滚动位置
+- [查询字符串处理](/zh/guide/advanced/query-handling) - 解析和序列化查询参数
+- [自定义参数解析器](/zh/guide/advanced/param-parsers) - 将路由参数转换为类型化值
+- [配置式路由](/zh/guide/advanced/config-based-routing) - 通过配置文件定义路由
+- [文件系统路由](/zh/guide/advanced/file-based-routing-unplugin) - 从页面目录自动生成路由
+

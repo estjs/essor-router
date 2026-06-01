@@ -224,3 +224,36 @@ No URL changes. Useful for SSR and testing.
 - Learn about [Route Configuration](/guide/essentials/route-configuration)
 - Explore [Dynamic Route Matching](/guide/essentials/dynamic-matching)
 - Set up [Navigation Guards](/guide/advanced/navigation-guards)
+- Set up [File-Based Routing](/guide/advanced/file-based-routing-unplugin) for automatic route generation
+
+## File-Based Routing (Recommended)
+
+For larger projects, use `unplugin-essor-router` to auto-generate routes from your `src/pages/` directory:
+
+```bash
+pnpm add -D unplugin-essor-router
+```
+
+```ts
+// vite.config.ts
+import routerPlugin from 'unplugin-essor-router/vite'
+
+export default defineConfig({
+  plugins: [routerPlugin()],
+})
+```
+
+```tsx
+// src/main.tsx
+import { createRouter, createWebHistory } from 'essor-router'
+import { routes } from 'essor-router/auto-routes'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes, // auto-generated from src/pages/
+})
+```
+
+Place files like `src/pages/index.tsx`, `src/pages/users/[id].tsx`, and `src/pages/[...catchAll].tsx` — the plugin generates routes, types, and the `typed-router.d.ts` file automatically.
+
+See the [File-Based Routing guide](/guide/advanced/file-based-routing-unplugin) for full conventions and configuration.

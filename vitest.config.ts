@@ -1,33 +1,21 @@
-import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
 
-const dirname = resolve();
 export default defineConfig({
-  resolve: {
-    alias: {
-      '@/': `${resolve(dirname, 'src')}/`,
-    },
-  },
-  define: {
-    __DEV__: true,
-    __TEST__: true,
-  },
   test: {
+    projects: ['./packages/router', './packages/unplugin'],
     coverage: {
       provider: 'v8',
-      include: ['src/**'],
-      exclude: [
-        'playground/**/*',
-        'playwright.config.ts',
-        'examples/**/*',
-        'scripts/**/*',
-        '**/test/**',
-      ],
+      reportsDirectory: './coverage',
       reporter: ['text', 'json', 'html'],
+      include: ['packages/*/src/**'],
+      exclude: [
+        'packages/*/src/**/*.d.ts',
+        'packages/router/src/config.ts',
+        'packages/router/src/index.ts',
+        'packages/router/src/experimental/index.ts',
+        'packages/router/src/matcher/types.ts',
+        'packages/router/src/types/utils.ts',
+      ],
     },
-    globals: true,
-    environment: 'jsdom',
-    watch: false,
-    exclude: ['**/node_modules/**', '**/e2e/**'],
   },
 });

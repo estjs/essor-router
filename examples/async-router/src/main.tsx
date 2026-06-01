@@ -1,20 +1,20 @@
 import { RouterView, createRouter } from 'essor-router';
-import { createApp } from 'essor/*';
+import { createApp } from 'essor';
 
 const router = createRouter({
   history: 'hash',
   routes: [
     {
       path: '/',
-      component: import('./Home'),
+      component: () => import('./Home'),
     },
     {
       path: '/about',
-      component: import('./About'),
+      component: () => import('./About'),
     },
     {
       path: '/:pathMatch(.*)*',
-      component: import('./NotFound'),
+      component: () => import('./NotFound'),
     },
   ],
 });

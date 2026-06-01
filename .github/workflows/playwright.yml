@@ -13,14 +13,16 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
+          cache: pnpm
+      - uses: pnpm/action-setup@v4
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
       - name: build essor-router
         run: pnpm run build
       - name: Run Playwright tests
-        run: pnpm exec playwright test
+        run: pnpm run test:e2e
       - uses: actions/upload-artifact@v6
         if: always()
         with:

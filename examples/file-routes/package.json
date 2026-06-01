@@ -1,0 +1,25 @@
+{
+  "name": "essor-file-routes-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite --host --port 3002",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "essor": "^0.0.16",
+    "essor-router": "workspace:*"
+  },
+  "devDependencies": {
+    "@estjs/eslint-config": "^2.3.0",
+    "@types/node": "^25.9.1",
+    "eslint": "^10.4.0",
+    "typescript": "^6.0.3",
+    "unplugin-essor": "^0.0.16",
+    "unplugin-essor-router": "workspace:*",
+    "vite": "^8.0.14",
+    "vite-plugin-inspect": "^11.3.3"
+  }
+}
