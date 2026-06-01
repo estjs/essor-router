@@ -31,23 +31,17 @@ export function applyToParams(
 
 export const noop = () => {};
 
-/**
- * Reference to Object.prototype.toString
- * @type {Function}
- */
-export const _toString = Object.prototype.toString;
-
 export { isArray, isObject, isString, isFunction } from '@estjs/shared';
 
 export function isAsyncFunction(fn: Function): boolean {
-  return _toString.call(fn) === '[object AsyncFunction]';
+  return Object.prototype.toString.call(fn) === '[object AsyncFunction]';
 }
 
 /**
  * Checks if a value is a Promise-like object (thenable).
  */
 export function isPromiseLike(value: unknown): value is Promise<unknown> {
-  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
+  return !!value && (isObject(value) || isFunction(value)) && isFunction((value as any).then);
 }
 
 /**

@@ -124,7 +124,7 @@ ${indentStr}},`;
  * @param filepath - the filepath to the file
  * @param importMode - the import mode to use
  * @param importsMap - the import list to fill
- * @returns
+ * @returns the import expression for the filepath
  */
 export function generatePageImport(
   filepath: string,

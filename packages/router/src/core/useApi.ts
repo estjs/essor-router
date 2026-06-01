@@ -8,21 +8,34 @@ import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from '../ty
 // Global router fallback — makes useRouter() work for components rendered
 // outside RouterView's subtree (e.g. header nav links that are siblings
 // of RouterView).
+//
+// A stack (rather than a single slot) is used so that creating a second router
+// does not clobber the first one's fallback, and destroying a router restores
+// the previously active one instead of unconditionally clearing it. This keeps
+// multi-router scenarios (micro-frontends, concurrent SSR requests) correct.
 // ---------------------------------------------------------------------------
 
+const stack: { router: Router; route: RouteLocationNormalizedLoaded }[] = [];
 let activeRouter: Router | undefined;
 let activeRoute: RouteLocationNormalizedLoaded | undefined;
 
-export function registerActiveRouter(router: Router): void {
-  activeRouter = router;
-  // Memoize the reactive accessor so repeated useRoute() calls outside of a
-  // RouterView (e.g. header siblings) don't allocate a new proxy each time.
-  activeRoute = createRouteAccessor(router.currentRoute);
+function sync(): void {
+  const top = stack[stack.length - 1];
+  activeRouter = top?.router;
+  activeRoute = top?.route;
 }
 
-export function unregisterActiveRouter(): void {
-  activeRouter = undefined;
-  activeRoute = undefined;
+export function registerActiveRouter(router: Router): void {
+  // Memoize the reactive accessor so repeated useRoute() calls outside of a
+  // RouterView (e.g. header siblings) don't allocate a new proxy each time.
+  stack.push({ router, route: createRouteAccessor(router.currentRoute) });
+  sync();
+}
+
+export function unregisterActiveRouter(router?: Router): void {
+  const i = router ? stack.findIndex((e) => e.router === router) : stack.length - 1;
+  if (i !== -1) stack.splice(i, 1);
+  sync();
 }
 
 // ---------------------------------------------------------------------------

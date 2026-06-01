@@ -34,8 +34,6 @@ export function createReadinessController(currentRoute?: {
   let ready = false;
   let firstReadyCallback: (() => void) | null = null;
 
-  function markAsReady<E extends Error = Error>(err: E): E;
-  function markAsReady<E extends Error = Error>(): void;
   function markAsReady<E extends Error = Error>(err?: E): E | void {
     if (!ready) {
       ready = !err;

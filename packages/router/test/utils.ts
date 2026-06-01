@@ -215,6 +215,14 @@ export function mount(code, props = {}) {
 export function mockWarn() {
   const mockFn = vi.spyOn(console, 'warn');
 
+  // Reset the recorded calls before every test so warnings can't leak across
+  // `it` blocks. Without this, `toHaveBeenWarned*` assertions count warnings
+  // from earlier tests in the same describe and silently pass for the wrong
+  // reason.
+  beforeEach(() => {
+    mockFn.mockClear();
+  });
+
   expect.extend({
     toHaveBeenWarned(received) {
       const calls = mockFn.mock.calls;

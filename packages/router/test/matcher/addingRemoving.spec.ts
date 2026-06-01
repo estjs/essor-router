@@ -47,6 +47,21 @@ describe('matcher: adding and removing records', () => {
     });
   });
 
+  describe('validation warnings', () => {
+    mockWarn();
+
+    it('warns when a named parent has a nameless child with an empty path', () => {
+      const matcher = createRouterMatcher([], {});
+      matcher.addRoute({
+        path: '/parent',
+        name: 'parent',
+        component,
+        children: [{ path: '', component }],
+      });
+      expect('has a child without a name and an empty path').toHaveBeenWarned();
+    });
+  });
+
   describe('addRoute returned function', () => {
     it('remove records', () => {
       const matcher = createRouterMatcher([], {});

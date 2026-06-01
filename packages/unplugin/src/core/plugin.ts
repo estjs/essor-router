@@ -6,7 +6,6 @@ import {
   DEFINE_PAGE_QUERY_RE,
   MODULE_RESOLVER_PATH,
   MODULE_ROUTES_PATH,
-  ROUTES_LAST_LOAD_TIME,
   VIRTUAL_PREFIX,
   asVirtualId as _asVirtualId,
   getVirtualId as _getVirtualId,
@@ -102,13 +101,11 @@ export default createUnplugin<Options | undefined>((opt = {}, _meta) => {
 
           // essor-router/auto-routes
           if (resolvedId === MODULE_ROUTES_PATH) {
-            ROUTES_LAST_LOAD_TIME.update();
             return ctx.generateRoutes();
           }
 
           // essor-router/auto-resolver
           if (resolvedId === MODULE_RESOLVER_PATH) {
-            ROUTES_LAST_LOAD_TIME.update();
             return ctx.generateResolver();
           }
 

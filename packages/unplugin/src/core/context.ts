@@ -147,16 +147,32 @@ export function createRoutesContext(options: ResolvedOptions) {
   function watchConfigFile(configPath: string) {
     const watcher = fsWatch(configPath, { ignoreInitial: true });
 
-    watcher.on('change', async () => {
-      logger.log(`Config routes file changed: ${configPath}`);
-      // reset the tree so we can rebuild it from scratch
-      routeTree.children.clear();
-      loadConfigRoutes(routeTree, options);
-      await _writeConfigFiles();
-      server?.updateRoutes();
+    watcher.on('change', () => {
+      // Run fire-and-forget — the chokidar `change` event does not await the
+      // handler, so a rejection (config parse error, write failure) would
+      // otherwise become an unhandled rejection and could crash the dev server.
+      Promise.resolve()
+        .then(async () => {
+          logger.log(`Config routes file changed: ${configPath}`);
+          // reset the tree so we can rebuild it from scratch
+          routeTree.children.clear();
+          loadConfigRoutes(routeTree, options);
+          await _writeConfigFiles();
+          server?.updateRoutes();
+        })
+        .catch((error) => {
+          logger.warn(`Failed to reload config routes for "${configPath}": ${error}`);
+        });
     });
 
     watchers.push(watcher);
+  }
+
+  // Recompute whether any component of the node uses definePage().
+  function refreshHasDefinePage(node: TreeNode) {
+    node.hasDefinePage = Array.from(node.value.components.values()).some((componentPath) =>
+      definePageFileFlags.get(componentPath),
+    );
   }
 
   async function writeRouteInfoToNode(node: TreeNode, filePath: string) {
@@ -166,9 +182,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     node.setCustomRouteBlock(filePath, {
       ...definedPageInfo,
     });
-    node.hasDefinePage = Array.from(node.value.components.values()).some((componentPath) =>
-      definePageFileFlags.get(componentPath),
-    );
+    refreshHasDefinePage(node);
 
     server?.invalidatePage(filePath);
   }
@@ -207,9 +221,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     // eslint-disable-next-line unicorn/prefer-dom-node-remove
     routeTree.removeChild(filePath);
     if (affectedNode) {
-      affectedNode.hasDefinePage = Array.from(affectedNode.value.components.values()).some(
-        (componentPath) => definePageFileFlags.get(componentPath),
-      );
+      refreshHasDefinePage(affectedNode);
     }
     server?.updateRoutes();
   }
@@ -227,9 +239,7 @@ export function createRoutesContext(options: ResolvedOptions) {
         // eslint-disable-next-line unicorn/prefer-dom-node-remove
         routeTree.removeChild(filePath);
         if (affectedNode) {
-          affectedNode.hasDefinePage = Array.from(affectedNode.value.components.values()).some(
-            (componentPath) => definePageFileFlags.get(componentPath),
-          );
+          refreshHasDefinePage(affectedNode);
         }
         changed = true;
       }

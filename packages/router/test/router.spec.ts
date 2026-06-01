@@ -133,6 +133,29 @@ describe('router', () => {
     expect(loader).toHaveBeenCalledTimes(1);
   });
 
+  it('evicts the preload cache when a preload fails so a retry can succeed', async () => {
+    let attempt = 0;
+    const loader = vitest.fn(() => {
+      attempt++;
+      // fail the first attempt, succeed afterwards
+      return attempt === 1 ? Promise.reject(new Error('boom')) : Promise.resolve();
+    });
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', component: components.Home },
+        { path: '/lazy/:id', component: components.Foo, loader },
+      ],
+    });
+
+    await router.push('/');
+    await expect(router.preloadRoute('/lazy/1')).rejects.toThrow('boom');
+
+    // the failed task must have been evicted, so a retry re-runs the loader
+    await router.preloadRoute('/lazy/1');
+    expect(loader).toHaveBeenCalledTimes(2);
+  });
+
   it('warns when adding a child route to a missing parent', async () => {
     const { router } = await newRouter();
     const remove = router.addRoute('missing-parent' as any, {
@@ -753,7 +776,35 @@ describe('router', () => {
     });
 
     it('cancels navigation abort if a newer one is finished on user navigation (from history)', async () => {
-      await checkNavigationCancelledOnPush(undefined);
+      await checkNavigationCancelledOnPopstate(false);
+    });
+  });
+
+  describe('duplicated navigation', () => {
+    it('returns a duplicated failure when pushing to the current location', async () => {
+      const { router } = await newRouter({ history: 'memory' });
+      // newRouter already pushes to '/', so pushing again is a duplicate
+      const failure = await router.push('/');
+      expect(failure).toMatchObject({ type: NavigationFailureType.duplicated });
+    });
+
+    it('bypasses the duplicated check with force', async () => {
+      const { router } = await newRouter({ history: 'memory' });
+      const failure = await router.push({ path: '/', force: true });
+      expect(failure).toBeUndefined();
+    });
+  });
+
+  describe('infinite redirect', () => {
+    it('rejects when a guard causes an infinite redirect', async () => {
+      const { router } = await newRouter({ history: 'memory' });
+      router.beforeEach((to, _from, next) => {
+        // always redirect back to the same target being navigated to, which
+        // keeps resolving to the same location and trips the dev-only guard
+        next(to.fullPath);
+      });
+      await expect(router.push('/foo')).rejects.toThrow('Infinite redirect in navigation guard');
+      expect(`Detected a possibly infinite redirection in a navigation guard`).toHaveBeenWarned();
     });
   });
 

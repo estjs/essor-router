@@ -17,6 +17,7 @@ import {
   computeScrollPosition,
   getScrollKey,
 } from '../core/scrollBehavior';
+import type { Router } from '../core/router';
 import type { ReadinessController } from './readiness';
 import type {
   RouteLocation,
@@ -72,6 +73,15 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
       const toLocation = options.resolve(to) as RouteLocationNormalized;
       const shouldRedirect = options.handleRedirectRecord(toLocation);
       if (shouldRedirect) {
+        // Save the scroll position of the page we are leaving before bailing
+        // out to the redirect. Without this, a pop that lands on a redirecting
+        // record loses the scroll position for the origin entry.
+        if (isBrowser) {
+          options.scrollPositionStore.save(
+            getScrollKey(options.currentRoute.value.fullPath, info.delta),
+            computeScrollPosition(),
+          );
+        }
         options
           .pushWithRedirect(Object.assign({}, shouldRedirect, { replace: true }), toLocation)
           .catch(noop);
@@ -208,7 +218,7 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
     // already consumed on the first ready, so without this a remounted
     // RouterView would never react to browser back/forward again.
     options.readiness.onFirstReady(setupHistoryListener);
-    unregisterActiveRouter();
+    unregisterActiveRouter(options.router as unknown as Router);
   }
 
   options.readiness.onFirstReady(setupHistoryListener);

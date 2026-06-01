@@ -129,7 +129,7 @@ export function createNavigationCoordinator(
   }
 
   function replace(to: RouteLocationRaw) {
-    return push(assign(options.locationAsObject(to), { replace: true }));
+    return pushWithRedirect(assign(options.locationAsObject(to), { replace: true }));
   }
 
   function handleRedirectRecord(to: RouteLocation): RouteLocationRaw | void {
@@ -268,12 +268,8 @@ export function createNavigationCoordinator(
       });
   }
 
-  function createPreloadRouteKey(route: RouteLocationNormalized) {
-    return route.fullPath;
-  }
-
   function runRouteDataHooks(to: RouteLocationNormalized, abortActive = false): Promise<void> {
-    const key = createPreloadRouteKey(to);
+    const key = to.fullPath;
     const cached = routeDataCache.get(key);
     if (cached) {
       return cached;
@@ -329,7 +325,7 @@ export function createNavigationCoordinator(
 
   function preloadRoute(to: RouteLocationRaw): Promise<RouteLocationNormalizedLoaded> {
     const resolved = options.resolve(to) as RouteLocationNormalized;
-    const key = createPreloadRouteKey(resolved);
+    const key = resolved.fullPath;
     const existing = preloadRouteCache.get(key);
     if (existing) {
       return existing;

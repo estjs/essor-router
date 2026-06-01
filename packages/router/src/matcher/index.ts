@@ -146,8 +146,7 @@ export function createRouterMatcher(
       }
 
       if (mainNormalizedRecord.children) {
-        const children = mainNormalizedRecord.children;
-        for (const [i, child] of children.entries()) {
+        for (const [i, child] of mainNormalizedRecord.children.entries()) {
           addRoute(child, matcher, originalRecord && originalRecord.children[i]);
         }
       }

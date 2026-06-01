@@ -81,12 +81,17 @@ export class MatcherPatternPathStatic implements MatcherPatternPath {
 export class MatcherPatternPathDynamic implements MatcherPatternPath {
   readonly source: string;
   private readonly paramNames: string[];
+  private readonly re: RegExp;
 
   constructor(
-    private readonly re: RegExp,
+    re: RegExp,
     private readonly params: Record<string, PathParamOptions>,
     private readonly parts: MatcherPatternPathPart[],
   ) {
+    // Strip the global/sticky flags: `match()` calls `exec()` up to twice on the
+    // same instance, and with `g`/`y` the regex's `lastIndex` would carry over
+    // between calls and make the second `exec()` start mid-string (or miss).
+    this.re = re.global || re.sticky ? new RegExp(re.source, re.flags.replaceAll(/[gy]/g, '')) : re;
     this.paramNames = Object.keys(params);
     this.source = renderPathTemplate(parts, this.paramNames, params);
   }
@@ -221,7 +226,7 @@ export function createFixedResolver(records: FixedResolverRecordInput[]): FixedR
         throw createRouterError<MatcherError>(ErrorTypes.MATCHER_NOT_FOUND, { location });
       }
 
-      const queryParams = matchQueryParams(node, normalizeQueryLike(location.query));
+      const queryParams = matchQueryParams(node, normalizeQuery(location.query));
       if (!queryParams) {
         throw createRouterError<MatcherError>(ErrorTypes.MATCHER_NOT_FOUND, { location });
       }
@@ -231,7 +236,7 @@ export function createFixedResolver(records: FixedResolverRecordInput[]): FixedR
     }
 
     if (location.path != null) {
-      const query = normalizeQueryLike(location.query);
+      const query = normalizeQuery(location.query);
       for (const node of getPathCandidates(segmentIndex, location.path)) {
         const pathParams = node.pattern.match(location.path);
         if (!pathParams) continue;
@@ -498,10 +503,6 @@ function parseMappedValue<T>(
 function normalizeStaticPath(path: string): string {
   const normalized = path.length > 1 ? path.replace(/\/+$/, '') : path;
   return normalized.toLowerCase();
-}
-
-function normalizeQueryLike(query: LocationQueryRaw | undefined): LocationQuery {
-  return normalizeQuery(query);
 }
 
 function getQueryValue(

@@ -14,7 +14,6 @@ import type { TreeNode } from './tree';
  */
 export class EditableTreeNode {
   private node: TreeNode;
-  // private _parent?: EditableTreeNode
 
   constructor(node: TreeNode) {
     this.node = node;

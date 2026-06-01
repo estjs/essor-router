@@ -1,3 +1,4 @@
+import { toStringLiteral } from '../utils';
 import type { TreePathParam, TreeQueryParam } from '../core/treeNodeValue';
 import type { ImportsMap } from '../core/utils';
 import type { PrefixTree } from '../core/tree';
@@ -21,16 +22,8 @@ const NATIVE_PARAM_PARSERS_TYPES = {
 } satisfies Record<(typeof _NATIVE_PARAM_PARSERS)[number], string>;
 
 export function warnMissingParamParsers(tree: PrefixTree, paramParsers: ParamParsersMap) {
-  for (const node of tree.getChildrenDeepSorted()) {
-    for (const param of node.params) {
-      if (
-        param.parser &&
-        !paramParsers.has(param.parser) &&
-        !NATIVE_PARAM_PARSERS.includes(param.parser)
-      ) {
-        console.warn(`Parameter parser "${param.parser}" not found for route "${node.fullPath}".`);
-      }
-    }
+  for (const { parser, routePath } of collectMissingParamParsers(tree, paramParsers)) {
+    console.warn(`Parameter parser "${parser}" not found for route "${routePath}".`);
   }
 }
 
@@ -67,7 +60,7 @@ export function generateParamParsersTypesDeclarations(paramParsers: ParamParsers
   return Array.from(paramParsers.values())
     .map(({ typeName, relativePath }) => {
       const importPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
-      return `type ${typeName} = ReturnType<NonNullable<typeof import('${importPath}').parser['get']>>`;
+      return `type ${typeName} = ReturnType<NonNullable<typeof import(${toStringLiteral(importPath)}).parser['get']>>`;
     })
     .join('\n');
 }
@@ -117,10 +110,10 @@ export function generateParamParserCustomType(paramParsers: ParamParsersMap): st
   }
 
   if (parserNames.length === 1) {
-    return `'${parserNames[0]}'`;
+    return toStringLiteral(parserNames[0]);
   }
 
-  return parserNames.map((name) => `  | '${name}'`).join('\n');
+  return parserNames.map((name) => `  | ${toStringLiteral(name)}`).join('\n');
 }
 
 export function generatePathParamsOptions(

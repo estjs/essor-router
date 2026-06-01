@@ -243,7 +243,9 @@ export function createRouter(options: RouterOptions): Router {
 
     const scrollPosition: _ScrollPositionNormalized | null =
       (!isPush && scrollPositionStore.get(getScrollKey(from.fullPath, delta))) ||
-      ((isFirstNavigation || !isPush) && history.state && (history.state as any).scroll) ||
+      ((isFirstNavigation || !isPush) &&
+        routerHistory.state &&
+        (routerHistory.state as any).scroll) ||
       null;
 
     return Promise.resolve()

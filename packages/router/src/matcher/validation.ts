@@ -10,7 +10,7 @@ function isSameParam(a: ParamKey, b: ParamKey): boolean {
 
 export function checkSameParams(a: RouteRecordMatcher, b: RouteRecordMatcher) {
   for (const key of a.keys) {
-    if (!key.optional && !b.keys.some(isSameParam.bind(null, key))) {
+    if (!key.optional && !b.keys.some((other) => isSameParam(key, other))) {
       warn(
         `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"`,
       );
@@ -19,7 +19,7 @@ export function checkSameParams(a: RouteRecordMatcher, b: RouteRecordMatcher) {
   }
 
   for (const key of b.keys) {
-    if (!key.optional && !a.keys.some(isSameParam.bind(null, key))) {
+    if (!key.optional && !a.keys.some((other) => isSameParam(key, other))) {
       warn(
         `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"`,
       );
@@ -46,7 +46,7 @@ export function checkMissingParamsInAbsolutePath(
   parent: RouteRecordMatcher,
 ) {
   for (const key of parent.keys) {
-    if (!record.keys.some(isSameParam.bind(null, key))) {
+    if (!record.keys.some((other) => isSameParam(key, other))) {
       warn(
         `Absolute path "${record.record.path}" must have the exact same param named "${key.name}" as its parent "${parent.record.path}".`,
       );

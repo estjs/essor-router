@@ -22,6 +22,26 @@ const router = createRouter({
       },
     },
     { path: '/detail/:id', component: Detail, name: 'detail' },
+    {
+      // guard that redirects elsewhere via next('/about')
+      path: '/redirect-guard',
+      component: Home,
+      name: 'redirect-guard',
+      beforeEnter(to, from, next) {
+        next('/about');
+      },
+    },
+    {
+      // guard that cancels the navigation via next(false)
+      path: '/blocked',
+      component: Protected,
+      name: 'blocked',
+      beforeEnter(to, from, next) {
+        const el = document.querySelector('#guard-blocked');
+        if (el) el.textContent = 'blocked: cancelled';
+        next(false);
+      },
+    },
     { path: '/:pathMatch(.*)*', component: NotFound, name: 'not-found' },
   ],
 });
@@ -70,6 +90,12 @@ function Nav() {
         <span data-testid="link-missing" onClick={handleClick('/missing')}>
           Missing
         </span>
+        <span data-testid="link-redirect-guard" onClick={handleClick('/redirect-guard')}>
+          Redirect Guard
+        </span>
+        <span data-testid="link-blocked" onClick={handleClick('/blocked')}>
+          Blocked
+        </span>
       </nav>
     </header>
   );
@@ -88,6 +114,7 @@ const App = () => {
           <div data-testid="guard-beforeEnter" id="guard-beforeEnter"></div>
           <div data-testid="guard-beforeRouteLeave" id="guard-beforeRouteLeave"></div>
           <div data-testid="guard-beforeRouteUpdate" id="guard-beforeRouteUpdate"></div>
+          <div data-testid="guard-blocked" id="guard-blocked"></div>
         </div>
         <RouterView router={router} />
       </div>

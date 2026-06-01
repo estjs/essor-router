@@ -1,4 +1,5 @@
 import { isString } from '@estjs/shared';
+import { escapeJsonForJs } from '../utils';
 import {
   CONVENTION_OVERRIDE_NAME,
   type TreeNodeValue,
@@ -309,7 +310,9 @@ export class TreeNode {
   get meta() {
     const overrideMeta = this.metaAsObject;
 
-    return Object.keys(overrideMeta).length > 0 ? JSON.stringify(overrideMeta, null, 2) : '';
+    return Object.keys(overrideMeta).length > 0
+      ? escapeJsonForJs(JSON.stringify(overrideMeta, null, 2))
+      : '';
   }
 
   /**

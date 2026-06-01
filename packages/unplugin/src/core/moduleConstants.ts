@@ -2,17 +2,6 @@
 export const MODULE_ROUTES_PATH = `essor-router/auto-routes`;
 export const MODULE_RESOLVER_PATH = `essor-router/auto-resolver`;
 
-// NOTE: not sure if needed. Used for HMR the virtual routes
-let time = Date.now();
-export const ROUTES_LAST_LOAD_TIME = {
-  get value() {
-    return time;
-  },
-  update(when = Date.now()) {
-    time = when;
-  },
-};
-
 // we used to have `/__` because HMR didn't work with `\0` virtual modules
 // but it seems to work now, so switching to the official Vite virtual module prefix
 export const VIRTUAL_PREFIX = '\0';

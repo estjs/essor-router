@@ -274,33 +274,42 @@ export const RouterView = (props: RouterViewProps) => {
   });
 
   // --- Render ---
+  // Keep this computed pure: it only maps the resolved component to a render
+  // node. Tracking mounted instances and flushing enterCallbacks are side
+  // effects and live in the effect below, so they fire exactly once per
+  // (matchedRoute, resolvedComponent) change rather than on every read/recompute
+  // of this computed.
   const renderView = computed(() => {
-    const matchedRoute = matchedRouteRef.value;
-    const viewName = props.name || 'default';
     const ViewComponent = resolvedComponentRef.value;
 
-    const rendered = ViewComponent
+    return ViewComponent
       ? safeRenderComponent(
           ViewComponent as RouteComponent,
           props.onError,
           props.fallback || props.children,
         )
       : props.children;
+  });
 
-    if (matchedRoute) {
-      // Track mounted component instance for beforeRouteUpdate/Leave guards
-      matchedRoute.instances[viewName] = (rendered as any) || null;
+  // --- Side effects tied to the rendered node ---
+  // Runs when the matched record or rendered node changes. Records the mounted
+  // instance for beforeRouteUpdate/Leave guards and drains the one-shot
+  // beforeRouteEnter `next(vm => ...)` callbacks.
+  effect(() => {
+    const matchedRoute = matchedRouteRef.value;
+    const viewName = props.name || 'default';
+    const rendered = renderView.value;
 
-      // Flush beforeRouteEnter `next(vm => ...)` callbacks
-      const enterCallbacks = matchedRoute.enterCallbacks[viewName];
-      if (rendered && enterCallbacks?.length) {
-        const callbacks = enterCallbacks.slice();
-        matchedRoute.enterCallbacks[viewName] = [];
-        untrack(() => callbacks.forEach((cb) => cb(rendered as any)));
-      }
+    if (!matchedRoute) return;
+
+    matchedRoute.instances[viewName] = (rendered as any) || null;
+
+    const enterCallbacks = matchedRoute.enterCallbacks[viewName];
+    if (rendered && enterCallbacks?.length) {
+      const callbacks = enterCallbacks.slice();
+      matchedRoute.enterCallbacks[viewName] = [];
+      untrack(() => callbacks.forEach((cb) => cb(rendered as any)));
     }
-
-    return rendered;
   });
 
   // --- Cleanup ---

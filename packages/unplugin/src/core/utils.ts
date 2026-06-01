@@ -50,13 +50,10 @@ export const isArray = Array.isArray;
 
 export function trimExtension(path: string, extensions: ResolvedOptions['extensions']) {
   for (const extension of extensions) {
-    const lastDot = path.endsWith(extension) ? -extension.length : 0;
-    if (lastDot < 0) {
-      // usually only one extension should match
-      return path.slice(0, lastDot);
+    if (path.endsWith(extension)) {
+      return path.slice(0, -extension.length);
     }
   }
-
   // no extension found, return the original path
   return path;
 }
@@ -188,6 +185,9 @@ function mergeDeep(...objects: Array<Record<string, unknown>>): Record<string, u
  * returns a route path, it will remove the extension from the file.
  *
  * @param options - RoutesFolderOption to apply
+ * @param options.src - absolute path to the pages folder
+ * @param options.path - route path prefix or a function to build it
+ * @param options.extensions - file extensions to strip
  * @param filePath - absolute path to file
  * @returns a route path to be used by the router with any defined prefix
  */
@@ -209,9 +209,9 @@ export function asRoutePath(
 /**
  * Builds a pattern from a file pattern and a list of extensions.
  *
- * @param filePattern - the file pattern to append the extensions to e.g. **‍/*
- * @param extensions array of extensions to append to the pattern e.g. ['.essor', '.js']
- * @returns
+ * @param filePatterns - the file pattern to append the extensions to e.g. **‍/*
+ * @param extensions - array of extensions to append to the pattern e.g. ['.essor', '.js']
+ * @returns the pattern with the extensions appended
  */
 export function appendExtensionListToPattern(filePatterns: string, extensions: string[]): string;
 export function appendExtensionListToPattern(

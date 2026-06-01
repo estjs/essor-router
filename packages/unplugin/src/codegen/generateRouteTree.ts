@@ -30,20 +30,21 @@ ${node
   .join('')}}`;
   }
 
-  const current =
-    node.value.components.size && node.isNamed()
-      ? pad(
-          2,
-          `${toStringLiteral(node.name)}: RouteTreeNodeInfo<
+  let current = '';
+  if (node.value.components.size && node.isNamed()) {
+    const source = getTypedRouteSource(node);
+    current = pad(
+      2,
+      `${toStringLiteral(node.name)}: RouteTreeNodeInfo<
     ${toStringLiteral(node.name)},
     ${toStringLiteral(node.fullPath)},
-    InferRouteSearch<${getTypedRouteSource(node)}>,
-    InferRouteLoaderData<${getTypedRouteSource(node)}>,
-    InferRouteBeforeLoadData<${getTypedRouteSource(node)}>,
-    InferRouteStartOptions<${getTypedRouteSource(node)}>
+    InferRouteSearch<${source}>,
+    InferRouteLoaderData<${source}>,
+    InferRouteBeforeLoadData<${source}>,
+    InferRouteStartOptions<${source}>
   >,\n`,
-        )
-      : '';
+    );
+  }
 
   const nested =
     node.children.size > 0

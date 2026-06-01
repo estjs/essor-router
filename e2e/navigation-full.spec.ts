@@ -18,7 +18,9 @@ test.describe('Programmatic Navigation', () => {
     await assertUrlContains(page, '/about');
 
     await page.click('.about');
-    await assertUrlContains(page, '/');
+    // pushing '/' redirects to '/home' — verify the redirect actually landed
+    await assertUrlContains(page, '/home');
+    await assertVisible(page, '.to-home');
   });
 
   test('useRouter.push navigates to random route', async ({ page }) => {

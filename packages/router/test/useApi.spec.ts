@@ -1,5 +1,5 @@
 import { createComponent as _h$, template as _template$, child, insert, next } from 'essor';
-import { RouterView, createRouter, usePreloadRoute, useRoute } from '../src';
+import { RouterView, createRouter, usePreloadRoute, useRoute, useRouter } from '../src';
 import { components, mount, sleep } from './utils';
 
 let router;
@@ -144,5 +144,30 @@ describe('use apis', () => {
     await router.push('/probe-params');
 
     expect(paramsText).toBe('none');
+  });
+});
+
+describe('active router fallback stack', () => {
+  function makeRouter() {
+    return createRouter({
+      history: 'memory',
+      routes: [{ path: '/:any(.*)', component: components.Home }],
+    });
+  }
+
+  it('keeps the previous router as fallback when a second router is created', () => {
+    const routerA = makeRouter();
+    // Creating a second router must NOT clobber routerA's global fallback.
+    const routerB = makeRouter();
+
+    // useRouter() outside a RouterView resolves to the most recent router.
+    let fallback: any;
+    mount(() => _h$(() => void (fallback = useRouter()), {}));
+    expect(fallback).toBe(routerB);
+
+    // Destroying B restores A as the fallback instead of clearing it.
+    routerB.destroy();
+    mount(() => _h$(() => void (fallback = useRouter()), {}));
+    expect(fallback).toBe(routerA);
   });
 });
