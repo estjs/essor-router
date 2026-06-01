@@ -168,6 +168,13 @@ export function createRoutesContext(options: ResolvedOptions) {
     watchers.push(watcher);
   }
 
+  // Recompute whether any component of the node uses definePage().
+  function refreshHasDefinePage(node: TreeNode) {
+    node.hasDefinePage = Array.from(node.value.components.values()).some((componentPath) =>
+      definePageFileFlags.get(componentPath),
+    );
+  }
+
   async function writeRouteInfoToNode(node: TreeNode, filePath: string) {
     const content = await fs.readFile(filePath, 'utf8');
     const definedPageInfo = extractDefinePageInfo(content, filePath);
@@ -175,9 +182,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     node.setCustomRouteBlock(filePath, {
       ...definedPageInfo,
     });
-    node.hasDefinePage = Array.from(node.value.components.values()).some((componentPath) =>
-      definePageFileFlags.get(componentPath),
-    );
+    refreshHasDefinePage(node);
 
     server?.invalidatePage(filePath);
   }
@@ -216,9 +221,7 @@ export function createRoutesContext(options: ResolvedOptions) {
     // eslint-disable-next-line unicorn/prefer-dom-node-remove
     routeTree.removeChild(filePath);
     if (affectedNode) {
-      affectedNode.hasDefinePage = Array.from(affectedNode.value.components.values()).some(
-        (componentPath) => definePageFileFlags.get(componentPath),
-      );
+      refreshHasDefinePage(affectedNode);
     }
     server?.updateRoutes();
   }
@@ -236,9 +239,7 @@ export function createRoutesContext(options: ResolvedOptions) {
         // eslint-disable-next-line unicorn/prefer-dom-node-remove
         routeTree.removeChild(filePath);
         if (affectedNode) {
-          affectedNode.hasDefinePage = Array.from(affectedNode.value.components.values()).some(
-            (componentPath) => definePageFileFlags.get(componentPath),
-          );
+          refreshHasDefinePage(affectedNode);
         }
         changed = true;
       }
