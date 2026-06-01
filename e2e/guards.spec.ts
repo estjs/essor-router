@@ -107,4 +107,34 @@ test.describe('Navigation Guards', () => {
     const afterEachText = await page.locator(Sel.guardAfterEach).textContent();
     expect(afterEachText).toContain('/');
   });
+
+  test('triggers beforeResolve on navigation', async ({ page }) => {
+    await page.goto('/');
+    await page.click('[data-testid="link-about"]');
+
+    const beforeResolveText = await page.locator(Sel.guardBeforeResolve).textContent();
+    expect(beforeResolveText).toContain('beforeResolve');
+    expect(beforeResolveText).toContain('/about');
+  });
+
+  test('beforeEnter next("/about") redirects to another route', async ({ page }) => {
+    await page.goto('/');
+    await page.click('[data-testid="link-redirect-guard"]');
+
+    // the guard calls next('/about'), so we end up on /about not /redirect-guard
+    await assertVisible(page, Sel.aboutTitle);
+    await expect(page).toHaveURL(/\/about$/);
+  });
+
+  test('beforeEnter next(false) cancels the navigation', async ({ page }) => {
+    await page.goto('/');
+    await assertVisible(page, Sel.homeTitle);
+
+    await page.click('[data-testid="link-blocked"]');
+
+    // the guard ran (set the marker) but cancelled, so the URL stays on '/'
+    await assertText(page, Sel.guardBlocked, 'blocked: cancelled');
+    await expect(page).toHaveURL(/\/$/);
+    await assertVisible(page, Sel.homeTitle);
+  });
 });

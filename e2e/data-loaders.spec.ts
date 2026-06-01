@@ -15,4 +15,16 @@ test.describe('data-loaders example', () => {
     ).toBeVisible();
     await expect(page.getByTestId('user-id')).toHaveText(/User ID:\s*789/);
   });
+
+  test('beforeLoad redirects unauthenticated user to /login', async ({ page }) => {
+    await page.goto('/');
+
+    // /profile defines a `beforeLoad` that returns { redirect: { name: '/login' } }
+    // because the fake auth check resolves false.
+    await page.getByRole('button', { name: 'Go to Profile' }).click();
+
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByRole('heading', { level: 2, name: 'Login Page' })).toBeVisible();
+    await expect(page.getByText('You were redirected here because')).toBeVisible();
+  });
 });

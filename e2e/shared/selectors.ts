@@ -31,6 +31,7 @@ export const Sel = {
   guardBeforeRouteLeave: '[data-testid="guard-beforeRouteLeave"]',
   guardBeforeRouteUpdate: '[data-testid="guard-beforeRouteUpdate"]',
   guardBeforeEnter: '[data-testid="guard-beforeEnter"]',
+  guardBlocked: '[data-testid="guard-blocked"]',
 
   // History
   currentUrl: '[data-testid="current-url"]',
