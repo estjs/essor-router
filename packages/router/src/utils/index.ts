@@ -47,7 +47,7 @@ export function isAsyncFunction(fn: Function): boolean {
  * Checks if a value is a Promise-like object (thenable).
  */
 export function isPromiseLike(value: unknown): value is Promise<unknown> {
-  return !!value && (isObject(value) || isFunction(value)) && 'then' in value;
+  return !!value && (isObject(value) || isFunction(value)) && isFunction((value as any).then);
 }
 
 /**

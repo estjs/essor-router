@@ -109,26 +109,33 @@ function getElementPosition(
 }
 
 /**
- * DEV-only: validate an element selector and warn about common mistakes.
- * Returns `true` if validation passed (or was skipped), `false` if the
- * caller should abort early.
+ * DEV-only: validate an element selector and warn about common mistakes,
+ * returning the resolved element so the caller can reuse it instead of querying
+ * the DOM a second time.
+ *
+ * @returns `{ abort }` is `true` if the caller should bail out early; `el` is
+ * the resolved element (or `null`).
  */
-function validateElementSelector(selector: string, isIdSelector: boolean): boolean {
+function validateElementSelector(
+  selector: string,
+  isIdSelector: boolean,
+): { abort: boolean; el: Element | null } {
+  let el: Element | null;
   try {
-    const el = document.querySelector(selector);
-    if (!el && isIdSelector) {
-      warn(
-        `The selector "${selector}" should be passed as "el: document.querySelector('${selector}')" because it starts with "#".`,
-      );
-      return false;
-    }
+    el = document.querySelector(selector);
   } catch {
     warn(
       `The selector "${selector}" is invalid. If you are using an id selector, make sure to escape it. You can find more information at https://mathiasbynens.be/notes/css-escapes.`,
     );
-    return false;
+    return { abort: true, el: null };
   }
-  return true;
+  if (!el && isIdSelector) {
+    warn(
+      `The selector "${selector}" should be passed as "el: document.querySelector('${selector}')" because it starts with "#".`,
+    );
+    return { abort: true, el: null };
+  }
+  return { abort: false, el };
 }
 
 function resolveScrollElement(positionEl: string | Element): Element | null {
@@ -144,11 +151,16 @@ export function scrollToPosition(position: ScrollPosition): void {
     const positionEl = position.el;
     const isIdSelector = isString(positionEl) && positionEl.startsWith('#');
 
-    if (__DEV__ && isString(positionEl) && !validateElementSelector(positionEl, isIdSelector)) {
-      return;
+    let el: Element | null;
+    if (__DEV__ && isString(positionEl)) {
+      const { abort, el: validatedEl } = validateElementSelector(positionEl, isIdSelector);
+      if (abort) return;
+      // reuse the element resolved during validation instead of querying again
+      el = validatedEl;
+    } else {
+      el = resolveScrollElement(positionEl);
     }
 
-    const el = resolveScrollElement(positionEl);
     if (!el) {
       __DEV__ &&
         warn(`Couldn't find element using selector "${position.el}" returned by scrollBehavior.`);

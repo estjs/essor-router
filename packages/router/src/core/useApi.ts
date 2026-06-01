@@ -15,17 +15,12 @@ import type { RouteLocationNormalizedLoaded, RouteLocationRawTyped } from '../ty
 // multi-router scenarios (micro-frontends, concurrent SSR requests) correct.
 // ---------------------------------------------------------------------------
 
-interface ActiveEntry {
-  router: Router;
-  route: RouteLocationNormalizedLoaded;
-}
-
-const activeRouterStack: ActiveEntry[] = [];
+const stack: { router: Router; route: RouteLocationNormalizedLoaded }[] = [];
 let activeRouter: Router | undefined;
 let activeRoute: RouteLocationNormalizedLoaded | undefined;
 
-function syncActiveFromStack(): void {
-  const top = activeRouterStack[activeRouterStack.length - 1];
+function sync(): void {
+  const top = stack[stack.length - 1];
   activeRouter = top?.router;
   activeRoute = top?.route;
 }
@@ -33,26 +28,14 @@ function syncActiveFromStack(): void {
 export function registerActiveRouter(router: Router): void {
   // Memoize the reactive accessor so repeated useRoute() calls outside of a
   // RouterView (e.g. header siblings) don't allocate a new proxy each time.
-  const existing = activeRouterStack.find((entry) => entry.router === router);
-  if (existing) {
-    // Already registered: re-promote it to the top so it becomes the fallback.
-    activeRouterStack.splice(activeRouterStack.indexOf(existing), 1);
-    activeRouterStack.push(existing);
-  } else {
-    activeRouterStack.push({ router, route: createRouteAccessor(router.currentRoute) });
-  }
-  syncActiveFromStack();
+  stack.push({ router, route: createRouteAccessor(router.currentRoute) });
+  sync();
 }
 
 export function unregisterActiveRouter(router?: Router): void {
-  if (router) {
-    const index = activeRouterStack.findIndex((entry) => entry.router === router);
-    if (index !== -1) activeRouterStack.splice(index, 1);
-  } else {
-    // No router specified: drop the current top entry.
-    activeRouterStack.pop();
-  }
-  syncActiveFromStack();
+  const i = router ? stack.findIndex((e) => e.router === router) : stack.length - 1;
+  if (i !== -1) stack.splice(i, 1);
+  sync();
 }
 
 // ---------------------------------------------------------------------------

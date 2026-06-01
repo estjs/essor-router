@@ -8,11 +8,27 @@ function isSameParam(a: ParamKey, b: ParamKey): boolean {
   return a.name === b.name && a.optional === b.optional && a.repeatable === b.repeatable;
 }
 
+function modifier(key: ParamKey): string {
+  return `${key.optional ? 'optional' : 'required'}${key.repeatable ? ' repeatable' : ''}`;
+}
+
+// Hint appended to a param-mismatch warning when a same-named param exists but
+// with different modifiers, so the message points at the real difference.
+function modifierMismatchHint(key: ParamKey, keys: readonly ParamKey[]): string {
+  const other = keys.find((k) => k.name === key.name);
+  return other && !isSameParam(key, other)
+    ? ` ("${key.name}" is ${modifier(key)} on one side, ${modifier(other)} on the other)`
+    : '';
+}
+
 export function checkSameParams(a: RouteRecordMatcher, b: RouteRecordMatcher) {
   for (const key of a.keys) {
     if (!key.optional && !b.keys.some(isSameParam.bind(null, key))) {
       warn(
-        `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"`,
+        `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"${modifierMismatchHint(
+          key,
+          b.keys,
+        )}`,
       );
       return;
     }
@@ -21,7 +37,10 @@ export function checkSameParams(a: RouteRecordMatcher, b: RouteRecordMatcher) {
   for (const key of b.keys) {
     if (!key.optional && !a.keys.some(isSameParam.bind(null, key))) {
       warn(
-        `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"`,
+        `Alias "${b.record.path}" and the original record: "${a.record.path}" must have the exact same param named "${key.name}"${modifierMismatchHint(
+          key,
+          a.keys,
+        )}`,
       );
       return;
     }
@@ -48,7 +67,10 @@ export function checkMissingParamsInAbsolutePath(
   for (const key of parent.keys) {
     if (!record.keys.some(isSameParam.bind(null, key))) {
       warn(
-        `Absolute path "${record.record.path}" must have the exact same param named "${key.name}" as its parent "${parent.record.path}".`,
+        `Absolute path "${record.record.path}" must have the exact same param named "${key.name}" as its parent "${parent.record.path}".${modifierMismatchHint(
+          key,
+          record.keys,
+        )}`,
       );
       return;
     }

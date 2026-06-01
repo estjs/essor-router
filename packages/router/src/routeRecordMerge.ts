@@ -53,8 +53,14 @@ export function _mergeRouteRecord(
     // Restore the deep-merged fields, overwriting the just-assigned source copy.
     acc.meta = mergedMeta;
     if (mergedAlias.length > 0) acc.alias = mergedAlias;
-    target.start = mergedStart;
-    target.params = mergedParams;
+    // Only assign when actually present, so `'start' in record` (and 'params')
+    // doesn't become true for records that never declared them.
+    if (target.start !== undefined || source.start !== undefined) {
+      target.start = mergedStart;
+    }
+    if (target.params !== undefined || source.params !== undefined) {
+      target.params = mergedParams;
+    }
 
     return acc;
   }, main);

@@ -89,11 +89,14 @@ export function createMemoryHistory(base: string = ''): RouterHistory {
         // using 0 for the delta doesn't make sense like it does in html5 where
         // it reloads the page
         delta < 0 ? NavigationDirection.back : NavigationDirection.forward;
+      const previousPosition = position;
       position = Math.max(0, Math.min(position + delta, queue.length - 1));
       if (shouldTrigger) {
         triggerListeners(this.location, from, {
           direction,
-          delta,
+          // report the distance actually moved (the requested delta may be
+          // clamped at the ends of the queue), not the originally requested one
+          delta: position - previousPosition,
         });
       }
     },

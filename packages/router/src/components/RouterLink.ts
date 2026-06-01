@@ -369,17 +369,22 @@ export const RouterLink = (props: RouterLinkProps): any => {
     return routeStart?.preload || 'intent';
   };
 
+  const prefetchMode = resolvePrefetchMode();
   const prefetch = usePrefetch({
-    mode: resolvePrefetchMode(),
+    mode: prefetchMode,
     id: prefetchId,
     preload: () => router.preloadRoute(peekTo(props.to)),
   });
 
-  prefetch.onRender();
-  if (typeof queueMicrotask === 'function') {
-    queueMicrotask(prefetch.onViewport);
-  } else {
-    Promise.resolve().then(prefetch.onViewport);
+  // When prefetching is disabled there is nothing to observe — skip arming the
+  // render hook and scheduling the microtask/IntersectionObserver entirely.
+  if (prefetchMode !== false) {
+    prefetch.onRender();
+    if (typeof queueMicrotask === 'function') {
+      queueMicrotask(prefetch.onViewport);
+    } else {
+      Promise.resolve().then(prefetch.onViewport);
+    }
   }
   onDestroy(() => prefetch.dispose());
 

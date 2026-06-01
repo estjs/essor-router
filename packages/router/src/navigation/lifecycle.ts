@@ -73,6 +73,15 @@ export function setupRouterLifecycle(options: LifecycleOptions) {
       const toLocation = options.resolve(to) as RouteLocationNormalized;
       const shouldRedirect = options.handleRedirectRecord(toLocation);
       if (shouldRedirect) {
+        // Save the scroll position of the page we are leaving before bailing
+        // out to the redirect. Without this, a pop that lands on a redirecting
+        // record loses the scroll position for the origin entry.
+        if (isBrowser) {
+          options.scrollPositionStore.save(
+            getScrollKey(options.currentRoute.value.fullPath, info.delta),
+            computeScrollPosition(),
+          );
+        }
         options
           .pushWithRedirect(Object.assign({}, shouldRedirect, { replace: true }), toLocation)
           .catch(noop);

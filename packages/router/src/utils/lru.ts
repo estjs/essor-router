@@ -16,10 +16,9 @@ export class LRUCache<K, V> {
   }
 
   getAndRemove(key: K): V | undefined {
+    if (!this._map.has(key)) return undefined;
     const value = this._map.get(key);
-    if (value !== undefined) {
-      this._map.delete(key);
-    }
+    this._map.delete(key);
     return value;
   }
 
