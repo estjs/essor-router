@@ -1,0 +1,14 @@
+{
+  "title": "基础",
+  "items": [
+    "route-configuration",
+    "dynamic-matching",
+    "nested-routes",
+    "navigation",
+    "named-routes",
+    "named-views",
+    "redirect-and-alias",
+    "passing-props",
+    "history-mode"
+  ]
+}

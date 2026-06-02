@@ -1,0 +1,5 @@
+{
+  "title": "指南",
+  "order": 1,
+  "items": ["index", "installation", "getting-started", "essentials", "advanced"]
+}

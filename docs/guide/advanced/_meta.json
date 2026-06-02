@@ -1,0 +1,15 @@
+{
+  "title": "Advanced",
+  "items": [
+    "navigation-guards",
+    "meta",
+    "lazy-loading",
+    "dynamic-routing",
+    "composition-api",
+    "scroll-behavior",
+    "query-handling",
+    "param-parsers",
+    "config-based-routing",
+    "file-based-routing-unplugin"
+  ]
+}

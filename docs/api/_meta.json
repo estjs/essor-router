@@ -1,0 +1,15 @@
+{
+  "title": "API Reference",
+  "order": 2,
+  "items": [
+    "index",
+    "create-router",
+    "router-instance",
+    "router-view",
+    "router-link",
+    "composition-api",
+    "types",
+    "config-alignment",
+    "unplugin"
+  ]
+}

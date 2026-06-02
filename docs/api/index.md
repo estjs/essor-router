@@ -1,3 +1,7 @@
+---
+sidebar_label: Overview
+---
+
 # API Reference
 
 This section contains the complete API reference for essor-router.

@@ -1,0 +1,5 @@
+{
+  "title": "Guide",
+  "order": 1,
+  "items": ["index", "installation", "getting-started", "essentials", "advanced"]
+}
