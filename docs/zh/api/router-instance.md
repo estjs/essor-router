@@ -102,6 +102,20 @@ router.back();
 router.forward();
 ```
 
+### preloadRoute
+
+提前解析目标位置并加载其异步组件与路由数据钩子，但**不进行导航**。返回的 Promise 会在路由完全加载后 resolve，因此随后对同一位置的 `push()`/`replace()` 会瞬间完成。
+
+```tsx
+// 在用户点击之前预热 dashboard
+await router.preloadRoute('/dashboard');
+await router.preloadRoute({ name: 'user', params: { id: '123' } });
+```
+
+这是 `RouterLink` 的 [`prefetch`](./router-link#prefetch) 属性和 [`usePreloadRoute`](./composition-api#usepreloadroute) 组合式函数的命令式对应物。
+
+**返回：** `Promise<RouteLocationNormalizedLoaded>`
+
 ## 路由管理
 
 ### addRoute
@@ -157,6 +171,19 @@ routes.forEach(route => {
 ```
 
 **返回：** `RouteRecord[]`
+
+### clearRoutes
+
+一次性移除所有已注册的路由：
+
+```tsx
+router.clearRoutes();
+console.log(router.getRoutes().length); // 0
+```
+
+适用于整体替换路由表的场景（例如微前端交接）。清空后，请在下一次导航前用 `addRoute()` 注册新路由。
+
+**返回：** `void`
 
 ### resolve
 
@@ -232,6 +259,18 @@ router.onError((error, to, from) => {
 });
 ```
 
+处理器会收到错误，以及发生错误时的导航对象：
+
+```tsx
+type ErrorListener = (
+  error: Error,
+  to: RouteLocationNormalized,        // 正在导航前往的目标
+  from: RouteLocationNormalizedLoaded, // 离开的位置
+) => void;
+```
+
+守卫、异步组件或路由数据钩子中抛出的错误都会转发到这里。导航**失败**（中止/取消/重复）**不是**错误——请用 [`isNavigationFailure`](#isnavigationfailure) 检查 `push()`/`replace()` 的返回值。
+
 **返回：** `() => void`
 
 ## 就绪状态
@@ -265,7 +304,9 @@ router.init();
 router.destroy();
 ```
 
-## 预渲染路径
+## 预渲染与渲染模式
+
+以下方法配合路由记录上的 `start` 字段（或 `defineStartRoute`），用于支持静态站点生成和按路由的渲染策略。
 
 ### getPrerenderPaths
 
@@ -273,6 +314,17 @@ router.destroy();
 
 ```tsx
 const entries = router.getPrerenderPaths();
+```
+
+每个入口是一个 `PrerenderPathInfo`：
+
+```tsx
+interface PrerenderPathInfo {
+  name: string | symbol | undefined; // 路由名称
+  pathTemplate: string;              // 例如 '/users/:id'
+  paths: string[];                   // 待渲染的具体路径
+  meta: Record<string | number | symbol, any>;
+}
 ```
 
 静态路由会直接把自身路径放进 `paths`。动态路由需要通过 `start.prerenderPaths` 提供具体路径，否则会被跳过。
@@ -287,7 +339,46 @@ const entries = router.getPrerenderPaths();
 }
 ```
 
-如果 `start.prerenderPaths` 是异步函数，请改用 `router.getPrerenderPathsAsync()`。
+**返回：** `PrerenderPathInfo[]`
+
+### getPrerenderPathsAsync
+
+与 `getPrerenderPaths` 相同，但会 await 那些为异步函数的 `start.prerenderPaths`（例如从 CMS 获取 slug）：
+
+```tsx
+{
+  path: '/posts/:slug',
+  start: {
+    prerender: true,
+    prerenderPaths: async () => {
+      const posts = await fetchAllPosts();
+      return posts.map(p => `/posts/${p.slug}`);
+    },
+  },
+}
+
+const entries = await router.getPrerenderPathsAsync();
+```
+
+**返回：** `Promise<PrerenderPathInfo[]>`
+
+### getRouteRenderMode
+
+按名称返回某个路由解析后的渲染模式：
+
+```tsx
+const mode = router.getRouteRenderMode('user'); // 'csr' | 'ssr' | 'prerender'
+```
+
+| 模式 | 含义 |
+|------|------|
+| `'csr'` | 客户端渲染（默认） |
+| `'ssr'` | 每次请求服务端渲染 |
+| `'prerender'` | 构建时渲染为静态 HTML |
+
+模式由路由的 `start` 配置推导而来。带 `start.prerender` 的路由解析为 `'prerender'`；可在构建流程中据此决定每个路由的产出方式。
+
+**返回：** `RouteRenderMode`
 
 ## 导航失败
 

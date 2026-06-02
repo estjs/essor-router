@@ -63,7 +63,7 @@ export { guardLinkEvent } from './navigation/guardEvent';
 export { RouterView, RouterViewProps } from './components/RouterView';
 export type { RouterScrollBehavior } from './core/scrollBehavior';
 
-export * from './core/useApi';
+export { useRoute, useRouter, usePreloadRoute } from './core/useApi';
 export type {
   // route location
   _RouteLocationBase,

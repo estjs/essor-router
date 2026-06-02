@@ -45,7 +45,9 @@ function MyComponent() {
 - `removeRoute()` - 删除路由
 - `hasRoute()` - 检查路由是否存在
 - `getRoutes()` - 获取所有路由
+- `clearRoutes()` - 移除所有路由
 - `resolve()` - 解析路由位置
+- `preloadRoute()` - 预加载目标路由的组件/数据
 
 ---
 
@@ -93,6 +95,41 @@ function MyComponent() {
 | `matched` | `RouteRecordNormalized[]` | 匹配的路由记录 |
 | `redirectedFrom` | `RouteLocation \| undefined` | 如果重定向，原始路由 |
 | `href` | `string` | 解析的 href |
+
+---
+
+## usePreloadRoute
+
+返回一个函数，用于提前解析目标位置并加载其异步组件与路由数据钩子——但**不进行导航**。可在用户真正前往之前预热路由。
+
+### 签名
+
+```tsx
+function usePreloadRoute(): (
+  to: RouteLocationRaw
+) => Promise<RouteLocationNormalizedLoaded>
+```
+
+### 用法
+
+```tsx
+import { usePreloadRoute } from 'essor-router';
+
+function Dashboard() {
+  const preload = usePreloadRoute();
+
+  // 在 dashboard 挂载时预热 settings 页面
+  preload('/settings');
+
+  return (
+    <RouterLink to="/settings" onMouseEnter={() => preload('/settings')}>
+      设置
+    </RouterLink>
+  );
+}
+```
+
+这是 [`router.preloadRoute()`](./router-instance#preloadroute) 的组合式封装。如需在链接上声明式预加载，请优先使用 `RouterLink` 的 [`prefetch`](./router-link#prefetch) 属性。
 
 ---
 

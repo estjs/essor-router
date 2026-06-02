@@ -52,11 +52,13 @@ interface Router {
   removeRoute(name: RouteRecordName): void;
   hasRoute(name: RouteRecordName): boolean;
   getRoutes(): RouteRecord[];
+  clearRoutes(): void;
   
   resolve(to: RouteLocationRaw, currentLocation?: RouteLocationNormalizedLoaded): RouteLocation & { href: string };
   
   push(to: RouteLocationRaw): Promise<NavigationFailure | void | undefined>;
   replace(to: RouteLocationRaw): Promise<NavigationFailure | void | undefined>;
+  preloadRoute(to: RouteLocationRaw): Promise<RouteLocationNormalizedLoaded>;
   back(): void;
   forward(): void;
   go(delta: number): void;
@@ -69,6 +71,35 @@ interface Router {
   isReady(): Promise<void>;
   init(): void;
   destroy(): void;
+  
+  getPrerenderPaths(): PrerenderPathInfo[];
+  getPrerenderPathsAsync(): Promise<PrerenderPathInfo[]>;
+  getRouteRenderMode(name: RouteRecordName): RouteRenderMode;
+}
+```
+
+### ErrorListener
+
+```tsx
+interface ErrorListener {
+  (
+    error: Error,
+    to: RouteLocationNormalized,
+    from: RouteLocationNormalizedLoaded
+  ): void;
+}
+```
+
+### 渲染模式与预渲染
+
+```tsx
+type RouteRenderMode = 'csr' | 'ssr' | 'prerender';
+
+interface PrerenderPathInfo {
+  name: string | symbol | undefined;
+  pathTemplate: string;
+  paths: string[];
+  meta: Record<string | number | symbol, any>;
 }
 ```
 

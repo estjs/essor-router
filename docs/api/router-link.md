@@ -116,6 +116,37 @@ Use View Transitions API when navigating:
 <RouterLink to="/about" viewTransition>About</RouterLink>
 ```
 
+### prefetch
+
+- **Type:** `'intent' | 'render' | 'viewport' | false`
+- **Default:** `'intent'` (or the matched route's `start.preload`, if set)
+
+Preload the target route's async components and data ahead of navigation, so the click feels instant. The value selects *when* preloading is triggered:
+
+| Mode | Preloads when… | Best for |
+|------|----------------|----------|
+| `'intent'` | the user hovers, focuses, or touches the link (intent to click) | most links — cheap, well-targeted |
+| `'render'` | the link mounts | a small number of high-confidence next steps |
+| `'viewport'` | the link scrolls into the viewport (via `IntersectionObserver`) | long lists / feeds |
+| `false` | never — disables preloading | links that are rarely followed |
+
+```tsx
+// Default (intent): preloads on hover/focus/touch — no prop needed
+<RouterLink to="/dashboard">Dashboard</RouterLink>
+
+// Preload as soon as the link is visible
+<RouterLink to="/article/1" prefetch="viewport">Read more</RouterLink>
+
+// Opt out
+<RouterLink to="/rarely-visited" prefetch={false}>Archive</RouterLink>
+```
+
+When the prop is omitted, the mode is taken from the matched route's `start.preload` and falls back to `'intent'` — so links preload on intent **by default**. Set `prefetch={false}` to opt a link out.
+
+Preloading only runs in the browser and never blocks rendering; failures are swallowed silently. Each link preloads at most once. When `IntersectionObserver` is unavailable, `'viewport'` falls back to preloading immediately.
+
+For imperative control, use [`router.preloadRoute()`](./router-instance#preloadroute) or [`usePreloadRoute`](./composition-api#usepreloadroute).
+
 ### class
 
 - **Type:** `string`
@@ -280,6 +311,47 @@ function NavLink({ to, children }) {
   );
 }
 ```
+
+## useLink
+
+`useLink` exposes the same logic that powers `RouterLink` so you can build fully custom link components. It accepts the same props as `RouterLink` and returns reactive link state plus a `navigate` handler.
+
+### Signature
+
+```tsx
+function useLink(props: RouterLinkProps): UseLinkReturn
+
+interface UseLinkReturn {
+  route: ReadonlyValue<RouteLocationNormalized>; // resolved target route
+  href: ReadonlyValue<string>;                   // resolved href
+  isActive: ReadonlyValue<boolean>;              // partial (prefix) match
+  isExactActive: ReadonlyValue<boolean>;         // exact match
+  navigate(e?: MouseEvent): Promise<void | NavigationFailure>;
+}
+```
+
+### Usage
+
+```tsx
+import { useLink } from 'essor-router';
+
+function NavButton(props) {
+  const { href, isActive, navigate } = useLink(props);
+
+  return (
+    <button
+      class={isActive.value ? 'active' : ''}
+      onClick={navigate}
+    >
+      {props.children}
+    </button>
+  );
+}
+
+// <NavButton to="/about">About</NavButton>
+```
+
+`navigate` already guards modifier-key and right-clicks the same way `RouterLink` does, so it is safe to wire directly to `onClick`. Pair it with the `custom` prop on `RouterLink` if you only need to override rendering, or reach for `useLink` when you want full control over the element and behavior.
 
 ## Accessibility
 

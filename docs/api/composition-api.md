@@ -45,7 +45,9 @@ The `Router` instance with all its methods and properties:
 - `removeRoute()` - Remove route
 - `hasRoute()` - Check route exists
 - `getRoutes()` - Get all routes
+- `clearRoutes()` - Remove all routes
 - `resolve()` - Resolve route location
+- `preloadRoute()` - Preload a target route's components/data
 
 ---
 
@@ -93,6 +95,41 @@ The current route location object:
 | `matched` | `RouteRecordNormalized[]` | Matched route records |
 | `redirectedFrom` | `RouteLocation \| undefined` | Original route if redirected |
 | `href` | `string` | Resolved href |
+
+---
+
+## usePreloadRoute
+
+Returns a function that eagerly resolves a target location and loads its async components and route data hooks — without navigating. Use it to warm up a route before the user actually goes there.
+
+### Signature
+
+```tsx
+function usePreloadRoute(): (
+  to: RouteLocationRaw
+) => Promise<RouteLocationNormalizedLoaded>
+```
+
+### Usage
+
+```tsx
+import { usePreloadRoute } from 'essor-router';
+
+function Dashboard() {
+  const preload = usePreloadRoute();
+
+  // Warm up the settings page when the dashboard mounts
+  preload('/settings');
+
+  return (
+    <RouterLink to="/settings" onMouseEnter={() => preload('/settings')}>
+      Settings
+    </RouterLink>
+  );
+}
+```
+
+This is the composition-API wrapper around [`router.preloadRoute()`](./router-instance#preloadroute). For declarative preloading on links, prefer the [`prefetch`](./router-link#prefetch) prop of `RouterLink`.
 
 ---
 

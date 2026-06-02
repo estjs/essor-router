@@ -116,6 +116,37 @@ const $to = signal('/about')
 <RouterLink to="/about" viewTransition>关于</RouterLink>
 ```
 
+### prefetch
+
+- **类型：** `'intent' | 'render' | 'viewport' | false`
+- **默认值：** `'intent'`（若匹配路由设置了 `start.preload`，则取该值）
+
+在导航前预加载目标路由的异步组件与数据，让点击瞬间完成。取值决定**何时**触发预加载：
+
+| 模式 | 触发时机 | 适用场景 |
+|------|----------|----------|
+| `'intent'` | 用户悬停、聚焦或触摸链接（产生点击意图）时 | 大多数链接——开销小、命中准 |
+| `'render'` | 链接挂载时 | 少量高置信度的下一步 |
+| `'viewport'` | 链接滚动进入视口时（通过 `IntersectionObserver`） | 长列表 / 信息流 |
+| `false` | 从不——禁用预加载 | 很少被点击的链接 |
+
+```tsx
+// 默认（intent）：悬停/聚焦/触摸时预加载——无需传 prop
+<RouterLink to="/dashboard">Dashboard</RouterLink>
+
+// 链接一进入视口就预加载
+<RouterLink to="/article/1" prefetch="viewport">阅读更多</RouterLink>
+
+// 显式关闭
+<RouterLink to="/rarely-visited" prefetch={false}>归档</RouterLink>
+```
+
+省略该 prop 时，模式取自匹配路由的 `start.preload`，并回退为 `'intent'`——因此链接**默认**会按意图预加载。传入 `prefetch={false}` 可让某个链接退出预加载。
+
+预加载只在浏览器中运行，且不会阻塞渲染；失败会被静默忽略。每个链接至多预加载一次。当 `IntersectionObserver` 不可用时，`'viewport'` 会退化为立即预加载。
+
+如需命令式控制，请使用 [`router.preloadRoute()`](./router-instance#preloadroute) 或 [`usePreloadRoute`](./composition-api#usepreloadroute)。
+
 ### class
 
 - **类型：** `string`
@@ -280,6 +311,47 @@ function NavLink({ to, children }) {
   );
 }
 ```
+
+## useLink
+
+`useLink` 暴露了驱动 `RouterLink` 的同一套逻辑，便于你构建完全自定义的链接组件。它接收与 `RouterLink` 相同的 props，返回响应式的链接状态以及 `navigate` 处理函数。
+
+### 签名
+
+```tsx
+function useLink(props: RouterLinkProps): UseLinkReturn
+
+interface UseLinkReturn {
+  route: ReadonlyValue<RouteLocationNormalized>; // 解析后的目标路由
+  href: ReadonlyValue<string>;                   // 解析后的 href
+  isActive: ReadonlyValue<boolean>;              // 部分（前缀）匹配
+  isExactActive: ReadonlyValue<boolean>;         // 精确匹配
+  navigate(e?: MouseEvent): Promise<void | NavigationFailure>;
+}
+```
+
+### 用法
+
+```tsx
+import { useLink } from 'essor-router';
+
+function NavButton(props) {
+  const { href, isActive, navigate } = useLink(props);
+
+  return (
+    <button
+      class={isActive.value ? 'active' : ''}
+      onClick={navigate}
+    >
+      {props.children}
+    </button>
+  );
+}
+
+// <NavButton to="/about">关于</NavButton>
+```
+
+`navigate` 已经像 `RouterLink` 一样处理了修饰键点击与右键点击，因此可直接绑定到 `onClick`。如果只需覆盖渲染，可配合 `RouterLink` 的 `custom` 属性；当你需要完全控制元素与行为时，使用 `useLink`。
 
 ## 无障碍
 

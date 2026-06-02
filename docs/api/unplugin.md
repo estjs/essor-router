@@ -86,6 +86,106 @@ Query param options:
 - from `essor-router`: `useRoute`, `useRouter`, `onBeforeRouteUpdate`, `onBeforeRouteLeave`
 - from `essor-router`: `definePage`, `defineRoute`, `defineStartRoute`
 
+## Editing the Route Tree
+
+Two hooks let you programmatically inspect and rewrite generated routes. Both receive an `EditableTreeNode` and may be async.
+
+### `extendRoute`
+
+Invoked **once per route** as the tree is built. Use it to modify a single node — add meta, rename, change the path, add aliases, insert children, or delete it.
+
+```ts
+essorRouter({
+  extendRoute(route) {
+    // Mark everything under /admin as protected
+    if (route.fullPath.startsWith('/admin')) {
+      route.addToMeta({ requiresAuth: true });
+    }
+    // Drop a route entirely
+    if (route.name === 'playground') {
+      route.delete();
+    }
+  },
+})
+```
+
+### `beforeWriteFiles`
+
+Invoked **every time** the route files are (re)written, with the **root** node. Use it for tree-wide changes or to add routes that don't map to a file.
+
+```ts
+essorRouter({
+  beforeWriteFiles(root) {
+    // Add a route programmatically
+    const node = root.insert('/home', '/src/pages/index.tsx');
+    node.addAlias(['/']);
+
+    // Walk the whole tree
+    for (const route of root.traverseDFS()) {
+      if (!route.meta.title) route.addToMeta({ title: route.name });
+    }
+  },
+})
+```
+
+### `EditableTreeNode`
+
+The node object passed to both hooks. Key members:
+
+| Member | Description |
+|--------|-------------|
+| `path` / `fullPath` | Segment path / full resolved path (read or assign `path`) |
+| `name` | Route name (assignable) |
+| `meta` / `addToMeta(partial)` | Read meta / merge fields into meta |
+| `alias` / `addAlias(alias)` | Aliases for this route |
+| `params` | Parsed path params of the node |
+| `components` / `component` | Named view component map / default component |
+| `children` / `parent` | Tree navigation |
+| `insert(path, filePath)` | Add a child route, returns the new node |
+| `delete()` | Remove this node from the tree |
+| `traverseDFS()` / `traverseBFS()` | Generators over the subtree (also `[Symbol.iterator]`) |
+
+## Route Name Helpers
+
+The plugin's default naming can be reused or swapped via `getRouteName`:
+
+```ts
+import { getFileBasedRouteName, getPascalCaseRouteName } from 'unplugin-essor-router'
+
+essorRouter({
+  // Default: file-path based, e.g. 'users-id'
+  getRouteName: getFileBasedRouteName,
+  // Or PascalCase, e.g. 'UsersId'
+  // getRouteName: getPascalCaseRouteName,
+})
+```
+
+## Auto-Exporting Data Loaders (Vite)
+
+`AutoExportLoaders` re-exports data loaders from page components so they can be discovered and tree-shaken. It is a Vite-only plugin and pairs with the `autoExportsDataLoaders` option.
+
+```ts
+import { AutoExportLoaders } from 'unplugin-essor-router'
+
+export default {
+  plugins: [
+    essorRouter({ autoExportsDataLoaders: 'src/loaders/**/*.ts' }),
+    AutoExportLoaders({
+      transformFilter: 'src/pages/**/*.tsx',     // which page components to rewrite
+      loadersPathsGlobs: 'src/loaders/**/*.ts',  // where loaders live
+    }),
+  ],
+}
+```
+
+`AutoExportLoadersOptions`:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `transformFilter` | `StringFilter` | Page components to apply the auto-export to |
+| `loadersPathsGlobs` | `string \| string[]` | Globs matching the loader file paths |
+| `root` | `string` | Project root for resolving paths (default `process.cwd()`) |
+
 ## Recommended Baseline
 
 ```ts

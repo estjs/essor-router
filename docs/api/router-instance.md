@@ -102,6 +102,20 @@ Go forward one entry (same as `go(1)`):
 router.forward();
 ```
 
+### preloadRoute
+
+Eagerly resolve a target location and load its async components and route data hooks, without navigating. The returned promise resolves with the fully loaded route, so a later `push()`/`replace()` to the same location is instant.
+
+```tsx
+// Warm up the dashboard before the user clicks
+await router.preloadRoute('/dashboard');
+await router.preloadRoute({ name: 'user', params: { id: '123' } });
+```
+
+This is the imperative counterpart to `RouterLink`'s [`prefetch`](./router-link#prefetch) prop and the [`usePreloadRoute`](./composition-api#usepreloadroute) composable.
+
+**Returns:** `Promise<RouteLocationNormalizedLoaded>`
+
 ## Route Management
 
 ### addRoute
@@ -157,6 +171,19 @@ routes.forEach(route => {
 ```
 
 **Returns:** `RouteRecord[]`
+
+### clearRoutes
+
+Remove every registered route at once:
+
+```tsx
+router.clearRoutes();
+console.log(router.getRoutes().length); // 0
+```
+
+Useful when swapping an entire route set (e.g. micro-frontend hand-off). After clearing, register new routes with `addRoute()` before the next navigation.
+
+**Returns:** `void`
 
 ### resolve
 
@@ -232,6 +259,18 @@ router.onError((error, to, from) => {
 });
 ```
 
+The handler receives the error plus the navigation it occurred on:
+
+```tsx
+type ErrorListener = (
+  error: Error,
+  to: RouteLocationNormalized,        // target being navigated to
+  from: RouteLocationNormalizedLoaded, // location navigated away from
+) => void;
+```
+
+Errors thrown inside guards, async components, or route data hooks are forwarded here. Navigation **failures** (aborted/cancelled/duplicated) are *not* errors — inspect the resolved value of `push()`/`replace()` with [`isNavigationFailure`](#isnavigationfailure) instead.
+
 **Returns:** `() => void`
 
 ## Ready State
@@ -265,7 +304,9 @@ Clean up the router:
 router.destroy();
 ```
 
-## Prerender Paths
+## Prerender & Render Mode
+
+These methods support static site generation and per-route rendering strategies driven by the `start` field on a route record (or via `defineStartRoute`).
 
 ### getPrerenderPaths
 
@@ -273,6 +314,17 @@ Returns prerender entries for routes marked with `start.prerender`:
 
 ```tsx
 const entries = router.getPrerenderPaths();
+```
+
+Each entry is a `PrerenderPathInfo`:
+
+```tsx
+interface PrerenderPathInfo {
+  name: string | symbol | undefined; // route name
+  pathTemplate: string;              // e.g. '/users/:id'
+  paths: string[];                   // concrete paths to render
+  meta: Record<string | number | symbol, any>;
+}
 ```
 
 For static routes, `paths` contains the route path itself. For dynamic routes, provide concrete paths with `start.prerenderPaths`; otherwise the route is skipped.
@@ -287,7 +339,46 @@ For static routes, `paths` contains the route path itself. For dynamic routes, p
 }
 ```
 
-Use `router.getPrerenderPathsAsync()` if `start.prerenderPaths` is an async function.
+**Returns:** `PrerenderPathInfo[]`
+
+### getPrerenderPathsAsync
+
+Same as `getPrerenderPaths`, but awaits any `start.prerenderPaths` that are async functions (e.g. fetching slugs from a CMS):
+
+```tsx
+{
+  path: '/posts/:slug',
+  start: {
+    prerender: true,
+    prerenderPaths: async () => {
+      const posts = await fetchAllPosts();
+      return posts.map(p => `/posts/${p.slug}`);
+    },
+  },
+}
+
+const entries = await router.getPrerenderPathsAsync();
+```
+
+**Returns:** `Promise<PrerenderPathInfo[]>`
+
+### getRouteRenderMode
+
+Returns the resolved render mode for a route by name:
+
+```tsx
+const mode = router.getRouteRenderMode('user'); // 'csr' | 'ssr' | 'prerender'
+```
+
+| Mode | Meaning |
+|------|---------|
+| `'csr'` | Client-side rendered (default) |
+| `'ssr'` | Server-side rendered per request |
+| `'prerender'` | Rendered to static HTML at build time |
+
+The mode is derived from the route's `start` configuration. Routes with `start.prerender` resolve to `'prerender'`; use this in a build pipeline to decide how each route is emitted.
+
+**Returns:** `RouteRenderMode`
 
 ## Navigation Failure
 
