@@ -1,6 +1,27 @@
 import process from 'node:process';
 import { defineConfig, devices } from '@playwright/test';
 
+function getWebServerEnv(): Record<string, string> {
+  const env: Record<string, string> = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    if (value !== undefined) env[key] = value;
+  }
+  env.CHOKIDAR_USEPOLLING = '1';
+  return env;
+}
+
+const webServerEnv = getWebServerEnv();
+
+function createViteWebServer(filter: string, port: number, options: { build?: boolean } = {}) {
+  const command = `pnpm --filter ${filter} exec vite --host 127.0.0.1 --port ${port} --strictPort`;
+  return {
+    command: options.build ? `pnpm run build && ${command}` : command,
+    url: `http://127.0.0.1:${port}/`,
+    reuseExistingServer: !process.env.CI,
+    env: webServerEnv,
+  };
+}
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -24,7 +45,7 @@ export default defineConfig({
   reporter: 'dot',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'http://localhost:3002',
+    baseURL: 'http://127.0.0.1:3002',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -68,60 +89,16 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: [
-    {
-      command: 'pnpm run build && pnpm --filter essor-file-routes-example run dev -- --strictPort',
-      url: 'http://localhost:3002/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter essor-typed-router-example run dev -- --strictPort',
-      url: 'http://localhost:3003/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter config-router run dev -- --strictPort',
-      url: 'http://localhost:3017/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter essor-option-basic run dev -- --strictPort',
-      url: 'http://localhost:3010/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter essor-router-option run dev -- --strictPort',
-      url: 'http://localhost:3011/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter essor-router-link run dev -- --strictPort',
-      url: 'http://localhost:3012/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter essor-router-use run dev -- --strictPort',
-      url: 'http://localhost:3013/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter param-parsers run dev -- --strictPort',
-      url: 'http://localhost:3014/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter data-loaders run dev -- --strictPort',
-      url: 'http://localhost:3015/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter essor-eouter-async run dev -- --strictPort',
-      url: 'http://localhost:3016/',
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      command: 'pnpm --filter example-guards run dev -- --strictPort',
-      url: 'http://localhost:3020/',
-      reuseExistingServer: !process.env.CI,
-    },
+    createViteWebServer('essor-file-routes-example', 3002, { build: true }),
+    createViteWebServer('essor-typed-router-example', 3003),
+    createViteWebServer('config-router', 3017),
+    createViteWebServer('essor-option-basic', 3010),
+    createViteWebServer('essor-router-option', 3011),
+    createViteWebServer('essor-router-link', 3012),
+    createViteWebServer('essor-router-use', 3013),
+    createViteWebServer('param-parsers', 3014),
+    createViteWebServer('data-loaders', 3015),
+    createViteWebServer('essor-router-async', 3016),
+    createViteWebServer('example-guards', 3020),
   ],
 });

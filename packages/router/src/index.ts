@@ -10,11 +10,11 @@ export type {
   LocationQueryValue,
   LocationQueryValueRaw,
 } from './core/query';
-export { RouteRecordNormalized } from './matcher/types';
+export type { RouteRecordNormalized } from './matcher/types';
 export type { RouterHistory, HistoryState } from './history/common';
 
-export { createRouter, RouterOptions } from './core/router';
-export type { ErrorListener, _ErrorListener, Router } from './core/router';
+export { createRouter } from './core/router';
+export type { ErrorListener, _ErrorListener, Router, RouterOptions } from './core/router';
 export { definePage, defineRoute, defineStartRoute } from './routeDefinition';
 export type {
   DefinePage,
@@ -60,7 +60,8 @@ export { onBeforeRouteLeave, onBeforeRouteUpdate, loadRouteLocation } from './na
 export { RouterLink, useLink } from './components/RouterLink';
 export type { RouterLinkProps, RouterLinkOptions, UseLinkReturn } from './components/RouterLink';
 export { guardLinkEvent } from './navigation/guardEvent';
-export { RouterView, RouterViewProps } from './components/RouterView';
+export { RouterView } from './components/RouterView';
+export type { RouterViewProps } from './components/RouterView';
 export type { RouterScrollBehavior } from './core/scrollBehavior';
 
 export { useRoute, useRouter, usePreloadRoute } from './core/useApi';

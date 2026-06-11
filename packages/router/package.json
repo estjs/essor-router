@@ -51,7 +51,7 @@
     "coverage": "vitest run --coverage"
   },
   "peerDependencies": {
-    "essor": "^0.0.17-beta.1-beta.1"
+    "essor": "^0.0.17-beta.1"
   },
   "dependencies": {
     "@estjs/shared": "^0.0.17-beta.1"

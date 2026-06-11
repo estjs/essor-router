@@ -75,9 +75,6 @@ export async function generateRoutesModule(
 
   return `${imports}${routeDupsWarns}\n${routeList}${generateHmrBlock(
     'routes',
-    `router.clearRoutes()
-    for (const route of mod.routes) {
-      router.addRoute(route)
-    }`,
+    `router._hmrReplaceRoutes(mod.routes)`,
   )}\n`;
 }

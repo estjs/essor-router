@@ -221,8 +221,8 @@ export const route = defineRoute({
       tab: { parser: 'string', default: 'overview' }
     },
   },
-  loader: async ({ params }) => {
-    return await fetchUser(params.id);
+  loader: ({ params }) => {
+    return fetchUser(params.id);
   },
 })
 

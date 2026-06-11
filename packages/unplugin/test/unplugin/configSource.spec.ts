@@ -56,8 +56,6 @@ describe('configSource logic', () => {
     const { tree, options } = setupTree('routes.config.ts');
     loadConfigRoutes(tree, options);
 
-    // There should be a `/settings` node
-    console.log('TREE CHILDREN:', Array.from(tree.children.keys()));
     const settingsNode = tree.children.get('settings');
     expect(settingsNode).toBeDefined();
     expect(settingsNode?.children.has('profile')).toBe(true);

@@ -1,5 +1,6 @@
 import type { DefineRouteStartOptions } from './routeDefinition';
 import type { RouteRecordRaw } from './types';
+import { assign } from './utils';
 
 type RouteRecordWithStableFields = RouteRecordRaw & {
   params?: {
@@ -39,16 +40,16 @@ export function _mergeRouteRecord(
     const source = routeRecord as Partial<RouteRecordWithStableFields>;
 
     // Snapshot fields that need deep merge BEFORE the shallow overwrite below.
-    const mergedMeta = Object.assign({}, target.meta, source.meta);
+    const mergedMeta = assign({}, target.meta, source.meta);
     const mergedAlias = ([] as string[]).concat(target.alias || [], source.alias || []);
-    const mergedStart = Object.assign({}, target.start, source.start);
+    const mergedStart = assign({}, target.start, source.start);
     const mergedParams = {
-      path: Object.assign({}, target.params?.path, source.params?.path),
-      query: Object.assign({}, target.params?.query, source.params?.query),
+      path: assign({}, target.params?.path, source.params?.path),
+      query: assign({}, target.params?.query, source.params?.query),
     };
 
     // Last-wins for every other field.
-    Object.assign(acc, routeRecord);
+    assign(acc, routeRecord);
 
     // Restore the deep-merged fields, overwriting the just-assigned source copy.
     acc.meta = mergedMeta;

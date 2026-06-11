@@ -2,26 +2,26 @@ import { cwd } from 'node:process';
 import { createFilter } from 'unplugin-utils';
 import MagicString from 'magic-string';
 import { findStaticImports, parseStaticImport } from 'mlly';
-import { resolve } from 'pathe';
+import { dirname, extname, resolve } from 'pathe';
 import { isObject } from '@estjs/shared';
 import type { StringFilter, UnpluginOptions } from 'unplugin';
 import type { Plugin } from 'vite';
+
+const RESOLVE_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.mts', '.cts'];
 
 export function extractLoadersToExport(
   code: string,
   filterPaths: (id: string) => boolean,
   root: string,
+  importer?: string,
 ): string[] {
   const imports = findStaticImports(code);
   const importNames = imports.flatMap((i) => {
     const parsed = parseStaticImport(i);
 
-    const specifier = resolve(
-      root,
-      parsed.specifier.startsWith('/') ? parsed.specifier.slice(1) : parsed.specifier,
-    );
+    const specifier = resolveImportSpecifier(parsed.specifier, root, importer);
 
-    if (!filterPaths(specifier)) return [];
+    if (!getImportSpecifierCandidates(specifier).some(filterPaths)) return [];
 
     return [parsed.defaultImport, ...Object.values(parsed.namedImports || {})].filter(
       (value): value is string => !!value && !value.startsWith('_'),
@@ -29,6 +29,28 @@ export function extractLoadersToExport(
   });
 
   return importNames;
+}
+
+function resolveImportSpecifier(specifier: string, root: string, importer?: string): string {
+  if (specifier.startsWith('/')) {
+    return resolve(root, specifier.slice(1));
+  }
+
+  if (specifier.startsWith('.') && importer) {
+    return resolve(dirname(importer.split('?')[0]!), specifier);
+  }
+
+  return resolve(root, specifier);
+}
+
+function getImportSpecifierCandidates(specifier: string): string[] {
+  if (extname(specifier)) return [specifier];
+
+  const candidates = [specifier];
+  for (const extension of RESOLVE_EXTENSIONS) {
+    candidates.push(`${specifier}${extension}`, resolve(specifier, `index${extension}`));
+  }
+  return candidates;
 }
 
 const PLUGIN_NAME = 'essor-router:data-loaders-auto-export';
@@ -74,10 +96,10 @@ export function AutoExportLoaders({
   loadersPathsGlobs,
   root = cwd(),
 }: AutoExportLoadersOptions): Plugin {
-  const filterPaths = createFilter(loadersPathsGlobs);
+  const filterPaths = createFilter(loadersPathsGlobs, undefined, { resolve: root });
   const isTransformTarget = isObjectFilter(transformFilter)
-    ? createFilter(transformFilter.include, transformFilter.exclude)
-    : createFilter(transformFilter);
+    ? createFilter(transformFilter.include, transformFilter.exclude, { resolve: root })
+    : createFilter(transformFilter, undefined, { resolve: root });
 
   return {
     name: PLUGIN_NAME,
@@ -85,7 +107,7 @@ export function AutoExportLoaders({
     transform(code, id) {
       if (!isTransformTarget(id)) return;
 
-      const loadersToExports = extractLoadersToExport(code, filterPaths, root);
+      const loadersToExports = extractLoadersToExport(code, filterPaths, root, id);
       if (loadersToExports.length <= 0) return;
 
       const s = new MagicString(code);

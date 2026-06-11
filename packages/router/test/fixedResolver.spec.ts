@@ -239,6 +239,26 @@ describe('fixed resolver', () => {
     expect(resolved).toMatchObject({ name: 'user', params: { id: 7 } });
   });
 
+  it('inherits current params when resolving a named route with missing params', () => {
+    const user = normalizeRouteRecord({
+      name: 'user',
+      path: new MatcherPatternPathDynamic(/^\/users\/([^/]+)$/i, { id: [PARAM_PARSER_INT] }, [
+        'users',
+        1,
+      ]),
+      component: {} as any,
+    });
+    const resolver = createFixedResolver([user]);
+    const current = resolver.resolve({ path: '/users/1' }, START_LOCATION_NORMALIZED);
+
+    const resolved = resolver.resolve(
+      { name: 'user', params: {} },
+      { ...START_LOCATION_NORMALIZED, ...current },
+    );
+
+    expect(resolved).toMatchObject({ name: 'user', path: '/users/1', params: { id: 1 } });
+  });
+
   it('throws FixedResolverParamError when stringifying without a required param', () => {
     const user = normalizeRouteRecord({
       name: 'user',

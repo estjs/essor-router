@@ -1,6 +1,16 @@
 import fakePromise from 'faked-promise';
-import { type RouterHistory, createMemoryHistory, createRouter, createWebHistory } from '../src';
-import { createHistory } from '../src/core/router';
+import {
+  MatcherPatternPathDynamic,
+  MatcherPatternPathStatic,
+  MatcherPatternQueryParam,
+  type RouterHistory,
+  createFixedResolver,
+  createMemoryHistory,
+  createRouter,
+  createWebHistory,
+  normalizeRouteRecord,
+} from '../src';
+import { type _RouterInternal, createHistory } from '../src/core/router';
 import { NavigationFailureType } from '../src/core/errors';
 import {
   type RouteLocationRaw,
@@ -1090,6 +1100,229 @@ describe('router', () => {
       expect(router.resolve('/new-route')).toMatchObject({
         name: 'new route',
       });
+    });
+
+    it('resolves added routes before generated catch-all records when a fixed resolver is configured', () => {
+      const fixedHome = normalizeRouteRecord({
+        path: new MatcherPatternPathStatic('/'),
+        name: 'home',
+        component: components.Home,
+      });
+      const fixedCatchAll = normalizeRouteRecord({
+        path: new MatcherPatternPathDynamic(/^\/(.*)$/, { pathMatch: [] }, [1]),
+        name: 'catch-all',
+        component: components.Home,
+      });
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [
+          { path: '/', name: 'home', component: components.Home },
+          { path: '/:pathMatch(.*)', name: 'catch-all', component: components.Home },
+        ],
+        resolver: createFixedResolver([fixedHome, fixedCatchAll]),
+      });
+
+      router.addRoute({
+        path: '/dynamic',
+        name: 'dynamic',
+        component: components.Foo,
+      });
+
+      expect(router.hasRoute('dynamic')).toBe(true);
+      expect(router.resolve('/dynamic')).toMatchObject({
+        name: 'dynamic',
+        path: '/dynamic',
+      });
+      expect(router.resolve({ name: 'dynamic' })).toMatchObject({
+        name: 'dynamic',
+        path: '/dynamic',
+      });
+    });
+
+    it('keeps fixed resolver query constraints for generated routes after adding runtime routes', () => {
+      const fixedSearch = normalizeRouteRecord({
+        path: new MatcherPatternPathStatic('/search'),
+        name: 'search',
+        query: [new MatcherPatternQueryParam('q', 'q', 'value', undefined, undefined, true)],
+        component: components.Home,
+      });
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/search', name: 'search', component: components.Home }],
+        resolver: createFixedResolver([fixedSearch]),
+      });
+
+      expect(router.resolve('/search')).toMatchObject({
+        name: undefined,
+        matched: [],
+      });
+
+      router.addRoute({
+        path: '/dynamic',
+        name: 'dynamic',
+        component: components.Foo,
+      });
+
+      expect(router.resolve('/search')).toMatchObject({
+        name: undefined,
+        matched: [],
+      });
+      expect(router.resolve('/search?q=router')).toMatchObject({
+        name: 'search',
+        params: { q: 'router' },
+      });
+      expect(router.resolve('/dynamic')).toMatchObject({
+        name: 'dynamic',
+      });
+    });
+
+    it('keeps fixed resolver query constraints after HMR route replacement', () => {
+      const fixedSearch = normalizeRouteRecord({
+        path: new MatcherPatternPathStatic('/search'),
+        name: 'search',
+        query: [new MatcherPatternQueryParam('q', 'q', 'value', undefined, undefined, true)],
+        component: components.Home,
+      });
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/search', name: 'search', component: components.Home }],
+        resolver: createFixedResolver([fixedSearch]),
+      });
+
+      (router as _RouterInternal)._hmrReplaceRoutes([
+        { path: '/search', name: 'search', component: components.Home },
+      ]);
+
+      expect(router.resolve('/search')).toMatchObject({
+        name: undefined,
+        matched: [],
+      });
+      expect(router.resolve('/search?q=router')).toMatchObject({
+        name: 'search',
+        params: { q: 'router' },
+      });
+    });
+
+    it('does not resolve old generated records after HMR replaces routes with an empty list', () => {
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [],
+        resolver: createFixedResolver([
+          normalizeRouteRecord({
+            path: new MatcherPatternPathStatic('/'),
+            name: 'home',
+            component: components.Home,
+          }),
+        ]),
+      });
+
+      expect(router.resolve('/')).toMatchObject({ name: 'home' });
+
+      (router as _RouterInternal)._hmrReplaceRoutes([]);
+
+      expect(router.resolve('/')).toMatchObject({
+        name: undefined,
+        matched: [],
+      });
+    });
+
+    it('keeps resolving fixed resolver routes after adding a runtime route without initial routes', () => {
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [],
+        resolver: createFixedResolver([
+          normalizeRouteRecord({
+            path: new MatcherPatternPathStatic('/'),
+            name: 'home',
+            component: components.Home,
+          }),
+        ]),
+      });
+
+      router.addRoute({
+        path: '/dynamic',
+        name: 'dynamic',
+        component: components.Foo,
+      });
+
+      expect(router.resolve('/')).toMatchObject({
+        name: 'home',
+        path: '/',
+      });
+      expect(router.resolve('/dynamic')).toMatchObject({
+        name: 'dynamic',
+        path: '/dynamic',
+      });
+    });
+
+    it('does not resolve generated records after clearing routes with a fixed resolver', () => {
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: components.Home }],
+        resolver: createFixedResolver([
+          normalizeRouteRecord({
+            path: new MatcherPatternPathStatic('/'),
+            name: 'home',
+            component: components.Home,
+          }),
+        ]),
+      });
+
+      expect(router.resolve('/')).toMatchObject({ name: 'home' });
+
+      router.clearRoutes();
+
+      expect(router.resolve('/')).toMatchObject({
+        name: undefined,
+        matched: [],
+      });
+    });
+
+    it('does not resolve removed generated records with a fixed resolver', () => {
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/', name: 'home', component: components.Home }],
+        resolver: createFixedResolver([
+          normalizeRouteRecord({
+            path: new MatcherPatternPathStatic('/'),
+            name: 'home',
+            component: components.Home,
+          }),
+        ]),
+      });
+
+      expect(router.resolve('/')).toMatchObject({ name: 'home' });
+
+      router.removeRoute('home');
+
+      expect(router.resolve('/')).toMatchObject({
+        name: undefined,
+        matched: [],
+      });
+      expect(() => router.resolve({ name: 'home' })).toThrow();
+    });
+
+    it('keeps generated resolver constraints after removing a runtime route with the same path', () => {
+      const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{ path: '/shared', component: components.Home }],
+        resolver: createFixedResolver([
+          normalizeRouteRecord({
+            path: new MatcherPatternPathStatic('/shared'),
+            query: [new MatcherPatternQueryParam('q', 'q', 'value', undefined, undefined, true)],
+            component: components.Home,
+          }),
+        ]),
+      });
+
+      router.addRoute({
+        path: '/shared',
+        name: 'runtime-shared',
+        component: components.Foo,
+      });
+      router.removeRoute('runtime-shared');
+
+      expect(router.resolve('/shared?q=router').params).toEqual({ q: 'router' });
     });
 
     it('checks if a route exists', async () => {

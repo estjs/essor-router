@@ -50,8 +50,14 @@ export const PARAM_PARSER_BOOL: ParamParser<boolean | boolean[] | undefined> = {
 
 export type MatcherPatternPathPart = string | number | Array<string | number>;
 
+export interface MatcherPatternPathParamKey {
+  name: string;
+  optional: boolean;
+}
+
 export interface MatcherPatternPath {
   readonly source: string;
+  readonly keys?: readonly MatcherPatternPathParamKey[];
   match(path: string): RouteParams | null;
   stringify(params: RouteParams): string;
 }
@@ -62,6 +68,7 @@ export interface MatcherPatternPath {
  */
 export class MatcherPatternPathStatic implements MatcherPatternPath {
   readonly source: string;
+  readonly keys: readonly MatcherPatternPathParamKey[] = [];
   private readonly comparable: string;
 
   constructor(path: string) {
@@ -80,6 +87,7 @@ export class MatcherPatternPathStatic implements MatcherPatternPath {
 
 export class MatcherPatternPathDynamic implements MatcherPatternPath {
   readonly source: string;
+  readonly keys: readonly MatcherPatternPathParamKey[];
   private readonly paramNames: string[];
   private readonly re: RegExp;
 
@@ -93,6 +101,10 @@ export class MatcherPatternPathDynamic implements MatcherPatternPath {
     // between calls and make the second `exec()` start mid-string (or miss).
     this.re = re.global || re.sticky ? new RegExp(re.source, re.flags.replaceAll(/[gy]/g, '')) : re;
     this.paramNames = Object.keys(params);
+    this.keys = this.paramNames.map((name) => ({
+      name,
+      optional: Boolean(params[name]?.[2]),
+    }));
     this.source = renderPathTemplate(parts, this.paramNames, params);
   }
 
@@ -231,7 +243,11 @@ export function createFixedResolver(records: FixedResolverRecordInput[]): FixedR
         throw createRouterError<MatcherError>(ErrorTypes.MATCHER_NOT_FOUND, { location });
       }
 
-      const params = assign({}, location.params || {}, queryParams) as RouteParams;
+      const params = assign(
+        pickParams(currentLocation.params, getInheritableParamNames(node)),
+        location.params || {},
+        queryParams,
+      ) as RouteParams;
       return createMatcherLocation(node, node.pattern.stringify(params), params);
     }
 
@@ -339,6 +355,37 @@ function getConcretePathSegments(path: string): string[] {
   }
 
   return segments;
+}
+
+function getInheritableParamNames(node: FixedResolverRecord): string[] | null {
+  const keys = node.pattern.keys;
+  if (!keys) return null;
+
+  const names = new Set<string>();
+  for (const key of keys) {
+    if (!key.optional) names.add(key.name);
+  }
+
+  if (node.parent) {
+    const parentKeys = node.parent.pattern.keys;
+    if (!parentKeys) return null;
+
+    for (const key of parentKeys) {
+      if (key.optional) names.add(key.name);
+    }
+  }
+
+  return [...names];
+}
+
+function pickParams(params: RouteParams, names: string[] | null): RouteParams {
+  if (names === null) return assign({}, params) as RouteParams;
+
+  const picked = {} as RouteParams;
+  for (const name of names) {
+    if (name in params) picked[name] = params[name];
+  }
+  return picked;
 }
 
 function isConcretePathSegment(segment: string): boolean {

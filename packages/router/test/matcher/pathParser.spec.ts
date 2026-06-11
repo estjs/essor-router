@@ -150,27 +150,9 @@ describe('path parser', () => {
       ]);
     });
 
-    // not sure how useful this is and if it's worth supporting because of the
-    // cost to support the ranking as well
-    it.skip('groups', () => {
-      expect(tokenizePath('/one{-b_:id}')).toEqual([
-        [
-          { type: TokenType.Static, value: 'one' },
-          {
-            type: TokenType.Group,
-            groups: [
-              { type: TokenType.Static, value: '-b_' },
-              { type: TokenType.Param, value: 'id' },
-            ],
-          },
-        ],
-      ]);
-    });
+    it.todo('supports groups in path tokens');
 
-    // same as above
-    it.skip('escapes } inside group', () => {
-      expect(tokenizePath('/{\\{}')).toEqual([[{ type: TokenType.Static, value: '{' }]]);
-    });
+    it.todo('escapes } inside groups');
 
     it('escapes ( inside custom re', () => {
       expect(tokenizePath('/:a(\\))')).toEqual([

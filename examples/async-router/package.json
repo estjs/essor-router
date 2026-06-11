@@ -1,5 +1,5 @@
 {
-  "name": "essor-eouter-async",
+  "name": "essor-router-async",
   "private": true,
   "type": "module",
   "scripts": {

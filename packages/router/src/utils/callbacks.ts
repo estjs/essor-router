@@ -7,7 +7,7 @@ export function useCallbacks<T>() {
   function add(handler: T): () => void {
     handlers.push(handler);
     return () => {
-      const i = handlers.indexOf(handler);
+      const i = handlers.lastIndexOf(handler);
       if (i > -1) handlers.splice(i, 1);
     };
   }

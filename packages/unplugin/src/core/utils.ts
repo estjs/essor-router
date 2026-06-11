@@ -4,8 +4,13 @@ import type { ResolvedOptions, RoutesFolderOptionResolved } from './options';
 import type { TreeNode } from './tree';
 import type { RouteRecordOverride } from './treeNodeValue';
 
-export function warn(msg: string, type: 'warn' | 'error' | 'debug' = 'warn'): void {
-  console[type](`⚠️  [essor-router]: ${msg}`);
+export function warn(msg: string, type: 'warn' | 'error' = 'warn'): void {
+  const message = `⚠️  [essor-router]: ${msg}`;
+  if (type === 'error') {
+    console.error(message);
+  } else {
+    console.warn(message);
+  }
 }
 
 export function logTree(tree: TreeNode, log: (str: string) => any) {

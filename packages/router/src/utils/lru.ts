@@ -27,7 +27,7 @@ export class LRUCache<K, V> {
       this._map.delete(key);
     }
     this._map.set(key, value);
-    while (this._map.size > this._limit) {
+    while (this._map.size > this._limit && this._limit > 0) {
       const oldest = this._map.keys().next().value;
       if (oldest == null) break;
       this._map.delete(oldest);

@@ -19,7 +19,7 @@ export default estjs(
     test: {
       'vitest/expect-expect': 'off',
     },
-    ignores: ['dist', 'doc_build', 'docs'],
+    ignores: ['dist', 'doc_build', 'docs', 'test-results'],
   },
   {
     react: false,

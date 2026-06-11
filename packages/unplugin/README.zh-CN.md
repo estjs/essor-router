@@ -221,8 +221,8 @@ export const route = defineRoute({
       tab: { parser: 'string', default: 'overview' },  // 带默认值的 query param
     },
   },
-  loader: async ({ params }) => {
-    return await fetchUser(params.id);
+  loader: ({ params }) => {
+    return fetchUser(params.id);
   },
 })
 

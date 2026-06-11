@@ -3,7 +3,5 @@ export function warn(msg: string, ...args: unknown[]): void {
 }
 
 export function logRouterError(...args: unknown[]): void {
-  if (__DEV__) {
-    console.error(...args);
-  }
+  console.error(...args);
 }

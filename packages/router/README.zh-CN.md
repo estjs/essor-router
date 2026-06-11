@@ -69,8 +69,8 @@ router.beforeEach((to, from, next) => {
 const routes = [
   {
     path: '/post/:id',
-    loader: async ({ params }) => {
-      return await fetchPost(params.id);
+    loader: ({ params }) => {
+      return fetchPost(params.id);
     },
     component: BlogPost,
   }
