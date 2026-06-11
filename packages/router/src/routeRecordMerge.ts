@@ -1,6 +1,6 @@
+import { assign } from './utils';
 import type { DefineRouteStartOptions } from './routeDefinition';
 import type { RouteRecordRaw } from './types';
-import { assign } from './utils';
 
 type RouteRecordWithStableFields = RouteRecordRaw & {
   params?: {

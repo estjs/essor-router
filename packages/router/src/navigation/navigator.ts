@@ -31,13 +31,13 @@ import {
   START_LOCATION_NORMALIZED,
   isRouteLocation,
 } from '../types';
-import { applyToParams, assign, isBrowser, isArray } from '../utils';
+import { applyToParams, assign, isArray, isBrowser } from '../utils';
 import { LRUCache } from '../utils/lru';
 import { useCallbacks } from '../utils/callbacks';
 import { warn } from '../core/warning';
 import { decode, encodeHash, encodeParam } from '../encoding';
-import { extractComponentsGuards, guardToPromiseFn, loadRouteLocation } from './guards';
 import { createRouteAccessor } from '../core/useApi';
+import { extractComponentsGuards, guardToPromiseFn, loadRouteLocation } from './guards';
 import type { Signal } from 'essor';
 import type { HistoryState, RouterHistory } from '../history/common';
 import type { RouteRecordNormalized } from '../matcher/types';

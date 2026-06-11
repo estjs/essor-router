@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { shallowSignal } from 'essor';
 import { createNavigator } from '../../src/navigation/navigator';
 import { parseQuery, stringifyQuery } from '../../src/core/query';
 import { START_LOCATION_NORMALIZED } from '../../src/types';
-import { shallowSignal } from 'essor';
 
 function createTestNavigator(matcherResolve: (location: any) => any) {
   const currentRoute = shallowSignal(START_LOCATION_NORMALIZED);

@@ -1,6 +1,6 @@
 import { nextTick, provide, shallowSignal, toRaw } from 'essor';
 import { isFunction, isObject, isString } from '@estjs/shared';
-import { isBrowser } from '../utils';
+import { assign, isBrowser, noop } from '../utils';
 import {
   type NavigationGuardWithThis,
   type NavigationHookAfter,
@@ -19,15 +19,14 @@ import { createMemoryHistory } from '../history/memory';
 import {
   type ErrorListener,
   type MatcherResolver,
-  type Navigator,
   createNavigator,
   createReactiveRoute,
 } from '../navigation/navigator';
+import { NavigationType, type RouterHistory } from '../history/common';
 import { registerActiveRouter, unregisterActiveRouter } from './useApi';
 import { routeLocationKey, routerKey, routerViewLocationKey } from './injectionSymbols';
 import {
   type RouterScrollBehavior,
-  type ScrollPositionStore,
   type _ScrollPositionNormalized,
   computeScrollPosition,
   createScrollPositionStore,
@@ -40,9 +39,7 @@ import {
   type NavigationRedirectError,
   isNavigationFailure,
 } from './errors';
-import { NavigationType, type RouterHistory } from '../history/common';
 import { parseQuery as defaultParseQuery, stringifyQuery as defaultStringifyQuery } from './query';
-import { assign, noop } from '../utils';
 import { warn } from './warning';
 import type { Signal } from 'essor';
 import type { RouteRecord } from '../matcher/types';
@@ -471,19 +468,14 @@ export function createRouter(options: RouterOptions): Router {
             computeScrollPosition(),
           );
         }
-        nav
-          .pushWithRedirect(assign({}, shouldRedirect, { replace: true }), toLocation)
-          .catch(noop);
+        nav.pushWithRedirect(assign({}, shouldRedirect, { replace: true }), toLocation).catch(noop);
         return;
       }
 
       nav.setPendingLocation(toLocation);
       const from = currentRoute.value;
       if (isBrowser) {
-        scrollPositionStore.save(
-          getScrollKey(from.fullPath, info.delta),
-          computeScrollPosition(),
-        );
+        scrollPositionStore.save(getScrollKey(from.fullPath, info.delta), computeScrollPosition());
       }
 
       nav

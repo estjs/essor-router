@@ -1,9 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { shallowSignal } from 'essor';
-import { isString } from '@estjs/shared';
 import { createNavigator } from '../../src/navigation/navigator';
 import { parseQuery, stringifyQuery } from '../../src/core/query';
-import { START_LOCATION_NORMALIZED } from '../../src/types';
 
 const baseRoute = {
   path: '/',

@@ -3,7 +3,6 @@ import { shallowSignal } from 'essor';
 import { ErrorTypes, createRouterError } from '../../src/core/errors';
 import { createNavigator } from '../../src/navigation/navigator';
 import { parseQuery, stringifyQuery } from '../../src/core/query';
-import { START_LOCATION_NORMALIZED } from '../../src/types';
 
 const baseRoute = {
   path: '/',
@@ -127,7 +126,7 @@ describe('navigator guard pipeline', () => {
 
   it('runs canceledNavigationCheck after each phase', async () => {
     const nav = createTestNavigator();
-    let checkCount = 0;
+    const checkCount = 0;
 
     nav.beforeGuards.add((_to, _from, next) => {
       next();
