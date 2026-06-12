@@ -54,9 +54,9 @@
     "essor": "^0.0.17-beta.1"
   },
   "dependencies": {
-    "@estjs/shared": "^0.0.17-beta.1"
+    "@estjs/shared": "^0.0.17-beta.2"
   },
   "devDependencies": {
-    "essor": "^0.0.17-beta.1"
+    "essor": "^0.0.17-beta.2"
   }
 }

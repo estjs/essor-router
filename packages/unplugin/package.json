@@ -73,7 +73,7 @@
   "dependencies": {
     "@babel/generator": "^7.29.7",
     "@babel/parser": "^7.29.7",
-    "@estjs/shared": "^0.0.17-beta.1",
+    "@estjs/shared": "^0.0.17-beta.2",
     "ast-walker-scope": "^0.9.0",
     "chokidar": "^5.0.0",
     "json5": "^2.2.3",
@@ -82,13 +82,13 @@
     "mlly": "^1.8.2",
     "pathe": "^2.0.3",
     "picomatch": "^4.0.4",
-    "tinyglobby": "^0.2.16",
+    "tinyglobby": "^0.2.17",
     "unplugin": "^3.0.0",
     "unplugin-utils": "^0.3.1",
     "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@babel/types": "^7.29.7",
-    "vite": "^8.0.14"
+    "vite": "^8.0.16"
   }
 }
