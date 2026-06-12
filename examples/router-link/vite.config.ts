@@ -11,8 +11,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/': `${resolve(dirname, 'src')}/`,
-      'essor': resolve(dirname, 'node_modules/essor'),
-      '@estjs/signals': resolve(dirname, 'node_modules/@estjs/signals'),
     },
   },
   plugins: [essor(), inspect()],

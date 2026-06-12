@@ -15,7 +15,6 @@ export default defineConfig({
     'index': './src/index.ts',
     'auto-routes': './src/auto-routes.ts',
     'auto-resolver': './src/auto-resolver.ts',
-    'experimental/index': './src/experimental/index.ts',
   },
   banner: {
     js: banner,

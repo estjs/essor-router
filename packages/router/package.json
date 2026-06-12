@@ -34,11 +34,6 @@
       "types": "./dist/auto-resolver.d.ts",
       "require": "./dist/auto-resolver.cjs",
       "import": "./dist/auto-resolver.mjs"
-    },
-    "./experimental": {
-      "types": "./dist/experimental/index.d.ts",
-      "require": "./dist/experimental/index.cjs",
-      "import": "./dist/experimental/index.mjs"
     }
   },
   "sideEffects": false,
