@@ -471,7 +471,7 @@ importers:
     dependencies:
       '@estjs/shared':
         specifier: ^0.0.17-beta.2
-        version: 0.0.17-beta.2
+        version: 0.0.17-beta.3
     devDependencies:
       essor:
         specifier: ^0.0.17-beta.2
@@ -487,7 +487,7 @@ importers:
         version: 7.29.7
       '@estjs/shared':
         specifier: ^0.0.17-beta.2
-        version: 0.0.17-beta.2
+        version: 0.0.17-beta.3
       ast-walker-scope:
         specifier: ^0.9.0
         version: 0.9.0
@@ -1193,6 +1193,9 @@ packages:
 
   '@estjs/shared@0.0.17-beta.2':
     resolution: {integrity: sha512-fNWEr59NLFB6zekEKjGZziMEz93gYTt9m/ocgt4qm+KuH3SeQjNa1SBGJIovKLXWqkoXXG7WRwbQG5k58FWMPw==}
+
+  '@estjs/shared@0.0.17-beta.3':
+    resolution: {integrity: sha512-6pvsFif9Wn/LNmAGLe6U9aHM34HevO/NaMN2lZ/zhSmfUnZZGLWKGFnDMfulrYEx9l8DXz3frPO58R7rcNzTIQ==}
 
   '@estjs/signals@0.0.16':
     resolution: {integrity: sha512-ThoT/XkQpyQasp9Ucy1XJJbvS3QoxpLNWkBXre+7FeQ4f5HMltViVu1qqFqYFibR1mxQTXZWd7c8aREoKEgSSA==}
@@ -5513,6 +5516,8 @@ snapshots:
   '@estjs/shared@0.0.16': {}
 
   '@estjs/shared@0.0.17-beta.2': {}
+
+  '@estjs/shared@0.0.17-beta.3': {}
 
   '@estjs/signals@0.0.16':
     dependencies:
