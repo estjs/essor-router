@@ -1,14 +1,8 @@
 import { defineRoute } from 'essor-router';
 import { signal } from 'essor';
+import { type UserProfile, fakeAuthCheck, fetchUserProfile } from '../api';
 
-// Fake authentication and fetch API
-const fakeAuthCheck = () =>
-  new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 300));
-const fetchUserProfile = (id: string) =>
-  new Promise<{ id: string; name: string; role: string }>((resolve) =>
-    setTimeout(() => resolve({ id, name: 'Alice Admin', role: 'SuperUser' }), 500),
-  );
-const profileData = signal<{ profile: { id: string; name: string; role: string } } | null>(null);
+const profileData = signal<{ profile: UserProfile } | null>(null);
 const profile = await fetchUserProfile('1');
 profileData.value = { profile };
 

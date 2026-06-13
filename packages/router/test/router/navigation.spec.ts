@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { shallowSignal } from 'essor';
 import { createNavigator } from '../../src/navigation/navigator';
 import { parseQuery, stringifyQuery } from '../../src/core/query';
+import { ErrorTypes } from '../../src/core/errors';
 
 const baseRoute = {
   path: '/',
@@ -159,6 +160,37 @@ describe('navigator navigation', () => {
     expect(calls).toEqual(['before:/users/1?tab=info', 'loader:/users/1?tab=info']);
     expect(beforeLoad).toHaveBeenCalledTimes(1);
     expect(loader).toHaveBeenCalledTimes(1);
+  });
+
+  it('turns a redirect returned from beforeLoad into a guard redirect and skips the loader', async () => {
+    const { nav } = createTestNavigator();
+    const loader = vi.fn();
+    const route = {
+      ...baseRoute,
+      fullPath: '/profile',
+      matched: [{ beforeLoad: () => ({ redirect: { name: '/login' } }), loader }],
+    } as any;
+
+    await expect(nav.runRouteDataHooks(route)).rejects.toMatchObject({
+      type: ErrorTypes.NAVIGATION_GUARD_REDIRECT,
+      to: { name: '/login' },
+    });
+    // a redirecting beforeLoad must short-circuit before the loader runs
+    expect(loader).not.toHaveBeenCalled();
+  });
+
+  it('turns a redirect returned from loader into a guard redirect', async () => {
+    const { nav } = createTestNavigator();
+    const route = {
+      ...baseRoute,
+      fullPath: '/old',
+      matched: [{ loader: () => ({ redirect: { path: '/new' } }) }],
+    } as any;
+
+    await expect(nav.runRouteDataHooks(route)).rejects.toMatchObject({
+      type: ErrorTypes.NAVIGATION_GUARD_REDIRECT,
+      to: { path: '/new' },
+    });
   });
 
   it('does not cache a route data task that was aborted before it settled', async () => {

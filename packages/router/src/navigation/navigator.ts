@@ -670,6 +670,14 @@ export function createNavigator(options: NavigatorOptions): Navigator {
         });
       }
     };
+    const handleRedirectResult = (result: unknown) => {
+      if (isObject(result) && 'redirect' in result && (result as any).redirect) {
+        throw createRouterError<NavigationRedirectError>(ErrorTypes.NAVIGATION_GUARD_REDIRECT, {
+          from: to,
+          to: (result as { redirect: RouteLocationRaw }).redirect,
+        });
+      }
+    };
     const task = (async () => {
       for (const record of to.matched) {
         const ctx: RouteLoaderContext = {
@@ -680,11 +688,11 @@ export function createNavigator(options: NavigatorOptions): Navigator {
         };
         checkCancelled();
         if (record.beforeLoad) {
-          await record.beforeLoad(ctx);
+          handleRedirectResult(await record.beforeLoad(ctx));
           checkCancelled();
         }
         if (record.loader) {
-          await record.loader(ctx);
+          handleRedirectResult(await record.loader(ctx));
           checkCancelled();
         }
       }
