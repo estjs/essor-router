@@ -380,17 +380,18 @@ export function createRouter(options: RouterOptions): Router {
     const previousMatchers = new Set(matcher.getRoutes());
     const remove = matcher.addRoute((route || parentOrRoute) as RouteRecordRaw, parentMatcher);
 
-    // Mark newly added matchers as runtime records
     const addedRecords: RouteRecord[] = [];
-    for (const m of matcher.getRoutes()) {
+    const currentRoutes = matcher.getRoutes();
+    for (const m of currentRoutes) {
       if (!previousMatchers.has(m)) {
         runtimeRouteRecords.add(m.record);
         addedRecords.push(m.record);
       }
     }
     // Clean up matchers that were removed as a side effect (e.g. name collision)
+    const currentRoutesSet = new Set(currentRoutes);
     for (const m of previousMatchers) {
-      if (!matcher.getRoutes().includes(m)) {
+      if (!currentRoutesSet.has(m)) {
         runtimeRouteRecords.delete(m.record);
         untrackRecord(m.record);
       }
