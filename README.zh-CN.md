@@ -46,35 +46,7 @@ yarn add -D unplugin-essor-router
 
 - `essor-router`: 运行时包（history、matcher、router API）
 - `unplugin-essor-router`: 文件路由与代码生成插件包
-- `essor-router-ts-plugin`: TypeScript 语言服务插件，为 `useRoute()` 提供路由级精确类型
 - 文件路由以代码文件（`.tsx/.ts/.jsx/.js`）为核心，不依赖 SFC route block。
-
-### TypeScript 插件（路由感知 `useRoute`）
-
-安装：
-
-```bash
-pnpm add -D essor-router-ts-plugin
-```
-
-`tsconfig.json`：
-
-```json
-{
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "essor-router-ts-plugin",
-        "moduleName": "essor-router",
-        "routesFolder": "src/pages",
-        "typedRouterDts": "typed-router.d.ts"
-      }
-    ]
-  }
-}
-```
-
-该插件会把当前页面文件映射为对应路由名，并生成按文件拆分的代理模块，从而让 `useRoute()` 获得更精确的 `name/path/params` 类型提示。
 
 ### 文件路由 API
 
@@ -150,19 +122,19 @@ const router = createRouter({
   history: 'history',           // HTML5 History API（推荐）
   // history: 'hash',           // Hash 模式，适用于静态托管
   // history: 'memory',         // Memory 模式，适用于 SSR/测试
-  
+
   // 或使用工厂函数获得更多控制：
   // history: createWebHistory('/base-path/'),
   // history: createWebHashHistory(),
   // history: createMemoryHistory(),
-  
+
   routes: [
     // 基础路由
     { path: '/', component: Home },
-    
+
     // 命名路由
     { path: '/user/:id', name: 'user', component: User },
-    
+
     // 嵌套路由
     {
       path: '/dashboard',
@@ -172,13 +144,13 @@ const router = createRouter({
         { path: 'settings', component: DashboardSettings },
       ],
     },
-    
+
     // 重定向
     { path: '/home', redirect: '/' },
-    
+
     // 别名
     { path: '/users', component: Users, alias: '/people' },
-    
+
     // 捕获所有 404
     { path: '/:pathMatch(.*)*', component: NotFound },
   ],
@@ -193,22 +165,22 @@ essor-router 支持强大的路径匹配和动态路径段：
 const routes = [
   // 动态路径段
   { path: '/user/:id', component: User },
-  
+
   // 多个路径段
   { path: '/user/:userId/post/:postId', component: Post },
-  
+
   // 可选路径段
   { path: '/user/:id?', component: User },
-  
+
   // 可重复路径段
   { path: '/files/:path+', component: Files },
-  
+
   // 可选可重复
   { path: '/files/:path*', component: Files },
-  
+
   // 自定义正则
   { path: '/user/:id(\\d+)', component: User },
-  
+
   // 捕获所有
   { path: '/:pathMatch(.*)*', component: NotFound },
 ];
@@ -253,22 +225,22 @@ import { useRouter } from 'essor-router';
 
 function MyComponent() {
   const router = useRouter();
-  
+
   // 导航到路径
   router.push('/about');
-  
+
   // 使用对象导航
   router.push({ path: '/user/123' });
-  
+
   // 命名路由
   router.push({ name: 'user', params: { id: '123' } });
-  
+
   // 带查询参数
   router.push({ path: '/search', query: { q: 'essor' } });
-  
+
   // 替换当前记录
   router.replace('/about');
-  
+
   // 前进/后退
   router.back();
   router.forward();
@@ -338,12 +310,12 @@ function Editor() {
       next();
     }
   });
-  
+
   onBeforeRouteUpdate((to, from, next) => {
     // 当路由参数变化但组件被复用时调用
     next();
   });
-  
+
   return <div>编辑器</div>;
 }
 ```
@@ -356,7 +328,7 @@ import { useRoute, useRouter } from 'essor-router';
 function MyComponent() {
   const router = useRouter();
   const route = useRoute();
-  
+
   // 访问当前路由信息
   console.log(route.path);        // '/user/123'
   console.log(route.params);      // { id: '123' }
@@ -366,20 +338,20 @@ function MyComponent() {
   console.log(route.name);        // 'user'
   console.log(route.meta);        // { requiresAuth: true }
   console.log(route.matched);     // 匹配的路由记录数组
-  
+
   // 路由实例方法
   router.push('/new-path');
   router.replace('/new-path');
   router.back();
   router.forward();
   router.go(n);
-  
+
   // 动态路由管理
   router.addRoute({ path: '/new', component: NewPage });
   router.removeRoute('routeName');
   router.hasRoute('routeName');
   router.getRoutes();
-  
+
   return <div>当前路径：{route.path}</div>;
 }
 ```
@@ -460,11 +432,11 @@ router.afterEach((to, from, failure) => {
   if (isNavigationFailure(failure)) {
     console.log('导航失败：', failure);
   }
-  
+
   if (isNavigationFailure(failure, NavigationFailureType.aborted)) {
     console.log('导航被中止');
   }
-  
+
   if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {
     console.log('已在当前位置');
   }
@@ -522,7 +494,7 @@ router.onError((error, to, from) => {
 渲染当前路由匹配的组件。
 
 ```tsx
-<RouterView 
+<RouterView
   router={router}      // 路由实例（如果通过上下文提供则可选）
   name="default"       // 命名视图（默认：'default'）
   route={route}        // 覆盖要显示的路由

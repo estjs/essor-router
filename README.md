@@ -282,11 +282,6 @@ declare module 'essor-router' {
   }
 }
 ```
-
-For file-based routing, install the TypeScript plugin for IDE autocompletion:
-
-
-
 ## Browser Support
 
 Supports all modern browsers. For HTML5 History mode, ensure your server handles client-side routing with a catch-all fallback to `index.html`.
