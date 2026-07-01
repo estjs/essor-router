@@ -60,8 +60,13 @@ function extractImportPath(expr: Expression | undefined): string | undefined {
   if (!expr) return undefined;
 
   // `() => import('...')` or `async () => import('...')`
-  if (expr.type === 'ArrowFunctionExpression' && expr.body.type === 'CallExpression') {
+  if (expr.type === 'ArrowFunctionExpression') {
     return extractImportPath(expr.body as unknown as Expression);
+  }
+
+  // Babel 8 parses `import('...')` as `ImportExpression`
+  if (expr.type === 'ImportExpression' && expr.source.type === 'StringLiteral') {
+    return expr.source.value;
   }
 
   // `import('...')`

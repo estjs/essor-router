@@ -3,8 +3,8 @@ import { exec, execSync } from 'node:child_process';
 import { createWriteStream, readFileSync, writeFileSync } from 'node:fs';
 import { promisify } from 'node:util';
 import process from 'node:process';
-import standardChangelog from 'standard-changelog';
-import { version as _version } from '../package.json' assert { type: 'json' };
+import { StandardChangelog } from 'standard-changelog';
+import { version as _version } from '../package.json' with { type: 'json' };
 const execPromise = promisify(exec);
 
 const VERSION_REG = /\d+\.\d+\.\d+/;
@@ -25,7 +25,7 @@ function getGitCommitMap(lastCommit: string) {
   writeFileSync('.gitlogmap', gitLogMap, 'utf8');
 }
 
-function updateChangeLog() {
+async function updateChangeLog() {
   console.log(` package.json version: ${_version}\n`);
 
   const lastCommit = getLastChangeLogCommit();
@@ -39,26 +39,26 @@ function updateChangeLog() {
   const data = initialChangelogStr.split(/---[\s\S]+---/);
   data.unshift(pageDataStr);
 
-  new Promise((resolve) => {
-    standardChangelog({}, null, { from: lastCommit, to: 'HEAD' })
-      .on('data', (chunk: any) => {
-        let changeLogStr = chunk.toString().trim();
-        changeLogStr = changeLogStr.replaceAll(/\(([\d-]+)\)/g, '`$1`');
-        changeLogStr = changeLogStr.replaceAll(/^#\s/g, '## ').trim();
-        data.splice(1, 0, `${changeLogStr}\n`);
-      })
-      .on('end', resolve);
-  }).then(async () => {
-    getGitCommitMap(lastCommit);
+  const changelog = new StandardChangelog(process.cwd())
+    .readPackage()
+    .commits({ from: lastCommit, to: 'HEAD' });
 
-    const writeStream = createWriteStream('CHANGELOG.md', 'utf8');
-    writeStream.write(data.join('\n'));
-    writeStream.end();
-    console.log('generate changelog done.');
+  for await (const chunk of changelog.write()) {
+    let changeLogStr = chunk.trim();
+    changeLogStr = changeLogStr.replaceAll(/\(([\d-]+)\)/g, '`$1`');
+    changeLogStr = changeLogStr.replaceAll(/^#\s/g, '## ').trim();
+    data.splice(1, 0, `${changeLogStr}\n`);
+  }
 
-    await execPromise('git add CHANGELOG.md');
-    await execPromise(`git commit -m "chore: update changelog"`);
-    await execPromise('git push');
-  });
+  getGitCommitMap(lastCommit);
+
+  const writeStream = createWriteStream('CHANGELOG.md', 'utf8');
+  writeStream.write(data.join('\n'));
+  writeStream.end();
+  console.log('generate changelog done.');
+
+  await execPromise('git add CHANGELOG.md');
+  await execPromise(`git commit -m "chore: update changelog"`);
+  await execPromise('git push');
 }
-updateChangeLog();
+await updateChangeLog();
