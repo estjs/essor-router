@@ -42,7 +42,7 @@
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.8",
     "picocolors": "^1.1.1",
-    "pnpm": "^11.9.0",
+    "pnpm": "^11.8.0",
     "prettier": "^3.9.4",
     "simple-git-hooks": "^2.13.1",
     "standard-changelog": "8.0.0",
