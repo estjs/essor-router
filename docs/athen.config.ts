@@ -26,6 +26,11 @@ export default defineConfig({
             activeMatch: "/zh/api/",
           },
           {
+            text: "架构",
+            link: "/zh/architecture/",
+            activeMatch: "/zh/architecture/",
+          },
+          {
             text: `v${pkg.version}`,
             items: [
               {
