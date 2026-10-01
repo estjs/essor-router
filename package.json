@@ -30,7 +30,7 @@
     "@estjs/eslint-config": "^2.3.0",
     "@playwright/test": "^1.61.1",
     "@types/jsdom": "^28.0.3",
-    "@types/node": "^26.0.1",
+    "@types/node": "^25.9.3",
     "@vitest/coverage-v8": "4.1.9",
     "athen": "^0.0.9-beta.1",
     "bumpp": "^11.1.0",
