@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@estjs/eslint-config": "^2.3.0",
-    "@types/node": "^26.0.1",
+    "@types/node": "^25.9.3",
     "eslint": "^10.6.0",
     "typescript": "^6.0.3",
     "unplugin-essor": "^0.0.17-beta.7",
